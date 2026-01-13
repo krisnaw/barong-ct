@@ -15,6 +15,7 @@ import {Spinner} from "@/components/ui/spinner";
 import {useActionState} from "react";
 import {ActionResponse, initialState} from "@/types/types";
 import {UpdateProfileAction} from "@/app/actions/profile/profile.action";
+import {CustomDatePicker} from "@/components/ui/custom-date-picker";
 
 export function ProfileForm() {
   const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(async (prevState: ActionResponse, formData: FormData) => {
@@ -23,9 +24,11 @@ export function ProfileForm() {
       full_name: formData.get("full_name") as string,
       phone : formData.get("phone") as string,
       date_of_birth: '',
-      emergency_contact_name: '',
-      emergency_contact_number: '',
+      emergency_contact_name: formData.get("emergency_contact_name") as string,
+      emergency_contact_number: formData.get("emergency_contact_number") as string,
     }
+
+
 
     const res = await UpdateProfileAction()
 
@@ -55,6 +58,12 @@ export function ProfileForm() {
                   required
                 />
               </Field>
+
+              <Field>
+                <FieldLabel htmlFor="full_name">Date of birth</FieldLabel>
+                <CustomDatePicker />
+              </Field>
+
             </FieldGroup>
 
 
