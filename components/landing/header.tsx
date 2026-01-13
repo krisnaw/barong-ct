@@ -17,12 +17,12 @@ export default function Header({user} : {user : User | undefined}) {
       <nav aria-label="Global" className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8">
         <div className="flex lg:flex-1">
           {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-          <a href="/" className="-m-1.5 p-1.5">
-            <span className="sr-only">Your Company</span>
+          <a href="/" className="-m-1.5">
+            <span className="sr-only">Home</span>
             <img
-              alt=""
-              src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
-              className="h-8 w-auto"
+              alt="Barong Cycling Logo"
+              src="/barong-no-bg.png"
+              className="h-12"
             />
           </a>
         </div>
