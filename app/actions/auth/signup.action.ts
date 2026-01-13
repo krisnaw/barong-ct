@@ -9,7 +9,6 @@ export async function SignUpAction() : Promise<ActionResponse> {
   const data = await auth.api.signInMagicLink({
     body: {
       email: "krisna.w2010@gmail.com", // required
-      name: "my-name",
       callbackURL: "/profile",
       newUserCallbackURL: "/profile",
       errorCallbackURL: "/auth/error",

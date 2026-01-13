@@ -14,7 +14,7 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
-    <header className="bg-gray-900">
+    <header className="border-b border-gray-200 sticky top-0 bg-white">
       <nav aria-label="Global" className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8">
         <div className="flex lg:flex-1">
           {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
@@ -31,7 +31,7 @@ export default function Header() {
           <button
             type="button"
             onClick={() => setMobileMenuOpen(true)}
-            className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-400"
+            className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 "
           >
             <span className="sr-only">Open main menu</span>
             <MenuIcon aria-hidden="true" className="size-6" />
@@ -39,13 +39,13 @@ export default function Header() {
         </div>
         <div className="hidden lg:flex lg:gap-x-12">
           {navigation.map((item) => (
-            <a key={item.name} href={item.href} className="text-sm/6 font-semibold text-white">
+            <a key={item.name} href={item.href} className="text-sm/6 font-semibold ">
               {item.name}
             </a>
           ))}
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          <a href="/auth/signup" className="text-sm/6 font-semibold text-white">
+          <a href="/auth/signup" className="text-sm/6 font-semibold ">
             Log in <span aria-hidden="true">&rarr;</span>
           </a>
         </div>
