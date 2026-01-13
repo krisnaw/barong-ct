@@ -6,13 +6,17 @@ import {Button} from "@/components/ui/button";
 import {Spinner} from "@/components/ui/spinner";
 import {useActionState} from "react";
 import {ActionResponse, initialState} from "@/types/types";
+import {UpdateProfileAction} from "@/app/actions/profile/profile.action";
 
 export function ProfileForm() {
-  const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(async () => {
-    return {
-      success: false,
-      message: ''
-    }
+  const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(async (prevState: ActionResponse, formData: FormData) => {
+
+    const name = formData.get('fullname')
+    
+    const res = await UpdateProfileAction()
+
+    return res;
+
   }, initialState)
   return (
     <div className="flex flex-col gap-6">
