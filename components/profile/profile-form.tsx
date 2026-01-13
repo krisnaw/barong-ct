@@ -1,36 +1,35 @@
 'use client'
 
-import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-  FieldLegend,
-  FieldSeparator,
-  FieldSet,
-} from "@/components/ui/field"
+import {Field, FieldDescription, FieldGroup, FieldLabel, FieldLegend, FieldSet,} from "@/components/ui/field"
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {Spinner} from "@/components/ui/spinner";
 import {useActionState} from "react";
 import {ActionResponse, initialState} from "@/types/types";
 import {UpdateProfileAction} from "@/app/actions/profile/profile.action";
-import {CustomDatePicker} from "@/components/ui/custom-date-picker";
+import {User} from "better-auth";
+import {toast} from "sonner";
 
-export function ProfileForm() {
+export function ProfileForm({user}: {user: User}) {
   const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(async (prevState: ActionResponse, formData: FormData) => {
 
     const payload = {
       full_name: formData.get("full_name") as string,
-      phone : formData.get("phone") as string,
-      date_of_birth: '',
-      emergency_contact_name: formData.get("emergency_contact_name") as string,
-      emergency_contact_number: formData.get("emergency_contact_number") as string,
+      // phone : formData.get("phone") as string,
+      // date_of_birth: '',
+      // emergency_contact_name: formData.get("emergency_contact_name") as string,
+      // emergency_contact_number: formData.get("emergency_contact_number") as string,
     }
 
+    console.log(payload);
 
+    const res = await UpdateProfileAction(payload)
 
-    const res = await UpdateProfileAction()
+    if (!res.success) {
+      toast.error(res.message)
+    }
+
+    toast.success(res.message)
 
     return res;
 
@@ -44,7 +43,7 @@ export function ProfileForm() {
           <FieldSet>
             <FieldLegend>Profile</FieldLegend>
             <FieldDescription>
-              All transactions are secure and encrypted
+              Update your full name for event registration and race-related features.
             </FieldDescription>
 
             <FieldGroup>
@@ -55,14 +54,15 @@ export function ProfileForm() {
                   type="text"
                   name="full_name"
                   placeholder="Tadej Pogačar"
+                  defaultValue={user.name}
                   required
                 />
               </Field>
 
-              <Field>
-                <FieldLabel htmlFor="full_name">Date of birth</FieldLabel>
-                <CustomDatePicker />
-              </Field>
+              {/*<Field>*/}
+              {/*  <FieldLabel htmlFor="full_name">Date of birth</FieldLabel>*/}
+              {/*  <CustomDatePicker />*/}
+              {/*</Field>*/}
 
             </FieldGroup>
 
@@ -70,67 +70,67 @@ export function ProfileForm() {
           </FieldSet>
 
 
-          <FieldSeparator />
+          {/*<FieldSeparator />*/}
 
-          <FieldSet>
-            <FieldLegend>Contact</FieldLegend>
-            <FieldDescription>
-              All transactions are secure and encrypted
-            </FieldDescription>
-
-
-            <FieldGroup>
-              <Field>
-                <FieldLabel htmlFor="email">Phone</FieldLabel>
-                <Input
-                  id="phone"
-                  type="text"
-                  name="phone"
-                  placeholder="08212345678"
-                  required
-                />
-              </Field>
-            </FieldGroup>
-
-          </FieldSet>
-
-          <FieldSeparator />
-
-          <FieldSet>
-            <FieldLegend>Emergency Contact</FieldLegend>
-            <FieldDescription>
-              All transactions are secure and encrypted
-            </FieldDescription>
+          {/*<FieldSet>*/}
+          {/*  <FieldLegend>Contact</FieldLegend>*/}
+          {/*  <FieldDescription>*/}
+          {/*    All transactions are secure and encrypted*/}
+          {/*  </FieldDescription>*/}
 
 
-            <FieldGroup>
+          {/*  <FieldGroup>*/}
+          {/*    <Field>*/}
+          {/*      <FieldLabel htmlFor="email">Phone</FieldLabel>*/}
+          {/*      <Input*/}
+          {/*        id="phone"*/}
+          {/*        type="text"*/}
+          {/*        name="phone"*/}
+          {/*        placeholder="08212345678"*/}
+          {/*        required*/}
+          {/*      />*/}
+          {/*    </Field>*/}
+          {/*  </FieldGroup>*/}
 
-              <Field>
-                <FieldLabel htmlFor="emergency_contact_name">Emergency Contact Name</FieldLabel>
-                <Input
-                  id="emergency_contact_name"
-                  type="text"
-                  name="emergency_contact_name"
-                  placeholder="Mira Tanaka"
-                  required
-                />
-              </Field>
+          {/*</FieldSet>*/}
 
-              <Field>
-                <FieldLabel htmlFor="emergency_contact_phone">Emergency Contact Phone</FieldLabel>
-                <Input
-                  id="emergency_contact_phone"
-                  type="text"
-                  name="emergency_contact_phone"
-                  placeholder="08212345678"
-                  required
-                />
-              </Field>
+          {/*<FieldSeparator />*/}
+
+          {/*<FieldSet>*/}
+          {/*  <FieldLegend>Emergency Contact</FieldLegend>*/}
+          {/*  <FieldDescription>*/}
+          {/*    All transactions are secure and encrypted*/}
+          {/*  </FieldDescription>*/}
 
 
-            </FieldGroup>
+          {/*  <FieldGroup>*/}
 
-          </FieldSet>
+          {/*    <Field>*/}
+          {/*      <FieldLabel htmlFor="emergency_contact_name">Emergency Contact Name</FieldLabel>*/}
+          {/*      <Input*/}
+          {/*        id="emergency_contact_name"*/}
+          {/*        type="text"*/}
+          {/*        name="emergency_contact_name"*/}
+          {/*        placeholder="Mira Tanaka"*/}
+          {/*        required*/}
+          {/*      />*/}
+          {/*    </Field>*/}
+
+          {/*    <Field>*/}
+          {/*      <FieldLabel htmlFor="emergency_contact_phone">Emergency Contact Phone</FieldLabel>*/}
+          {/*      <Input*/}
+          {/*        id="emergency_contact_phone"*/}
+          {/*        type="text"*/}
+          {/*        name="emergency_contact_phone"*/}
+          {/*        placeholder="08212345678"*/}
+          {/*        required*/}
+          {/*      />*/}
+          {/*    </Field>*/}
+
+
+          {/*  </FieldGroup>*/}
+
+          {/*</FieldSet>*/}
 
 
           <Field>

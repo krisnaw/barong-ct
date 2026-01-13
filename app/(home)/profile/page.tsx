@@ -2,12 +2,17 @@ import {auth} from "@/lib/auth";
 import {headers} from "next/headers";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs"
 import {ProfileForm} from "@/components/profile/profile-form";
+import {redirect} from "next/navigation";
 
 export default async function ProfilePage() {
 
   const session = await auth.api.getSession({
     headers: await headers() // you need to pass the headers object.
   })
+
+  if (!session) {
+    redirect("/auth/signup")
+  }
 
   return (
     <div>
@@ -17,7 +22,7 @@ export default async function ProfilePage() {
           <TabsTrigger value="password">Events</TabsTrigger>
         </TabsList>
         <TabsContent value="account">
-          <ProfileForm />
+          <ProfileForm user={session.user} />
         </TabsContent>
         <TabsContent value="password">Change your password here.</TabsContent>
       </Tabs>

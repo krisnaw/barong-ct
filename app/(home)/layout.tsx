@@ -13,8 +13,6 @@ export default async function HomeLayout({
     headers: await headers() // you need to pass the headers object.
   })
 
-  console.log(session)
-
   return (
     <div className="min-h-screen flex flex-col">
       <Header user={session?.user ? session.user : undefined} />
