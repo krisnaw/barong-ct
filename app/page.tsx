@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Footer from "@/components/landing/footer";
 import Header from "@/components/landing/header";
+import Main from "@/components/landing/main";
 
 export default function Home() {
   return (
@@ -8,9 +8,7 @@ export default function Home() {
 
       <Header />
 
-      <main>
-        Main
-      </main>
+      <Main />
 
       <Footer />
 
