@@ -1,6 +1,14 @@
 'use client'
 
-import {Field, FieldGroup, FieldLabel,} from "@/components/ui/field"
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+  FieldLegend,
+  FieldSeparator,
+  FieldSet,
+} from "@/components/ui/field"
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {Spinner} from "@/components/ui/spinner";
@@ -11,8 +19,14 @@ import {UpdateProfileAction} from "@/app/actions/profile/profile.action";
 export function ProfileForm() {
   const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(async (prevState: ActionResponse, formData: FormData) => {
 
-    const name = formData.get('fullname')
-    
+    const payload = {
+      full_name: formData.get("full_name") as string,
+      phone : formData.get("phone") as string,
+      date_of_birth: '',
+      emergency_contact_name: '',
+      emergency_contact_number: '',
+    }
+
     const res = await UpdateProfileAction()
 
     return res;
@@ -23,16 +37,92 @@ export function ProfileForm() {
 
       <form action={formAction}>
         <FieldGroup>
-          <Field>
-            <FieldLabel htmlFor="email">Full name</FieldLabel>
-            <Input
-              id="fullname"
-              type="text"
-              name="fullname"
-              placeholder="Tadej Pogačar"
-              required
-            />
-          </Field>
+
+          <FieldSet>
+            <FieldLegend>Profile</FieldLegend>
+            <FieldDescription>
+              All transactions are secure and encrypted
+            </FieldDescription>
+
+            <FieldGroup>
+              <Field>
+                <FieldLabel htmlFor="full_name">Full name</FieldLabel>
+                <Input
+                  id="full_name"
+                  type="text"
+                  name="full_name"
+                  placeholder="Tadej Pogačar"
+                  required
+                />
+              </Field>
+            </FieldGroup>
+
+
+          </FieldSet>
+
+
+          <FieldSeparator />
+
+          <FieldSet>
+            <FieldLegend>Contact</FieldLegend>
+            <FieldDescription>
+              All transactions are secure and encrypted
+            </FieldDescription>
+
+
+            <FieldGroup>
+              <Field>
+                <FieldLabel htmlFor="email">Phone</FieldLabel>
+                <Input
+                  id="phone"
+                  type="text"
+                  name="phone"
+                  placeholder="08212345678"
+                  required
+                />
+              </Field>
+            </FieldGroup>
+
+          </FieldSet>
+
+          <FieldSeparator />
+
+          <FieldSet>
+            <FieldLegend>Emergency Contact</FieldLegend>
+            <FieldDescription>
+              All transactions are secure and encrypted
+            </FieldDescription>
+
+
+            <FieldGroup>
+
+              <Field>
+                <FieldLabel htmlFor="emergency_contact_name">Emergency Contact Name</FieldLabel>
+                <Input
+                  id="emergency_contact_name"
+                  type="text"
+                  name="emergency_contact_name"
+                  placeholder="Mira Tanaka"
+                  required
+                />
+              </Field>
+
+              <Field>
+                <FieldLabel htmlFor="emergency_contact_phone">Emergency Contact Phone</FieldLabel>
+                <Input
+                  id="emergency_contact_phone"
+                  type="text"
+                  name="emergency_contact_phone"
+                  placeholder="08212345678"
+                  required
+                />
+              </Field>
+
+
+            </FieldGroup>
+
+          </FieldSet>
+
 
           <Field>
             <Button type="submit" disabled={isPending}>

@@ -6,8 +6,6 @@ import {MenuIcon, XIcon} from "lucide-react";
 const navigation = [
   { name: 'Events', href: '/event' },
   { name: 'About', href: '/about' },
-  { name: 'Marketplace', href: '#' },
-  { name: 'Company', href: '#' },
 ]
 
 export default function Header() {
@@ -15,7 +13,7 @@ export default function Header() {
 
   return (
     <header className="border-b border-gray-200 sticky top-0 bg-white">
-      <nav aria-label="Global" className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8">
+      <nav aria-label="Global" className="mx-auto flex max-w-5xl items-center justify-between p-6 lg:px-8">
         <div className="flex lg:flex-1">
           {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
           <a href="/" className="-m-1.5 p-1.5">
