@@ -2,18 +2,19 @@
 
 import {useState} from 'react'
 import {MenuIcon, XIcon} from "lucide-react";
+import {User} from "@/types/auth-types";
 
 const navigation = [
   { name: 'Events', href: '/event' },
   { name: 'About', href: '/about' },
 ]
 
-export default function Header() {
+export default function Header({user} : {user : User | undefined}) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
-    <header className="border-b border-gray-200 sticky top-0 bg-white">
-      <nav aria-label="Global" className="mx-auto flex max-w-5xl items-center justify-between p-6 lg:px-8">
+    <header className="border-b border-gray-200 sticky top-0 bg-white z-50">
+      <nav aria-label="Global" className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8">
         <div className="flex lg:flex-1">
           {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
           <a href="/" className="-m-1.5 p-1.5">
@@ -43,9 +44,16 @@ export default function Header() {
           ))}
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          <a href="/auth/signup" className="text-sm/6 font-semibold ">
-            Log in <span aria-hidden="true">&rarr;</span>
-          </a>
+          {user ? (
+            <a href="/profile" className="text-sm/6 font-semibold ">
+              Profile
+            </a>
+            ) : (
+            <a href="/auth/signup" className="text-sm/6 font-semibold ">
+              Log in <span aria-hidden="true">&rarr;</span>
+            </a>
+          ) }
+
         </div>
       </nav>
       <div  className="lg:hidden">
