@@ -1,17 +1,11 @@
 'use client'
 
-import { GalleryVerticalEnd } from "lucide-react"
+import {GalleryVerticalEnd} from "lucide-react"
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-  FieldSeparator,
-} from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
+import {cn} from "@/lib/utils"
+import {Button} from "@/components/ui/button"
+import {Field, FieldDescription, FieldGroup, FieldLabel,} from "@/components/ui/field"
+import {Input} from "@/components/ui/input"
 import {useActionState} from "react";
 import {ActionResponse, initialState} from "@/types/types";
 import {SignUpAction} from "@/app/actions/auth/signup.action";
@@ -60,7 +54,7 @@ export function SignupForm({
             />
           </Field>
           <Field>
-            <Button type="submit">
+            <Button type="submit" disabled={isPending}>
               {isPending ? <Spinner /> : null }
               Create Account
             </Button>
