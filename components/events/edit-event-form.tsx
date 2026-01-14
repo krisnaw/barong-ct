@@ -6,13 +6,23 @@ import {Button} from "@/components/ui/button";
 import {Textarea} from "@/components/ui/textarea";
 import {CustomDatePicker} from "@/components/ui/custom-date-picker";
 import {EventType} from "@/db/schema";
+import {useActionState} from "react";
+import {initialState} from "@/types/types";
 
 export function EditEventForm({event} : {event: EventType}) {
   // No wiring up logic as requested, just the UI structure
 
+  const [state, formAction, isPending] = useActionState(async () => {
+    return {
+      success: false,
+      message: "",
+
+    }
+  }, initialState);
+
   return (
     <div className="flex flex-col gap-6">
-      <form>
+      <form action={formAction}>
         <FieldGroup>
 
           <Field>

@@ -3,6 +3,8 @@
 import {EventInsertSchema, EventSchema, EventType} from "@/db/schema";
 import {z} from "zod";
 import {db} from "@/db/db";
+import {redirect} from "next/navigation";
+import {eq} from "drizzle-orm";
 
 export async function CreateEventAction(payload: Partial<EventType>) {
 
@@ -36,7 +38,7 @@ export async function CreateEventAction(payload: Partial<EventType>) {
     }
     return {
       success: false,
-      message: "Failed to create brief",
+      message: "Failed to create event",
       fields: validate.data,
     }
   }
@@ -48,9 +50,32 @@ export async function CreateEventAction(payload: Partial<EventType>) {
 }
 
 export async function UpdateEventAction(payload: Partial<EventType>) {
+  try {
+    await db.update(EventSchema).set({
+      name: payload.name,
+      description: payload.description,
+    })
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log(error.message)
+      return {
+        success: false,
+        message: error.message,
+      }
+    }
+    return {
+      success: false,
+      message: "Failed to update event",
+    }
+  }
 
+  return {
+    success: true,
+    message: 'Success, event was updated.'
+  }
 }
 
-export async function DeleteEventAction(payload: Partial<EventType>) {
-
+export async function DeleteEventAction(id: number) {
+  await db.delete(EventSchema).where(eq(EventSchema.id, id));
+  redirect('/dashboard');
 }
