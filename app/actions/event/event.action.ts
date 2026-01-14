@@ -46,3 +46,11 @@ export async function CreateEventAction(payload: Partial<EventType>) {
     message: 'Success, event was created.'
   }
 }
+
+export async function UpdateEventAction(payload: Partial<EventType>) {
+
+}
+
+export async function DeleteEventAction(payload: Partial<EventType>) {
+
+}
