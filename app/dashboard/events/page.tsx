@@ -1,12 +1,5 @@
-import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import {Button} from "@/components/ui/button";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table";
 import Link from "next/link";
 
 const events = [
@@ -31,7 +24,7 @@ export default function EventsPage() {
     <div>
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Events</h1>
-        <Link href="/dashboard/events/new">
+        <Link href="/dashboard/events/create">
           <Button>Create Event</Button>
         </Link>
       </div>

@@ -6,6 +6,7 @@ import {magicLink} from "better-auth/plugins";
 import {Resend} from "resend";
 
 import NotionMagicLink from "@/react-email-starter/emails/notion-magic-link";
+import {nextCookies} from "better-auth/next-js";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -17,6 +18,7 @@ export const auth = betterAuth({
     enabled: true,
   },
   plugins: [
+    nextCookies(),
     magicLink({
       sendMagicLink: async ({ email, token, url }, ctx) => {
 
