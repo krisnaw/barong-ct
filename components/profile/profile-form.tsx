@@ -1,6 +1,14 @@
 'use client'
 
-import {Field, FieldDescription, FieldGroup, FieldLabel, FieldLegend, FieldSet,} from "@/components/ui/field"
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+  FieldLegend,
+  FieldSeparator,
+  FieldSet,
+} from "@/components/ui/field"
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {Spinner} from "@/components/ui/spinner";
@@ -70,67 +78,102 @@ export function ProfileForm({user}: {user: User}) {
           </FieldSet>
 
 
-          {/*<FieldSeparator />*/}
+          <FieldSeparator />
 
-          {/*<FieldSet>*/}
-          {/*  <FieldLegend>Contact</FieldLegend>*/}
-          {/*  <FieldDescription>*/}
-          {/*    All transactions are secure and encrypted*/}
-          {/*  </FieldDescription>*/}
+          <FieldSet>
+            <FieldLegend>Social Media</FieldLegend>
+            <FieldDescription>
+              All transactions are secure and encrypted
+            </FieldDescription>
 
+            <FieldGroup>
+              <Field>
+                <FieldLabel htmlFor="email">Instagram</FieldLabel>
+                <Input
+                  id="phone"
+                  type="text"
+                  name="phone"
+                  placeholder="08212345678"
+                  required
+                />
+              </Field>
+            </FieldGroup>
 
-          {/*  <FieldGroup>*/}
-          {/*    <Field>*/}
-          {/*      <FieldLabel htmlFor="email">Phone</FieldLabel>*/}
-          {/*      <Input*/}
-          {/*        id="phone"*/}
-          {/*        type="text"*/}
-          {/*        name="phone"*/}
-          {/*        placeholder="08212345678"*/}
-          {/*        required*/}
-          {/*      />*/}
-          {/*    </Field>*/}
-          {/*  </FieldGroup>*/}
+            <FieldGroup>
+              <Field>
+                <FieldLabel htmlFor="strava">Strava</FieldLabel>
+                <Input
+                  id="strava"
+                  type="text"
+                  name="strava"
+                  placeholder="08212345678"
+                  required
+                />
+              </Field>
+            </FieldGroup>
+          </FieldSet>
 
-          {/*</FieldSet>*/}
+          <FieldSeparator />
 
-          {/*<FieldSeparator />*/}
-
-          {/*<FieldSet>*/}
-          {/*  <FieldLegend>Emergency Contact</FieldLegend>*/}
-          {/*  <FieldDescription>*/}
-          {/*    All transactions are secure and encrypted*/}
-          {/*  </FieldDescription>*/}
-
-
-          {/*  <FieldGroup>*/}
-
-          {/*    <Field>*/}
-          {/*      <FieldLabel htmlFor="emergency_contact_name">Emergency Contact Name</FieldLabel>*/}
-          {/*      <Input*/}
-          {/*        id="emergency_contact_name"*/}
-          {/*        type="text"*/}
-          {/*        name="emergency_contact_name"*/}
-          {/*        placeholder="Mira Tanaka"*/}
-          {/*        required*/}
-          {/*      />*/}
-          {/*    </Field>*/}
-
-          {/*    <Field>*/}
-          {/*      <FieldLabel htmlFor="emergency_contact_phone">Emergency Contact Phone</FieldLabel>*/}
-          {/*      <Input*/}
-          {/*        id="emergency_contact_phone"*/}
-          {/*        type="text"*/}
-          {/*        name="emergency_contact_phone"*/}
-          {/*        placeholder="08212345678"*/}
-          {/*        required*/}
-          {/*      />*/}
-          {/*    </Field>*/}
+          <FieldSet>
+            <FieldLegend>Contact</FieldLegend>
+            <FieldDescription>
+              All transactions are secure and encrypted
+            </FieldDescription>
 
 
-          {/*  </FieldGroup>*/}
+            <FieldGroup>
+              <Field>
+                <FieldLabel htmlFor="email">Phone</FieldLabel>
+                <Input
+                  id="phone"
+                  type="text"
+                  name="phone"
+                  placeholder="08212345678"
+                  required
+                />
+              </Field>
+            </FieldGroup>
 
-          {/*</FieldSet>*/}
+          </FieldSet>
+
+          <FieldSeparator />
+
+          <FieldSet>
+            <FieldLegend>Emergency Contact</FieldLegend>
+            <FieldDescription>
+              All transactions are secure and encrypted
+            </FieldDescription>
+
+
+            <FieldGroup>
+
+              <Field>
+                <FieldLabel htmlFor="emergency_contact_name">Emergency Contact Name</FieldLabel>
+                <Input
+                  id="emergency_contact_name"
+                  type="text"
+                  name="emergency_contact_name"
+                  placeholder="Mira Tanaka"
+                  required
+                />
+              </Field>
+
+              <Field>
+                <FieldLabel htmlFor="emergency_contact_phone">Emergency Contact Phone</FieldLabel>
+                <Input
+                  id="emergency_contact_phone"
+                  type="text"
+                  name="emergency_contact_phone"
+                  placeholder="08212345678"
+                  required
+                />
+              </Field>
+
+
+            </FieldGroup>
+
+          </FieldSet>
 
 
           <Field>

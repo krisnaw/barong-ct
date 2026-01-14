@@ -1,40 +1,63 @@
-export default function EventPage() {
-  return (
-    <div className="max-w-2xl mx-auto my-20">
-
-      <div>
-        <ul role="list" className="space-y-6">
-          {events.map(elem => (
-            <li key={elem.id}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img className="rounded-lg" src="https://www.mainsepeda.com/uploads/event/30/FeaturedImage-1764067192.jpg" alt=""/>
-              <div>
-                <a href={`/event/${elem.id}`}>
-                  <span className="absolute inset-0" />
-                  <h2 className="text-lg font-semibold">{elem.title}</h2>
-                </a>
-
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-
-    </div>
-  )
-}
+import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import Link from "next/link";
 
 const events = [
   {
-    id: 1,
-    title: 'Barong X Anniversary',
-    invitation_only: true,
-    feature_image: "https://www.mainsepeda.com/uploads/event/30/FeaturedImage-1764067192.jpg"
+    id: "1",
+    name: "Event 1",
+    description: "Description 1",
+    date: "2024-01-01",
+    location: "Location 1",
   },
   {
-    id: 2,
-    title: "Barong Melali 2026",
-    invitation_only: false,
-  }
-]
+    id: "2",
+    name: "Event 2",
+    description: "Description 2",
+    date: "2024-01-02",
+    location: "Location 2",
+  },
+];
+
+export default function EventsPage() {
+  return (
+    <div>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold">Events</h1>
+      </div>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Name</TableHead>
+            <TableHead>Date</TableHead>
+            <TableHead>Location</TableHead>
+            <TableHead>Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {events.map((event) => (
+            <TableRow key={event.id}>
+              <TableCell>{event.name}</TableCell>
+              <TableCell>{event.date}</TableCell>
+              <TableCell>{event.location}</TableCell>
+              <TableCell>
+                <Link href={`/event/${event.id}`}>
+                  <Button variant="outline" size="sm" className="mr-2">
+                    View
+                  </Button>
+                </Link>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  );
+}
