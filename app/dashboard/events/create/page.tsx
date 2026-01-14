@@ -2,7 +2,7 @@ import {CreateEventForm} from "@/components/events/create-event-form";
 
 export default async function Page() {
   return (
-    <div>
+    <div className="max-w-xl">
       <CreateEventForm />
     </div>
   )

@@ -6,6 +6,12 @@ export const EventSchema = pgTable("event", {
   name: text("name").notNull(),
   description: text("description").notNull(),
   feature_image: text("feature_image"),
+
+  startDate: timestamp("created_at").defaultNow().notNull(),
+
+  locationName: text("location_name"),
+  locationLink: text("location_link"), // Link to google maps
+
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()

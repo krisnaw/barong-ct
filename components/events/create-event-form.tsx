@@ -9,6 +9,7 @@ import {Spinner} from "@/components/ui/spinner";
 import {Textarea} from "@/components/ui/textarea";
 import {CreateEventAction} from "@/app/actions/event/event.action";
 import {toast} from "sonner";
+import {CustomDatePicker} from "@/components/ui/custom-date-picker";
 
 export function CreateEventForm() {
   const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(async (prevState: ActionResponse, formData: FormData) => {
@@ -46,6 +47,50 @@ export function CreateEventForm() {
             <FieldLabel htmlFor="description">Descriptions</FieldLabel>
             <Textarea name="description" id="description" required placeholder="Type your description here." />
           </Field>
+
+
+          <div className="flex gap-4">
+            <Field>
+              <FieldLabel htmlFor="date">Date</FieldLabel>
+              <CustomDatePicker />
+            </Field>
+
+            <Field>
+              <FieldLabel htmlFor="time">Time</FieldLabel>
+              <Input
+                type="time"
+                id="time"
+                step="1"
+                defaultValue="10:30:00"
+                className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+              />
+            </Field>
+
+          </div>
+
+          <Field>
+            <FieldLabel htmlFor="location">Meeting Location</FieldLabel>
+            <Input
+              id="location"
+              type="text"
+              name="location"
+              placeholder="Lumintang Park"
+              required
+            />
+          </Field>
+
+          <Field>
+            <FieldLabel htmlFor="maps">Google Maps link for Direction</FieldLabel>
+            <Input
+              id="maps"
+              type="url"
+              name="maps"
+              placeholder="https://share.google/jkQd7JmZJg808xIg4"
+              required
+            />
+          </Field>
+
+
 
           <Field>
             <Button type="submit" disabled={isPending}>

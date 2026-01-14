@@ -15,6 +15,13 @@
       "when": 1768354950002,
       "tag": "0001_fancy_black_queen",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1768360194000,
+      "tag": "0002_perpetual_sentry",
+      "breakpoints": true
     }
   ]
 }
