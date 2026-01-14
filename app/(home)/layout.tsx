@@ -16,7 +16,7 @@ export default async function HomeLayout({
   return (
     <div className="min-h-screen flex flex-col">
       <Header user={session?.user ? session.user : undefined} />
-      <div className="flex-grow">
+      <div className="flex-grow py-12">
         {children}
       </div>
       <Footer />
