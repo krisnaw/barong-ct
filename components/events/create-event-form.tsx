@@ -7,21 +7,33 @@ import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {Spinner} from "@/components/ui/spinner";
 import {Textarea} from "@/components/ui/textarea";
+import {CustomDatePicker} from "@/components/ui/custom-date-picker";
 import {CreateEventAction} from "@/app/actions/event/event.action";
 import {toast} from "sonner";
-import {CustomDatePicker} from "@/components/ui/custom-date-picker";
+
+function combineDateTime(date: string, time: string) {
+  return new Date(`${date}T${time}:00`)
+}
+
 
 export function CreateEventForm() {
   const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(async (prevState: ActionResponse, formData: FormData) => {
 
+    const startDate = new Date();
+
     const payload = {
       name: formData.get("name") as string,
       description: formData.get("description") as string,
+      startDate: startDate,
+      location: formData.get("location") as string,
+      map: formData.get("map") as string,
     }
+
+    console.log(payload)
 
     const res = await CreateEventAction(payload)
 
-    toast.success(res.message)
+    toast.info(res.message)
 
     return res
   }, initialState)
@@ -80,17 +92,15 @@ export function CreateEventForm() {
           </Field>
 
           <Field>
-            <FieldLabel htmlFor="maps">Google Maps link for Direction</FieldLabel>
+            <FieldLabel htmlFor="map">Google Maps link for Direction</FieldLabel>
             <Input
-              id="maps"
+              id="map"
               type="url"
-              name="maps"
+              name="map"
               placeholder="https://share.google/jkQd7JmZJg808xIg4"
               required
             />
           </Field>
-
-
 
           <Field>
             <Button type="submit" disabled={isPending}>
