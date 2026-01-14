@@ -3,23 +3,6 @@ import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/
 import Link from "next/link";
 import {getEvents} from "@/db/query/event-query";
 
-const events = [
-  {
-    id: "1",
-    name: "Event 1",
-    description: "Description 1",
-    date: "2024-01-01",
-    location: "Location 1",
-  },
-  {
-    id: "2",
-    name: "Event 2",
-    description: "Description 2",
-    date: "2024-01-02",
-    location: "Location 2",
-  },
-];
-
 export default async function EventsPage() {
 
   const events = await getEvents()
