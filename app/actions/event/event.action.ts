@@ -5,6 +5,7 @@ import {z} from "zod";
 import {db} from "@/db/db";
 import {redirect} from "next/navigation";
 import {eq} from "drizzle-orm";
+import {revalidatePath} from "next/cache";
 
 export async function CreateEventAction(payload: Partial<EventType>) {
 
@@ -42,7 +43,7 @@ export async function CreateEventAction(payload: Partial<EventType>) {
       fields: validate.data,
     }
   }
-  
+
   return {
     success: true,
     message: 'Success, event was created.'
@@ -51,10 +52,9 @@ export async function CreateEventAction(payload: Partial<EventType>) {
 
 export async function UpdateEventAction(payload: Partial<EventType>) {
   try {
-    await db.update(EventSchema).set({
-      name: payload.name,
-      description: payload.description,
-    })
+    await db.update(EventSchema)
+      .set(payload)
+      .where(eq(EventSchema.id, Number(payload.id)))
   } catch (error) {
     if (error instanceof Error) {
       console.log(error.message)
@@ -68,6 +68,8 @@ export async function UpdateEventAction(payload: Partial<EventType>) {
       message: "Failed to update event",
     }
   }
+
+  revalidatePath('/')
 
   return {
     success: true,

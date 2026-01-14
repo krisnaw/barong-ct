@@ -7,12 +7,30 @@ import {Textarea} from "@/components/ui/textarea";
 import {CustomDatePicker} from "@/components/ui/custom-date-picker";
 import {EventType} from "@/db/schema";
 import {useActionState} from "react";
-import {initialState} from "@/types/types";
+import {ActionResponse, initialState} from "@/types/types";
+import {Spinner} from "@/components/ui/spinner";
+import {UpdateEventAction} from "@/app/actions/event/event.action";
+import {toast} from "sonner";
 
 export function EditEventForm({event} : {event: EventType}) {
-  // No wiring up logic as requested, just the UI structure
+  console.log(event);
+  const eventDate = new Date(event.startDate);
+  const eventTime = eventDate.toTimeString().split(' ')[0]; // Format to HH:mm:ss
 
-  const [state, formAction, isPending] = useActionState(async () => {
+  const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(async (prevState: ActionResponse, formData: FormData) => {
+
+    const payload = {
+      id: event.id,
+      name: formData.get("name") as string,
+      description: formData.get("description") as string,
+      locationName: formData.get("locationName") as string,
+      locationLink: formData.get("locationLink") as string,
+    }
+
+    const res = await UpdateEventAction(payload)
+
+    toast.info(res.message)
+
     return {
       success: false,
       message: "",
@@ -44,7 +62,7 @@ export function EditEventForm({event} : {event: EventType}) {
               id="description"
               required
               placeholder="Type your description here."
-              defaultValue="This is an existing event description that can be edited."
+              defaultValue={event.description}
             />
           </Field>
 
@@ -52,8 +70,7 @@ export function EditEventForm({event} : {event: EventType}) {
           <div className="flex gap-4">
             <Field>
               <FieldLabel htmlFor="date">Date</FieldLabel>
-              {/* CustomDatePicker would need a value prop for editing */}
-              <CustomDatePicker />
+              <CustomDatePicker value={eventDate} />
             </Field>
 
             <Field>
@@ -62,7 +79,7 @@ export function EditEventForm({event} : {event: EventType}) {
                 type="time"
                 id="time"
                 step="1"
-                defaultValue="14:00:00" // Example existing time
+                defaultValue={eventTime}
                 className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
               />
             </Field>
@@ -70,31 +87,30 @@ export function EditEventForm({event} : {event: EventType}) {
           </div>
 
           <Field>
-            <FieldLabel htmlFor="location">Meeting Location</FieldLabel>
+            <FieldLabel htmlFor="locationName">Meeting Location</FieldLabel>
             <Input
-              id="location"
+              id="locationName"
               type="text"
-              name="location"
+              name="locationName"
               placeholder="Lumintang Park"
-              defaultValue="Existing Meeting Location"
-              required
+              defaultValue={event.locationName ?? ""}
             />
           </Field>
 
           <Field>
-            <FieldLabel htmlFor="map">Google Maps link for Direction</FieldLabel>
+            <FieldLabel htmlFor="locationLink">Google Maps link for Direction</FieldLabel>
             <Input
-              id="map"
+              id="locationLink"
               type="url"
-              name="map"
+              name="locationLink"
               placeholder="https://share.google/jkQd7JmZJg808xIg4"
-              defaultValue="https://maps.google.com/?q=Existing+Location"
-              required
+              defaultValue={event.locationLink ?? ""}
             />
           </Field>
 
           <Field>
-            <Button type="submit">
+            <Button type="submit" disabled={isPending}>
+              {isPending ? <Spinner /> : null}
               Save Changes
             </Button>
           </Field>
@@ -105,3 +121,4 @@ export function EditEventForm({event} : {event: EventType}) {
     </div>
   )
 }
+

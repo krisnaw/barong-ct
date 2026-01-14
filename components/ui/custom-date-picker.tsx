@@ -7,13 +7,17 @@ import {Button} from "@/components/ui/button"
 import {Calendar} from "@/components/ui/calendar"
 import {Popover, PopoverContent, PopoverTrigger,} from "@/components/ui/popover"
 
-export function CustomDatePicker() {
+interface CustomDatePickerProps {
+  value?: Date;
+}
+
+export function CustomDatePicker({ value = new Date() }: CustomDatePickerProps) {
   const [open, setOpen] = React.useState(false)
-  const [date, setDate] = React.useState<Date | undefined>(undefined)
+  const [date, setDate] = React.useState<Date>(value)
 
   return (
     <>
-      <input className="hidden" name="date" id="date" type="text" defaultValue={new Date().toLocaleDateString()} value={date?.toLocaleDateString()}  />
+      <input className="hidden" name="date" id="date" type="text" defaultValue={date.toLocaleDateString()}  />
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
@@ -31,6 +35,7 @@ export function CustomDatePicker() {
             selected={date}
             captionLayout="dropdown"
             onSelect={(date) => {
+              if (!date) return
               setDate(date)
               setOpen(false)
             }}

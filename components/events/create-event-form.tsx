@@ -70,6 +70,7 @@ export function CreateEventForm() {
             <Field>
               <FieldLabel htmlFor="time">Time</FieldLabel>
               <Input
+                required
                 type="time"
                 id="time"
                 step="1"
@@ -87,7 +88,6 @@ export function CreateEventForm() {
               type="text"
               name="location"
               placeholder="Lumintang Park"
-              required
             />
           </Field>
 
@@ -98,7 +98,6 @@ export function CreateEventForm() {
               type="url"
               name="map"
               placeholder="https://share.google/jkQd7JmZJg808xIg4"
-              required
             />
           </Field>
 
