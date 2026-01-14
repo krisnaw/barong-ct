@@ -4,18 +4,15 @@ import {ActionResponse} from "@/types/types";
 import {auth} from "@/lib/auth";
 import {headers} from "next/headers";
 import {revalidatePath} from "next/cache";
+import {User} from "@/types/auth-types";
 
-type ProfileData = { full_name: string }
-
-export async function UpdateProfileAction(payload: ProfileData) : Promise<ActionResponse> {
-
-  console.log(payload);
-
+export async function UpdateProfileAction(payload: Partial<User>) : Promise<ActionResponse> {
   try {
     await auth.api.updateUser({
       headers: await headers(),
       body: {
-        name: payload.full_name,
+        name: payload.name,
+        image: payload.image,
       }
     })
 

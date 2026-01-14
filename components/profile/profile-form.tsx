@@ -12,7 +12,7 @@ import {
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {Spinner} from "@/components/ui/spinner";
-import {useActionState} from "react";
+import {useActionState, useState} from "react";
 import {ActionResponse, initialState} from "@/types/types";
 import {UpdateProfileAction} from "@/app/actions/profile/profile.action";
 import {User} from "better-auth";
@@ -20,17 +20,17 @@ import {toast} from "sonner";
 import {UploadButton} from "@/utils/uploadthing";
 
 export function ProfileForm({user}: {user: User}) {
+  const [profileImage, setProfileImage] = useState<string | null>(user.image ?? null);
   const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(async (prevState: ActionResponse, formData: FormData) => {
 
     const payload = {
-      full_name: formData.get("full_name") as string,
+      name: formData.get("full_name") as string,
+      image: profileImage ?? null,
       // phone : formData.get("phone") as string,
       // date_of_birth: '',
       // emergency_contact_name: formData.get("emergency_contact_name") as string,
       // emergency_contact_number: formData.get("emergency_contact_number") as string,
     }
-
-    console.log(payload);
 
     const res = await UpdateProfileAction(payload)
 
@@ -61,23 +61,34 @@ export function ProfileForm({user}: {user: User}) {
                 <FieldLabel htmlFor="full_name">Profile picture</FieldLabel>
 
                 <div className="col-span-full flex items-center gap-x-8">
-                  <img
-                    alt=""
-                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                    className="size-24 flex-none rounded-lg bg-gray-800 object-cover outline -outline-offset-1 outline-white/10"
-                  />
+                  {profileImage ? (
+                    <>
+                      <img
+                        alt=""
+                        src={profileImage}
+                        className="size-24 flex-none rounded-lg bg-gray-800 object-cover outline -outline-offset-1 outline-white/10"
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <img
+                        alt=""
+                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                        className="size-24 flex-none rounded-lg bg-gray-800 object-cover outline -outline-offset-1 outline-white/10"
+                      />
+                    </>
+                  )}
+
                   <div>
 
                     <UploadButton
                       endpoint="imageUploader"
                       onClientUploadComplete={(res) => {
-                        // Do something with the response
-                        console.log("Files: ", res);
-                        alert("Upload Completed");
+                        setProfileImage(res[0].appUrl);
                       }}
                       onUploadError={(error: Error) => {
                         // Do something with the error.
-                        alert(`ERROR! ${error.message}`);
+                        toast.error(`ERROR! ${error.message}`);
                       }}
                     />
                   </div>
@@ -107,7 +118,6 @@ export function ProfileForm({user}: {user: User}) {
                     type="text"
                     name="phone"
                     placeholder="08212345678"
-                    required
                   />
                 </Field>
               </FieldGroup>
@@ -141,7 +151,7 @@ export function ProfileForm({user}: {user: User}) {
                   type="text"
                   name="emergency_contact_name"
                   placeholder="Mira Tanaka"
-                  required
+
                 />
               </Field>
 
@@ -152,7 +162,7 @@ export function ProfileForm({user}: {user: User}) {
                   type="text"
                   name="emergency_contact_phone"
                   placeholder="08212345678"
-                  required
+
                 />
               </Field>
 
@@ -162,7 +172,7 @@ export function ProfileForm({user}: {user: User}) {
           </FieldSet>
 
           <FieldSeparator />
-          
+
           <FieldSet>
 
             <FieldLegend>Social Media</FieldLegend>
@@ -179,7 +189,6 @@ export function ProfileForm({user}: {user: User}) {
                   type="text"
                   name="phone"
                   placeholder="08212345678"
-                  required
                 />
               </Field>
             </FieldGroup>
@@ -192,7 +201,7 @@ export function ProfileForm({user}: {user: User}) {
                   type="text"
                   name="strava"
                   placeholder="08212345678"
-                  required
+
                 />
               </Field>
             </FieldGroup>
