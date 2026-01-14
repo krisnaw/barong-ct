@@ -1,6 +1,7 @@
 import {Button} from "@/components/ui/button";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table";
 import Link from "next/link";
+import {getEvents} from "@/db/query/event-query";
 
 const events = [
   {
@@ -19,7 +20,10 @@ const events = [
   },
 ];
 
-export default function EventsPage() {
+export default async function EventsPage() {
+
+  const events = await getEvents()
+
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
@@ -41,8 +45,8 @@ export default function EventsPage() {
           {events.map((event) => (
             <TableRow key={event.id}>
               <TableCell>{event.name}</TableCell>
-              <TableCell>{event.date}</TableCell>
-              <TableCell>{event.location}</TableCell>
+              <TableCell>{event.name}</TableCell>
+              <TableCell>{event.name}</TableCell>
               <TableCell>
                 <Link href={`/dashboard/events/${event.id}`}>
                   <Button variant="outline" size="sm" className="mr-2">
