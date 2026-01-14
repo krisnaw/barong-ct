@@ -17,6 +17,7 @@ import {ActionResponse, initialState} from "@/types/types";
 import {UpdateProfileAction} from "@/app/actions/profile/profile.action";
 import {User} from "better-auth";
 import {toast} from "sonner";
+import {UploadButton} from "@/utils/uploadthing";
 
 export function ProfileForm({user}: {user: User}) {
   const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(async (prevState: ActionResponse, formData: FormData) => {
@@ -55,6 +56,37 @@ export function ProfileForm({user}: {user: User}) {
             </FieldDescription>
 
             <FieldGroup>
+
+              <Field>
+                <FieldLabel htmlFor="full_name">Profile picture</FieldLabel>
+
+                <div className="col-span-full flex items-center gap-x-8">
+                  <img
+                    alt=""
+                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                    className="size-24 flex-none rounded-lg bg-gray-800 object-cover outline -outline-offset-1 outline-white/10"
+                  />
+                  <div>
+
+                    <UploadButton
+                      endpoint="imageUploader"
+                      onClientUploadComplete={(res) => {
+                        // Do something with the response
+                        console.log("Files: ", res);
+                        alert("Upload Completed");
+                      }}
+                      onUploadError={(error: Error) => {
+                        // Do something with the error.
+                        alert(`ERROR! ${error.message}`);
+                      }}
+                    />
+                  </div>
+                </div>
+
+
+              </Field>
+
+
               <Field>
                 <FieldLabel htmlFor="full_name">Full name</FieldLabel>
                 <Input
@@ -67,6 +99,19 @@ export function ProfileForm({user}: {user: User}) {
                 />
               </Field>
 
+              <FieldGroup>
+                <Field>
+                  <FieldLabel htmlFor="email">Phone</FieldLabel>
+                  <Input
+                    id="phone"
+                    type="text"
+                    name="phone"
+                    placeholder="08212345678"
+                    required
+                  />
+                </Field>
+              </FieldGroup>
+
               {/*<Field>*/}
               {/*  <FieldLabel htmlFor="full_name">Date of birth</FieldLabel>*/}
               {/*  <CustomDatePicker />*/}
@@ -77,65 +122,6 @@ export function ProfileForm({user}: {user: User}) {
 
           </FieldSet>
 
-
-          <FieldSeparator />
-
-          <FieldSet>
-            <FieldLegend>Social Media</FieldLegend>
-            <FieldDescription>
-              All transactions are secure and encrypted
-            </FieldDescription>
-
-            <FieldGroup>
-              <Field>
-                <FieldLabel htmlFor="email">Instagram</FieldLabel>
-                <Input
-                  id="phone"
-                  type="text"
-                  name="phone"
-                  placeholder="08212345678"
-                  required
-                />
-              </Field>
-            </FieldGroup>
-
-            <FieldGroup>
-              <Field>
-                <FieldLabel htmlFor="strava">Strava</FieldLabel>
-                <Input
-                  id="strava"
-                  type="text"
-                  name="strava"
-                  placeholder="08212345678"
-                  required
-                />
-              </Field>
-            </FieldGroup>
-          </FieldSet>
-
-          <FieldSeparator />
-
-          <FieldSet>
-            <FieldLegend>Contact</FieldLegend>
-            <FieldDescription>
-              All transactions are secure and encrypted
-            </FieldDescription>
-
-
-            <FieldGroup>
-              <Field>
-                <FieldLabel htmlFor="email">Phone</FieldLabel>
-                <Input
-                  id="phone"
-                  type="text"
-                  name="phone"
-                  placeholder="08212345678"
-                  required
-                />
-              </Field>
-            </FieldGroup>
-
-          </FieldSet>
 
           <FieldSeparator />
 
@@ -175,6 +161,42 @@ export function ProfileForm({user}: {user: User}) {
 
           </FieldSet>
 
+          <FieldSeparator />
+          
+          <FieldSet>
+
+            <FieldLegend>Social Media</FieldLegend>
+
+            <FieldDescription>
+              All transactions are secure and encrypted
+            </FieldDescription>
+
+            <FieldGroup>
+              <Field>
+                <FieldLabel htmlFor="email">Instagram</FieldLabel>
+                <Input
+                  id="phone"
+                  type="text"
+                  name="phone"
+                  placeholder="08212345678"
+                  required
+                />
+              </Field>
+            </FieldGroup>
+
+            <FieldGroup>
+              <Field>
+                <FieldLabel htmlFor="strava">Strava</FieldLabel>
+                <Input
+                  id="strava"
+                  type="text"
+                  name="strava"
+                  placeholder="08212345678"
+                  required
+                />
+              </Field>
+            </FieldGroup>
+          </FieldSet>
 
           <Field>
             <Button type="submit" disabled={isPending}>
