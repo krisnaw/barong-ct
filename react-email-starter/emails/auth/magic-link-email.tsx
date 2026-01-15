@@ -1,12 +1,22 @@
 import * as React from 'react';
-import {Body, Button, Container, Head, Html, Section, Tailwind, Text,} from '@react-email/components';
+import {Body, Button, Container, Head, Html, pixelBasedPreset, Section, Tailwind, Text,} from '@react-email/components';
 
 const MagicLinkEmail = ({email, url} : { email: string, url: string}) => {
 
-
   return (
     <Html lang="en" dir="ltr">
-      <Tailwind>
+      <Tailwind
+        config={{
+          presets: [pixelBasedPreset],
+          theme: {
+            extend: {
+              colors: {
+                brand: "#007291",
+              },
+            },
+          },
+        }}
+      >
         <Head />
         <Body className="bg-gray-100 font-sans py-[40px]">
           <Container className="bg-white rounded-[8px] shadow-lg max-w-[600px] mx-auto p-[40px]">

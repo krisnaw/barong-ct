@@ -6,6 +6,11 @@ import {headers} from "next/headers";
 import {redirect} from "next/navigation";
 import {db} from "@/db/db";
 import {participant} from "@/db/schema";
+import {Resend} from "resend";
+import CyclingEventConfirmationEmail from "@/react-email-starter/emails/event-registration-email";
+import {getEventById} from "@/db/query/event-query";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function joinEventAction(payload: {  eventId: string }) : Promise<ActionResponse> {
 
@@ -17,11 +22,35 @@ export async function joinEventAction(payload: {  eventId: string }) : Promise<A
     redirect("/auth/signup")
   }
 
+  const event = await getEventById(Number(payload.eventId));
+
+  if (!event) {
+    redirect("/auth/signup")
+  }
+
   try {
     await db.insert(participant).values({
       userId: session.user.id,
       eventId: Number(payload.eventId),
     }).onConflictDoNothing()
+
+    const param = {
+      name: session.user.name,
+      eventName : event.name,
+      eventDate : event.startDate.toDateString(),
+      eventTime : event.startDate.toTimeString(),
+      meetingPoint : event.locationName ?? "",
+    }
+
+    await resend.emails.send({
+      from: 'Barong Cycling Team <info@barongmelali.com>',
+      to: [session.user.email],
+      subject: 'Thanks for joining the event',
+      react: CyclingEventConfirmationEmail(param)
+    })
+
+
+
   } catch (error) {
     console.log(error);
   }
