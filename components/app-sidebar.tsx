@@ -23,15 +23,15 @@ const data = {
   },
   navMain: [
     {
-      title: "Users",
-      url: "/dashboard/users",
-      icon: Users,
-      items: [],
-    },
-    {
       title: "Events",
       url: "/dashboard/events",
       icon: CalendarDays,
+      items: [],
+    },
+    {
+      title: "Users",
+      url: "/dashboard/users",
+      icon: Users,
       items: [],
     },
   ],

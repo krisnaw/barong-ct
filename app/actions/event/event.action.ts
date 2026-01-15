@@ -9,15 +9,9 @@ import {revalidatePath} from "next/cache";
 
 export async function CreateEventAction(payload: Partial<EventType & { eventDate: string, eventTime: string }>) {
 
-  console.log(payload);
   const validate = EventInsertSchema.safeParse(payload);
-  // Combine date and time
   const dateTimeString = `${payload.eventDate}T${payload.eventTime}`; // "2025-01-31T14:30:00"
-
-  // Create Date object - this interprets as LOCAL server time
   const localDate = new Date(dateTimeString);
-
-  console.log(localDate);
 
   if (!validate.success) {
     console.log(validate.error);
@@ -61,7 +55,13 @@ export async function CreateEventAction(payload: Partial<EventType & { eventDate
   }
 }
 
-export async function UpdateEventAction(payload: Partial<EventType>) {
+export async function UpdateEventAction(payload: Partial<EventType & { eventDate: string, eventTime: string }>) {
+
+  const dateTimeString = `${payload.eventDate}T${payload.eventTime}`; // "2025-01-31T14:30:00"
+  payload.startDate = new Date(dateTimeString);
+
+  console.log(payload)
+
   try {
     await db.update(EventSchema)
       .set(payload)

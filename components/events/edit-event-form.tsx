@@ -12,9 +12,9 @@ import {toast} from "sonner";
 import {UploadButton} from "@/utils/uploadthing";
 import {EventType} from "@/db/schema";
 import {UpdateEventAction} from "@/app/actions/event/event.action";
+import {format} from "date-fns";
 
 export function EditEventForm({event} : {event: EventType}) {
-  console.log(event);
   const eventDate = new Date(event.startDate);
   const eventTime = eventDate.toTimeString().split(' ')[0]; // Format to HH:mm:ss
 
@@ -22,10 +22,16 @@ export function EditEventForm({event} : {event: EventType}) {
 
   const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(async (prevState: ActionResponse, formData: FormData) => {
 
+    const inputDate = formData.get('date') as string
+    const inputTime = formData.get('time') as string
+
     const payload = {
       id: event.id,
       name: formData.get("name") as string,
+      feature_image: image,
       description: formData.get("description") as string,
+      eventDate:  format(inputDate, 'yyyy-MM-dd'),
+      eventTime: inputTime,
       locationName: formData.get("locationName") as string,
       locationLink: formData.get("locationLink") as string,
     }
@@ -86,6 +92,19 @@ export function EditEventForm({event} : {event: EventType}) {
           </Field>
 
           <Field>
+            <FieldLabel htmlFor="name">Name</FieldLabel>
+            <Input
+              id="name"
+              type="text"
+              name="name"
+              placeholder="Barong X Anniversary"
+              required
+              defaultValue={event.name}
+            />
+          </Field>
+
+
+          <Field>
             <FieldLabel htmlFor="description">Descriptions</FieldLabel>
             <Textarea
               name="description"
@@ -95,7 +114,6 @@ export function EditEventForm({event} : {event: EventType}) {
               defaultValue={event.description}
             />
           </Field>
-
 
           <div className="flex gap-4">
             <Field>
