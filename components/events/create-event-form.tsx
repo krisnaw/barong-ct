@@ -25,13 +25,12 @@ export function CreateEventForm() {
 
     const payload = {
       name: formData.get("name") as string,
+      feature_image: image,
       description: formData.get("description") as string,
       startDate: startDate,
-      location: formData.get("location") as string,
-      map: formData.get("map") as string,
+      locationName: formData.get("location") as string,
+      locationLink: formData.get("map") as string,
     }
-
-    console.log(payload)
 
     const res = await CreateEventAction(payload)
 

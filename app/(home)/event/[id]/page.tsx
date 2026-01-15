@@ -19,7 +19,6 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
       <div className="sm:flex gap-8">
 
         <div className="mr-4 shrink-0 w-sm">
-
           <img
             className="aspect-square w-full rounded-2xl  object-cover"
             src={event.feature_image ?? emptyBanner}

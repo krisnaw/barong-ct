@@ -12,7 +12,6 @@ export async function CreateEventAction(payload: Partial<EventType>) {
   const validate = EventInsertSchema.safeParse(payload);
 
   if (!validate.success) {
-    console.error(validate.error);
     return {
       success: false,
       message: "Invalid data",
@@ -24,8 +23,11 @@ export async function CreateEventAction(payload: Partial<EventType>) {
   try {
     await db.insert(EventSchema).values({
       name: validate.data.name,
+      feature_image: validate.data.feature_image,
       description: validate.data.description,
-      startDate: validate.data.startDate
+      startDate: validate.data.startDate,
+      locationLink: validate.data.locationLink,
+      locationName: validate.data.locationName
     });
 
   } catch (error) {
