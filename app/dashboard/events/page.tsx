@@ -20,7 +20,6 @@ export default async function EventsPage() {
 
   return (
     <div>
-      event page
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Events</h1>
 

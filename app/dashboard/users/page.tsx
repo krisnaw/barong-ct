@@ -1,4 +1,6 @@
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table"
+import {db} from "@/db/db";
+import {user} from "@/db/schema";
 
 type User = {
   id: string;
@@ -16,7 +18,7 @@ const dummyUsers: User[] = [
 ];
 
 export default async function UsersPage() {
-
+  const users =  await db.select().from(user).limit(10)
   return (
     <div className="flex flex-col gap-6">
       <h1 className="text-2xl font-bold">Users</h1>
@@ -25,19 +27,13 @@ export default async function UsersPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>ID</TableHead>
               <TableHead>Name</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Role</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {dummyUsers.map((user) => (
+            {users.map((user) => (
               <TableRow key={user.id}>
-                <TableCell className="font-medium">{user.id}</TableCell>
-                <TableCell>{user.name}</TableCell>
-                <TableCell>{user.email}</TableCell>
-                <TableCell>{user.role}</TableCell>
+                <TableCell className="font-medium">{user.name}</TableCell>
               </TableRow>
             ))}
           </TableBody>
