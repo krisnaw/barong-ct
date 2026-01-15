@@ -1,22 +1,6 @@
 import {getParticipantByEvent} from "@/db/query/participant-query";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 
-type User = {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-};
-
-const dummyUsers: User[] = [
-  { id: "1", name: "Alice Smith", email: "alice@example.com", role: "Admin" },
-  { id: "2", name: "Bob Johnson", email: "bob@example.com", role: "Member" },
-  { id: "3", name: "Charlie Brown", email: "charlie@example.com", role: "Member" },
-  { id: "4", name: "Diana Prince", email: "diana@example.com", role: "Editor" },
-  { id: "5", name: "Eve Adams", email: "eve@example.com", role: "Member" },
-];
-
-
 export default async function Page({params}: { params: Promise<{ id: number }> }) {
   const {id} = await params;
   const participants = await getParticipantByEvent(id)
