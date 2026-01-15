@@ -4,11 +4,10 @@ import {auth} from "@/lib/auth";
 import {headers} from "next/headers";
 import {ActionResponse} from "@/types/types";
 
-export async function SignUpAction() : Promise<ActionResponse> {
-
+export async function SignUpAction(email: string) : Promise<ActionResponse> {
   const data = await auth.api.signInMagicLink({
     body: {
-      email: "krisna.w2010@gmail.com", // required
+      email: email.trim(), // required
       callbackURL: "/profile",
       newUserCallbackURL: "/profile",
       errorCallbackURL: "/auth/error",
@@ -17,9 +16,8 @@ export async function SignUpAction() : Promise<ActionResponse> {
     headers: await headers(),
   });
 
-  console.log(data);
   return {
     success: true,
-    message: "Sign up successfully",
+    message: "Success, please check your email address.",
   }
 }
