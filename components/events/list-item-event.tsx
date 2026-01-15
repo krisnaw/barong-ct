@@ -2,7 +2,7 @@ import {EventType} from "@/db/schema";
 import {MapPin} from "lucide-react";
 import {Button} from "@/components/ui/button";
 import Link from "next/link";
-import {ButtonRegisterEvent} from "@/components/events/button-register-event";
+import {ButtonJoinEvent} from "@/components/events/button-join-event";
 
 export function ListItemEvent({event} : {event: EventType}) {
   return (
@@ -32,7 +32,7 @@ export function ListItemEvent({event} : {event: EventType}) {
               View
             </Link>
           </Button>
-          <ButtonRegisterEvent eventId={event.id} />
+          <ButtonJoinEvent eventId={event.id} />
         </div>
       </div>
 
