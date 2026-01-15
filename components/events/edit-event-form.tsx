@@ -27,15 +27,13 @@ export function EditEventForm({event} : {event: EventType}) {
     const inputDate = formData.get('date') as string
     const inputTime = formData.get('time') as string
 
-
     const localDate = parse(
       `${inputDate} ${inputTime}`,
-      "yyyy-MM-dd HH:mm:ss",
+      "M/d/yyyy HH:mm:ss",
       new Date()
     )
 
     const utcDate = fromZonedTime(localDate, "Asia/Singapore")
-    console.log(utcDate)
 
     const payload = {
       id: event.id,
