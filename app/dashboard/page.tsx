@@ -1,8 +1,8 @@
-import {getEvents} from "@/db/query/event-query";
+import {db} from "@/db/db";
 
 export default async function Page() {
-  const events = await getEvents()
-  console.log(events)
+  const events = await db.query.EventSchema.findMany();
+  console.log(events);
   return (
     <>
       <div className="grid auto-rows-min gap-4 md:grid-cols-3">
