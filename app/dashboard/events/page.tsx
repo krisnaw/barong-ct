@@ -8,6 +8,16 @@ export default async function EventsPage() {
 
   const events = await getEvents()
 
+  if (events.length === 0) {
+    return (
+      <div>
+        <Link href="/dashboard/events/create">
+          <Button>Create Event</Button>
+        </Link>
+      </div>
+    )
+  }
+
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
