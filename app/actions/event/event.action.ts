@@ -6,6 +6,7 @@ import {db} from "@/db/db";
 import {redirect} from "next/navigation";
 import {eq} from "drizzle-orm";
 import {revalidatePath} from "next/cache";
+import {format} from "date-fns";
 
 export async function CreateEventAction(payload: Partial<EventType & { eventDate: string, eventTime: string }>) {
 
@@ -60,7 +61,10 @@ export async function UpdateEventAction(payload: Partial<EventType & { eventDate
   const dateTimeString = `${payload.eventDate}T${payload.eventTime}`; // "2025-01-31T14:30:00"
   payload.startDate = new Date(dateTimeString);
 
-  console.log(payload)
+  const eventDate = format(`${payload.eventDate}`, "yyyy-MM-dd");
+  const eventTime = payload.eventTime;
+
+  console.log(eventDate, eventTime);
 
   try {
     await db.update(EventSchema)
