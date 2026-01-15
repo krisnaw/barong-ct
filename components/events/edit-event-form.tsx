@@ -13,9 +13,11 @@ import {EventType} from "@/db/schema";
 import {UpdateEventAction} from "@/app/actions/event/event.action";
 import {format} from "date-fns";
 import {ContentEditor} from "@/components/events/content-editor";
+import {toZonedTime} from "date-fns-tz";
 
 export function EditEventForm({event} : {event: EventType}) {
   const eventDate = new Date(event.startDate);
+  const eventTime = toZonedTime(event.startDate, "Asia/Singapore")
   const [description, setDescription] = useState<string>(event.description);
 
   const [image, setImage] = useState<string | null>(event.feature_image ?? null);
@@ -128,7 +130,7 @@ export function EditEventForm({event} : {event: EventType}) {
                 id="time"
                 name="time"
                 step="1"
-                defaultValue={format(event.startDate, "HH:mm:ss")}
+                defaultValue={format(eventTime, "HH:mm:ss")}
                 className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
               />
             </Field>
