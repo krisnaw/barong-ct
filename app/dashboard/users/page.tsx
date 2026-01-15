@@ -1,11 +1,4 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table"
 
 type User = {
   id: string;
@@ -22,7 +15,8 @@ const dummyUsers: User[] = [
   { id: "5", name: "Eve Adams", email: "eve@example.com", role: "Member" },
 ];
 
-export default function UsersPage() {
+export default async function UsersPage() {
+
   return (
     <div className="flex flex-col gap-6">
       <h1 className="text-2xl font-bold">Users</h1>

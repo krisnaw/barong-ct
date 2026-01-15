@@ -1,7 +1,8 @@
 import {db} from "@/db/db";
+import {EventSchema} from "@/db/schema";
 
 export default async function Page() {
-  const events = await db.query.EventSchema.findMany();
+  const events = await db.select().from(EventSchema).limit(50)
   console.log(events);
   return (
     <>
