@@ -35,6 +35,7 @@ export function EditEventForm({event} : {event: EventType}) {
     )
 
     const utcDate = fromZonedTime(localDate, "Asia/Singapore")
+    console.log(utcDate)
 
     const payload = {
       id: event.id,
@@ -47,6 +48,8 @@ export function EditEventForm({event} : {event: EventType}) {
       locationName: formData.get("location") as string,
       locationLink: formData.get("map") as string,
     }
+
+    console.log(payload)
 
     const res = await UpdateEventAction(payload)
 
