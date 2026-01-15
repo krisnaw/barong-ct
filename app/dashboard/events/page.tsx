@@ -59,6 +59,10 @@ export default async function EventsPage() {
                     View
                   </Button>
                 </Link>
+
+
+
+
                 <Link href={`/dashboard/events/${event.id}/edit`}>
                   <Button variant="outline" size="sm">
                     Edit

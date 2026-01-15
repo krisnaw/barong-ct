@@ -32,8 +32,8 @@ export function EditEventForm({event} : {event: EventType}) {
       description: formData.get("description") as string,
       eventDate:  format(inputDate, 'yyyy-MM-dd'),
       eventTime: inputTime,
-      locationName: formData.get("locationName") as string,
-      locationLink: formData.get("locationLink") as string,
+      locationName: formData.get("location") as string,
+      locationLink: formData.get("map") as string,
     }
 
     const res = await UpdateEventAction(payload)
