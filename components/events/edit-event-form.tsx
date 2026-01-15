@@ -6,16 +6,17 @@ import {Field, FieldGroup, FieldLabel} from "@/components/ui/field";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {Spinner} from "@/components/ui/spinner";
-import {Textarea} from "@/components/ui/textarea";
 import {CustomDatePicker} from "@/components/ui/custom-date-picker";
 import {toast} from "sonner";
 import {UploadButton} from "@/utils/uploadthing";
 import {EventType} from "@/db/schema";
 import {UpdateEventAction} from "@/app/actions/event/event.action";
 import {format} from "date-fns";
+import {ContentEditor} from "@/components/events/content-editor";
 
 export function EditEventForm({event} : {event: EventType}) {
   const eventDate = new Date(event.startDate);
+  const [description, setDescription] = useState<string>(event.description);
   const eventTime = eventDate.toTimeString().split(' ')[0]; // Format to HH:mm:ss
 
   const [image, setImage] = useState<string | null>(event.feature_image ?? null);
@@ -29,7 +30,7 @@ export function EditEventForm({event} : {event: EventType}) {
       id: event.id,
       name: formData.get("name") as string,
       feature_image: image,
-      description: formData.get("description") as string,
+      description: description,
       eventDate:  format(inputDate, 'yyyy-MM-dd'),
       eventTime: inputTime,
       locationName: formData.get("location") as string,
@@ -106,12 +107,11 @@ export function EditEventForm({event} : {event: EventType}) {
 
           <Field>
             <FieldLabel htmlFor="description">Descriptions</FieldLabel>
-            <Textarea
-              name="description"
-              id="description"
-              required
-              placeholder="Type your description here."
-              defaultValue={event.description}
+            <ContentEditor
+              content={description}
+              onChange={(content: string) => setDescription(content)}
+              editable={!isPending}
+              placeholder="Enter description..."
             />
           </Field>
 

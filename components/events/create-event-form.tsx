@@ -12,9 +12,11 @@ import {toast} from "sonner";
 import {UploadButton} from "@/utils/uploadthing";
 import {CreateEventAction} from "@/app/actions/event/event.action";
 import {format} from 'date-fns';
+import {ContentEditor} from "@/components/events/content-editor";
 
 export function CreateEventForm() {
   const [image, setImage] = useState<string | null>(null);
+  const [description, setDescription] = useState<string>("")
   const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(async (prevState: ActionResponse, formData: FormData) => {
 
     const inputDate = formData.get('date') as string
@@ -23,14 +25,12 @@ export function CreateEventForm() {
     const payload = {
       name: formData.get("name") as string,
       feature_image: image,
-      description: formData.get("description") as string,
+      description: description,
       eventDate:  format(inputDate, 'yyyy-MM-dd'),
       eventTime: inputTime,
       locationName: formData.get("location") as string,
       locationLink: formData.get("map") as string,
     }
-
-    console.log(payload)
 
     const res = await CreateEventAction(payload)
 
@@ -98,6 +98,12 @@ export function CreateEventForm() {
 
           <Field>
             <FieldLabel htmlFor="description">Descriptions</FieldLabel>
+            <ContentEditor
+              content={description}
+              onChange={(content: string) => setDescription(content)}
+              editable={!isPending}
+              placeholder="Enter description..."
+            />
             <Textarea name="description" id="description" required placeholder="Type your description here." />
           </Field>
 
