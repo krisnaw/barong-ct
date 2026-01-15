@@ -10,13 +10,15 @@ import {Textarea} from "@/components/ui/textarea";
 import {CustomDatePicker} from "@/components/ui/custom-date-picker";
 import {toast} from "sonner";
 import {UploadButton} from "@/utils/uploadthing";
+import {EventType} from "@/db/schema";
+import {UpdateEventAction} from "@/app/actions/event/event.action";
 
 export function EditEventForm({event} : {event: EventType}) {
   console.log(event);
   const eventDate = new Date(event.startDate);
   const eventTime = eventDate.toTimeString().split(' ')[0]; // Format to HH:mm:ss
 
-  const [image, setImage] = useState<string | null>(event.featureImage ?? null);
+  const [image, setImage] = useState<string | null>(event.feature_image ?? null);
 
   const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(async (prevState: ActionResponse, formData: FormData) => {
 
@@ -98,7 +100,7 @@ export function EditEventForm({event} : {event: EventType}) {
           <div className="flex gap-4">
             <Field>
               <FieldLabel htmlFor="date">Date</FieldLabel>
-              <CustomDatePicker name="date" value={eventDate} />
+              <CustomDatePicker value={eventDate} />
             </Field>
 
             <Field>
