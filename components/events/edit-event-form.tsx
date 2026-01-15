@@ -1,21 +1,22 @@
 'use client'
 
+import {useActionState, useState} from "react";
+import {ActionResponse, initialState} from "@/types/types";
 import {Field, FieldGroup, FieldLabel} from "@/components/ui/field";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
+import {Spinner} from "@/components/ui/spinner";
 import {Textarea} from "@/components/ui/textarea";
 import {CustomDatePicker} from "@/components/ui/custom-date-picker";
-import {EventType} from "@/db/schema";
-import {useActionState} from "react";
-import {ActionResponse, initialState} from "@/types/types";
-import {Spinner} from "@/components/ui/spinner";
-import {UpdateEventAction} from "@/app/actions/event/event.action";
 import {toast} from "sonner";
+import {UploadButton} from "@/utils/uploadthing";
 
 export function EditEventForm({event} : {event: EventType}) {
   console.log(event);
   const eventDate = new Date(event.startDate);
   const eventTime = eventDate.toTimeString().split(' ')[0]; // Format to HH:mm:ss
+
+  const [image, setImage] = useState<string | null>(event.featureImage ?? null);
 
   const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(async (prevState: ActionResponse, formData: FormData) => {
 
@@ -44,15 +45,42 @@ export function EditEventForm({event} : {event: EventType}) {
         <FieldGroup>
 
           <Field>
-            <FieldLabel htmlFor="name">Name</FieldLabel>
-            <Input
-              id="name"
-              type="text"
-              name="name"
-              placeholder="Barong X Anniversary"
-              defaultValue={event.name}
-              required
-            />
+            <FieldLabel htmlFor="name">Banner image</FieldLabel>
+            <div className="col-span-full flex items-center gap-x-8">
+
+              <div>
+                {image ? (
+                  <>
+                    <img
+                      alt=""
+                      src={image}
+                      className="size-80 aspect-square flex-none rounded-lg  object-cover outline -outline-offset-1 outline-white/10"
+                    />
+                  </>
+                  ) : (
+                  <img
+
+                    className="size-80 aspect-square flex-none rounded-lg object-cover outline -outline-offset-1 outline-white/10"
+
+                    src="https://placeholdit.com/400x400/f3f4f6/9da8bf?text=Banner" alt=""/>
+                )}
+
+              </div>
+
+              <div>
+                <UploadButton
+                  endpoint="imageUploader"
+                  onClientUploadComplete={(res) => {
+                    setImage(res[0].appUrl);
+                  }}
+                  onUploadError={(error: Error) => {
+                    // Do something with the error.
+                    toast.error(`ERROR! ${error.message}`);
+                  }}
+                />
+              </div>
+
+            </div>
           </Field>
 
           <Field>
@@ -70,14 +98,16 @@ export function EditEventForm({event} : {event: EventType}) {
           <div className="flex gap-4">
             <Field>
               <FieldLabel htmlFor="date">Date</FieldLabel>
-              <CustomDatePicker value={eventDate} />
+              <CustomDatePicker name="date" value={eventDate} />
             </Field>
 
             <Field>
               <FieldLabel htmlFor="time">Time</FieldLabel>
               <Input
+                required
                 type="time"
                 id="time"
+                name="time"
                 step="1"
                 defaultValue={eventTime}
                 className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
@@ -91,7 +121,7 @@ export function EditEventForm({event} : {event: EventType}) {
             <Input
               id="locationName"
               type="text"
-              name="locationName"
+              name="location"
               placeholder="Lumintang Park"
               defaultValue={event.locationName ?? ""}
             />
@@ -102,7 +132,7 @@ export function EditEventForm({event} : {event: EventType}) {
             <Input
               id="locationLink"
               type="url"
-              name="locationLink"
+              name="map"
               placeholder="https://share.google/jkQd7JmZJg808xIg4"
               defaultValue={event.locationLink ?? ""}
             />
