@@ -16,3 +16,5 @@ export const userDetail = pgTable("user_detail", {
   emergency_contact_name: text("emergency_contact_name"),
   emergency_contact_number: text("emergency_contact_number"),
 });
+
+export type UserDetailType = typeof userDetail.$inferSelect

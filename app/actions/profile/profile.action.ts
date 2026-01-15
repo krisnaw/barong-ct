@@ -5,8 +5,10 @@ import {auth} from "@/lib/auth";
 import {headers} from "next/headers";
 import {revalidatePath} from "next/cache";
 import {User} from "@/types/auth-types";
+import {db} from "@/db/db";
+import {userDetail, UserDetailType} from "@/db/schema/user-detail-schema";
 
-export async function UpdateProfileAction(payload: Partial<User>) : Promise<ActionResponse> {
+export async function UpdateProfileAction(payload: Partial<User & UserDetailType>): Promise<ActionResponse> {
   try {
     await auth.api.updateUser({
       headers: await headers(),
@@ -15,6 +17,20 @@ export async function UpdateProfileAction(payload: Partial<User>) : Promise<Acti
         image: payload.image,
       }
     })
+
+    console.log(payload)
+
+    await db.insert(userDetail)
+      .values({
+        userId: String(payload.id),
+        instagram: payload.instagram,
+      })
+      .onConflictDoUpdate({
+        target: userDetail.userId,
+        set: {
+          instagram: payload.instagram,
+        }
+      })
 
     revalidatePath("/", "page")
 

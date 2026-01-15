@@ -24,12 +24,14 @@ export function ProfileForm({user}: {user: User}) {
   const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(async (prevState: ActionResponse, formData: FormData) => {
 
     const payload = {
+      id: user.id,
       name: formData.get("full_name") as string,
       image: profileImage ?? null,
-      // phone : formData.get("phone") as string,
-      // date_of_birth: '',
-      // emergency_contact_name: formData.get("emergency_contact_name") as string,
-      // emergency_contact_number: formData.get("emergency_contact_number") as string,
+      phone : formData.get("phone") as string,
+      date_of_birth: '',
+      emergency_contact_name: formData.get("emergency_contact_name") as string,
+      emergency_contact_number: formData.get("emergency_contact_number") as string,
+      instagram: formData.get("instagram") as string,
     }
 
     const res = await UpdateProfileAction(payload)
@@ -183,11 +185,11 @@ export function ProfileForm({user}: {user: User}) {
 
             <FieldGroup>
               <Field>
-                <FieldLabel htmlFor="email">Instagram</FieldLabel>
+                <FieldLabel htmlFor="instagram">Instagram</FieldLabel>
                 <Input
-                  id="phone"
+                  id="instagram"
                   type="text"
-                  name="phone"
+                  name="instagram"
                   placeholder="08212345678"
                 />
               </Field>
