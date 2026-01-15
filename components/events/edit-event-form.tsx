@@ -14,6 +14,7 @@ import {UpdateEventAction} from "@/app/actions/event/event.action";
 import {format, parse} from "date-fns";
 import {ContentEditor} from "@/components/events/content-editor";
 import {fromZonedTime, toZonedTime} from "date-fns-tz";
+import {eventDateFormat} from "@/types/date-helper";
 
 export function EditEventForm({event} : {event: EventType}) {
   const eventDate = new Date(event.startDate);
@@ -62,6 +63,11 @@ export function EditEventForm({event} : {event: EventType}) {
 
   return (
     <div className="flex flex-col gap-6">
+
+      <div>
+        {eventDateFormat(event.startDate)}
+      </div>
+
       <form action={formAction}>
         <FieldGroup>
 
