@@ -1,23 +1,7 @@
-import {getEvents} from "@/db/query/event-query";
-import Link from "next/link";
-import {Button} from "@/components/ui/button";
-
 export default async function EventsPage() {
 
-  const events = await getEvents()
 
-  if (events.length === 0) {
-    return (
-      <div>
-        <Button asChild>
-          <Link href="/dashboard/events/create">
-            Create Event
-          </Link>
-        </Button>
 
-      </div>
-    )
-  }
 
   return (
     <div>
