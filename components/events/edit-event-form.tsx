@@ -11,9 +11,9 @@ import {toast} from "sonner";
 import {UploadButton} from "@/utils/uploadthing";
 import {EventType} from "@/db/schema";
 import {UpdateEventAction} from "@/app/actions/event/event.action";
-import {format} from "date-fns";
+import {format, parse} from "date-fns";
 import {ContentEditor} from "@/components/events/content-editor";
-import {toZonedTime} from "date-fns-tz";
+import {fromZonedTime, toZonedTime} from "date-fns-tz";
 
 export function EditEventForm({event} : {event: EventType}) {
   const eventDate = new Date(event.startDate);
@@ -27,11 +27,21 @@ export function EditEventForm({event} : {event: EventType}) {
     const inputDate = formData.get('date') as string
     const inputTime = formData.get('time') as string
 
+
+    const localDate = parse(
+      `${inputDate} ${inputTime}`,
+      "yyyy-MM-dd HH:mm:ss",
+      new Date()
+    )
+
+    const utcDate = fromZonedTime(localDate, "Asia/Singapore")
+
     const payload = {
       id: event.id,
       name: formData.get("name") as string,
       feature_image: image,
       description: description,
+      startDate: utcDate,
       eventDate:  format(inputDate, 'yyyy-MM-dd'),
       eventTime: inputTime,
       locationName: formData.get("location") as string,

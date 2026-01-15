@@ -58,6 +58,7 @@ export async function CreateEventAction(payload: Partial<EventType & { eventDate
 
 export async function UpdateEventAction(payload: Partial<EventType & { eventDate: string, eventTime: string }>) {
 
+  console.log('start', payload.startDate)
   const dateTimeString = `${payload.eventDate}T${payload.eventTime}`; // "2025-01-31T14:30:00"
   payload.startDate = new Date(dateTimeString);
 
