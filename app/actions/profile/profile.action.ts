@@ -23,12 +23,20 @@ export async function UpdateProfileAction(payload: Partial<User & UserDetailType
     await db.insert(userDetail)
       .values({
         userId: String(payload.id),
+        phoneNumber: payload.phoneNumber,
         instagram: payload.instagram,
+        strava: payload.strava,
+        emergencyContactName: payload.emergencyContactName,
+        emergencyContactNumber: payload.emergencyContactNumber,
       })
       .onConflictDoUpdate({
         target: userDetail.userId,
         set: {
+          phoneNumber: payload.phoneNumber,
           instagram: payload.instagram,
+          strava: payload.strava,
+          emergencyContactName: payload.emergencyContactName,
+          emergencyContactNumber: payload.emergencyContactNumber,
         }
       })
 

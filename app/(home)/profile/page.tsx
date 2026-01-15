@@ -3,6 +3,7 @@ import {headers} from "next/headers";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs"
 import {ProfileForm} from "@/components/profile/profile-form";
 import {redirect} from "next/navigation";
+import {getUserWithDetail} from "@/db/query/user-query";
 
 export default async function ProfilePage() {
 
@@ -14,6 +15,12 @@ export default async function ProfilePage() {
     redirect("/auth/signup")
   }
 
+  const userDetail = await getUserWithDetail(session.user.id)
+
+  if (!userDetail) {
+    redirect("/auth/login")
+  }
+
   return (
     <div>
       <Tabs defaultValue="account" className="w-[400px]">
@@ -22,7 +29,7 @@ export default async function ProfilePage() {
           <TabsTrigger value="password">Events</TabsTrigger>
         </TabsList>
         <TabsContent value="account">
-          <ProfileForm user={session.user} />
+          <ProfileForm user={userDetail} />
         </TabsContent>
         <TabsContent value="password">Change your password here.</TabsContent>
       </Tabs>

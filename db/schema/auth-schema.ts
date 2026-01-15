@@ -1,5 +1,6 @@
-import { relations } from "drizzle-orm";
-import { pgTable, text, timestamp, boolean, index } from "drizzle-orm/pg-core";
+import {relations} from "drizzle-orm";
+import {boolean, index, pgTable, text, timestamp} from "drizzle-orm/pg-core";
+import {userDetail} from "@/db/schema/user-detail-schema";
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -89,5 +90,12 @@ export const accountRelations = relations(account, ({ one }) => ({
   user: one(user, {
     fields: [account.userId],
     references: [user.id],
+  }),
+}));
+
+export const usersDetailRelations = relations(user, ({ one }) => ({
+  detail: one(userDetail, {
+    fields: [user.id],
+    references: [userDetail.userId],
   }),
 }));

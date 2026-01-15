@@ -15,11 +15,12 @@ import {Spinner} from "@/components/ui/spinner";
 import {useActionState, useState} from "react";
 import {ActionResponse, initialState} from "@/types/types";
 import {UpdateProfileAction} from "@/app/actions/profile/profile.action";
-import {User} from "better-auth";
 import {toast} from "sonner";
 import {UploadButton} from "@/utils/uploadthing";
+import {UserWithDetail} from "@/types/auth-types";
 
-export function ProfileForm({user}: {user: User}) {
+export function ProfileForm({user}: {user: UserWithDetail}) {
+
   const [profileImage, setProfileImage] = useState<string | null>(user.image ?? null);
   const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(async (prevState: ActionResponse, formData: FormData) => {
 
@@ -27,11 +28,12 @@ export function ProfileForm({user}: {user: User}) {
       id: user.id,
       name: formData.get("full_name") as string,
       image: profileImage ?? null,
-      phone : formData.get("phone") as string,
-      date_of_birth: '',
-      emergency_contact_name: formData.get("emergency_contact_name") as string,
-      emergency_contact_number: formData.get("emergency_contact_number") as string,
+      phoneNumber : formData.get("phone_number") as string,
+      dateOfBirth: '',
+      emergencyContactName: formData.get("emergency_contact_name") as string,
+      emergencyContactNumber: formData.get("emergency_contact_number") as string,
       instagram: formData.get("instagram") as string,
+      strava: formData.get("strava") as string,
     }
 
     const res = await UpdateProfileAction(payload)
@@ -68,16 +70,16 @@ export function ProfileForm({user}: {user: User}) {
                       <img
                         alt=""
                         src={profileImage}
-                        className="size-24 flex-none rounded-lg bg-gray-800 object-cover outline -outline-offset-1 outline-white/10"
+                        className="size-24 flex-none rounded-lg  object-cover outline -outline-offset-1 outline-white/10"
                       />
                     </>
                   ) : (
                     <>
-                      <img
-                        alt=""
-                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                        className="size-24 flex-none rounded-lg bg-gray-800 object-cover outline -outline-offset-1 outline-white/10"
-                      />
+                      <svg className="size-24 flex-none rounded-lg" width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="256" height="256" fill="#F3F4F6"/>
+                        <path d="M128 128C152.301 128 172 108.301 172 84C172 59.6995 152.301 40 128 40C103.699 40 84 59.6995 84 84C84 108.301 103.699 128 128 128Z" fill="#9CA3AF"/>
+                        <path d="M128 148C90.4446 148 60 178.445 60 216V224H196V216C196 178.445 165.555 148 128 148Z" fill="#9CA3AF"/>
+                      </svg>
                     </>
                   )}
 
@@ -114,12 +116,13 @@ export function ProfileForm({user}: {user: User}) {
 
               <FieldGroup>
                 <Field>
-                  <FieldLabel htmlFor="email">Phone</FieldLabel>
+                  <FieldLabel htmlFor="phone_number">Phone</FieldLabel>
                   <Input
-                    id="phone"
+                    id="phone_number"
                     type="text"
-                    name="phone"
+                    name="phone_number"
                     placeholder="08212345678"
+                    defaultValue={user.detail?.phoneNumber ?? ""}
                   />
                 </Field>
               </FieldGroup>
@@ -153,18 +156,18 @@ export function ProfileForm({user}: {user: User}) {
                   type="text"
                   name="emergency_contact_name"
                   placeholder="Mira Tanaka"
-
+                  defaultValue={user.detail?.emergencyContactName ?? ""}
                 />
               </Field>
 
               <Field>
-                <FieldLabel htmlFor="emergency_contact_phone">Emergency Contact Phone</FieldLabel>
+                <FieldLabel htmlFor="emergency_contact_number">Emergency Contact Phone</FieldLabel>
                 <Input
-                  id="emergency_contact_phone"
+                  id="emergency_contact_number"
                   type="text"
-                  name="emergency_contact_phone"
+                  name="emergency_contact_number"
                   placeholder="08212345678"
-
+                  defaultValue={user.detail?.emergencyContactNumber ?? ""}
                 />
               </Field>
 
@@ -190,7 +193,8 @@ export function ProfileForm({user}: {user: User}) {
                   id="instagram"
                   type="text"
                   name="instagram"
-                  placeholder="08212345678"
+                  placeholder="https://www.instagram.com/yourname"
+                  defaultValue={user.detail?.instagram ?? ""}
                 />
               </Field>
             </FieldGroup>
@@ -202,8 +206,8 @@ export function ProfileForm({user}: {user: User}) {
                   id="strava"
                   type="text"
                   name="strava"
-                  placeholder="08212345678"
-
+                  placeholder="https://www.strava.com/athletes/1"
+                  defaultValue={user.detail?.strava ?? ""}
                 />
               </Field>
             </FieldGroup>
