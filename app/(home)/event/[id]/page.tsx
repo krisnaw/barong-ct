@@ -26,7 +26,7 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
           <img
             className="aspect-square w-full rounded-2xl  object-cover"
             src={event.feature_image ?? emptyBanner}
-            alt="Banner image" />
+            alt="Banner image"/>
         </div>
 
         <div className="w-full">
@@ -43,16 +43,16 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
                   <div className="mr-4 shrink-0">
 
                     <div className="outline rounded-xl outline-gray-300 p-2.5">
-                      <CalendarDays size="32" className="text-gray-500" />
+                      <CalendarDays size="32" className="text-gray-500"/>
                     </div>
                   </div>
 
                   <div>
                     <h4 className="text-lg font-semibold text-gray-800">
-                      <EventDate eventDate={event.startDate} type="date" />
+                      <EventDate eventDate={event.startDate} type="date"/>
                     </h4>
                     <p className="mt-1 text-gray-400">
-                      <EventDate eventDate={event.startDate} type="time" />
+                      <EventDate eventDate={event.startDate} type="time"/>
                     </p>
                   </div>
                 </div>
@@ -63,7 +63,7 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
                   <div className="mr-4 shrink-0">
 
                     <div className="outline rounded-xl outline-gray-300 p-2.5">
-                      <MapPin size="32" className="text-gray-500" />
+                      <MapPin size="32" className="text-gray-500"/>
                     </div>
 
                   </div>
@@ -80,7 +80,7 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
             </ul>
 
             <div className="mt-8">
-              <ButtonJoinEvent eventId={event.id} />
+              <ButtonJoinEvent eventId={event.id}/>
             </div>
           </div>
 
@@ -92,8 +92,12 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
                 <div className="px-4 sm:px-0 border-b border-gray-200">
                   <h3 className="text-base/7 font-semibold text-muted-foreground">About Event</h3>
                 </div>
-                <div className="mt-4">
-                  <p>{event.description}</p>
+                <div>
+
+                  <article className="prose prose-sm">
+                    <div dangerouslySetInnerHTML={{__html: event.description}}/>
+                  </article>
+
                 </div>
               </div>
 
@@ -106,7 +110,7 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
                 <div className="mt-4">
                   <iframe
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3944.3628429589126!2d115.26138180000001!3d-8.656998999999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd241007ff18975%3A0x90cb3b1c40257b08!2sXavi%20Croissanterie!5e0!3m2!1sen!2sid!4v1768382812451!5m2!1sen!2sid"
-                    width="600" height="450" style={{ border: 0 }} allowFullScreen={false} loading="lazy"
+                    width="600" height="450" style={{border: 0}} allowFullScreen={false} loading="lazy"
                     referrerPolicy="no-referrer-when-downgrade"></iframe>
                 </div>
               </div>
