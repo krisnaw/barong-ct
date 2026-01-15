@@ -17,7 +17,6 @@ import {ContentEditor} from "@/components/events/content-editor";
 export function EditEventForm({event} : {event: EventType}) {
   const eventDate = new Date(event.startDate);
   const [description, setDescription] = useState<string>(event.description);
-  const eventTime = eventDate.toTimeString().split(' ')[0]; // Format to HH:mm:ss
 
   const [image, setImage] = useState<string | null>(event.feature_image ?? null);
 
@@ -129,7 +128,7 @@ export function EditEventForm({event} : {event: EventType}) {
                 id="time"
                 name="time"
                 step="1"
-                defaultValue={eventTime}
+                defaultValue={format(event.startDate, "HH:mm:ss")}
                 className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
               />
             </Field>
