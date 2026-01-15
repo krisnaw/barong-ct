@@ -1,7 +1,4 @@
-import {getEvents} from "@/db/query/event-query";
-
 export default async function Page() {
-  const events = await getEvents()
   return (
     <>
       <div className="grid auto-rows-min gap-4 md:grid-cols-3">

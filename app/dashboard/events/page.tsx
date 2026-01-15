@@ -1,6 +1,8 @@
+import {getEvents} from "@/db/query/event-query";
+
 export default async function EventsPage() {
 
-
+  const events = await getEvents()
 
 
   return (
