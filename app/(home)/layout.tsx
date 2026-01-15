@@ -1,7 +1,13 @@
-import Header from "@/components/landing/header";
-import Footer from "@/components/landing/footer";
 import {auth} from "@/lib/auth";
 import {headers} from "next/headers";
+import {Mona_Sans} from "next/font/google";
+
+const instrumentSerif = Mona_Sans({
+  subsets: ["latin"],
+  style: "normal",
+  weight: "400"
+})
+
 
 export default async function HomeLayout({
                                      children,
@@ -14,12 +20,10 @@ export default async function HomeLayout({
   })
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header user={session?.user ? session.user : undefined} />
-      <div className="flex-grow py-12">
+    <div className={`${instrumentSerif.className} min-h-screen flex flex-col`}>
+      <div className="flex-grow">
         {children}
       </div>
-      <Footer />
     </div>
   )
 }

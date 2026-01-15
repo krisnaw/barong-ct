@@ -13,7 +13,7 @@ export default function Header({user} : {user : User | undefined}) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
-    <header className="border-b border-gray-200 sticky top-0 bg-white z-50">
+    <header className="absolute inset-x-0 top-0 z-50">
       <nav aria-label="Global" className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8">
         <div className="flex lg:flex-1">
           {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
@@ -21,8 +21,8 @@ export default function Header({user} : {user : User | undefined}) {
             <span className="sr-only">Home</span>
             <img
               alt="Barong Cycling Logo"
-              src="/barong-no-bg.png"
-              className="h-12"
+              src="/barong-no-bg.svg"
+              className="h-14"
             />
           </a>
         </div>
@@ -38,18 +38,18 @@ export default function Header({user} : {user : User | undefined}) {
         </div>
         <div className="hidden lg:flex lg:gap-x-12">
           {navigation.map((item) => (
-            <a key={item.name} href={item.href} className="text-sm/6 font-semibold ">
+            <a key={item.name} href={item.href} className="text-sm/6 font-semibold text-white">
               {item.name}
             </a>
           ))}
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           {user ? (
-            <a href="/profile" className="text-sm/6 font-semibold ">
+            <a href="/profile" className="text-sm/6 font-semibold text-white">
               Profile
             </a>
             ) : (
-            <a href="/auth/signup" className="text-sm/6 font-semibold ">
+            <a href="/auth/signup" className="text-sm/6 font-semibold text-white">
               Log in <span aria-hidden="true">&rarr;</span>
             </a>
           ) }
