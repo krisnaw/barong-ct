@@ -63,8 +63,8 @@ export async function UpdateEventAction(payload: Partial<EventType & { eventDate
 
   const eventDate = format(`${payload.eventDate}`, "yyyy-MM-dd");
   const eventTime = payload.eventTime;
-
-  console.log(eventDate, eventTime);
+  payload.eventDate = eventDate;
+  payload.eventTime = eventTime;
 
   try {
     await db.update(EventSchema)
