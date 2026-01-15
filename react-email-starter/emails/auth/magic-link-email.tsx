@@ -11,6 +11,7 @@ const MagicLinkEmail = ({email, url} : { email: string, url: string}) => {
         <Body className="bg-gray-100 font-sans py-[40px]">
           <Container className="bg-white rounded-[8px] shadow-lg max-w-[600px] mx-auto p-[40px]">
             <Section>
+
               <Text className="text-[32px] font-bold text-gray-900 mb-[24px] text-center">
                 Sign in to your account
               </Text>
