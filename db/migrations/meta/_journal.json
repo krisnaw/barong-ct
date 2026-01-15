@@ -8,6 +8,41 @@
       "when": 1768208729075,
       "tag": "0000_silky_cammi",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1768354950002,
+      "tag": "0001_fancy_black_queen",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1768360194000,
+      "tag": "0002_perpetual_sentry",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1768369591432,
+      "tag": "0003_perpetual_masked_marvel",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1768370375598,
+      "tag": "0004_flat_quicksilver",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1768393577072,
+      "tag": "0005_yummy_domino",
+      "breakpoints": true
     }
   ]
 }
