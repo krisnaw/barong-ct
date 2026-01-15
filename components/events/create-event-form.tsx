@@ -8,35 +8,36 @@ import {Button} from "@/components/ui/button";
 import {Spinner} from "@/components/ui/spinner";
 import {Textarea} from "@/components/ui/textarea";
 import {CustomDatePicker} from "@/components/ui/custom-date-picker";
-import {CreateEventAction} from "@/app/actions/event/event.action";
 import {toast} from "sonner";
 import {UploadButton} from "@/utils/uploadthing";
-
-function combineDateTime(date: string, time: string) {
-  return new Date(`${date}T${time}:00`)
-}
-
+import {CreateEventAction} from "@/app/actions/event/event.action";
+import {format} from 'date-fns';
 
 export function CreateEventForm() {
   const [image, setImage] = useState<string | null>(null);
   const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(async (prevState: ActionResponse, formData: FormData) => {
 
-    const startDate = new Date();
+    const inputDate = formData.get('date') as string
+    const inputTime = formData.get('time') as string
 
     const payload = {
       name: formData.get("name") as string,
       feature_image: image,
       description: formData.get("description") as string,
-      startDate: startDate,
+      eventDate:  format(inputDate, 'yyyy-MM-dd'),
+      eventTime: inputTime,
       locationName: formData.get("location") as string,
       locationLink: formData.get("map") as string,
     }
+
+    console.log(payload)
 
     const res = await CreateEventAction(payload)
 
     toast.info(res.message)
 
     return res
+
   }, initialState)
 
 
@@ -113,8 +114,9 @@ export function CreateEventForm() {
                 required
                 type="time"
                 id="time"
+                name="time"
                 step="1"
-                defaultValue="10:30:00"
+                defaultValue="05:30:00"
                 className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
               />
             </Field>

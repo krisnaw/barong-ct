@@ -4,6 +4,7 @@ export function formatEventDate(date: Date) {
     weekday: "long",
     month: "long",
     day: "numeric",
+    year: "numeric",
   }).format(date)
 }
 
@@ -13,6 +14,8 @@ export function formatEventTime(date: Date, locale = "id-ID") {
     hour: "numeric",
     minute: "2-digit",
     hour12: true,
+    timeZone: "Asia/Singapore", // GMT+8
+    timeZoneName: "short",
   }).format(date)
 }
 

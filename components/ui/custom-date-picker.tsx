@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import {useEffect} from "react"
 import {ChevronDownIcon} from "lucide-react"
 
 import {Button} from "@/components/ui/button"
@@ -14,6 +15,11 @@ interface CustomDatePickerProps {
 export function CustomDatePicker({ value = new Date() }: CustomDatePickerProps) {
   const [open, setOpen] = React.useState(false)
   const [date, setDate] = React.useState<Date>(value)
+  const [timeZone, setTimeZone] = React.useState<string | undefined>(undefined)
+
+  useEffect(() => {
+    setTimeZone(Intl.DateTimeFormat().resolvedOptions().timeZone)
+  }, [])
 
   return (
     <>
@@ -31,9 +37,11 @@ export function CustomDatePicker({ value = new Date() }: CustomDatePickerProps) 
         </PopoverTrigger>
         <PopoverContent className="w-auto overflow-hidden p-0" align="start">
           <Calendar
+            timeZone={timeZone}
             mode="single"
             selected={date}
             captionLayout="dropdown"
+
             onSelect={(date) => {
               if (!date) return
               setDate(date)

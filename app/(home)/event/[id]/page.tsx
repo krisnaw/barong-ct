@@ -1,8 +1,10 @@
 import {CalendarDays, MapPin} from "lucide-react";
-import {emptyBanner, formatEventDate, formatEventTime} from "@/types/date-helper";
+import {emptyBanner} from "@/types/date-helper";
 import {getEventById} from "@/db/query/event-query";
 import {redirect} from "next/navigation";
 import {ButtonJoinEvent} from "@/components/events/button-join-event";
+import {toZonedTime} from "date-fns-tz";
+import {EventDate} from "@/components/events/event-date";
 
 export default async function Page({params,}: { params: Promise<{ id: number }> }) {
 
@@ -11,8 +13,10 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
   const event = await getEventById(id);
 
   if (!event) {
-    redirect('/dashboard');
+    redirect('/');
   }
+
+  const zonedDate = toZonedTime(event.startDate, 'Asia/Singapore')
 
   return (
     <div className="mx-auto max-w-4xl">
@@ -45,10 +49,10 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
 
                   <div>
                     <h4 className="text-lg font-semibold text-gray-800">
-                      {formatEventDate(new Date())}
+                      <EventDate eventDate={event.startDate} type="date" />
                     </h4>
                     <p className="mt-1 text-gray-400">
-                      {formatEventTime(new Date())} GMT+8
+                      <EventDate eventDate={event.startDate} type="time" />
                     </p>
                   </div>
                 </div>
@@ -89,16 +93,7 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
                   <h3 className="text-base/7 font-semibold text-muted-foreground">About Event</h3>
                 </div>
                 <div className="mt-4">
-                  <p>
-                    MetaMask Welcoming Night — Indonesia Edition 🇮🇩
-                    in collaboration with ETH Jakarta.
-
-                    ​MetaMask Welcoming Night marks one of the first Web3 Wallet community gatherings of 2026 in Jakarta bringing builders, users, and enthusiasts together for an evening of learning, sharing, and meaningful conversations around Web3.
-
-                    ​This in person meetup will start with introducing MetaMask, its core features, and its role within the Web3 ecosystem. The session will then continue with a sharing and discussion segment covering security practices, on chain protocols, and an overview of the current security landscape across wallets, & protocols.
-
-                    ​Designed for developers, students, founders, DAO contributors, and Web3 enthusiasts, this event aims to help participants better understand self custody, common security risks, and how to safely navigate the Web3 space all in a friendly and community driven environment.
-                  </p>
+                  <p>{event.description}</p>
                 </div>
               </div>
 

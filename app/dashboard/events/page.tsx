@@ -2,6 +2,7 @@ import {Button} from "@/components/ui/button";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table";
 import Link from "next/link";
 import {getEvents} from "@/db/query/event-query";
+import {toZonedTime} from "date-fns-tz";
 
 export default async function EventsPage() {
 
@@ -28,7 +29,7 @@ export default async function EventsPage() {
           {events.map((event) => (
             <TableRow key={event.id}>
               <TableCell>{event.name}</TableCell>
-              <TableCell>{event.name}</TableCell>
+              <TableCell>{toZonedTime(event.startDate, "Asia/Singapore").toLocaleDateString()}</TableCell>
               <TableCell>{event.name}</TableCell>
               <TableCell>
                 <Link href={`/dashboard/events/${event.id}`}>
