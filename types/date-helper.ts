@@ -15,3 +15,5 @@ export function formatEventTime(date: Date, locale = "id-ID") {
     hour12: true,
   }).format(date)
 }
+
+export const emptyBanner = "https://placeholdit.com/400x400/f3f4f6/9da8bf?text=Banner"

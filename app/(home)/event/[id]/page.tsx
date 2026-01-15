@@ -1,5 +1,5 @@
 import {CalendarDays, MapPin} from "lucide-react";
-import {formatEventDate, formatEventTime} from "@/types/date-helper";
+import {emptyBanner, formatEventDate, formatEventTime} from "@/types/date-helper";
 import {getEventById} from "@/db/query/event-query";
 import {redirect} from "next/navigation";
 import {ButtonJoinEvent} from "@/components/events/button-join-event";
@@ -19,8 +19,11 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
       <div className="sm:flex gap-8">
 
         <div className="mr-4 shrink-0 w-sm">
-          <img className="aspect-square w-full rounded-2xl  object-cover"
-            src="https://images.lumacdn.com/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=400,height=400/event-covers/ci/f04dc0fd-f5da-4f06-bd6d-482ea04c5dec.png" alt=""/>
+
+          <img
+            className="aspect-square w-full rounded-2xl  object-cover"
+            src={event.feature_image ?? emptyBanner}
+            alt="Banner image" />
         </div>
 
         <div className="w-full">

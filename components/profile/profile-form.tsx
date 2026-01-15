@@ -84,7 +84,6 @@ export function ProfileForm({user}: {user: UserWithDetail}) {
                   )}
 
                   <div>
-
                     <UploadButton
                       endpoint="imageUploader"
                       onClientUploadComplete={(res) => {

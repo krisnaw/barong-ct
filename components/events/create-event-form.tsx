@@ -1,6 +1,6 @@
 'use client'
 
-import {useActionState} from "react";
+import {useActionState, useState} from "react";
 import {ActionResponse, initialState} from "@/types/types";
 import {Field, FieldGroup, FieldLabel} from "@/components/ui/field";
 import {Input} from "@/components/ui/input";
@@ -10,6 +10,7 @@ import {Textarea} from "@/components/ui/textarea";
 import {CustomDatePicker} from "@/components/ui/custom-date-picker";
 import {CreateEventAction} from "@/app/actions/event/event.action";
 import {toast} from "sonner";
+import {UploadButton} from "@/utils/uploadthing";
 
 function combineDateTime(date: string, time: string) {
   return new Date(`${date}T${time}:00`)
@@ -17,6 +18,7 @@ function combineDateTime(date: string, time: string) {
 
 
 export function CreateEventForm() {
+  const [image, setImage] = useState<string | null>(null);
   const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(async (prevState: ActionResponse, formData: FormData) => {
 
     const startDate = new Date();
@@ -43,6 +45,45 @@ export function CreateEventForm() {
     <div className="flex flex-col gap-6">
       <form action={formAction}>
         <FieldGroup>
+
+          <Field>
+            <FieldLabel htmlFor="name">Banner image</FieldLabel>
+            <div className="col-span-full flex items-center gap-x-8">
+              
+              <div>
+                {image ? (
+                  <>
+                    <img
+                      alt=""
+                      src={image}
+                      className="size-80 aspect-square flex-none rounded-lg  object-cover outline -outline-offset-1 outline-white/10"
+                    />
+                  </>
+                  ) : (
+                  <img
+
+                    className="size-80 aspect-square flex-none rounded-lg object-cover outline -outline-offset-1 outline-white/10"
+
+                    src="https://placeholdit.com/400x400/f3f4f6/9da8bf?text=Banner" alt=""/>
+                )}
+
+              </div>
+
+              <div>
+                <UploadButton
+                  endpoint="imageUploader"
+                  onClientUploadComplete={(res) => {
+                    setImage(res[0].appUrl);
+                  }}
+                  onUploadError={(error: Error) => {
+                    // Do something with the error.
+                    toast.error(`ERROR! ${error.message}`);
+                  }}
+                />
+              </div>
+
+            </div>
+          </Field>
 
           <Field>
             <FieldLabel htmlFor="name">Name</FieldLabel>
@@ -102,7 +143,7 @@ export function CreateEventForm() {
           </Field>
 
           <Field>
-            <Button type="submit" disabled={isPending}>
+            <Button type="submit" disabled={isPending} size="lg">
               {isPending ? <Spinner /> : null }
               Save
             </Button>
