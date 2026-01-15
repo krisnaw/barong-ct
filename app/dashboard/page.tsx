@@ -1,8 +1,8 @@
 import {db} from "@/db/db";
-import {EventSchema} from "@/db/schema";
+import {user} from "@/db/schema";
 
 export default async function Page() {
-  const events = await db.select().from(EventSchema).limit(50)
+  const events = await db.select().from(user).limit(1);
   console.log(events);
   return (
     <>
