@@ -49,7 +49,7 @@ export function CreateEventForm() {
 
           <Field>
             <FieldLabel htmlFor="name">Banner image</FieldLabel>
-            <div className="col-span-full flex items-center gap-x-8">
+            <div className="col-span-full flex flex-col sm:flex-row items-center gap-x-8">
               
               <div>
                 {image ? (
@@ -109,7 +109,7 @@ export function CreateEventForm() {
           </Field>
 
 
-          <div className="flex gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
 
             <Field>
               <FieldLabel htmlFor="maxParticipants">Max Participants</FieldLabel>

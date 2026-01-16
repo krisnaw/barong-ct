@@ -14,7 +14,6 @@ import {UpdateEventAction} from "@/app/actions/event/event.action";
 import {format, parse} from "date-fns";
 import {ContentEditor} from "@/components/events/content-editor";
 import {fromZonedTime, toZonedTime} from "date-fns-tz";
-import {eventDateFormat} from "@/types/date-helper";
 
 export function EditEventForm({event} : {event: EventType}) {
   const eventDate = new Date(event.startDate);
@@ -63,16 +62,12 @@ export function EditEventForm({event} : {event: EventType}) {
   return (
     <div className="flex flex-col gap-6">
 
-      <div>
-        {eventDateFormat(event.startDate)}
-      </div>
-
       <form action={formAction}>
         <FieldGroup>
 
           <Field>
             <FieldLabel htmlFor="name">Banner image</FieldLabel>
-            <div className="col-span-full flex items-center gap-x-8">
+            <div className="col-span-full flex flex-col sm:flex-row items-center gap-x-8">
 
               <div>
                 {image ? (
@@ -132,7 +127,7 @@ export function EditEventForm({event} : {event: EventType}) {
             />
           </Field>
 
-          <div className="flex gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
 
             <Field>
               <FieldLabel htmlFor="maxParticipants">Max Participants</FieldLabel>
