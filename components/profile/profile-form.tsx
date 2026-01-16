@@ -35,6 +35,8 @@ export function ProfileForm({user}: {user: UserWithDetail}) {
       emergencyContactNumber: formData.get("emergency_contact_number") as string,
       instagram: formData.get("instagram") as string,
       strava: formData.get("strava") as string,
+      identity_number: formData.get("identity_number") as string,
+      address: formData.get("address") as string,
     }
 
     const res = await UpdateProfileAction(payload)
@@ -129,12 +131,13 @@ export function ProfileForm({user}: {user: UserWithDetail}) {
 
               <FieldGroup>
                 <Field>
-                  <FieldLabel htmlFor="id_card">KTP / Passport ID / ID Card</FieldLabel>
+                  <FieldLabel htmlFor="identity_number">KTP / Passport ID / ID Card</FieldLabel>
                   <Input
-                    id="id_card"
+                    id="identity_number"
                     type="text"
-                    name="id_card"
+                    name="identity_number"
                     placeholder="123023"
+                    defaultValue={user.detail?.identity_number ?? ""}
                   />
                 </Field>
               </FieldGroup>
@@ -146,6 +149,7 @@ export function ProfileForm({user}: {user: UserWithDetail}) {
                     id="address"
                     name="address"
                     placeholder="Jln. Toko Sepeda"
+                    defaultValue={user.detail?.address ?? ""}
                   />
                 </Field>
               </FieldGroup>

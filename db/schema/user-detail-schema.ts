@@ -6,6 +6,10 @@ export const userDetail = pgTable("user_detail", {
     .primaryKey()
     .references(() => user.id, {onDelete: "cascade"}),
 
+  identity_number: text("identity_number"),
+  address: text("address"),
+  blood_type: text("blood_type"),
+
   dateOfBirth: date("date_of_birth"),
 
   phoneNumber: text("phone_number"),

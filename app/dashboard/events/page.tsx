@@ -23,11 +23,11 @@ export default async function EventsPage() {
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Events</h1>
 
-      <Button asChild>
-        <Link href="/dashboard/events/create">
-          Create Event
-        </Link>
-      </Button>
+        <Button asChild>
+          <Link href="/dashboard/events/create">
+            Create Event
+          </Link>
+        </Button>
 
       </div>
       <Table>
@@ -47,10 +47,10 @@ export default async function EventsPage() {
               </TableCell>
               <TableCell className="flex flex-col">
                 <div className="font-medium ">
-                  <EventDate eventDate={event.startDate} type="date" />
+                  <EventDate eventDate={event.startDate} type="date"/>
                 </div>
                 <div className="mt-1 text-muted-foreground">
-                  <EventDate eventDate={event.startDate} type="time" />
+                  <EventDate eventDate={event.startDate} type="time"/>
                 </div>
               </TableCell>
               <TableCell>

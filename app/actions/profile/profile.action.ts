@@ -18,8 +18,6 @@ export async function UpdateProfileAction(payload: Partial<User & UserDetailType
       }
     })
 
-    console.log(payload)
-
     await db.insert(userDetail)
       .values({
         userId: String(payload.id),
@@ -28,6 +26,8 @@ export async function UpdateProfileAction(payload: Partial<User & UserDetailType
         strava: payload.strava,
         emergencyContactName: payload.emergencyContactName,
         emergencyContactNumber: payload.emergencyContactNumber,
+        identity_number: payload.identity_number,
+        address: payload.address,
       })
       .onConflictDoUpdate({
         target: userDetail.userId,
@@ -37,6 +37,8 @@ export async function UpdateProfileAction(payload: Partial<User & UserDetailType
           strava: payload.strava,
           emergencyContactName: payload.emergencyContactName,
           emergencyContactNumber: payload.emergencyContactNumber,
+          identity_number: payload.identity_number,
+          address: payload.address,
         }
       })
 
