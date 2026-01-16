@@ -39,12 +39,14 @@ export async function joinEventAction(payload: {  eventId: string }) : Promise<A
     }).onConflictDoNothing()
 
     const zonedDate = toZonedTime(event.startDate, 'Asia/Singapore')
+    console.log(zonedDate)
+    console.log(formatEventTime(event.startDate))
 
     const param = {
       name: session.user.name,
       eventName : event.name,
-      eventDate : formatEventDate(zonedDate),
-      eventTime : formatEventTime(zonedDate),
+      eventDate : formatEventDate(event.startDate),
+      eventTime : formatEventTime(event.startDate),
       meetingPoint : event.locationName ?? "",
     }
 
