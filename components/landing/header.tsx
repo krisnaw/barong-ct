@@ -6,7 +6,7 @@ import {User} from "@/types/auth-types";
 
 const navigation = [
   { name: 'Events', href: '/event' },
-  { name: 'About', href: '/about' },
+  // { name: 'About', href: '/about' },
 ]
 
 export default function Header({user} : {user : User | undefined}) {
@@ -45,9 +45,13 @@ export default function Header({user} : {user : User | undefined}) {
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           {user ? (
-            <a href="/profile" className="text-sm/6 font-semibold text-white">
-              Profile
-            </a>
+            <>
+              <a href="/profile" className="text-sm/6 font-semibold text-white">
+                Profile
+              </a>
+
+              {/*<button formAction={signOut()}>Logout</button>*/}
+            </>
             ) : (
             <a href="/auth/signup" className="text-sm/6 font-semibold text-white">
               Log in <span aria-hidden="true">&rarr;</span>

@@ -37,7 +37,7 @@ export function SignupForm({
             >
               <img
                 alt="Barong Cycling Logo"
-                src="/barong-no-bg.png"
+                src="/barong-no-bg.svg"
                 className="h-24"
               />
               <span className="sr-only">Barong Cycling.</span>

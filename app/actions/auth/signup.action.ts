@@ -3,6 +3,7 @@
 import {auth} from "@/lib/auth";
 import {headers} from "next/headers";
 import {ActionResponse} from "@/types/types";
+import {redirect} from "next/navigation";
 
 export async function SignUpAction(email: string) : Promise<ActionResponse> {
   const data = await auth.api.signInMagicLink({
@@ -20,4 +21,9 @@ export async function SignUpAction(email: string) : Promise<ActionResponse> {
     success: true,
     message: "Success, please check your email address.",
   }
+}
+
+export async function signOut() : Promise<void> {
+  await auth.api.signOut()
+  redirect("/")
 }
