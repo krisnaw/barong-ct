@@ -7,6 +7,7 @@ import {EventDate} from "@/components/events/event-date";
 import {MapPin} from "lucide-react";
 import {Button} from "@/components/ui/button";
 import Link from "next/link";
+import {ButtonDeleteParticipant} from "@/app/dashboard/events/[id]/button-delete-participant";
 
 export default async function Page({params}: { params: Promise<{ id: number }> }) {
   const {id} = await params;
@@ -64,6 +65,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
               <TableHeader>
                 <TableRow>
                   <TableHead>Name</TableHead>
+                  <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -71,11 +73,14 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
                   participants.map((participant) => (
                     <TableRow key={participant.id}>
                       <TableCell className="font-medium">{participant.user.name ?? "-"}</TableCell>
+                      <TableCell>
+                        <ButtonDeleteParticipant participantId={participant.id} />
+                      </TableCell>
                     </TableRow>
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell className="font-medium">Sorry, no participant yet</TableCell>
+                    <TableCell className="font-medium" colSpan={2}>Sorry, no participant yet</TableCell>
                   </TableRow>
                 )}
               </TableBody>

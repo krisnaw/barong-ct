@@ -12,6 +12,7 @@ import {getEventById} from "@/db/query/event-query";
 import {revalidatePath} from "next/cache";
 import {toZonedTime} from "date-fns-tz";
 import {formatEventDate, formatEventTime} from "@/types/date-helper";
+import {eq} from "drizzle-orm";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -66,6 +67,8 @@ export async function joinEventAction(payload: {  eventId: string }) : Promise<A
   }
 }
 
-export async function DeleteEventParticipantAction() {
-
+export async function DeleteEventParticipantAction(formData: FormData): Promise<void> {
+  const participantId = formData.get("participantId");
+  await db.delete(participant).where(eq(participant.id, Number(participantId)))
+  revalidatePath('/', 'layout');
 }

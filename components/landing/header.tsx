@@ -48,7 +48,7 @@ export default function Header({user} : {user : User | undefined}) {
                 Profile
               </a>
 
-              <form  action={signOut}>
+              <form action={signOut}>
                 <button type="submit"
                         className={cn('text-sm/6 font-semibold text-white', isHome ? 'text-white' : 'text-primary')}
                 >Logout</button>
