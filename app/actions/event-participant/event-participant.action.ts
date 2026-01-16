@@ -10,8 +10,7 @@ import {Resend} from "resend";
 import CyclingEventConfirmationEmail from "@/react-email-starter/emails/event-registration-email";
 import {getEventById} from "@/db/query/event-query";
 import {revalidatePath} from "next/cache";
-import {toZonedTime} from "date-fns-tz";
-import {formatEventDate, formatEventTime} from "@/types/date-helper";
+import {formatEventTime} from "@/types/date-helper";
 import {eq} from "drizzle-orm";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -38,14 +37,11 @@ export async function joinEventAction(payload: {  eventId: string }) : Promise<A
       eventId: Number(payload.eventId),
     }).onConflictDoNothing()
 
-    const zonedDate = toZonedTime(event.startDate, 'Asia/Singapore')
-    console.log(zonedDate)
-    console.log(formatEventTime(event.startDate))
 
     const param = {
       name: session.user.name,
       eventName : event.name,
-      eventDate : formatEventDate(event.startDate),
+      eventDate : event.startDate.toDateString(),
       eventTime : formatEventTime(event.startDate),
       meetingPoint : event.locationName ?? "",
     }

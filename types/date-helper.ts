@@ -6,6 +6,7 @@ export function formatEventDate(date: Date) {
     month: "long",
     day: "numeric",
     year: "numeric",
+    timeZone: "Asia/Singapore", // GMT+8
   }).format(date)
 }
 
