@@ -2,9 +2,9 @@ import {CalendarDays, MapPin} from "lucide-react";
 import {emptyBanner} from "@/types/date-helper";
 import {getEventById} from "@/db/query/event-query";
 import {redirect} from "next/navigation";
-import {ButtonJoinEvent} from "@/components/events/button-join-event";
 import {toZonedTime} from "date-fns-tz";
 import {EventDate} from "@/components/events/event-date";
+import {EventStatus} from "@/components/events/event-status";
 
 export default async function Page({params,}: { params: Promise<{ id: number }> }) {
 
@@ -80,7 +80,7 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
             </ul>
 
             <div className="mt-8">
-              <ButtonJoinEvent eventId={event.id}/>
+              <EventStatus eventId={event.id} />
             </div>
           </div>
 
