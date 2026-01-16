@@ -7,14 +7,13 @@ import {redirect} from "next/navigation";
 import {eq} from "drizzle-orm";
 import {revalidatePath} from "next/cache";
 
-export async function CreateEventAction(payload: Partial<EventType & { eventDate: string, eventTime: string }>) {
+export async function createEventAction(payload: Partial<EventType & { eventDate: string, eventTime: string }>) {
 
   const validate = EventInsertSchema.safeParse(payload);
   const dateTimeString = `${payload.eventDate}T${payload.eventTime}`; // "2025-01-31T14:30:00"
   const localDate = new Date(dateTimeString);
 
   if (!validate.success) {
-    console.log(validate.error);
     return {
       success: false,
       message: "Invalid data",
@@ -30,7 +29,8 @@ export async function CreateEventAction(payload: Partial<EventType & { eventDate
       description: validate.data.description,
       startDate: localDate,
       locationLink: validate.data.locationLink,
-      locationName: validate.data.locationName
+      locationName: validate.data.locationName,
+      maxParticipants: validate.data.maxParticipants
     });
 
   } catch (error) {

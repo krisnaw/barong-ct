@@ -10,7 +10,7 @@ import {Textarea} from "@/components/ui/textarea";
 import {CustomDatePicker} from "@/components/ui/custom-date-picker";
 import {toast} from "sonner";
 import {UploadButton} from "@/utils/uploadthing";
-import {CreateEventAction} from "@/app/actions/event/event.action";
+import {createEventAction} from "@/app/actions/event/event.action";
 import {format} from 'date-fns';
 import {ContentEditor} from "@/components/events/content-editor";
 
@@ -30,9 +30,10 @@ export function CreateEventForm() {
       eventTime: inputTime,
       locationName: formData.get("location") as string,
       locationLink: formData.get("map") as string,
+      maxParticipants: Number(formData.get("maxParticipants")),
     }
 
-    const res = await CreateEventAction(payload)
+    const res = await createEventAction(payload)
 
     toast.info(res.message)
 
@@ -109,6 +110,20 @@ export function CreateEventForm() {
 
 
           <div className="flex gap-4">
+
+            <Field>
+              <FieldLabel htmlFor="maxParticipants">Max Participants</FieldLabel>
+              <Input
+                id="maxParticipants"
+                type="number"
+                name="maxParticipants"
+                placeholder="100"
+                min="1"
+                defaultValue="25"
+              />
+            </Field>
+
+            
             <Field>
               <FieldLabel htmlFor="date">Date</FieldLabel>
               <CustomDatePicker />
@@ -146,18 +161,6 @@ export function CreateEventForm() {
               type="url"
               name="map"
               placeholder="https://share.google/jkQd7JmZJg808xIg4"
-            />
-          </Field>
-
-          <Field>
-            <FieldLabel htmlFor="maxParticipants">Max Participants</FieldLabel>
-            <Input
-              id="maxParticipants"
-              type="number"
-              name="maxParticipants"
-              placeholder="100"
-              min="1"
-              defaultValue="25"
             />
           </Field>
 

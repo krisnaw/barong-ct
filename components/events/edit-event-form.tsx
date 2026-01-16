@@ -46,6 +46,7 @@ export function EditEventForm({event} : {event: EventType}) {
       eventTime: inputTime,
       locationName: formData.get("location") as string,
       locationLink: formData.get("map") as string,
+      maxParticipants: Number(formData.get("maxParticipants")),
     }
 
     const res = await UpdateEventAction(payload)
@@ -132,6 +133,19 @@ export function EditEventForm({event} : {event: EventType}) {
           </Field>
 
           <div className="flex gap-4">
+
+            <Field>
+              <FieldLabel htmlFor="maxParticipants">Max Participants</FieldLabel>
+              <Input
+                id="maxParticipants"
+                type="number"
+                name="maxParticipants"
+                placeholder="100"
+                min="1"
+                defaultValue={event.maxParticipants ?? 25}
+              />
+            </Field>
+
             <Field>
               <FieldLabel htmlFor="date">Date</FieldLabel>
               <CustomDatePicker value={eventDate} />
