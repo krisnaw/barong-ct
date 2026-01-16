@@ -67,11 +67,10 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
                 </TableRow>
               </TableHeader>
               <TableBody>
-
                 {participants.length > 0 ? (
                   participants.map((participant) => (
                     <TableRow key={participant.id}>
-                      <TableCell className="font-medium">{participant.user.name}</TableCell>
+                      <TableCell className="font-medium">{participant.user.name ?? "-"}</TableCell>
                     </TableRow>
                   ))
                 ) : (
@@ -79,7 +78,6 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
                     <TableCell className="font-medium">Sorry, no participant yet</TableCell>
                   </TableRow>
                 )}
-
               </TableBody>
             </Table>
           </div>
