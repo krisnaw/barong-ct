@@ -49,7 +49,7 @@ export function CreateEventForm() {
 
           <Field>
             <FieldLabel htmlFor="name">Banner image</FieldLabel>
-            <div className="col-span-full flex flex-col sm:flex-row items-center gap-x-8">
+            <div className="col-span-full flex flex-col sm:flex-row items-center gap-4">
               
               <div>
                 {image ? (
