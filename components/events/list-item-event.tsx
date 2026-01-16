@@ -20,7 +20,7 @@ export function ListItemEvent({event} : {event: EventType}) {
       <div className="w-full flex flex-wrap items-center justify-between sm:flex-nowrap">
         <div>
           <p className="text-gray-500 text-lg">
-            <EventDate eventDate={event.startDate} type="date" />
+            <EventDate eventDate={event.startDate} type="date" /> -  <EventDate eventDate={event.startDate} type="time" />
           </p>
           <h4 className="text-lg font-bold ">
             {event.name}
