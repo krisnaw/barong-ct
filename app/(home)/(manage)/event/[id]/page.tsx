@@ -26,7 +26,7 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
             alt="Banner image"/>
         </div>
 
-        <div className="w-full mt-8">
+        <div className="w-full mt-8 md:mt-0">
 
           <div>
             <h2 className="text-2xl font-semibold">
@@ -108,9 +108,9 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
 
           <div className="mt-10">
 
-            <div className="space-y-6">
+            <div className="space-y-6 flex flex-col">
 
-              <div>
+              <div className="order-first md:order-last">
 
                 <div className="border-b border-gray-200">
                   <h3 className="text-base/7 font-semibold text-muted-foreground">Location</h3>
@@ -126,7 +126,7 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
                 </div>
               </div>
 
-              <div>
+              <div className="order-last md:order-first">
                 <div className="border-b border-gray-200">
                   <h3 className="text-base/7 font-semibold text-muted-foreground">About Event</h3>
                 </div>
@@ -138,8 +138,6 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
 
                 </div>
               </div>
-
-
 
             </div>
 
