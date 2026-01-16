@@ -1,4 +1,4 @@
-import {integer, pgTable, serial, text, timestamp} from "drizzle-orm/pg-core";
+import {integer, pgTable, serial, text, timestamp, uniqueIndex} from "drizzle-orm/pg-core";
 import {user} from "@/db/schema/auth-schema";
 import {EventSchema} from "@/db/schema/event-schema";
 import {relations} from "drizzle-orm";
@@ -20,7 +20,9 @@ export const participant = pgTable("event_participant", {
     .defaultNow()
     .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
-})
+}, (t) => ({
+  userEventUnique: uniqueIndex("user_event_unique").on(t.userId, t.eventId),
+}))
 
 export const userRelation = relations(participant, ({ one }) => ({
   user: one(user, {

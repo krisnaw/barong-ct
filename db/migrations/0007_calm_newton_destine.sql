@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "user_event_unique" ON "event_participant" USING btree ("user_id","event_id");

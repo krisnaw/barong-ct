@@ -9,6 +9,7 @@ import {participant} from "@/db/schema";
 import {Resend} from "resend";
 import CyclingEventConfirmationEmail from "@/react-email-starter/emails/event-registration-email";
 import {getEventById} from "@/db/query/event-query";
+import {revalidatePath} from "next/cache";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -54,6 +55,8 @@ export async function joinEventAction(payload: {  eventId: string }) : Promise<A
   } catch (error) {
     console.log(error);
   }
+
+  revalidatePath('/', 'layout')
 
   return {
     success: true,
