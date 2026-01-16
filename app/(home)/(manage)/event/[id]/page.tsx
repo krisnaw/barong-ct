@@ -5,7 +5,6 @@ import {redirect} from "next/navigation";
 import {toZonedTime} from "date-fns-tz";
 import {EventDate} from "@/components/events/event-date";
 import {EventStatus} from "@/components/events/event-status";
-import {format} from "date-fns";
 
 export default async function Page({params,}: { params: Promise<{ id: number }> }) {
 
@@ -18,7 +17,6 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
   }
 
   const eventTime = toZonedTime(event.startDate, "Asia/Singapore")
-  console.log("eventTime", format(eventTime, "HH:mm:ss"))
 
   return (
     <div className="mx-auto max-w-4xl">
@@ -54,7 +52,7 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
                       <EventDate eventDate={event.startDate} type="date"/>
                     </h4>
                     <p className="mt-1 text-gray-400">
-                      <EventDate eventDate={event.startDate} type="time"/>
+                      <EventDate eventDate={eventTime} type="time"/>
                     </p>
                   </div>
                 </div>
