@@ -11,8 +11,6 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
 
   const event = await getEventById(id);
 
-  console.log(event);
-
   if (!event) {
     redirect('/');
   }
@@ -77,17 +75,33 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
             <div className="mt-8">
               <div className="outline outline-gold-500 rounded-lg p-4 text-center">
 
-                <div className="text-lg font-bold text-gray-600">
-                  Limited slots available
-                </div>
+                {Number(event.maxParticipants) - event.participantCount == 0 ? (
+                  <>
+                    <div className="text-lg font-bold text-gray-600">
+                      Event is full
+                    </div>
+                    <div className="text-lg font-bold text-red-600">
+                      All slots have been taken.
+                    </div>
+                  </>
+                  ) : (
+                  <>
+                    <div className="text-lg font-bold text-gray-600">
+                      Limited slots available
+                    </div>
 
-                <div className="text-lg font-bold text-red-600">
-                  {Number(event.maxParticipants) - event.participantCount} spots left
-                </div>
+                    <div className="text-lg font-bold text-red-600">
+                      {Number(event.maxParticipants) - event.participantCount} spots left
+                    </div>
 
-                <div className="mt-2">
-                  <EventStatus eventId={event.id} max={event.maxParticipants ?? 0} current={event.participantCount}/>
-                </div>
+                    <div className="mt-2">
+                      <EventStatus eventId={event.id} max={event.maxParticipants ?? 0} current={event.participantCount}/>
+                    </div>
+                  </>
+
+                )}
+
+
               </div>
             </div>
           </div>
