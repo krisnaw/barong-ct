@@ -17,12 +17,12 @@ export default async function HomeLayout({children,}: Readonly<{ children: React
   })
 
   return (
-    <div className={`${instrumentSerif.className} min-h-screen flex flex-col `}>
-      <div className="flex-grow">
-        <Header user={session?.user ? session.user : undefined}/>
+    <div className={`${instrumentSerif.className} min-h-screen flex flex-col`}>
+      <Header user={session?.user ? session.user : undefined}/>
+      <div className="flex-1">
         {children}
-        <Footer />
       </div>
+      <Footer />
     </div>
   )
 }

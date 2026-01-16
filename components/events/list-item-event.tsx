@@ -32,7 +32,7 @@ export function ListItemEvent({event} : {event: EventType}) {
         </div>
         <div className="shrink-0 flex gap-2">
           <Button variant="outline" asChild>
-            <Link href={`/event/${event.id}`}>
+            <Link href={`/app/(home)/(manage)/event/${event.id}`}>
               View
             </Link>
           </Button>

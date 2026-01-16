@@ -26,12 +26,16 @@ export default async function ProfilePage() {
       <Tabs defaultValue="account" className="w-[400px]">
         <TabsList>
           <TabsTrigger value="account">Account</TabsTrigger>
-          <TabsTrigger value="password">Events</TabsTrigger>
+          <TabsTrigger value="password">Joined events</TabsTrigger>
         </TabsList>
         <TabsContent value="account">
           <ProfileForm user={userDetail} />
         </TabsContent>
-        <TabsContent value="password">Change your password here.</TabsContent>
+        <TabsContent value="password">
+
+          List of joined events
+
+        </TabsContent>
       </Tabs>
     </div>
   )
