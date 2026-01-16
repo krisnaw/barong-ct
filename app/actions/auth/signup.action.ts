@@ -23,7 +23,7 @@ export async function SignUpAction(email: string) : Promise<ActionResponse> {
   }
 }
 
-export async function signOut() : Promise<void> {
+export async function signOut() {
   await auth.api.signOut()
   redirect("/")
 }

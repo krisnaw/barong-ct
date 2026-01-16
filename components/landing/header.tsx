@@ -3,6 +3,9 @@
 import {useState} from 'react'
 import {MenuIcon, XIcon} from "lucide-react";
 import {User} from "@/types/auth-types";
+import {usePathname} from "next/navigation";
+import {cn} from "@/lib/utils";
+import {signOut} from "@/app/actions/auth/signup.action";
 
 const navigation = [
   { name: 'Events', href: '/event' },
@@ -11,6 +14,9 @@ const navigation = [
 
 export default function Header({user} : {user : User | undefined}) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+  const pathname = usePathname();
+  const isHome = pathname === "/";
 
   return (
     <header className="absolute inset-x-0 top-0 z-50">
@@ -38,22 +44,24 @@ export default function Header({user} : {user : User | undefined}) {
         </div>
         <div className="hidden lg:flex lg:gap-x-12">
           {navigation.map((item) => (
-            <a key={item.name} href={item.href} className="text-sm/6 font-semibold text-white">
+            <a key={item.name} href={item.href} className={cn('text-sm/6 font-semibold text-white', isHome ? 'text-white' : 'text-primary')}>
               {item.name}
             </a>
           ))}
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           {user ? (
-            <>
-              <a href="/profile" className="text-sm/6 font-semibold text-white">
+            <div className="inline-flex gap-4">
+              <a href="/profile" className={cn('text-sm/6 font-semibold text-white', isHome ? 'text-white' : 'text-primary')}>
                 Profile
               </a>
 
-              {/*<button formAction={signOut()}>Logout</button>*/}
-            </>
+              <button
+                className={cn('text-sm/6 font-semibold text-white', isHome ? 'text-white' : 'text-primary')}
+                formAction={signOut}>Logout</button>
+            </div>
             ) : (
-            <a href="/auth/signup" className="text-sm/6 font-semibold text-white">
+            <a href="/auth/signup" className={cn('text-sm/6 font-semibold text-white', isHome ? 'text-white' : 'text-primary')}>
               Log in <span aria-hidden="true">&rarr;</span>
             </a>
           ) }

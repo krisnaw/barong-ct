@@ -4,7 +4,7 @@ import {getEvents} from "@/db/query/event-query";
 export default async function EventsPage() {
   const events = await getEvents()
   return (
-    <div className="pt-14 h-full">
+    <div className="h-screen pt-20">
       <div className="mx-auto max-w-5xl p-6 lg:px-8">
         <ListEvent events={events} />
       </div>
