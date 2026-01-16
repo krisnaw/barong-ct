@@ -2,7 +2,6 @@ import {EventType} from "@/db/schema";
 import {MapPin} from "lucide-react";
 import {Button} from "@/components/ui/button";
 import Link from "next/link";
-import {ButtonJoinEvent} from "@/components/events/button-join-event";
 import {emptyBanner} from "@/types/date-helper";
 import {EventDate} from "@/components/events/event-date";
 
@@ -32,11 +31,10 @@ export function ListItemEvent({event} : {event: EventType}) {
         </div>
         <div className="shrink-0 flex gap-2">
           <Button variant="outline" asChild>
-            <Link href={`/app/(home)/(manage)/event/${event.id}`}>
+            <Link href={`/event/${event.id}`}>
               View
             </Link>
           </Button>
-          <ButtonJoinEvent eventId={event.id} />
         </div>
       </div>
 
