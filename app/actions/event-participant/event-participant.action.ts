@@ -10,7 +10,7 @@ import {Resend} from "resend";
 import CyclingEventConfirmationEmail from "@/react-email-starter/emails/event-registration-email";
 import {getEventById} from "@/db/query/event-query";
 import {revalidatePath} from "next/cache";
-import {formatEventTime} from "@/types/date-helper";
+import {formatEventDate, formatEventTime} from "@/types/date-helper";
 import {eq} from "drizzle-orm";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -41,7 +41,7 @@ export async function joinEventAction(payload: {  eventId: string }) : Promise<A
     const param = {
       name: session.user.name,
       eventName : event.name,
-      eventDate : event.startDate.toDateString(),
+      eventDate : formatEventDate(event.startDate),
       eventTime : formatEventTime(event.startDate),
       meetingPoint : event.locationName ?? "",
     }
