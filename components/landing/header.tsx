@@ -52,13 +52,17 @@ export default function Header({user} : {user : User | undefined}) {
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           {user ? (
             <div className="inline-flex gap-4">
+
+              <form  action={signOut}>
+                <button type="submit"
+                  className={cn('text-sm/6 font-semibold text-white', isHome ? 'text-white' : 'text-primary')}
+                 >Logout</button>
+              </form>
+
               <a href="/profile" className={cn('text-sm/6 font-semibold text-white', isHome ? 'text-white' : 'text-primary')}>
                 Profile
               </a>
 
-              <button
-                className={cn('text-sm/6 font-semibold text-white', isHome ? 'text-white' : 'text-primary')}
-                formAction={signOut}>Logout</button>
             </div>
             ) : (
             <a href="/auth/signup" className={cn('text-sm/6 font-semibold text-white', isHome ? 'text-white' : 'text-primary')}>
