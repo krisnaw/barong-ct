@@ -48,8 +48,6 @@ export function EditEventForm({event} : {event: EventType}) {
       locationLink: formData.get("map") as string,
     }
 
-    console.log(payload)
-
     const res = await UpdateEventAction(payload)
 
     toast.info(res.message)
