@@ -7,9 +7,10 @@ type Props = {
   eventDate : string,
   eventTime : string,
   meetingPoint : string,
+  eventURL: string,
 }
 
-const CyclingEventConfirmationEmail = ({ name, eventName, eventDate, eventTime, meetingPoint} : Props) => {
+const CyclingEventConfirmationEmail = ({ name, eventName, eventDate, eventTime, meetingPoint, eventURL} : Props) => {
   return (
     <Html lang="en" dir="ltr">
       <Tailwind>
@@ -54,16 +55,13 @@ const CyclingEventConfirmationEmail = ({ name, eventName, eventDate, eventTime, 
 
               <Section className="text-center mb-[32px]">
                 <Button
-                  href="#"
+                  href={eventURL}
                   className="bg-green-600 text-white px-[32px] py-[16px] rounded-[8px] text-[16px] font-semibold no-underline box-border hover:bg-green-700 transition-colors"
                 >
                   View Event Details
                 </Button>
               </Section>
-
-              <Text className="text-[14px] text-gray-600 mb-[32px] leading-relaxed">
-                Questions? Reply to this email or contact our support team. Can&#39;t make it? Please let us know as soon as possible.
-              </Text>
+              
             </Section>
 
           </Container>

@@ -37,6 +37,8 @@ export async function joinEventAction(payload: {  eventId: string }) : Promise<A
       eventId: Number(payload.eventId),
     }).onConflictDoNothing()
 
+    const eventURL = `${process.env.BETTER_AUTH_URL}/event/${event.id}`
+    console.log(eventURL);
 
     const param = {
       name: session.user.name,
@@ -44,6 +46,7 @@ export async function joinEventAction(payload: {  eventId: string }) : Promise<A
       eventDate : formatEventDate(event.startDate),
       eventTime : formatEventTime(event.startDate),
       meetingPoint : event.locationName ?? "",
+      eventURL
     }
 
     await resend.emails.send({
