@@ -20,11 +20,6 @@ export function formatEventTime(date: Date, locale = "id-ID") {
   }).format(date)
 }
 
-export function UTCtoLocalTime(date: Date) {
-  return toZonedTime(date, "Asia/Singapore")
-}
-
-
 export function eventDateFormat(
   utcDate: Date | string,
   timeZone = "Asia/Singapore"

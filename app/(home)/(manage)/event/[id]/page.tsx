@@ -1,5 +1,5 @@
 import {CalendarDays, MapPin} from "lucide-react";
-import {emptyBanner, UTCtoLocalTime} from "@/types/date-helper";
+import {emptyBanner} from "@/types/date-helper";
 import {getEventById} from "@/db/query/event-query";
 import {redirect} from "next/navigation";
 import {EventDate} from "@/components/events/event-date";
@@ -49,7 +49,7 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
                       <EventDate eventDate={event.startDate} type="date"/>
                     </h4>
                     <p className="mt-1 text-gray-400">
-                      <EventDate eventDate={UTCtoLocalTime(event.startDate)} type="time"/>
+                      <EventDate eventDate={event.startDate} type="time"/>
                     </p>
                   </div>
                 </div>
