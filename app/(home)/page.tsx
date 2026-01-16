@@ -1,6 +1,7 @@
 import {Heading} from "@/components/landing/heading";
 import {Container} from "@/components/landing/container";
 import Link from "next/link";
+import Image from "next/image";
 
 // If loading a variable font, you don't need to specify the font weight
 
@@ -9,9 +10,10 @@ export default async function Home() {
   return (
     <div>
       <div className="relative isolate overflow-hidden pt-14 h-screen">
-        <img
+        <Image
           alt=""
           src="/bg-image-opt.jpg"
+          fill={true}
           className="absolute inset-0 -z-10 size-full object-cover grayscale brightness-50 contrast-100"
         />
         {/*<div*/}
