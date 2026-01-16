@@ -18,6 +18,7 @@ import {UpdateProfileAction} from "@/app/actions/profile/profile.action";
 import {toast} from "sonner";
 import {UploadButton} from "@/utils/uploadthing";
 import {UserWithDetail} from "@/types/auth-types";
+import {Textarea} from "@/components/ui/textarea";
 
 export function ProfileForm({user}: {user: UserWithDetail}) {
 
@@ -122,6 +123,29 @@ export function ProfileForm({user}: {user: UserWithDetail}) {
                     name="phone_number"
                     placeholder="08212345678"
                     defaultValue={user.detail?.phoneNumber ?? ""}
+                  />
+                </Field>
+              </FieldGroup>
+
+              <FieldGroup>
+                <Field>
+                  <FieldLabel htmlFor="id_card">KTP / Passport ID / ID Card</FieldLabel>
+                  <Input
+                    id="id_card"
+                    type="text"
+                    name="id_card"
+                    placeholder="123023"
+                  />
+                </Field>
+              </FieldGroup>
+
+              <FieldGroup>
+                <Field>
+                  <FieldLabel htmlFor="address">Address</FieldLabel>
+                  <Textarea
+                    id="address"
+                    name="address"
+                    placeholder="Jln. Toko Sepeda"
                   />
                 </Field>
               </FieldGroup>

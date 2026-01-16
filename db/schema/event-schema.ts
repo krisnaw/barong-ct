@@ -1,4 +1,4 @@
-import {date, pgTable, serial, text, time, timestamp} from "drizzle-orm/pg-core";
+import {date, integer, pgTable, serial, text, time, timestamp} from "drizzle-orm/pg-core";
 import {createInsertSchema} from "drizzle-zod";
 
 export const EventSchema = pgTable("event", {
@@ -6,6 +6,8 @@ export const EventSchema = pgTable("event", {
   name: text("name").notNull(),
   description: text("description").notNull(),
   feature_image: text("feature_image"),
+
+  maxParticipants: integer("max_participants").default(50), // NULL = unlimited
 
   startDate: timestamp("start_date").defaultNow().notNull(),
 

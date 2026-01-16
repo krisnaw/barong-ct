@@ -1,7 +1,7 @@
 import {betterAuth} from "better-auth";
 import {drizzleAdapter} from "better-auth/adapters/drizzle";
 import {db} from "@/db/db";
-import {magicLink} from "better-auth/plugins";
+import {admin, magicLink} from "better-auth/plugins";
 
 import {Resend} from "resend";
 import {nextCookies} from "better-auth/next-js";
@@ -17,25 +17,23 @@ export const auth = betterAuth({
     enabled: true,
   },
   plugins: [
-    nextCookies(),
+    admin(),
     magicLink({
       expiresIn: 900,
       sendMagicLink: async ({ email, token, url }, ctx) => {
-
         try {
-          const data = await resend.emails.send({
+          await resend.emails.send({
             from: 'Barong Cycling Team <info@barongmelali.com>',
             to: [email],
             subject: 'Sign in to your account',
             react: MagicLinkEmail({ email, url })
           })
-
-          console.log(data)
         } catch (e) {
           console.log(e)
         }
 
       }
-    })
+    }),
+    nextCookies(),
   ]
 });
