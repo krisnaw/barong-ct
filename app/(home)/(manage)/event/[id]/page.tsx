@@ -19,14 +19,14 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
     <div className="mx-auto max-w-4xl">
       <div className="sm:flex gap-8">
 
-        <div className="mr-4 shrink-0 w-sm">
+        <div className="mr-0 md:mr-4 shrink-0 w-full md:w-64 lg:w-80">
           <img
             className="aspect-square w-full rounded-2xl  object-cover"
             src={event.feature_image ?? emptyBanner}
             alt="Banner image"/>
         </div>
 
-        <div className="w-full">
+        <div className="w-full mt-8">
 
           <div>
             <h2 className="text-2xl font-semibold">
@@ -86,7 +86,23 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
             <div className="space-y-6">
 
               <div>
-                <div className="px-4 sm:px-0 border-b border-gray-200">
+
+                <div className="border-b border-gray-200">
+                  <h3 className="text-base/7 font-semibold text-muted-foreground">Location</h3>
+                </div>
+
+                <div className="mt-4">
+                  <div className="w-full aspect-[16/9] rounded-lg overflow-hidden">
+                    <iframe
+                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3944.3628429589126!2d115.26138180000001!3d-8.656998999999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd241007ff18975%3A0x90cb3b1c40257b08!2sXavi%20Croissanterie!5e0!3m2!1sen!2sid!4v1768382812451!5m2!1sen!2sid"
+                      width="600" height="450" style={{border: 0}} allowFullScreen={false} loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"></iframe>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div className="border-b border-gray-200">
                   <h3 className="text-base/7 font-semibold text-muted-foreground">About Event</h3>
                 </div>
                 <div>
@@ -98,19 +114,7 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
                 </div>
               </div>
 
-              <div>
 
-                <div className="px-4 sm:px-0 border-b border-gray-200">
-                  <h3 className="text-base/7 font-semibold text-muted-foreground">Location</h3>
-                </div>
-
-                <div className="mt-4">
-                  <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3944.3628429589126!2d115.26138180000001!3d-8.656998999999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd241007ff18975%3A0x90cb3b1c40257b08!2sXavi%20Croissanterie!5e0!3m2!1sen!2sid!4v1768382812451!5m2!1sen!2sid"
-                    width="600" height="450" style={{border: 0}} allowFullScreen={false} loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"></iframe>
-                </div>
-              </div>
 
             </div>
 

@@ -23,7 +23,7 @@ export default async function ProfilePage() {
 
   return (
     <div>
-      <Tabs defaultValue="account" className="w-[400px]">
+      <Tabs defaultValue="account" className="w-full">
         <TabsList>
           <TabsTrigger value="account">Account</TabsTrigger>
           <TabsTrigger value="password">Joined events</TabsTrigger>

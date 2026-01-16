@@ -56,7 +56,7 @@ export function ProfileForm({user}: {user: UserWithDetail}) {
           <FieldSet>
             <FieldLegend>Profile</FieldLegend>
             <FieldDescription>
-              Update your full name for event registration and race-related features.
+              Update your full name
             </FieldDescription>
 
             <FieldGroup>
