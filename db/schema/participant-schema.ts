@@ -24,10 +24,14 @@ export const participant = pgTable("event_participant", {
   userEventUnique: uniqueIndex("user_event_unique").on(t.userId, t.eventId),
 }))
 
-export const userRelation = relations(participant, ({ one }) => ({
+export const participantRelations = relations(participant, ({ one }) => ({
   user: one(user, {
     fields: [participant.userId],
     references: [user.id],
+  }),
+  event: one(EventSchema, {
+    fields: [participant.eventId],
+    references: [EventSchema.id],
   }),
 }));
 

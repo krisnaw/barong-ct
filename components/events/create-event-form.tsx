@@ -150,6 +150,18 @@ export function CreateEventForm() {
           </Field>
 
           <Field>
+            <FieldLabel htmlFor="maxParticipants">Max Participants</FieldLabel>
+            <Input
+              id="maxParticipants"
+              type="number"
+              name="maxParticipants"
+              placeholder="100"
+              min="1"
+              defaultValue="25"
+            />
+          </Field>
+
+          <Field>
             <Button type="submit" disabled={isPending} size="lg">
               {isPending ? <Spinner /> : null }
               Save
