@@ -1,8 +1,7 @@
 import {CalendarDays, MapPin} from "lucide-react";
-import {emptyBanner} from "@/types/date-helper";
+import {emptyBanner, UTCtoLocalTime} from "@/types/date-helper";
 import {getEventById} from "@/db/query/event-query";
 import {redirect} from "next/navigation";
-import {toZonedTime} from "date-fns-tz";
 import {EventDate} from "@/components/events/event-date";
 import {EventStatus} from "@/components/events/event-status";
 
@@ -15,8 +14,6 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
   if (!event) {
     redirect('/');
   }
-
-  const eventTime = toZonedTime(event.startDate, "Asia/Singapore")
 
   return (
     <div className="mx-auto max-w-4xl">
@@ -52,7 +49,7 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
                       <EventDate eventDate={event.startDate} type="date"/>
                     </h4>
                     <p className="mt-1 text-gray-400">
-                      <EventDate eventDate={eventTime} type="time"/>
+                      <EventDate eventDate={UTCtoLocalTime(event.startDate)} type="time"/>
                     </p>
                   </div>
                 </div>

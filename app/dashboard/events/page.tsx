@@ -3,6 +3,7 @@ import {Button} from "@/components/ui/button";
 import Link from "next/link";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {EventDate} from "@/components/events/event-date";
+import {UTCtoLocalTime} from "@/types/date-helper";
 
 export default async function EventsPage() {
 
@@ -50,7 +51,7 @@ export default async function EventsPage() {
                 </div>
                 <div className="mt-1 text-muted-foreground">
 
-                  <EventDate eventDate={event.startDate} type="time" />
+                  <EventDate eventDate={UTCtoLocalTime(event.startDate)} type="time" />
                 </div>
               </TableCell>
               <TableCell>
@@ -59,9 +60,6 @@ export default async function EventsPage() {
                     View
                   </Button>
                 </Link>
-
-
-
 
                 <Link href={`/dashboard/events/${event.id}/edit`}>
                   <Button variant="outline" size="sm">
