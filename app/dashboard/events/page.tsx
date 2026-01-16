@@ -35,6 +35,7 @@ export default async function EventsPage() {
           <TableRow>
             <TableHead>Name</TableHead>
             <TableHead>Date time</TableHead>
+            <TableHead>Participants</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -51,6 +52,9 @@ export default async function EventsPage() {
                 <div className="mt-1 text-muted-foreground">
                   <EventDate eventDate={event.startDate} type="time" />
                 </div>
+              </TableCell>
+              <TableCell>
+                {event.participantCount} / {event.maxParticipants || '∞'}
               </TableCell>
               <TableCell>
                 <Link href={`/dashboard/events/${event.id}`}>

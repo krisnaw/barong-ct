@@ -5,7 +5,7 @@ import {ButtonJoinEvent} from "@/components/events/button-join-event";
 import {Button} from "@/components/ui/button";
 import Link from "next/link";
 
-export async function EventStatus({eventId}: {eventId: number}) {
+export async function EventStatus({eventId, max, current}: {eventId: number, max: number, current: number}) {
   const session = await auth.api.getSession({
     headers: await headers() // you need to pass the headers object.
   })

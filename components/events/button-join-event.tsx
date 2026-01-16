@@ -22,7 +22,7 @@ export function ButtonJoinEvent({eventId} : {eventId: number}) {
       <input type="hidden" name="eventId" defaultValue={eventId} />
       <Button className="w-full" type="submit" disabled={isPending}>
         {isPending ? <Spinner /> : null}
-        Join
+        Join Now
       </Button>
     </form>
   )

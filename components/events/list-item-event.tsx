@@ -1,11 +1,11 @@
 import {EventType} from "@/db/schema";
 import {emptyBanner} from "@/types/date-helper";
-import {MapPin} from "lucide-react";
+import {MapPin, Users} from "lucide-react";
 import {EventDate} from "@/components/events/event-date";
 import {Button} from "@/components/ui/button";
 import Link from "next/link";
 
-export function ListItemEvent({event}: { event: EventType }) {
+export function ListItemEvent({event}: { event: EventType & { participantCount?: number } }) {
   return (
     <div className="sm:flex outline rounded-xl p-4">
       <div className="mb-4 shrink-0 sm:mr-4 sm:mb-0 flex items-center justify-center">
@@ -29,9 +29,17 @@ export function ListItemEvent({event}: { event: EventType }) {
               {event.name}
             </h3>
 
-            <p className="mt-1 inline-flex items-center text-gray-500 gap-2">
-              <MapPin size={18}/> {event.locationName}
-            </p>
+            <div className="flex gap-4">
+              <p className="mt-1 inline-flex items-center text-gray-500 gap-2">
+                <MapPin size={18}/> {event.locationName}
+              </p>
+
+              {event.participantCount !== undefined && (
+                <p className="mt-1 inline-flex items-center text-gray-500 gap-2">
+                  <Users size={18}/> {event.participantCount}
+                </p>
+              )}
+            </div>
 
           </div>
           <div className="mt-4 shrink-0">

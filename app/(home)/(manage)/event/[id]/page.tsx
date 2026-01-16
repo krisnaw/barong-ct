@@ -11,6 +11,8 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
 
   const event = await getEventById(id);
 
+  console.log(event);
+
   if (!event) {
     redirect('/');
   }
@@ -56,28 +58,37 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
               </li>
 
               <li>
-                <div className="flex">
+                <div className="flex items-center">
                   <div className="mr-4 shrink-0">
 
                     <div className="outline rounded-xl outline-gray-300 p-2.5">
                       <MapPin size="32" className="text-gray-500"/>
                     </div>
-
                   </div>
                   <div>
                     <h4 className="text-lg font-semibold text-gray-800">
                       {event.locationName}
                     </h4>
-                    <p className="mt-1 text-gray-400">
-                      {event.locationName}
-                    </p>
                   </div>
                 </div>
               </li>
             </ul>
 
             <div className="mt-8">
-              <EventStatus eventId={event.id} />
+              <div className="outline outline-gold-500 rounded-lg p-4 text-center">
+
+                <div className="text-lg font-bold text-gray-600">
+                  Limited slots available
+                </div>
+
+                <div className="text-lg font-bold text-red-600">
+                  {Number(event.maxParticipants) - event.participantCount} spots left
+                </div>
+
+                <div className="mt-2">
+                  <EventStatus eventId={event.id} max={event.maxParticipants ?? 0} current={event.participantCount}/>
+                </div>
+              </div>
             </div>
           </div>
 

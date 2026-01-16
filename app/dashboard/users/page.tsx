@@ -1,21 +1,8 @@
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table"
+import {Button} from "@/components/ui/button";
+import Link from "next/link";
 import {db} from "@/db/db";
 import {user} from "@/db/schema";
-
-type User = {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-};
-
-const dummyUsers: User[] = [
-  { id: "1", name: "Alice Smith", email: "alice@example.com", role: "Admin" },
-  { id: "2", name: "Bob Johnson", email: "bob@example.com", role: "Member" },
-  { id: "3", name: "Charlie Brown", email: "charlie@example.com", role: "Member" },
-  { id: "4", name: "Diana Prince", email: "diana@example.com", role: "Editor" },
-  { id: "5", name: "Eve Adams", email: "eve@example.com", role: "Member" },
-];
 
 export default async function UsersPage() {
   const users =  await db.select().from(user).limit(10)
@@ -28,12 +15,22 @@ export default async function UsersPage() {
           <TableHeader>
             <TableRow>
               <TableHead>Name</TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {users.map((user) => (
               <TableRow key={user.id}>
                 <TableCell className="font-medium">{user.name}</TableCell>
+                <TableCell>{user.email}</TableCell>
+                <TableCell>
+                  <Button variant="outline" size="sm" asChild>
+                    <Link href={`/dashboard/users/${user.id}`}>
+                      View Details
+                    </Link>
+                  </Button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
