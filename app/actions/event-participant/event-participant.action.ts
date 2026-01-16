@@ -10,6 +10,8 @@ import {Resend} from "resend";
 import CyclingEventConfirmationEmail from "@/react-email-starter/emails/event-registration-email";
 import {getEventById} from "@/db/query/event-query";
 import {revalidatePath} from "next/cache";
+import {toZonedTime} from "date-fns-tz";
+import {formatEventDate, formatEventTime} from "@/types/date-helper";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -35,11 +37,13 @@ export async function joinEventAction(payload: {  eventId: string }) : Promise<A
       eventId: Number(payload.eventId),
     }).onConflictDoNothing()
 
+    const zonedDate = toZonedTime(event.startDate, 'Asia/Singapore')
+
     const param = {
       name: session.user.name,
       eventName : event.name,
-      eventDate : event.startDate.toDateString(),
-      eventTime : event.startDate.toTimeString(),
+      eventDate : formatEventDate(zonedDate),
+      eventTime : formatEventTime(zonedDate),
       meetingPoint : event.locationName ?? "",
     }
 
@@ -49,8 +53,6 @@ export async function joinEventAction(payload: {  eventId: string }) : Promise<A
       subject: 'Thanks for joining the event',
       react: CyclingEventConfirmationEmail(param)
     })
-
-
 
   } catch (error) {
     console.log(error);
