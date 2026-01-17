@@ -66,7 +66,7 @@ const CyclingEventConfirmationEmail = ({ name, eventName, eventDate, eventTime, 
               <Section className="text-center mb-[32px]">
                 <Button
                   href={eventURL}
-                  className="bg-green-600 text-white px-[32px] py-[16px] rounded-[8px] text-[16px] font-semibold no-underline box-border hover:bg-green-700 transition-colors"
+                  className="bg-blue-600 text-white px-[32px] py-[16px] rounded-[8px] text-[16px] font-semibold no-underline box-border  transition-colors"
                 >
                   View Event Details
                 </Button>

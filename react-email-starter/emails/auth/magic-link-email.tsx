@@ -61,7 +61,7 @@ const MagicLinkEmail = ({email, url} : { email: string, url: string}) => {
               <Section className="text-center mb-[32px]">
                 <Button
                   href={url}
-                  className="bg-blue-600 text-white px-[32px] py-[16px] rounded-[8px] text-[16px] font-semibold no-underline box-border hover:bg-blue-700 transition-colors"
+                  className="bg-blue-600 text-white px-[32px] py-[16px] rounded-[8px] text-[16px] font-semibold no-underline box-border  transition-colors"
                 >
                   Continue
                 </Button>
