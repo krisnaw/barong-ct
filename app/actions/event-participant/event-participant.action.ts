@@ -38,7 +38,6 @@ export async function joinEventAction(payload: {  eventId: string }) : Promise<A
     }).onConflictDoNothing()
 
     const eventURL = `${process.env.BETTER_AUTH_URL}/event/${event.id}`
-    console.log(eventURL);
 
     const param = {
       name: session.user.name,

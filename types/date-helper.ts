@@ -1,18 +1,25 @@
 import {format, toZonedTime} from "date-fns-tz"
 
+const lang = "en-GB"
+
 export function formatEventDate(date: Date) {
-  return new Intl.DateTimeFormat("id-ID", {
+  const res  = new Intl.DateTimeFormat(lang, {
     weekday: "long",
     month: "long",
     day: "numeric",
     year: "numeric",
     timeZone: "Asia/Singapore", // GMT+8
   }).format(date)
+
+  console.log(res.toString())
+
+  return res;
 }
 
 
-export function formatEventTime(date: Date, locale = "id-ID") {
-  return new Intl.DateTimeFormat(locale, {
+
+export function formatEventTime(date: Date) {
+  return new Intl.DateTimeFormat(lang, {
     hour: "numeric",
     minute: "2-digit",
     hour12: true,
