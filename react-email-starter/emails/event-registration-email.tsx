@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Body, Button, Container, Head, Html, Section, Tailwind, Text,} from '@react-email/components';
+import {Body, Button, Container, Head, Html, Img, Section, Tailwind, Text,} from '@react-email/components';
 
 type Props = {
   name: string,
@@ -10,6 +10,8 @@ type Props = {
   eventURL: string,
 }
 
+const imgURL = "https://fi7tj80kxj.ufs.sh/f/jjB2MlHJbriWIPo3tMP916KnsQXzrbZ8jdfDLy0eJwl3qaVC"
+
 const CyclingEventConfirmationEmail = ({ name, eventName, eventDate, eventTime, meetingPoint, eventURL} : Props) => {
   return (
     <Html lang="en" dir="ltr">
@@ -17,10 +19,18 @@ const CyclingEventConfirmationEmail = ({ name, eventName, eventDate, eventTime, 
         <Head />
         <Body className="bg-gray-100 font-sans py-[40px]">
           <Container className="bg-white rounded-[8px] shadow-lg max-w-[600px] mx-auto p-[40px]">
+
+            <Section className="flex items-center justify-center">
+              <Img
+                src={imgURL}
+                width="128"
+                height="128"
+                alt="Barong Cycling Logo"
+              />
+            </Section>
+
+
             <Section>
-              <Text className="text-[32px] font-bold text-gray-900 mb-[24px] text-center">
-                🚴‍♂️ You&#39;re In!
-              </Text>
 
               <Text className="text-[18px] text-gray-700 mb-[24px] leading-relaxed">
                 Hey {name}!

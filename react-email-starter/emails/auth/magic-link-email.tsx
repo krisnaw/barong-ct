@@ -1,5 +1,19 @@
 import * as React from 'react';
-import {Body, Button, Container, Head, Html, pixelBasedPreset, Section, Tailwind, Text,} from '@react-email/components';
+import {
+  Body,
+  Button,
+  Container,
+  Head,
+  Html,
+  Img,
+  pixelBasedPreset,
+  Section,
+  Tailwind,
+  Text,
+} from '@react-email/components';
+
+const imgURL = "https://fi7tj80kxj.ufs.sh/f/jjB2MlHJbriWIPo3tMP916KnsQXzrbZ8jdfDLy0eJwl3qaVC"
+
 
 const MagicLinkEmail = ({email, url} : { email: string, url: string}) => {
 
@@ -20,6 +34,16 @@ const MagicLinkEmail = ({email, url} : { email: string, url: string}) => {
         <Head />
         <Body className="bg-gray-100 font-sans py-[40px]">
           <Container className="bg-white rounded-[8px] shadow-lg max-w-[600px] mx-auto p-[40px]">
+
+            <Section className="flex items-center justify-center">
+              <Img
+                src={imgURL}
+                width="128"
+                height="128"
+                alt="Barong Cycling Logo"
+              />
+            </Section>
+
             <Section>
 
               <Text className="text-[32px] font-bold text-gray-900 mb-[24px] text-center">
