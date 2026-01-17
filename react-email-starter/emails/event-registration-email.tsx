@@ -12,7 +12,7 @@ type Props = {
 
 const imgURL = "https://fi7tj80kxj.ufs.sh/f/jjB2MlHJbriWIPo3tMP916KnsQXzrbZ8jdfDLy0eJwl3qaVC"
 
-const CyclingEventConfirmationEmail = ({ name, eventName, eventDate, eventTime, meetingPoint, eventURL} : Props) => {
+const CyclingEventConfirmationEmail = ({ name, eventName, eventDate, eventTime, meetingPoint, eventURL } : Props) => {
   return (
     <Html lang="en" dir="ltr">
       <Tailwind>

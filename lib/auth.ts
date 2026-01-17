@@ -5,7 +5,7 @@ import {admin, magicLink} from "better-auth/plugins";
 
 import {Resend} from "resend";
 import {nextCookies} from "better-auth/next-js";
-import MagicLinkEmail from "@/react-email-starter/emails/auth/magic-link-email";
+import SignupLink from "@/react-email-starter/emails/auth/signup-link";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -26,7 +26,7 @@ export const auth = betterAuth({
             from: 'Barong Cycling Team <info@barongmelali.com>',
             to: [email],
             subject: 'Sign in to your account',
-            react: MagicLinkEmail({ email, url })
+            react: SignupLink({ email, url })
           })
         } catch (e) {
           console.log(e)

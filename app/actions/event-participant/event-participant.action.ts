@@ -7,11 +7,11 @@ import {redirect} from "next/navigation";
 import {db} from "@/db/db";
 import {participant} from "@/db/schema";
 import {Resend} from "resend";
-import CyclingEventConfirmationEmail from "@/react-email-starter/emails/event-registration-email";
 import {getEventById} from "@/db/query/event-query";
 import {revalidatePath} from "next/cache";
 import {formatEventDate, formatEventTime} from "@/types/date-helper";
 import {eq} from "drizzle-orm";
+import EventJoinedEmail from "@/react-email-starter/emails/event-joined-email";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -41,7 +41,7 @@ export async function joinEventAction(payload: {  eventId: string }) : Promise<A
 
     const param = {
       name: session.user.name,
-      eventName : event.name,
+      eventName : event.name ?? "There",
       eventDate : formatEventDate(event.startDate),
       eventTime : formatEventTime(event.startDate),
       meetingPoint : event.locationName ?? "",
@@ -52,7 +52,7 @@ export async function joinEventAction(payload: {  eventId: string }) : Promise<A
       from: 'Barong Cycling Team <info@barongmelali.com>',
       to: [session.user.email],
       subject: 'Thanks for joining the event',
-      react: CyclingEventConfirmationEmail(param)
+      react: EventJoinedEmail(param)
     })
 
   } catch (error) {
