@@ -145,7 +145,6 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
                     name="clubName"
                     placeholder="Barong Cycling"
                     defaultValue={user.detail?.clubName ?? ""}
-                    required
                   />
                 </Field>
 
