@@ -12,11 +12,14 @@ import {UploadButton} from "@/utils/uploadthing";
 import {UserWithDetail} from "@/types/auth-types";
 import {Textarea} from "@/components/ui/textarea";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select";
-import {CalendarViewPicker} from "@/components/ui/calendar-view-picker";
+import {CustomDatePicker} from "@/components/ui/custom-date-picker";
 
 export function ProfileForm({user}: { user: UserWithDetail }) {
 
   const [profileImage, setProfileImage] = useState<string | null>(user.image ?? null);
+  const [dateOfBirth, setDateOfBirth] = useState<Date | undefined>(
+    user.detail?.dateOfBirth ? new Date(user.detail.dateOfBirth) : undefined
+  );
   const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(async (prevState: ActionResponse, formData: FormData) => {
 
     const payload = {
@@ -24,7 +27,7 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
       name: formData.get("full_name") as string,
       image: profileImage ?? null,
       phoneNumber: formData.get("phone_number") as string,
-      dateOfBirth: formData.get("date") as string,
+      dateOfBirth: dateOfBirth ? dateOfBirth.toISOString().split('T')[0] : "",
       emergencyContactName: formData.get("emergency_contact_name") as string,
       emergencyContactNumber: formData.get("emergency_contact_number") as string,
       instagram: formData.get("instagram") as string,
@@ -52,6 +55,7 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
     return res;
 
   }, initialState)
+  
   return (
     <div className="flex flex-col gap-6">
 
@@ -204,11 +208,7 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
 
                 <Field>
                   <FieldLabel htmlFor="date_of_birth">Date of Birth</FieldLabel>
-                  <div className="h-[300px]">
-                    <CalendarViewPicker defaultValue={user.detail?.dateOfBirth ?? undefined} />
-                  </div>
-
-                  {/*<CustomDatePicker value={user.detail?.dateOfBirth ? new Date(user.detail?.dateOfBirth) : undefined}/>*/}
+                  <CustomDatePicker value={dateOfBirth} />
                 </Field>
 
 

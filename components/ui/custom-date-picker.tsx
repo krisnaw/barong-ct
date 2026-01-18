@@ -17,8 +17,6 @@ export function CustomDatePicker({ value = new Date() }: CustomDatePickerProps) 
   const [date, setDate] = React.useState<Date>(value)
   const [timeZone, setTimeZone] = React.useState<string | undefined>(undefined)
 
-  console.log(date)
-
   useEffect(() => {
     setTimeZone(Intl.DateTimeFormat().resolvedOptions().timeZone)
   }, [])
@@ -43,7 +41,7 @@ export function CustomDatePicker({ value = new Date() }: CustomDatePickerProps) 
             mode="single"
             selected={date}
             captionLayout="dropdown"
-
+            defaultMonth={date}
             onSelect={(date) => {
               if (!date) return
               setDate(date)

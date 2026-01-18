@@ -9,17 +9,22 @@ interface Props {
 }
 
 export function CalendarViewPicker({ defaultValue }: Props) {
-  const [date, setDate] = React.useState<Date | undefined>( defaultValue ? new Date(defaultValue) : new Date())
-
-  console.log("CalendarViewPicker", date)
+  const [date, setDate] = React.useState<Date | undefined>(defaultValue);
 
   return (
-    <Calendar
-      mode="single"
-      selected={date}
-      onSelect={setDate}
-      className="rounded-md border shadow-sm md:max-w-sm"
-      captionLayout="dropdown"
-    />
+    <>
+      <input className="hidden" name="date" id="date" type="text" defaultValue={date?.toLocaleDateString()}  />
+      <Calendar
+        mode="single"
+        selected={date}
+        onSelect={(date) => {
+          if (!date) return
+          setDate(date)
+        }}
+        defaultMonth={date}
+        className="rounded-md border shadow-sm md:max-w-sm"
+        captionLayout="dropdown"
+      />
+    </>
   )
 }
