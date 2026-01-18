@@ -6,19 +6,24 @@ export const userDetail = pgTable("user_detail", {
     .primaryKey()
     .references(() => user.id, {onDelete: "cascade"}),
 
-  identity_number: text("identity_number"),
-  address: text("address"),
-  blood_type: text("blood_type"),
-
-  dateOfBirth: date("date_of_birth"),
-
   phoneNumber: text("phone_number"),
+  identityNumber: text("identity_number"),
+  nationality: text("nationality"),
+  gender: text("gender"),
+  bloodType: text("blood_type"),
+  dateOfBirth: date("date_of_birth"),
 
   instagram: text("instagram"),
   strava: text("strava"),
 
   emergencyContactName: text("emergency_contact_name"),
   emergencyContactNumber: text("emergency_contact_number"),
+
+  countryOfResidence: text("country_of_residence"),
+  province: text("province"),
+  city: text("city"),
+  postalCode: text("postal_code"),
+  address: text("address"),
 });
 
 export type UserDetailType = typeof userDetail.$inferSelect

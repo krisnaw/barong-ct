@@ -18,6 +18,8 @@ export async function UpdateProfileAction(payload: Partial<User & UserDetailType
       }
     })
 
+    payload.userId = String(payload.id)
+
     await db.insert(userDetail)
       .values({
         userId: String(payload.id),
@@ -26,20 +28,12 @@ export async function UpdateProfileAction(payload: Partial<User & UserDetailType
         strava: payload.strava,
         emergencyContactName: payload.emergencyContactName,
         emergencyContactNumber: payload.emergencyContactNumber,
-        identity_number: payload.identity_number,
+        identityNumber: payload.identityNumber,
         address: payload.address,
       })
       .onConflictDoUpdate({
         target: userDetail.userId,
-        set: {
-          phoneNumber: payload.phoneNumber,
-          instagram: payload.instagram,
-          strava: payload.strava,
-          emergencyContactName: payload.emergencyContactName,
-          emergencyContactNumber: payload.emergencyContactNumber,
-          identity_number: payload.identity_number,
-          address: payload.address,
-        }
+        set: payload
       })
 
     revalidatePath("/", "page")

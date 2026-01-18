@@ -31,10 +31,10 @@ export default async function ProfilePage() {
           <TabsTrigger value="account">Account</TabsTrigger>
           <TabsTrigger value="joined-events">Joined events</TabsTrigger>
         </TabsList>
-        <TabsContent value="account">
+        <TabsContent value="account" className="pt-6">
           <ProfileForm user={userDetail} />
         </TabsContent>
-        <TabsContent value="joined-events">
+        <TabsContent value="joined-events" className="pt-6">
           <ListEvent events={joinedEvents} />
         </TabsContent>
       </Tabs>
