@@ -3,7 +3,13 @@
 import {user} from "@/db/schema";
 import {UserWithDetail} from "@/types/auth-types";
 import {db} from "@/db/db";
-import {eq} from "drizzle-orm";
+import {eq, ilike} from "drizzle-orm";
+
+export async function getUsers( name?  : string) {
+  return db.select().from(user)
+    .where(name ? ilike(user.name, `%${name}%`) : undefined)
+    .limit(100);
+}
 
 export async function getUserWithDetail(id: string): Promise<UserWithDetail | undefined> {
   const userDetail = await db.query.user.findFirst({

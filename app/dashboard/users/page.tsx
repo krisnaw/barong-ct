@@ -1,14 +1,27 @@
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table"
 import {Button} from "@/components/ui/button";
 import Link from "next/link";
-import {db} from "@/db/db";
-import {user} from "@/db/schema";
+import {InputSearch} from "@/components/dashboard/input-search";
+import {getUsers} from "@/db/query/user-query";
 
-export default async function UsersPage() {
-  const users =  await db.select().from(user).limit(100)
+export default async function UsersPage({searchParams} : {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+
+  const name = (await searchParams).name as string ?? ""
+  const users = await getUsers(name)
+
   return (
     <div className="flex flex-col gap-6">
       <h1 className="text-2xl font-bold">Users</h1>
+
+      <div>
+        {name}
+      </div>
+
+      <div>
+        <InputSearch />
+      </div>
 
       <div className="rounded-md border">
         <Table>

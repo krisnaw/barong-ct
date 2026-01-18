@@ -5,6 +5,7 @@ import {Toaster} from "sonner";
 import {NextSSRPlugin} from "@uploadthing/react/next-ssr-plugin";
 import {extractRouterConfig} from "uploadthing/server";
 import {ourFileRouter} from "@/app/api/uploadthing/core";
+import {NuqsAdapter} from "nuqs/adapters/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,7 +39,7 @@ export default function RootLayout({
          */
         routerConfig={extractRouterConfig(ourFileRouter)}
       />
-      {children}
+      <NuqsAdapter>{children}</NuqsAdapter>
       <Toaster position="top-center" />
       </body>
     </html>
