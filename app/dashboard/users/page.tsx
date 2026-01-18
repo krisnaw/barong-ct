@@ -5,7 +5,7 @@ import {db} from "@/db/db";
 import {user} from "@/db/schema";
 
 export default async function UsersPage() {
-  const users =  await db.select().from(user).limit(10)
+  const users =  await db.select().from(user).limit(100)
   return (
     <div className="flex flex-col gap-6">
       <h1 className="text-2xl font-bold">Users</h1>
