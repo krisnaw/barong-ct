@@ -17,6 +17,8 @@ export function CustomDatePicker({ value = new Date() }: CustomDatePickerProps) 
   const [date, setDate] = React.useState<Date>(value)
   const [timeZone, setTimeZone] = React.useState<string | undefined>(undefined)
 
+  console.log(date)
+
   useEffect(() => {
     setTimeZone(Intl.DateTimeFormat().resolvedOptions().timeZone)
   }, [])

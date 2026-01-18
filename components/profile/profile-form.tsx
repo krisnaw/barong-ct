@@ -12,7 +12,7 @@ import {UploadButton} from "@/utils/uploadthing";
 import {UserWithDetail} from "@/types/auth-types";
 import {Textarea} from "@/components/ui/textarea";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select";
-import {CustomDatePicker} from "@/components/ui/custom-date-picker";
+import {CalendarViewPicker} from "@/components/ui/calendar-view-picker";
 
 export function ProfileForm({user}: { user: UserWithDetail }) {
 
@@ -184,12 +184,6 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
                 </Field>
 
                 <Field>
-                  <FieldLabel htmlFor="date_of_birth">Date of Birth</FieldLabel>
-                  <CustomDatePicker value={user.detail?.dateOfBirth ? new Date(user.detail?.dateOfBirth) : undefined}/>
-                </Field>
-
-
-                <Field>
                   <FieldLabel htmlFor="blood_type">Blood Type</FieldLabel>
                   <Select defaultValue={user.detail?.bloodType ?? ""} name="blood_type" >
                     <SelectTrigger>
@@ -207,6 +201,16 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
                     </SelectContent>
                   </Select>
                 </Field>
+
+                <Field>
+                  <FieldLabel htmlFor="date_of_birth">Date of Birth</FieldLabel>
+                  <div className="h-[300px]">
+                    <CalendarViewPicker defaultValue={user.detail?.dateOfBirth ?? undefined} />
+                  </div>
+
+                  {/*<CustomDatePicker value={user.detail?.dateOfBirth ? new Date(user.detail?.dateOfBirth) : undefined}/>*/}
+                </Field>
+
 
               </div>
 
