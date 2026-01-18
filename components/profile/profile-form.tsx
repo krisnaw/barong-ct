@@ -12,7 +12,7 @@ import {UploadButton} from "@/utils/uploadthing";
 import {UserWithDetail} from "@/types/auth-types";
 import {Textarea} from "@/components/ui/textarea";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select";
-import {CalendarViewPicker} from "@/components/ui/calendar-view-picker";
+import {CustomDatePicker} from "@/components/ui/custom-date-picker";
 
 export function ProfileForm({user}: { user: UserWithDetail }) {
 
@@ -208,9 +208,7 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
 
                 <Field>
                   <FieldLabel htmlFor="date_of_birth">Date of Birth</FieldLabel>
-                  <div className="h-[300px]">
-                    <CalendarViewPicker defaultValue={dateOfBirth} />
-                  </div>
+                  <CustomDatePicker value={user.detail.dateOfBirth ? new Date(user.detail.dateOfBirth)  : undefined} />
                 </Field>
 
 
