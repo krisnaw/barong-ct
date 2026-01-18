@@ -143,7 +143,7 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
               <div className="sm:col-span-1">
                 <dt className="text-sm  text-gray-500">Cycling Team / Club Name</dt>
                 <dd className="mt-1 font-medium text-gray-900 text-lg">
-                  {user.detail.gender ?? "-"}
+                  {user.detail.clubName ?? "-"}
                 </dd>
               </div>
             </dl>

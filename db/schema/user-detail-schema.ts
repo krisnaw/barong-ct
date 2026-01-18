@@ -13,6 +13,8 @@ export const userDetail = pgTable("user_detail", {
   bloodType: text("blood_type"),
   dateOfBirth: date("date_of_birth"),
 
+  clubName: text("club_name"),
+
   instagram: text("instagram"),
   strava: text("strava"),
 

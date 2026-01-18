@@ -38,6 +38,7 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
       city: formData.get("city") as string,
       postalCode: formData.get("postal_code") as string,
       address: formData.get("address") as string,
+      clubName: formData.get("clubName") as string,
     }
 
     const res = await UpdateProfileAction(payload)
@@ -104,19 +105,20 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
                 </div>
               </Field>
 
-              <Field>
-                <FieldLabel htmlFor="full_name">Full name</FieldLabel>
-                <Input
-                  id="full_name"
-                  type="text"
-                  name="full_name"
-                  placeholder="Tadej Pogačar"
-                  defaultValue={user.name}
-                  required
-                />
-              </Field>
 
               <div className="grid gap-4 md:grid-cols-2">
+
+                <Field>
+                  <FieldLabel htmlFor="full_name">Full name</FieldLabel>
+                  <Input
+                    id="full_name"
+                    type="text"
+                    name="full_name"
+                    placeholder="Tadej Pogačar"
+                    defaultValue={user.name}
+                    required
+                  />
+                </Field>
 
                 <FieldGroup>
                   <Field>
@@ -130,6 +132,18 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
                     />
                   </Field>
                 </FieldGroup>
+
+                <Field>
+                  <FieldLabel htmlFor="clubName">Cycling Team/Club Name</FieldLabel>
+                  <Input
+                    id="clubName"
+                    type="text"
+                    name="clubName"
+                    placeholder="Barong Cycling"
+                    defaultValue={user.detail?.clubName ?? ""}
+                    required
+                  />
+                </Field>
 
                 <Field>
                   <FieldLabel htmlFor="gender">Gender</FieldLabel>
@@ -195,8 +209,6 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
                 </Field>
 
               </div>
-
-
 
             </FieldGroup>
 

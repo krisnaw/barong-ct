@@ -1,0 +1,1 @@
+ALTER TABLE "user_detail" ADD COLUMN "club_name" text;
