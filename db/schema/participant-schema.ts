@@ -1,4 +1,4 @@
-import {integer, pgTable, serial, text, timestamp, uniqueIndex} from "drizzle-orm/pg-core";
+import {integer, pgTable, serial, text, timestamp, unique, uniqueIndex} from "drizzle-orm/pg-core";
 import {user} from "@/db/schema/auth-schema";
 import {EventSchema} from "@/db/schema/event-schema";
 import {relations} from "drizzle-orm";
@@ -15,6 +15,9 @@ export const participant = pgTable("event_participant", {
     .notNull()
     .references(() => EventSchema.id, { onDelete: "cascade" }),
 
+  bibNumber: integer("bib_id"),
+  status: text("status").default('registered'),
+
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
@@ -22,6 +25,11 @@ export const participant = pgTable("event_participant", {
     .notNull(),
 }, (t) => ({
   userEventUnique: uniqueIndex("user_event_unique").on(t.userId, t.eventId),
+  // Bib number must be unique per event
+  uniqueBibPerEvent: unique().on(
+    t.eventId,
+    t.bibNumber
+  ),
 }))
 
 export const participantRelations = relations(participant, ({ one }) => ({
