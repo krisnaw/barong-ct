@@ -7,6 +7,7 @@ import {revalidatePath} from "next/cache";
 import {User} from "@/types/auth-types";
 import {db} from "@/db/db";
 import {userDetail, UserDetailType} from "@/db/schema/user-detail-schema";
+import {format} from "date-fns";
 
 export async function UpdateProfileAction(payload: Partial<User & UserDetailType>): Promise<ActionResponse> {
   try {
@@ -17,8 +18,8 @@ export async function UpdateProfileAction(payload: Partial<User & UserDetailType
         image: payload.image,
       }
     })
-
     payload.userId = String(payload.id)
+    payload.dateOfBirth = payload.dateOfBirth ? format(new Date(payload.dateOfBirth), 'yyyy-MM-dd') : undefined;
 
     await db.insert(userDetail)
       .values({
