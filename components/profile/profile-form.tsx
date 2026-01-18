@@ -133,6 +133,7 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
                       name="phone_number"
                       placeholder="08212345678"
                       defaultValue={user.detail?.phoneNumber ?? ""}
+                      required
                     />
                   </Field>
                 </FieldGroup>
@@ -150,7 +151,7 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
 
                 <Field>
                   <FieldLabel htmlFor="gender">Gender</FieldLabel>
-                  <Select defaultValue={user.detail?.gender ?? ""} name="gender">
+                  <Select defaultValue={user.detail?.gender ?? ""} name="gender" required>
                     <SelectTrigger>
                       <SelectValue placeholder="Select gender"/>
                     </SelectTrigger>
@@ -171,6 +172,7 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
                       name="identity_number"
                       placeholder="123023"
                       defaultValue={user.detail?.identityNumber ?? ""}
+                      required
                     />
                   </Field>
                 </FieldGroup>
@@ -183,12 +185,13 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
                     name="nationality"
                     placeholder="Indonesian"
                     defaultValue={user.detail?.nationality ?? ""}
+                    required
                   />
                 </Field>
 
                 <Field>
                   <FieldLabel htmlFor="blood_type">Blood Type</FieldLabel>
-                  <Select defaultValue={user.detail?.bloodType ?? ""} name="blood_type" >
+                  <Select defaultValue={user.detail?.bloodType ?? ""} name="blood_type" required>
                     <SelectTrigger>
                       <SelectValue placeholder="Select blood type"/>
                     </SelectTrigger>
@@ -232,6 +235,7 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
                     name="emergency_contact_name"
                     placeholder="Mira Tanaka"
                     defaultValue={user.detail?.emergencyContactName ?? ""}
+                    required
                   />
                 </Field>
 
@@ -243,6 +247,7 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
                     name="emergency_contact_number"
                     placeholder="08212345678"
                     defaultValue={user.detail?.emergencyContactNumber ?? ""}
+                    required
                   />
                 </Field>
               </div>
@@ -265,6 +270,7 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
                     name="country_of_residence"
                     placeholder="Indonesia"
                     defaultValue={user.detail?.countryOfResidence ?? ""}
+                    required
                   />
                 </Field>
 
@@ -276,6 +282,7 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
                     name="province"
                     placeholder="DKI Jakarta"
                     defaultValue={user.detail?.province ?? ""}
+                    required
                   />
                 </Field>
               </div>
@@ -289,6 +296,7 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
                     name="city"
                     placeholder="Jakarta"
                     defaultValue={user.detail?.city ?? ""}
+                    required
                   />
                 </Field>
 
@@ -300,6 +308,7 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
                     name="postal_code"
                     placeholder="12345"
                     defaultValue={user.detail?.postalCode ?? ""}
+                    required
                   />
                 </Field>
               </div>
@@ -311,6 +320,7 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
                   name="address"
                   placeholder="Jln. Toko Sepeda No. 123"
                   defaultValue={user.detail?.address ?? ""}
+                  required
                 />
               </Field>
             </FieldGroup>
