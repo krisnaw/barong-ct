@@ -6,7 +6,7 @@ import {ActionResponse} from "@/types/types";
 import {redirect} from "next/navigation";
 
 export async function SignUpAction(email: string) : Promise<ActionResponse> {
-  const data = await auth.api.signInMagicLink({
+  await auth.api.signInMagicLink({
     body: {
       email: email.trim(), // required
       callbackURL: "/profile",
@@ -19,7 +19,7 @@ export async function SignUpAction(email: string) : Promise<ActionResponse> {
 
   return {
     success: true,
-    message: "Success, please check your email address.",
+    message: "Click the confirmation link we sent to your email. Don’t forget to check your spam folder.",
   }
 }
 
