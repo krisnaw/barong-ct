@@ -36,7 +36,7 @@ export function ListItemEvent({event}: { event: EventType & { participantCount?:
 
               {event.participantCount !== undefined && (
                 <p className="mt-1 inline-flex items-center text-gray-500 gap-2">
-                  <Users size={18}/> {event.participantCount}
+                  <Users size={18}/> {event.participantCount} / {event.maxParticipants}
                 </p>
               )}
             </div>
