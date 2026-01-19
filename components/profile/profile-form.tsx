@@ -225,8 +225,7 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
 
                 <Field>
                   <FieldLabel htmlFor="date_of_birth">Date of Birth</FieldLabel>
-                  <DobPicker
-                    value={state.fields?.dateOfBirth ? new Date(state.fields.dateOfBirth) : user.detail.dateOfBirth ? new Date(user.detail.dateOfBirth) : undefined}/>
+                  <DobPicker value={state.fields?.dateOfBirth ? new Date(state.fields?.dateOfBirth) : (user.detail?.dateOfBirth ? new Date(user.detail.dateOfBirth) : undefined)}/>
                 </Field>
 
 
