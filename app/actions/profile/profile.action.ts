@@ -36,6 +36,8 @@ export async function UpdateProfileAction(formData: UserDetailType & { name: str
 
     validate.data.dateOfBirth = validate.data.dateOfBirth ? format(new Date(validate.data.dateOfBirth), 'yyyy-MM-dd').toString() : null;
 
+    console.log(validate.data);
+
     await db.insert(userDetail)
       .values(validate.data)
       .onConflictDoUpdate({

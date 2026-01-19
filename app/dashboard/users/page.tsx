@@ -5,6 +5,7 @@ import {InputSearch} from "@/components/dashboard/input-search";
 import {getUsers} from "@/db/query/user-query";
 import {format} from "date-fns";
 import {id} from "date-fns/locale";
+import {Badge} from "@/components/ui/badge";
 
 export default async function UsersPage({searchParams} : {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -12,7 +13,6 @@ export default async function UsersPage({searchParams} : {
 
   const name = (await searchParams).name as string ?? ""
   const users = await getUsers(name)
-
   return (
     <div className="flex flex-col gap-6">
 
@@ -30,6 +30,7 @@ export default async function UsersPage({searchParams} : {
             <TableRow>
               <TableHead>Name</TableHead>
               <TableHead>Email</TableHead>
+              <TableHead>Profile</TableHead>
               <TableHead>Registered At</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
@@ -39,6 +40,7 @@ export default async function UsersPage({searchParams} : {
               <TableRow key={user.id}>
                 <TableCell className="font-medium">{user.name}</TableCell>
                 <TableCell>{user.email}</TableCell>
+                <TableCell><Badge className={`${user.phone ? 'bg-green-500 text-white' : ''}`}>{user.phone ? "Completed" : "Not Complete"}</Badge> </TableCell>
                 <TableCell>{format(user.createdAt, 'PPpp', { locale: id })}</TableCell>
                 <TableCell>
                   <Button variant="outline" size="sm" asChild>
