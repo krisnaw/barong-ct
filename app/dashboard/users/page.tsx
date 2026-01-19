@@ -4,6 +4,7 @@ import Link from "next/link";
 import {InputSearch} from "@/components/dashboard/input-search";
 import {getUsers} from "@/db/query/user-query";
 import {format} from "date-fns";
+import {id} from "date-fns/locale";
 
 export default async function UsersPage({searchParams} : {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -38,7 +39,7 @@ export default async function UsersPage({searchParams} : {
               <TableRow key={user.id}>
                 <TableCell className="font-medium">{user.name}</TableCell>
                 <TableCell>{user.email}</TableCell>
-                <TableCell>{format(user.createdAt, 'PPP')}</TableCell>
+                <TableCell>{format(user.createdAt, 'PPpp', { locale: id })}</TableCell>
                 <TableCell>
                   <Button variant="outline" size="sm" asChild>
                     <Link href={`/dashboard/users/${user.id}`}>

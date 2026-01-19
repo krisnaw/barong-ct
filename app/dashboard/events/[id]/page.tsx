@@ -8,6 +8,7 @@ import {CalendarIcon, MapPin, Users} from "lucide-react";
 import {EventDate} from "@/components/events/event-date";
 import Link from "next/link";
 import {format} from "date-fns";
+import {id as idLocale} from "date-fns/locale";
 
 export default async function Page({params}: { params: Promise<{ id: number }> }) {
   const {id} = await params;
@@ -83,7 +84,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
                     <TableRow key={participant.participant.id}>
                       <TableCell className="font-medium">{participant.user.name}</TableCell>
                       <TableCell className="font-medium">{participant.user.email}</TableCell>
-                      <TableCell className="font-medium">{format(participant.participant.createdAt, 'PPP')}</TableCell>
+                      <TableCell className="font-medium">{format(participant.participant.createdAt, 'PPpp', { locale: idLocale })}</TableCell>
                       <TableCell>
                         {/*<ButtonDeleteParticipant participantId={participant.id} />*/}
                       </TableCell>
