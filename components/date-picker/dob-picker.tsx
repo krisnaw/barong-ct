@@ -18,15 +18,14 @@ export function DobPicker({ value }: CustomDatePickerProps) {
 
   return (
     <div>
-      <input className="sr-only"
-        required name="date" id="date" type="text" defaultValue={date ? date.toLocaleDateString() : undefined}  />
-      <div className="z-10">
+      <input className="sr-only" required name="date" id="date" type="text" defaultValue={date ? date.toLocaleDateString() : undefined}  />
+      <div>
         <Popover open={open} onOpenChange={setOpen} >
           <PopoverTrigger asChild>
             <Button
               variant="outline"
               id="date"
-              className="w-48 justify-between font-normal"
+              className="w-full justify-between font-normal"
             >
               {date ? date.toLocaleDateString() : "Select date"}
               <ChevronDownIcon />

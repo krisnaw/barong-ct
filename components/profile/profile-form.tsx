@@ -111,7 +111,7 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
               </Field>
 
 
-              <div className="grid gap-4 md:grid-cols-2">
+              <div className="grid md:gap-x-6 gap-y-4 md:grid-cols-2">
 
                 <Field>
                   <FieldLabel htmlFor="full_name">Full name</FieldLabel>
@@ -140,7 +140,15 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
                 </FieldGroup>
 
                 <Field>
-                  <FieldLabel htmlFor="clubName">Cycling Team/Club Name</FieldLabel>
+
+                  <div className="flex justify-between">
+                    <FieldLabel htmlFor="clubName">Cycling Team/Club Name</FieldLabel>
+                    <span id="email-optional" className="text-sm/6 text-muted-foreground">
+                      Optional
+                    </span>
+                  </div>
+
+
                   <Input
                     id="clubName"
                     type="text"
