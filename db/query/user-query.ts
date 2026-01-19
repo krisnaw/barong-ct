@@ -3,12 +3,12 @@
 import {user} from "@/db/schema";
 import {UserWithDetail} from "@/types/auth-types";
 import {db} from "@/db/db";
-import {asc, eq, ilike} from "drizzle-orm";
+import {desc, eq, ilike} from "drizzle-orm";
 
 export async function getUsers( name?  : string) {
   return db.select().from(user)
     .where(name ? ilike(user.name, `%${name}%`) : undefined)
-    .orderBy(asc(user.name))
+    .orderBy(desc(user.createdAt))
     .limit(100);
 }
 

@@ -1,7 +1,7 @@
 "use server"
 
 import {db} from "@/db/db";
-import {and, eq} from "drizzle-orm";
+import {and, desc, eq} from "drizzle-orm";
 import {participant, user} from "@/db/schema";
 
 export async function checkParticipantByEvent(eventId: number, userId: string): Promise<boolean> {
@@ -22,6 +22,7 @@ export async function getParticipantByEvent(eventId: number) {
     .from(participant)
     .innerJoin(user, eq(user.id, participant.userId))
     .where(eq(participant.eventId, eventId))
+    .orderBy(desc(participant.createdAt))
     .limit(100)
 
   return participants;
