@@ -4,12 +4,25 @@ import {ActionResponse} from "@/types/types";
 import {auth} from "@/lib/auth";
 import {headers} from "next/headers";
 import {revalidatePath} from "next/cache";
-import {User} from "@/types/auth-types";
 import {db} from "@/db/db";
-import {userDetail, UserDetailType} from "@/db/schema/user-detail-schema";
+import {userDetail, UserDetailInsertSchema, UserDetailType} from "@/db/schema/user-detail-schema";
 import {format} from "date-fns";
+import {z} from "zod";
 
-export async function UpdateProfileAction(payload: Partial<User & UserDetailType>): Promise<ActionResponse> {
+export async function UpdateProfileAction(payload: UserDetailType & { name: string, image: string | null}): Promise<ActionResponse> {
+
+  const validate = UserDetailInsertSchema.safeParse(payload);
+
+  if (!validate.success) {
+    console.log(z.flattenError(validate.error))
+    return {
+      success: false,
+      message: "Invalid data",
+      error: z.flattenError(validate.error),
+      fields: validate.data,
+    }
+  }
+
   try {
     await auth.api.updateUser({
       headers: await headers(),
@@ -18,20 +31,13 @@ export async function UpdateProfileAction(payload: Partial<User & UserDetailType
         image: payload.image,
       }
     })
-    payload.userId = String(payload.id)
-    payload.dateOfBirth = payload.dateOfBirth ? format(new Date(payload.dateOfBirth), 'yyyy-MM-dd') : undefined;
+
+    payload.dateOfBirth = payload.dateOfBirth ? format(new Date(payload.dateOfBirth), 'yyyy-MM-dd').toString() : null;
+
+    console.log(payload)
 
     await db.insert(userDetail)
-      .values({
-        userId: String(payload.id),
-        phoneNumber: payload.phoneNumber,
-        instagram: payload.instagram,
-        strava: payload.strava,
-        emergencyContactName: payload.emergencyContactName,
-        emergencyContactNumber: payload.emergencyContactNumber,
-        identityNumber: payload.identityNumber,
-        address: payload.address,
-      })
+      .values(payload)
       .onConflictDoUpdate({
         target: userDetail.userId,
         set: payload
@@ -43,12 +49,20 @@ export async function UpdateProfileAction(payload: Partial<User & UserDetailType
       success: true,
       message: 'Success, profile was updated'
     }
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log(error.message)
+      return {
+        success: false,
+        message: error.message,
+        fields: payload
+      }
+    }
   }
 
   return {
     success: false,
-    message: 'Sorry, something went wrong. Please try again later.'
+    message: 'Sorry, something went wrong. Please try again later.',
+    fields: payload
   }
 }

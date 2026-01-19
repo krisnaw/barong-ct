@@ -13,6 +13,7 @@ import {UserWithDetail} from "@/types/auth-types";
 import {Textarea} from "@/components/ui/textarea";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select";
 import {DobPicker} from "@/components/date-picker/dob-picker";
+import {UserDetailType} from "@/db/schema";
 
 export function ProfileForm({user}: { user: UserWithDetail }) {
 
@@ -20,11 +21,10 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
   const [dateOfBirth, setDateOfBirth] = useState<Date | undefined>(
     user.detail?.dateOfBirth ? new Date(user.detail.dateOfBirth) : undefined
   );
-  console.log(dateOfBirth)
-  const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(async (prevState: ActionResponse, formData: FormData) => {
+  const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(async (_, formData: FormData) => {
 
-    const payload = {
-      id: user.id,
+    const payload : UserDetailType & { name: string, image: string | null} = {
+      userId: user.id as string,
       name: formData.get("full_name") as string,
       image: profileImage ?? null,
       phoneNumber: formData.get("phone_number") as string,
@@ -44,7 +44,6 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
       address: formData.get("address") as string,
       clubName: formData.get("clubName") as string,
     }
-
     const res = await UpdateProfileAction(payload)
 
     if (!res.success) {
@@ -56,7 +55,9 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
     return res;
 
   }, initialState)
-  
+
+  console.log(state.fields);
+
   return (
     <div className="flex flex-col gap-6">
 
@@ -114,7 +115,10 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
               <div className="grid md:gap-x-6 gap-y-4 md:grid-cols-2">
 
                 <Field>
+
+
                   <FieldLabel htmlFor="full_name">Full name</FieldLabel>
+
                   <Input
                     id="full_name"
                     type="text"
@@ -148,7 +152,6 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
                     </span>
                   </div>
 
-
                   <Input
                     id="clubName"
                     type="text"
@@ -159,7 +162,9 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
                 </Field>
 
                 <Field>
+
                   <FieldLabel htmlFor="gender">Gender</FieldLabel>
+
                   <Select defaultValue={user.detail?.gender ?? ""} name="gender" required>
                     <SelectTrigger>
                       <SelectValue placeholder="Select gender"/>
@@ -174,6 +179,7 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
 
                 <FieldGroup>
                   <Field>
+
                     <FieldLabel htmlFor="identity_number">KTP / Passport ID / ID Card</FieldLabel>
                     <Input
                       id="identity_number"
@@ -219,7 +225,7 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
 
                 <Field>
                   <FieldLabel htmlFor="date_of_birth">Date of Birth</FieldLabel>
-                  <DobPicker value={dateOfBirth ?? undefined}  />
+                  <DobPicker value={dateOfBirth ?? undefined}/>
                 </Field>
 
 

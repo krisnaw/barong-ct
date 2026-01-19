@@ -1,5 +1,6 @@
 import {date, pgTable, text} from "drizzle-orm/pg-core";
 import {user} from "@/db/schema/auth-schema";
+import {createInsertSchema} from "drizzle-zod";
 
 export const userDetail = pgTable("user_detail", {
   userId: text("user_id")
@@ -29,3 +30,4 @@ export const userDetail = pgTable("user_detail", {
 });
 
 export type UserDetailType = typeof userDetail.$inferSelect
+export const UserDetailInsertSchema = createInsertSchema(userDetail);

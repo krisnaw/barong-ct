@@ -13,6 +13,7 @@ export async function EventStatus({eventId, max, current}: {eventId: number, max
     headers: await headers() // you need to pass the headers object.
   })
 
+  // If user is not logged in show the sign up button
   if (!session) {
     return (
       <Button className="w-full" type="submit">
@@ -23,40 +24,40 @@ export async function EventStatus({eventId, max, current}: {eventId: number, max
     )
   }
 
-  // Check if user has name or not
-
+  // Check if user already registered or not
   const event = await checkParticipantByEvent(eventId, session.user.id)
+
+  // If user registered, show the success button
+  if (event) {
+    return (
+      <Button className="w-full" type="submit" disabled={true}>
+        You have joined this event
+      </Button>
+    )
+  }
+
+  // check if user has complete their profile or not
   const detail = await db.query.userDetail.findFirst({
     where: eq(userDetail.userId, session.user.id),
   })
 
-  if (!event) {
-
-    if (!detail) {
-      return (
-        <div>
-
-
-          <div className="text-lg font-bold text-gray-600">
-            Please complete your profile to join
-          </div>
-          <Button>
-            <Link href="/profile">
-              Update profile
-            </Link>
-          </Button>
-        </div>
-      )
-    }
-
+  if (!detail) {
     return (
-      <ButtonJoinEvent eventId={eventId}  />
+      <div>
+        <div className="text-lg font-bold text-gray-600">
+          Please complete your profile to join
+        </div>
+        <Button>
+          <Link href="/profile">
+            Update profile
+          </Link>
+        </Button>
+      </div>
     )
   }
 
   return (
-    <Button className="w-full" type="submit" disabled={true}>
-      You have joined this event
-    </Button>
+    <ButtonJoinEvent eventId={eventId}  />
   )
+
 }
