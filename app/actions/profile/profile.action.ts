@@ -6,7 +6,6 @@ import {headers} from "next/headers";
 import {revalidatePath} from "next/cache";
 import {db} from "@/db/db";
 import {userDetail, UserDetailInsertSchema, UserDetailType} from "@/db/schema/user-detail-schema";
-import {format} from "date-fns";
 import {z} from "zod";
 
 export type UserDetailData = z.infer<typeof UserDetailInsertSchema>;
@@ -34,7 +33,7 @@ export async function UpdateProfileAction(formData: UserDetailType & { name: str
       }
     })
 
-    validate.data.dateOfBirth = validate.data.dateOfBirth ? format(new Date(validate.data.dateOfBirth), 'yyyy-MM-dd').toString() : null;
+    validate.data.dateOfBirth = validate.data.dateOfBirth ? validate.data.dateOfBirth : null;
 
     console.log(validate.data);
 
