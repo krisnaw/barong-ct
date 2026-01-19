@@ -3,6 +3,7 @@ import {Button} from "@/components/ui/button";
 import Link from "next/link";
 import {InputSearch} from "@/components/dashboard/input-search";
 import {getUsers} from "@/db/query/user-query";
+import {format} from "date-fns";
 
 export default async function UsersPage({searchParams} : {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -16,10 +17,6 @@ export default async function UsersPage({searchParams} : {
       <h1 className="text-2xl font-bold">Users</h1>
 
       <div>
-        {name}
-      </div>
-
-      <div>
         <InputSearch />
       </div>
 
@@ -29,6 +26,7 @@ export default async function UsersPage({searchParams} : {
             <TableRow>
               <TableHead>Name</TableHead>
               <TableHead>Email</TableHead>
+              <TableHead>Registered At</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -37,6 +35,7 @@ export default async function UsersPage({searchParams} : {
               <TableRow key={user.id}>
                 <TableCell className="font-medium">{user.name}</TableCell>
                 <TableCell>{user.email}</TableCell>
+                <TableCell>{format(user.createdAt, 'PPP')}</TableCell>
                 <TableCell>
                   <Button variant="outline" size="sm" asChild>
                     <Link href={`/dashboard/users/${user.id}`}>

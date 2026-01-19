@@ -12,7 +12,7 @@ import {UploadButton} from "@/utils/uploadthing";
 import {UserWithDetail} from "@/types/auth-types";
 import {Textarea} from "@/components/ui/textarea";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select";
-import {CustomDatePicker} from "@/components/ui/custom-date-picker";
+import {DobPicker} from "@/components/date-picker/dob-picker";
 
 export function ProfileForm({user}: { user: UserWithDetail }) {
 
@@ -20,6 +20,7 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
   const [dateOfBirth, setDateOfBirth] = useState<Date | undefined>(
     user.detail?.dateOfBirth ? new Date(user.detail.dateOfBirth) : undefined
   );
+  console.log(dateOfBirth)
   const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(async (prevState: ActionResponse, formData: FormData) => {
 
     const payload = {
@@ -27,7 +28,7 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
       name: formData.get("full_name") as string,
       image: profileImage ?? null,
       phoneNumber: formData.get("phone_number") as string,
-      dateOfBirth: dateOfBirth ? dateOfBirth.toISOString().split('T')[0] : "",
+      dateOfBirth: formData.get('date') as string,
       emergencyContactName: formData.get("emergency_contact_name") as string,
       emergencyContactNumber: formData.get("emergency_contact_number") as string,
       instagram: formData.get("instagram") as string,
@@ -210,7 +211,7 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
 
                 <Field>
                   <FieldLabel htmlFor="date_of_birth">Date of Birth</FieldLabel>
-                  <CustomDatePicker value={dateOfBirth} />
+                  <DobPicker value={dateOfBirth ?? undefined}  />
                 </Field>
 
 
@@ -280,7 +281,7 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
                     id="province"
                     type="text"
                     name="province"
-                    placeholder="DKI Jakarta"
+                    placeholder="Bali"
                     defaultValue={user.detail?.province ?? ""}
                     required
                   />
@@ -294,7 +295,7 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
                     id="city"
                     type="text"
                     name="city"
-                    placeholder="Jakarta"
+                    placeholder="Denpasar"
                     defaultValue={user.detail?.city ?? ""}
                     required
                   />
