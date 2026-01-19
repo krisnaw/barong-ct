@@ -70,6 +70,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
               <TableHeader>
                 <TableRow>
                   <TableHead>Name</TableHead>
+                  <TableHead>Email</TableHead>
                   <TableHead>Joined At</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
@@ -79,6 +80,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
                   participants.map((participant) => (
                     <TableRow key={participant.participant.id}>
                       <TableCell className="font-medium">{participant.user.name}</TableCell>
+                      <TableCell className="font-medium">{participant.user.email}</TableCell>
                       <TableCell className="font-medium">{format(participant.participant.createdAt, 'PPP')}</TableCell>
                       <TableCell>
                         {/*<ButtonDeleteParticipant participantId={participant.id} />*/}
