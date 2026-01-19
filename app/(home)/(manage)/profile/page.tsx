@@ -23,14 +23,26 @@ export default async function ProfilePage() {
 
   const userDetail = await getUserWithDetail(session.user.id)
 
-  if (!userDetail) {
-    redirect("/auth/login")
-  }
-
   const joinedEvents = await getEventsByUserId(session.user.id)
 
   return (
     <div>
+      {joinedEvents.length < 1 && (
+        <div className="text-center gap-x-6 bg-gold-600 px-6 py-2.5 sm:px-3.5 sm:before:flex-1 mb-6">
+          <p className="text-sm/6 text-white">
+            <a href="https://www.barongmelali.com/event/1">
+              <strong className="font-semibold">
+                Barong X Anniversary Jersey Launching Ride
+              </strong>
+              <svg viewBox="0 0 2 2" aria-hidden="true" className="mx-2 inline size-0.5 fill-current">
+                <circle r={1} cx={1} cy={1} />
+              </svg>
+              JOIN NOW. LIMITED SLOT AVAILABLE. &nbsp;<span aria-hidden="true">&rarr;</span>
+            </a>
+          </p>
+        </div>
+      )}
+
       <Tabs defaultValue="account" className="w-full">
         <TabsList>
           <TabsTrigger value="account">Account</TabsTrigger>

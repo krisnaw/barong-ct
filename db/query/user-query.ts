@@ -12,17 +12,13 @@ export async function getUsers( name?  : string) {
     .limit(100);
 }
 
-export async function getUserWithDetail(id: string): Promise<UserWithDetail | undefined> {
+export async function getUserWithDetail(id: string): Promise<UserWithDetail> {
   const userDetail = await db.query.user.findFirst({
     where: eq(user.id, id),
     with: {
       detail: true
     }
   })
-
-  if (!userDetail) {
-    return undefined
-  }
 
   return userDetail as UserWithDetail;
 }
