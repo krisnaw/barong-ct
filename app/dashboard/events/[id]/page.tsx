@@ -2,11 +2,12 @@ import {getParticipantByEvent} from "@/db/query/participant-query";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {getEventById} from "@/db/query/event-query";
 import {redirect} from "next/navigation";
-import {emptyBanner} from "@/types/date-helper";
-import {EventDate} from "@/components/events/event-date";
-import {MapPin} from "lucide-react";
+import {Card, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
+import {CalendarIcon, MapPin, Users} from "lucide-react";
+import {EventDate} from "@/components/events/event-date";
 import Link from "next/link";
+import {format} from "date-fns";
 
 export default async function Page({params}: { params: Promise<{ id: number }> }) {
   const {id} = await params;
@@ -18,43 +19,48 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
   return (
     <div className="flex flex-col gap-6">
 
-      <div>
-        <h1 className="text-2xl font-bold">Event Detail</h1>
-        <div className="mt-4">
-          <div className="flex outline rounded-xl p-4">
+      <div className="md:flex md:items-center md:justify-between">
+        <div className="min-w-0 flex-1">
+          <h2 className="text-2xl/7 font-bold  sm:truncate sm:text-3xl sm:tracking-tight">
+            {event.name}
+          </h2>
 
-            <div className="mr-4 shrink-0">
-              <img
-                alt=""
-                src={event.feature_image ?? emptyBanner}
-                className="inline-block size-24 object-cover rounded-md outline -outline-offset-1 outline-white/10"
-              />
+          <div className="mt-1 flex flex-col sm:mt-0 sm:flex-row sm:flex-wrap sm:space-x-6">
+            <div className="mt-2 flex items-center text-sm text-gray-400">
+              <MapPin aria-hidden="true" className="mr-1.5 size-5 shrink-0 text-gray-500" />
+              {event.locationName}
             </div>
-
-            <div className="w-full flex flex-wrap items-center justify-between sm:flex-nowrap">
-              <div>
-                <p className="text-gray-500 text-lg">
-                  <EventDate eventDate={event.startDate} type="date" />
-                </p>
-                <h4 className="text-lg font-bold ">
-                  {event.name}
-                </h4>
-                <p className="mt-1 inline-flex items-center text-gray-500 gap-2">
-                  <MapPin size={18} /> {event.locationName}
-                </p>
-              </div>
-              <div className="shrink-0 flex gap-2">
-                <Button variant="outline" asChild>
-                  <Link href={`/dashboard/events/${event.id}/edit`}>
-                    Edit
-                  </Link>
-                </Button>
-              </div>
+            <div className="mt-2 flex items-center text-sm text-gray-400">
+              <Users aria-hidden="true" className="mr-1.5 size-5 shrink-0 text-gray-500" />
+              Max: {event.maxParticipants}
             </div>
-
+            <div className="mt-2 flex items-center text-sm text-gray-400">
+              <CalendarIcon aria-hidden="true" className="mr-1.5 size-5 shrink-0 text-gray-500" />
+              <EventDate eventDate={event.startDate} type="date"/> - <EventDate eventDate={event.startDate} type="time"/>
+            </div>
           </div>
+
+        </div>
+        <div className="mt-4 flex md:mt-0 md:ml-4">
+          <Button variant="outline">
+            <Link href={`/dashboard/events/${id}`}>
+              Edit
+            </Link>
+          </Button>
         </div>
       </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <Card>
+          <CardHeader>
+            <CardDescription>Total participants</CardDescription>
+            <CardTitle className="text-3xl">
+              {participants.length}
+            </CardTitle>
+          </CardHeader>
+        </Card>
+      </div>
+
 
       <div>
         <h1 className="text-2xl font-bold">Participants</h1>
@@ -64,14 +70,16 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
               <TableHeader>
                 <TableRow>
                   <TableHead>Name</TableHead>
+                  <TableHead>Joined At</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {participants.length > 0 ? (
                   participants.map((participant) => (
-                    <TableRow key={participant.id}>
-                      <TableCell className="font-medium">{participant.user.name ?? "-"}</TableCell>
+                    <TableRow key={participant.participant.id}>
+                      <TableCell className="font-medium">{participant.user.name}</TableCell>
+                      <TableCell className="font-medium">{format(participant.participant.createdAt, 'PPP')}</TableCell>
                       <TableCell>
                         {/*<ButtonDeleteParticipant participantId={participant.id} />*/}
                       </TableCell>

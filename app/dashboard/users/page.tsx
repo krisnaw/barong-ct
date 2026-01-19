@@ -14,7 +14,10 @@ export default async function UsersPage({searchParams} : {
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-bold">Users</h1>
+
+      <h1 className="text-2xl font-bold">
+        Total {users.length} Users
+      </h1>
 
       <div>
         <InputSearch />

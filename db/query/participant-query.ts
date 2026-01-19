@@ -2,7 +2,7 @@
 
 import {db} from "@/db/db";
 import {and, eq} from "drizzle-orm";
-import {participant} from "@/db/schema";
+import {participant, user} from "@/db/schema";
 
 export async function checkParticipantByEvent(eventId: number, userId: string): Promise<boolean> {
   const user = await db.query.participant.findFirst({
@@ -13,10 +13,16 @@ export async function checkParticipantByEvent(eventId: number, userId: string): 
 }
 
 export async function getParticipantByEvent(eventId: number) {
-  return await db.query.participant.findMany({
-    where: eq(participant.eventId, eventId),
-    with: {
-      user: true
-    }
-  });
+
+  const participants = await db
+    .select({
+      participant,
+      user,
+    })
+    .from(participant)
+    .innerJoin(user, eq(user.id, participant.userId))
+    .where(eq(participant.eventId, eventId))
+    .limit(100)
+
+  return participants;
 }
