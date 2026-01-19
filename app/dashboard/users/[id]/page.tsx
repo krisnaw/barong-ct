@@ -66,7 +66,7 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
                     </Badge>
                   )}
 
-                  {user.detail.instagram && (
+                  {user.detail?.instagram && (
                     <a href={user.detail.instagram}>
                       <svg className="size-6"
                            fill="currentColor" viewBox="0 0 24 24">
@@ -79,8 +79,8 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
                     </a>
                   )}
 
-                  {user.detail.strava && (
-                    <a href={user.detail.strava}>
+                  {user.detail?.strava && (
+                    <a href={user.detail?.strava}>
                       <Image
                         src="/strava.svg"
                         alt="Strava"
@@ -108,42 +108,42 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
               <div className="sm:col-span-1">
                 <dt className="text-sm  text-gray-500">Nationality</dt>
                 <dd className="mt-1 font-medium text-gray-900 text-lg">
-                  {user.detail.nationality ?? "-"}
+                  {user.detail?.nationality ?? "-"}
                 </dd>
               </div>
 
               <div className="sm:col-span-1">
                 <dt className="text-sm  text-gray-500">Birth Date</dt>
                 <dd className="mt-1 font-medium text-gray-900 text-lg">
-                  {user.detail.dateOfBirth ?? "-"}
+                  {user.detail?.dateOfBirth ?? "-"}
                 </dd>
               </div>
 
               <div className="sm:col-span-1">
                 <dt className="text-sm  text-gray-500">ID Number</dt>
                 <dd className="mt-1 font-medium text-gray-900 text-lg">
-                  {user.detail.identityNumber ?? "-"}
+                  {user.detail?.identityNumber ?? "-"}
                 </dd>
               </div>
 
               <div className="sm:col-span-1">
                 <dt className="text-sm  text-gray-500">Gender</dt>
                 <dd className="mt-1 font-medium text-gray-900 text-lg">
-                  {user.detail.gender ?? "-"}
+                  {user.detail?.gender ?? "-"}
                 </dd>
               </div>
 
               <div className="sm:col-span-1">
                 <dt className="text-sm  text-gray-500">Blood Type</dt>
                 <dd className="mt-1 font-medium text-gray-900 text-lg">
-                  {user.detail.identityNumber ?? "-"}
+                  {user.detail?.identityNumber ?? "-"}
                 </dd>
               </div>
 
               <div className="sm:col-span-1">
                 <dt className="text-sm  text-gray-500">Cycling Team / Club Name</dt>
                 <dd className="mt-1 font-medium text-gray-900 text-lg">
-                  {user.detail.clubName ?? "-"}
+                  {user.detail?.clubName ?? "-"}
                 </dd>
               </div>
             </dl>
@@ -169,21 +169,21 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
               <div className="sm:col-span-1">
                 <dt className="text-sm  text-gray-500">Phone number</dt>
                 <dd className="mt-1 font-medium text-gray-900 text-lg">
-                  {user.detail.phoneNumber ?? "-"}
+                  {user.detail?.phoneNumber ?? "-"}
                 </dd>
               </div>
 
               <div className="sm:col-span-1">
                 <dt className="text-sm  text-gray-500">Emergency Contact Name</dt>
                 <dd className="mt-1 font-medium text-gray-900 text-lg">
-                  {user.detail.emergencyContactName ?? "-"}
+                  {user.detail?.emergencyContactName ?? "-"}
                 </dd>
               </div>
 
               <div className="sm:col-span-1">
                 <dt className="text-sm  text-gray-500">Emergency Contact Number</dt>
                 <dd className="mt-1 font-medium text-gray-900 text-lg">
-                  {user.detail.emergencyContactNumber ?? "-"}
+                  {user.detail?.emergencyContactNumber ?? "-"}
                 </dd>
               </div>
             </dl>
@@ -199,35 +199,35 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
               <div className="sm:col-span-1">
                 <dt className="text-sm  text-gray-500">Country of Residence</dt>
                 <dd className="mt-1 font-medium text-gray-900 text-lg">
-                  {user.detail.countryOfResidence ?? "-"}
+                  {user.detail?.countryOfResidence ?? "-"}
                 </dd>
               </div>
 
               <div className="sm:col-span-1">
                 <dt className="text-sm  text-gray-500">Province</dt>
                 <dd className="mt-1 font-medium text-gray-900 text-lg">
-                  {user.detail.province ?? "-"}
+                  {user.detail?.province ?? "-"}
                 </dd>
               </div>
 
               <div className="sm:col-span-1">
                 <dt className="text-sm  text-gray-500">City</dt>
                 <dd className="mt-1 font-medium text-gray-900 text-lg">
-                  {user.detail.city ?? "-"}
+                  {user.detail?.city ?? "-"}
                 </dd>
               </div>
 
               <div className="sm:col-span-1">
                 <dt className="text-sm  text-gray-500">ZIP/Postal Code</dt>
                 <dd className="mt-1 font-medium text-gray-900 text-lg">
-                  {user.detail.postalCode ?? "-"}
+                  {user.detail?.postalCode ?? "-"}
                 </dd>
               </div>
 
               <div className="sm:col-span-2">
                 <dt className="text-sm  text-gray-500">Address</dt>
                 <dd className="mt-1 font-medium text-gray-900 text-lg">
-                  {user.detail.address ?? "-"}
+                  {user.detail?.address ?? "-"}
                 </dd>
               </div>
             </dl>

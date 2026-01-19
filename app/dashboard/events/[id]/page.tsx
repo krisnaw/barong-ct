@@ -15,7 +15,9 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
   if (!event) {
     redirect('/dashboard/events');
   }
+
   const participants = await getParticipantByEvent(id)
+
   return (
     <div className="flex flex-col gap-6">
 
