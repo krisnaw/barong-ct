@@ -6,7 +6,7 @@ import {Button} from "@/components/ui/button";
 import {Spinner} from "@/components/ui/spinner";
 import {useActionState, useState} from "react";
 import {ActionResponse, initialState} from "@/types/types";
-import {UpdateProfileAction} from "@/app/actions/profile/profile.action";
+import {UpdateProfileAction, UserDetailData} from "@/app/actions/profile/profile.action";
 import {toast} from "sonner";
 import {UploadButton} from "@/utils/uploadthing";
 import {UserWithDetail} from "@/types/auth-types";
@@ -18,12 +18,11 @@ import {UserDetailType} from "@/db/schema";
 export function ProfileForm({user}: { user: UserWithDetail }) {
 
   const [profileImage, setProfileImage] = useState<string | null>(user.image ?? null);
-  const [dateOfBirth, setDateOfBirth] = useState<Date | undefined>(
-    user.detail?.dateOfBirth ? new Date(user.detail.dateOfBirth) : undefined
-  );
-  const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(async (_, formData: FormData) => {
-
-    const payload : UserDetailType & { name: string, image: string | null} = {
+  const [state, formAction, isPending] = useActionState(async (_: ActionResponse<UserDetailData & {
+    name: string,
+    image: string | null
+  }>, formData: FormData) => {
+    const payload: UserDetailType & { name: string, image: string | null } = {
       userId: user.id as string,
       name: formData.get("full_name") as string,
       image: profileImage ?? null,
@@ -45,7 +44,7 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
       clubName: formData.get("clubName") as string,
     }
     const res = await UpdateProfileAction(payload)
-
+    
     if (!res.success) {
       toast.error(res.message)
     }
@@ -53,10 +52,11 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
     toast.success(res.message)
 
     return res;
+  }, initialState) as [state: ActionResponse<UserDetailType & { name: string, image: string | null }, UserDetailType & {
+    name: string,
+    image: string | null
+  }>, formAction: (formData: FormData) => void, isPending: boolean]
 
-  }, initialState)
-
-  console.log(state.fields);
 
   return (
     <div className="flex flex-col gap-6">
@@ -116,7 +116,6 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
 
                 <Field>
 
-
                   <FieldLabel htmlFor="full_name">Full name</FieldLabel>
 
                   <Input
@@ -124,7 +123,7 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
                     type="text"
                     name="full_name"
                     placeholder="Tadej Pogačar"
-                    defaultValue={user.name}
+                    defaultValue={state.fields?.name ?? user.name}
                     required
                   />
                 </Field>
@@ -137,7 +136,7 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
                       type="text"
                       name="phone_number"
                       placeholder="08212345678"
-                      defaultValue={user.detail?.phoneNumber ?? ""}
+                      defaultValue={state.fields?.phoneNumber ?? user.detail?.phoneNumber ?? ""}
                       required
                     />
                   </Field>
@@ -157,7 +156,7 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
                     type="text"
                     name="clubName"
                     placeholder="Barong Cycling"
-                    defaultValue={user.detail?.clubName ?? ""}
+                    defaultValue={state.fields?.clubName ?? user.detail?.clubName ?? ""}
                   />
                 </Field>
 
@@ -165,7 +164,7 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
 
                   <FieldLabel htmlFor="gender">Gender</FieldLabel>
 
-                  <Select defaultValue={user.detail?.gender ?? ""} name="gender" required>
+                  <Select defaultValue={state.fields?.gender ?? (user.detail?.gender ?? "")} name="gender" required>
                     <SelectTrigger>
                       <SelectValue placeholder="Select gender"/>
                     </SelectTrigger>
@@ -186,7 +185,7 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
                       type="text"
                       name="identity_number"
                       placeholder="123023"
-                      defaultValue={user.detail?.identityNumber ?? ""}
+                      defaultValue={state.fields?.identityNumber ?? user.detail?.identityNumber ?? ""}
                       required
                     />
                   </Field>
@@ -199,14 +198,15 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
                     type="text"
                     name="nationality"
                     placeholder="Indonesian"
-                    defaultValue={user.detail?.nationality ?? ""}
+                    defaultValue={state.fields?.nationality ?? user.detail?.nationality ?? ""}
                     required
                   />
                 </Field>
 
                 <Field>
                   <FieldLabel htmlFor="blood_type">Blood Type</FieldLabel>
-                  <Select defaultValue={user.detail?.bloodType ?? ""} name="blood_type" required>
+                  <Select defaultValue={state.fields?.bloodType ?? (user.detail?.bloodType ?? "")} name="blood_type"
+                          required>
                     <SelectTrigger>
                       <SelectValue placeholder="Select blood type"/>
                     </SelectTrigger>
@@ -225,7 +225,8 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
 
                 <Field>
                   <FieldLabel htmlFor="date_of_birth">Date of Birth</FieldLabel>
-                  <DobPicker value={dateOfBirth ?? undefined}/>
+                  <DobPicker
+                    value={state.fields?.dateOfBirth ? new Date(state.fields.dateOfBirth) : user.detail.dateOfBirth ? new Date(user.detail.dateOfBirth) : undefined}/>
                 </Field>
 
 
@@ -249,7 +250,7 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
                     type="text"
                     name="emergency_contact_name"
                     placeholder="Mira Tanaka"
-                    defaultValue={user.detail?.emergencyContactName ?? ""}
+                    defaultValue={state.fields?.emergencyContactName ?? user.detail?.emergencyContactName ?? ""}
                     required
                   />
                 </Field>
@@ -261,7 +262,7 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
                     type="text"
                     name="emergency_contact_number"
                     placeholder="08212345678"
-                    defaultValue={user.detail?.emergencyContactNumber ?? ""}
+                    defaultValue={state.fields?.emergencyContactNumber ?? user.detail?.emergencyContactNumber ?? ""}
                     required
                   />
                 </Field>
@@ -284,7 +285,7 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
                     type="text"
                     name="country_of_residence"
                     placeholder="Indonesia"
-                    defaultValue={user.detail?.countryOfResidence ?? ""}
+                    defaultValue={state.fields?.countryOfResidence ?? user.detail?.countryOfResidence ?? ""}
                     required
                   />
                 </Field>
@@ -296,7 +297,7 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
                     type="text"
                     name="province"
                     placeholder="Bali"
-                    defaultValue={user.detail?.province ?? ""}
+                    defaultValue={state.fields?.province ?? user.detail?.province ?? ""}
                     required
                   />
                 </Field>
@@ -310,7 +311,7 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
                     type="text"
                     name="city"
                     placeholder="Denpasar"
-                    defaultValue={user.detail?.city ?? ""}
+                    defaultValue={state.fields?.city ?? user.detail?.city ?? ""}
                     required
                   />
                 </Field>
@@ -322,7 +323,7 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
                     type="text"
                     name="postal_code"
                     placeholder="12345"
-                    defaultValue={user.detail?.postalCode ?? ""}
+                    defaultValue={state.fields?.postalCode ?? user.detail?.postalCode ?? ""}
                     required
                   />
                 </Field>
@@ -334,7 +335,7 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
                   id="address"
                   name="address"
                   placeholder="Jln. Toko Sepeda No. 123"
-                  defaultValue={user.detail?.address ?? ""}
+                  defaultValue={state.fields?.address ?? (user.detail?.address ?? "")}
                   required
                 />
               </Field>
@@ -356,7 +357,7 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
                     type="text"
                     name="instagram"
                     placeholder="https://www.instagram.com/yourname"
-                    defaultValue={user.detail?.instagram ?? ""}
+                    defaultValue={state.fields?.instagram ?? (user.detail?.instagram ?? "")}
                   />
                 </Field>
 
@@ -367,7 +368,7 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
                     type="text"
                     name="strava"
                     placeholder="https://www.strava.com/athletes/1"
-                    defaultValue={user.detail?.strava ?? ""}
+                    defaultValue={state.fields?.strava ?? (user.detail?.strava ?? "")}
                   />
                 </Field>
               </div>

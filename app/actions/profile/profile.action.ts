@@ -9,12 +9,14 @@ import {userDetail, UserDetailInsertSchema, UserDetailType} from "@/db/schema/us
 import {format} from "date-fns";
 import {z} from "zod";
 
-export async function UpdateProfileAction(payload: UserDetailType & { name: string, image: string | null}): Promise<ActionResponse> {
+export type UserDetailData = z.infer<typeof UserDetailInsertSchema>;
 
-  const validate = UserDetailInsertSchema.safeParse(payload);
+export async function UpdateProfileAction(formData: UserDetailType & { name: string, image: string | null })
+  : Promise<ActionResponse<UserDetailType & { name: string, image: string | null }>> {
+
+  const validate = UserDetailInsertSchema.safeParse(formData);
 
   if (!validate.success) {
-    console.log(z.flattenError(validate.error))
     return {
       success: false,
       message: "Invalid data",
@@ -27,35 +29,35 @@ export async function UpdateProfileAction(payload: UserDetailType & { name: stri
     await auth.api.updateUser({
       headers: await headers(),
       body: {
-        name: payload.name,
-        image: payload.image,
+        name: formData.name,
+        image: formData.image,
       }
     })
 
-    payload.dateOfBirth = payload.dateOfBirth ? format(new Date(payload.dateOfBirth), 'yyyy-MM-dd').toString() : null;
-
-    console.log(payload)
+    validate.data.dateOfBirth = validate.data.dateOfBirth ? format(new Date(validate.data.dateOfBirth), 'yyyy-MM-dd').toString() : null;
 
     await db.insert(userDetail)
-      .values(payload)
+      .values(validate.data)
       .onConflictDoUpdate({
         target: userDetail.userId,
-        set: payload
+        set: validate.data,
       })
 
     revalidatePath("/", "page")
 
     return {
       success: true,
-      message: 'Success, profile was updated'
+      message: 'Success, profile was updated',
+      fields: validate.data,
     }
   } catch (error) {
+    console.log(error);
     if (error instanceof Error) {
       console.log(error.message)
       return {
         success: false,
         message: error.message,
-        fields: payload
+        fields: validate.data,
       }
     }
   }
@@ -63,6 +65,6 @@ export async function UpdateProfileAction(payload: UserDetailType & { name: stri
   return {
     success: false,
     message: 'Sorry, something went wrong. Please try again later.',
-    fields: payload
+    fields: validate.data
   }
 }
