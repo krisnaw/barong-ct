@@ -1,5 +1,5 @@
 import {getUserWithDetail} from "@/db/query/user-query";
-import {ProfileForm} from "@/components/profile/profile-form";
+import {DashboardProfileForm} from "@/components/profile/dashboard-profile-form";
 
 export default async function EditUser({ params }: { params: Promise<{ id: string }> }) {
   const {id} = await params;
@@ -8,7 +8,7 @@ export default async function EditUser({ params }: { params: Promise<{ id: strin
 
   return (
     <div>
-      <ProfileForm user={user} />
+      <DashboardProfileForm user={user} />
     </div>
   )
 }
