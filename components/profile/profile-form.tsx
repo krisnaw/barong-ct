@@ -64,7 +64,7 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
         <FieldGroup>
 
           <FieldSet>
-            <FieldLegend>Personal Information</FieldLegend>
+            <FieldLegend>Personal Information - {user.email}</FieldLegend>
 
             <FieldGroup>
 
