@@ -6,6 +6,7 @@ import {getUsers} from "@/db/query/user-query";
 import {format} from "date-fns";
 import {id} from "date-fns/locale";
 import {Badge} from "@/components/ui/badge";
+import {ButtonSendReminder} from "@/app/dashboard/users/button-send-reminder";
 
 export default async function UsersPage({searchParams} : {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -42,12 +43,18 @@ export default async function UsersPage({searchParams} : {
                 <TableCell>{user.email}</TableCell>
                 <TableCell><Badge className={`${user.phone ? 'bg-green-500 text-white' : ''}`}>{user.phone ? "Completed" : "Not Complete"}</Badge> </TableCell>
                 <TableCell>{format(user.createdAt, 'PPpp', { locale: id })}</TableCell>
-                <TableCell>
+                <TableCell className="inline-flex gap-2">
                   <Button variant="outline" size="sm" asChild>
                     <Link href={`/dashboard/users/${user.id}`}>
                       View Details
                     </Link>
                   </Button>
+
+                  {!user.phone && (
+                    <>
+                      <ButtonSendReminder email={user.email} />
+                    </>
+                  )}
                 </TableCell>
               </TableRow>
             ))}

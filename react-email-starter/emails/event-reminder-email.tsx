@@ -2,13 +2,13 @@ import {Body, Button, Container, Head, Html, Img, Section, Tailwind, Text,} from
 import * as React from "react";
 
 interface EmailProps {
-  email: string,
+  name: string,
   url: string
 }
 
 const imgURL = "https://fi7tj80kxj.ufs.sh/f/jjB2MlHJbriWIPo3tMP916KnsQXzrbZ8jdfDLy0eJwl3qaVC"
 
-export const SignupLink = ({email, url}: EmailProps) => (
+export const EventReminder = ({name, url}: EmailProps) => (
   <Html>
     <Head />
     <Tailwind>
@@ -22,26 +22,21 @@ export const SignupLink = ({email, url}: EmailProps) => (
             className="mx-auto"
           />
           <Text className="text-[16px] leading-[26px]">
-            Hello Cyclist,
+            Hello {name}!,
           </Text>
           <Text className="text-[16px] leading-[26px]">
-            Click the button below to continue with {email}.
+            Thanks for completing your profile.
+          </Text>
+          <Text className="text-[16px] leading-[26px]">
+            This is a quick reminder that you haven’t joined the event yet. If you’re planning to attend, you can join the event using the link below.
           </Text>
           <Section className="text-center">
             <Button
-              className="bg-[#E86A1F] rounded-[3px] text-white text-[16px] no-underline text-center block p-3"
+              className="bg-[#E86A1F] rounded-[3px] text-white text-[16px] no-underline text-center block p-3 uppercase"
               href={url}>
-              Continue
+              Join Now
             </Button>
           </Section>
-
-          <Text className="text-[12px]  leading-relaxed">
-            If the button doesn&#39;t work, copy and paste this link:
-          </Text>
-
-          <Text className="text-[12px] text-blue-600 break-all mb-[32px]">
-            {url}
-          </Text>
 
           <Text className="text-[16px] leading-[26px]">
             Best,
@@ -54,10 +49,10 @@ export const SignupLink = ({email, url}: EmailProps) => (
   </Html>
 );
 
-SignupLink.PreviewProps = {
-  email: "krisna.w2010@gmail.com",
-  url: "https://app.example.com/auth/magic-link?token=abc123xyz789",
+EventReminder.PreviewProps = {
+  name: "Krisna",
+  url: "https://www.barongmelali.com",
 };
 
 
-export default SignupLink;
+export default EventReminder;

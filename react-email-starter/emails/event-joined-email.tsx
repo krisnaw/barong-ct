@@ -31,8 +31,7 @@ export const EventJoinedEmail = ({name, eventName, eventDate, eventTime, meeting
     <Tailwind>
       <Body className="bg-white font-koala">
         <Preview>
-          The sales intelligence platform that helps you uncover qualified
-          leads.
+          Great news! You&#39;ve successfully joined. We&#39;re excited to have you ride with us!
         </Preview>
         <Container className="mx-auto py-5 pb-12">
           <Img
