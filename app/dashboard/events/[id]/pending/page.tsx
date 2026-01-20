@@ -8,6 +8,7 @@ import {Button} from "@/components/ui/button";
 import Link from "next/link";
 import {id as idLocale} from "date-fns/locale";
 import {ButtonEventReminder} from "@/app/dashboard/events/[id]/pending/button-event-reminder";
+import {ButtonAddParticipant} from "@/app/dashboard/events/[id]/pending/button-add-participant";
 
 export default async function Page({params}: { params: Promise<{ id: number }> }) {
   const {id} = await params;
@@ -44,6 +45,9 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
                 <TableCell><Badge className={`${user.phone ? 'bg-green-500 text-white' : ''}`}>{user.phone ? "Completed" : "Not Complete"}</Badge> </TableCell>
                 <TableCell>{format(user.createdAt, 'PPpp', { locale: idLocale })}</TableCell>
                 <TableCell className="inline-flex gap-2">
+
+                  <ButtonAddParticipant eventId={event.id} userId={user.id} name={user.name} email={user.email} />
+
                   <Button variant="outline" size="sm" asChild>
                     <Link href={`/dashboard/users/${user.id}`}>
                       View Details

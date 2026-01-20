@@ -15,6 +15,51 @@ import EventJoinedEmail from "@/react-email-starter/emails/event-joined-email";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+export async function addParticipant(payload: {eventId: string, userId: string, name: string, email: string}): Promise<ActionResponse> {
+  try {
+    await db.insert(participant).values({
+      userId: payload.userId,
+      eventId: Number(payload.eventId),
+    }).onConflictDoNothing()
+
+    const eventURL = `${process.env.BETTER_AUTH_URL}/event/${payload.eventId}`
+    const event = await getEventById(Number(payload.eventId));
+    if (!event) {
+      return {
+        success: false,
+        message: `No event with id ${payload.eventId} found.`,
+      }
+    }
+
+    const param = {
+      name: payload.name,
+      eventName : event.name ?? "There",
+      eventDate : formatEventDate(event.startDate),
+      eventTime : formatEventTime(event.startDate),
+      meetingPoint : event.locationName ?? "",
+      eventURL
+    }
+
+    await resend.emails.send({
+      from: 'Barong Cycling Team <info@barongmelali.com>',
+      to: [payload.email],
+      subject: 'Thanks for joining the event',
+      react: EventJoinedEmail(param)
+    })
+
+  } catch (error) {
+    console.log(error);
+  }
+
+  revalidatePath("/", "layout")
+
+  return {
+    success: true,
+    message: "Success, you have joined this event",
+  }
+
+}
+
 export async function joinEventAction(payload: {  eventId: string }) : Promise<ActionResponse> {
 
   const session = await auth.api.getSession({
