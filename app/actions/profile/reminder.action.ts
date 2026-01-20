@@ -26,7 +26,7 @@ export async function sendEventReminder(prevState: void | null, formData: FormDa
   await resend.emails.send({
     from: 'Barong Cycling Team <info@barongmelali.com>',
     to: [email],
-    subject: 'Complete your profile to join this event',
+    subject: 'Reminder to join the event',
     react: EventReminder({
       name, url
     })
