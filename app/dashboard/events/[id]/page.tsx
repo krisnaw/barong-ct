@@ -9,6 +9,7 @@ import {EventDate} from "@/components/events/event-date";
 import Link from "next/link";
 import {format} from "date-fns";
 import {id as idLocale} from "date-fns/locale";
+import {BtnResendConfirm} from "@/app/dashboard/events/[id]/btn-resend-confirm";
 
 export default async function Page({params}: { params: Promise<{ id: number }> }) {
   const {id} = await params;
@@ -86,6 +87,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
                       <TableCell className="font-medium">{participant.user.email}</TableCell>
                       <TableCell className="font-medium">{format(participant.participant.createdAt, 'PPpp', { locale: idLocale })}</TableCell>
                       <TableCell>
+                        <BtnResendConfirm eventId={event.id} name={participant.user.name} userId={participant.user.id} email={participant.user.email} />
                         {/*<ButtonDeleteParticipant participantId={participant.id} />*/}
                       </TableCell>
                     </TableRow>
