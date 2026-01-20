@@ -7,6 +7,7 @@ import {format} from "date-fns";
 import {id} from "date-fns/locale";
 import {Badge} from "@/components/ui/badge";
 import {ButtonSendReminder} from "@/app/dashboard/users/button-send-reminder";
+import {PencilIcon} from "lucide-react";
 
 export default async function UsersPage({searchParams} : {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -44,12 +45,16 @@ export default async function UsersPage({searchParams} : {
                 <TableCell><Badge className={`${user.phone ? 'bg-green-500 text-white' : ''}`}>{user.phone ? "Completed" : "Not Complete"}</Badge> </TableCell>
                 <TableCell>{format(user.createdAt, 'PPpp', { locale: id })}</TableCell>
                 <TableCell className="inline-flex gap-2">
-                  <Button variant="outline" size="sm" asChild>
-                    <Link href={`/dashboard/users/${user.id}`}>
-                      View Details
+                  <Button asChild size="icon-sm" variant="outline">
+                    <Link href={`/dashboard/users/${user.id}/edit`}>
+                      <PencilIcon />
                     </Link>
                   </Button>
-
+                  <Button variant="outline" size="sm" asChild>
+                    <Link href={`/dashboard/users/${user.id}`}>
+                      View
+                    </Link>
+                  </Button>
                   {!user.phone && (
                     <>
                       <ButtonSendReminder email={user.email} />
