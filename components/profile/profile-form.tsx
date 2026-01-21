@@ -13,8 +13,12 @@ import {UserWithDetail} from "@/types/auth-types";
 import {Textarea} from "@/components/ui/textarea";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select";
 import {UserDetailType} from "@/db/schema";
+import {useRouter} from "next/navigation";
+
+const redirect_url = 'https://www.barongmelali.com/event/1'
 
 export function ProfileForm({user}: { user: UserWithDetail }) {
+  const router = useRouter();
 
   const [profileImage, setProfileImage] = useState<string | null>(user.image ?? null);
   const [state, formAction, isPending] = useActionState(async (_: ActionResponse<UserDetailData & {
@@ -44,11 +48,12 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
     }
     const res = await UpdateProfileAction(payload)
     
-    if (!res.success) {
-      toast.error(res.message)
+    if (res.success) {
+      toast.success(res.message)
+      router.push(redirect_url)
     }
 
-    toast.success(res.message)
+    toast.error(res.message)
 
     return res;
   }, initialState) as [state: ActionResponse<UserDetailType & { name: string, image: string | null }, UserDetailType & {
