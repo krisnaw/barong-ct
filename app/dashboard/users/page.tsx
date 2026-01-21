@@ -41,17 +41,10 @@ export default async function UsersPage({searchParams}: {
             {users.map((user) => (
               <TableRow key={user.id}>
                 <TableCell className="font-medium">
-
-                  <div className="flex items-center">
-                    <div className="size-11 shrink-0">
-                      <img alt="" src={user.image ?? "/no_avatar.png"} className="size-11 rounded-full"/>
-                    </div>
-                    <div className="ml-4">
-                      <div className="font-medium text-gray-900">{user.name}</div>
-                      <div className="mt-1 text-gray-500">{user.email}</div>
-                    </div>
+                  <div>
+                    <div className="font-medium text-gray-900">{user.name}</div>
+                    <div className="mt-1 text-gray-500">{user.email}</div>
                   </div>
-
                 </TableCell>
                 <TableCell>{user.phone}</TableCell>
                 <TableCell><Badge
