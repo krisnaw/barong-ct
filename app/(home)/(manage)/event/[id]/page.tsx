@@ -1,4 +1,4 @@
-import {CalendarDays, MapPin} from "lucide-react";
+import {CalendarDays, MapPin, UsersIcon} from "lucide-react";
 import {emptyBanner} from "@/types/date-helper";
 import {getEventById} from "@/db/query/event-query";
 import {redirect} from "next/navigation";
@@ -38,9 +38,8 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
                 <div className="flex">
 
                   <div className="mr-4 shrink-0">
-
                     <div className="outline rounded-xl outline-gray-300 p-2.5">
-                      <CalendarDays size="32" className="text-gray-500"/>
+                      <CalendarDays size="24" className="text-gray-500"/>
                     </div>
                   </div>
 
@@ -60,12 +59,28 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
                   <div className="mr-4 shrink-0">
 
                     <div className="outline rounded-xl outline-gray-300 p-2.5">
-                      <MapPin size="32" className="text-gray-500"/>
+                      <MapPin size="24" className="text-gray-500"/>
                     </div>
                   </div>
                   <div>
                     <h4 className="text-lg font-semibold text-gray-800">
                       {event.locationName}
+                    </h4>
+                  </div>
+                </div>
+              </li>
+
+              <li>
+                <div className="flex items-center">
+                  <div className="mr-4 shrink-0">
+
+                    <div className="outline rounded-xl outline-gray-300 p-2.5">
+                      <UsersIcon size="24" className="text-gray-500"/>
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-semibold text-gray-800">
+                      {event.participantCount} riders joined
                     </h4>
                   </div>
                 </div>

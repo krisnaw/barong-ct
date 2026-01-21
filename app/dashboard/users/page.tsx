@@ -9,7 +9,7 @@ import {Badge} from "@/components/ui/badge";
 import {ButtonSendReminder} from "@/app/dashboard/users/button-send-reminder";
 import {PencilIcon} from "lucide-react";
 
-export default async function UsersPage({searchParams} : {
+export default async function UsersPage({searchParams}: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
 
@@ -23,7 +23,7 @@ export default async function UsersPage({searchParams} : {
       </h1>
 
       <div>
-        <InputSearch />
+        <InputSearch/>
       </div>
 
       <div className="rounded-md border">
@@ -31,7 +31,7 @@ export default async function UsersPage({searchParams} : {
           <TableHeader>
             <TableRow>
               <TableHead>Name</TableHead>
-              <TableHead>Email</TableHead>
+              <TableHead>Phone</TableHead>
               <TableHead>Profile</TableHead>
               <TableHead>Registered At</TableHead>
               <TableHead>Actions</TableHead>
@@ -40,14 +40,28 @@ export default async function UsersPage({searchParams} : {
           <TableBody>
             {users.map((user) => (
               <TableRow key={user.id}>
-                <TableCell className="font-medium">{user.name}</TableCell>
-                <TableCell>{user.email}</TableCell>
-                <TableCell><Badge className={`${user.phone ? 'bg-green-500 text-white' : ''}`}>{user.phone ? "Completed" : "Not Complete"}</Badge> </TableCell>
-                <TableCell>{format(user.createdAt, 'PPpp', { locale: id })}</TableCell>
+                <TableCell className="font-medium">
+
+                  <div className="flex items-center">
+                    <div className="size-11 shrink-0">
+                      <img alt="" src={user.image ?? "/no_avatar.png"} className="size-11 rounded-full"/>
+                    </div>
+                    <div className="ml-4">
+                      <div className="font-medium text-gray-900">{user.name}</div>
+                      <div className="mt-1 text-gray-500">{user.email}</div>
+                    </div>
+                  </div>
+
+                </TableCell>
+                <TableCell>{user.phone}</TableCell>
+                <TableCell><Badge
+                  className={`${user.phone ? 'bg-green-500 text-white' : ''}`}>{user.phone ? "Completed" : "Not Complete"}</Badge>
+                </TableCell>
+                <TableCell>{format(user.createdAt.toLocaleString(), 'PPpp', {locale: id})}</TableCell>
                 <TableCell className="inline-flex gap-2">
                   <Button asChild size="icon-sm" variant="outline">
                     <Link href={`/dashboard/users/${user.id}/edit`}>
-                      <PencilIcon />
+                      <PencilIcon/>
                     </Link>
                   </Button>
                   <Button variant="outline" size="sm" asChild>
@@ -57,7 +71,7 @@ export default async function UsersPage({searchParams} : {
                   </Button>
                   {!user.phone && (
                     <>
-                      <ButtonSendReminder email={user.email} />
+                      <ButtonSendReminder email={user.email}/>
                     </>
                   )}
                 </TableCell>
