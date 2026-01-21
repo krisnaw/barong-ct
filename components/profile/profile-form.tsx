@@ -51,9 +51,9 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
     if (res.success) {
       toast.success(res.message)
       router.push(redirect_url)
+    } else {
+      toast.error(res.message)
     }
-
-    toast.error(res.message)
 
     return res;
   }, initialState) as [state: ActionResponse<UserDetailType & { name: string, image: string | null }, UserDetailType & {
