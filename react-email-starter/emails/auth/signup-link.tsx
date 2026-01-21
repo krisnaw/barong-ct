@@ -27,6 +27,11 @@ export const SignupLink = ({email, url}: EmailProps) => (
           <Text className="text-[16px] leading-[26px]">
             Click the button below to continue with {email}.
           </Text>
+
+          <Text className="text-[16px] leading-[26px]">
+            This link expires in 15 minutes.
+          </Text>
+
           <Section className="text-center">
             <Button
               className="bg-[#E86A1F] rounded-[3px] text-white text-[16px] no-underline text-center block p-3"

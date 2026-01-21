@@ -12,7 +12,7 @@ export async function getUsers( name?  : string) {
     .where(name ? ilike(user.name, `%${name}%`) : undefined)
     .leftJoin(userDetail, eq(userDetail.userId, user.id))
     .orderBy(desc(user.createdAt))
-    .limit(100);
+    .limit(150);
 }
 
 export async function getUserWithDetail(id: string): Promise<UserWithDetail> {
