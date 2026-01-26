@@ -18,6 +18,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.BETTER_AUTH_URL ?? "https://www.barongmelali.com/"),
   title: "Barong Cycling Team",
   description: "Bali Road Cycling Group",
 };
