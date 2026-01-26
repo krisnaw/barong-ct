@@ -9,7 +9,8 @@ import {EventDate} from "@/components/events/event-date";
 import Link from "next/link";
 import {format} from "date-fns";
 import {id as idLocale} from "date-fns/locale";
-import {BtnResendConfirm} from "@/app/dashboard/events/[id]/btn-resend-confirm";
+import {BtnResendConfirm} from "@/components/button/btn-resend-confirm";
+import {ButtonDownloadParticipant} from "@/components/button/button-download-participant";
 
 export default async function Page({params}: { params: Promise<{ id: number }> }) {
   const {id} = await params;
@@ -67,7 +68,13 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
 
 
       <div>
-        <h1 className="text-2xl font-bold">Participants</h1>
+
+        <div className="flex flex-wrap items-center justify-between sm:flex-nowrap">
+          <h2 className="text-2xl font-bold">Participants</h2>
+          <ButtonDownloadParticipant eventId={event.id} eventName={event.name} />
+        </div>
+
+
         <div className="mt-4">
           <div className="rounded-md border">
             <Table>
