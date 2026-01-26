@@ -23,7 +23,21 @@ export function ButtonDownloadParticipant({eventId, eventName}: ButtonDownloadPa
       const excelData = participants.map(p => ({
         Name: p.user.name || '',
         Email: p.user.email,
-        Phone: p.userDetail?.phoneNumber || ''
+        Phone: p.userDetail?.phoneNumber || '',
+        'Identity Number': p.userDetail?.identityNumber || '',
+        Nationality: p.userDetail?.nationality || '',
+        Gender: p.userDetail?.gender || '',
+        'Blood Type': p.userDetail?.bloodType || '',
+        'Club Name': p.userDetail?.clubName || '',
+        Instagram: p.userDetail?.instagram || '',
+        Strava: p.userDetail?.strava || '',
+        'Emergency Contact Name': p.userDetail?.emergencyContactName || '',
+        'Emergency Contact Number': p.userDetail?.emergencyContactNumber || '',
+        'Country of Residence': p.userDetail?.countryOfResidence || '',
+        Province: p.userDetail?.province || '',
+        City: p.userDetail?.city || '',
+        'Postal Code': p.userDetail?.postalCode || '',
+        Address: p.userDetail?.address || '',
       }));
 
       const ws = XLSX.utils.json_to_sheet(excelData);
