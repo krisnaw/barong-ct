@@ -24,7 +24,7 @@ export async function getParticipantByEvent(eventId: number, sortByName: boolean
     .leftJoin(userDetail, eq(userDetail.userId, user.id))
     .where(eq(participant.eventId, eventId))
     .orderBy(sortByName ? asc(user.name) : desc(participant.createdAt))
-    .limit(100);
+    .limit(200);
 }
 
 export async function getPendingParticipants(eventId: number) {
