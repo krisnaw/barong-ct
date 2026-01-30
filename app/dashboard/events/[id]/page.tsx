@@ -11,6 +11,7 @@ import {format} from "date-fns";
 import {id as idLocale} from "date-fns/locale";
 import {BtnResendConfirm} from "@/components/button/btn-resend-confirm";
 import {ButtonDownloadParticipant} from "@/components/button/button-download-participant";
+import {ButtonAddCategory} from "@/components/button-add-category";
 
 export default async function Page({params}: { params: Promise<{ id: number }> }) {
   const {id} = await params;
@@ -47,6 +48,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
 
         </div>
         <div className="mt-4 flex md:mt-0 md:ml-4">
+          <ButtonAddCategory />
           <Button variant="outline">
             <Link href={`/dashboard/events/${id}`}>
               Edit
