@@ -8,3 +8,5 @@ export const eventCategory = pgTable("event_category", {
     .notNull()
     .references(() => EventSchema.id, { onDelete: "cascade" }),
 });
+
+export type EventCategoryType = typeof eventCategory.$inferSelect

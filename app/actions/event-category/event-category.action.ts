@@ -1,10 +1,15 @@
 'use server'
 
 import {revalidatePath} from "next/cache";
+import {db} from "@/db/db";
+import {eventCategory} from "@/db/schema";
 
-export async function createCategoryAction() : Promise<void> {
+export async function createCategoryAction(formData: FormData) : Promise<void> {
 
-  console.log('Creating new category');
+  await db.insert(eventCategory).values({
+    eventId: Number(formData.get("eventId")),
+    name: formData.get("name") as string,
+  })
 
   revalidatePath('/', 'page')
 
