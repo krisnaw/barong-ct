@@ -3,39 +3,37 @@
 import {EventSchema, EventType} from "@/db/schema";
 import {participant} from "@/db/schema/participant-schema";
 import {db} from "@/db/db";
-import {eq} from "drizzle-orm";
+import {count, eq, getTableColumns} from "drizzle-orm";
 
 export async function getEvents(): Promise<(EventType & { participantCount: number })[] | []> {
 
-  // @ts-ignore
-  const events = await db.select({
-    ...EventSchema,
-    participantCount: db.$count(participant, eq(participant.eventId, EventSchema.id))
-  })
+  const events = await db
+    .select({
+      ...getTableColumns(EventSchema),
+      participantCount: count(participant.id)
+    })
     .from(EventSchema)
-    .limit(10)
-
-  if (events.length === 0) {
-    return [];
-  }
+    .leftJoin(participant, eq(EventSchema.id, participant.eventId))
+    .groupBy(EventSchema.id,)
+    .limit(10);
 
   return events as (EventType & { participantCount: number })[]
 }
 
 export async function getEventById(id: number): Promise<(EventType & { participantCount: number}) | undefined> {
-  // @ts-ignore
-  const event = await db.select({
-    ...EventSchema,
-    participantCount: db.$count(participant, eq(participant.eventId, EventSchema.id))
-  })
+
+  const [event] = await db
+    .select({
+      ...getTableColumns(EventSchema),
+      participantCount: count(participant.id)
+    })
     .from(EventSchema)
+    .leftJoin(participant, eq(EventSchema.id, participant.eventId))
     .where(eq(EventSchema.id, id))
+    .groupBy(EventSchema.id,)
+    .limit(1);
 
-  if (!event) {
-    return undefined;
-  }
-
-  return event[0] as EventType & { participantCount: number };
+  return event as EventType & { participantCount: number };
 }
 
 export async function getEventsByUserId(userId: string): Promise<(EventType & { participantCount: number })[]> {
