@@ -6,7 +6,6 @@ import {Field, FieldGroup, FieldLabel} from "@/components/ui/field";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {Spinner} from "@/components/ui/spinner";
-import {Textarea} from "@/components/ui/textarea";
 import {CustomDatePicker} from "@/components/ui/custom-date-picker";
 import {toast} from "sonner";
 import {UploadButton} from "@/utils/uploadthing";
@@ -105,7 +104,6 @@ export function CreateEventForm() {
               editable={!isPending}
               placeholder="Enter description..."
             />
-            <Textarea name="description" id="description" required placeholder="Type your description here." />
           </Field>
 
 
