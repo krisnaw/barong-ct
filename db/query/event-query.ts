@@ -25,12 +25,12 @@ export async function getEventById(id: number): Promise<(EventType & { participa
   const [event] = await db
     .select({
       ...getTableColumns(EventSchema),
-      participantCount: count(participant.id)
+      participantCount: count(participant.id),
     })
     .from(EventSchema)
     .leftJoin(participant, eq(EventSchema.id, participant.eventId))
     .where(eq(EventSchema.id, id))
-    .groupBy(EventSchema.id,)
+    .groupBy(EventSchema.id)
     .limit(1);
 
   return event as EventType & { participantCount: number };

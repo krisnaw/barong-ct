@@ -2,6 +2,7 @@ import {date, integer, pgTable, serial, text, time, timestamp} from "drizzle-orm
 import {createInsertSchema} from "drizzle-zod";
 import {relations} from "drizzle-orm";
 import {participant} from "@/db/schema/participant-schema";
+import {eventCategory} from "@/db/schema/event-category-schema";
 
 export const EventSchema = pgTable("event", {
   id: serial('id').primaryKey(),
@@ -28,6 +29,7 @@ export const EventSchema = pgTable("event", {
 
 export const eventRelations = relations(EventSchema, ({ many }) => ({
   participants: many(participant),
+  categories: many(eventCategory),
 }));
 
 export type EventType = typeof EventSchema.$inferSelect
