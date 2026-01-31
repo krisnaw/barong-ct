@@ -5,7 +5,7 @@ import {eventCategory} from "@/db/schema/event-category-schema";
 export const eventGroup = pgTable("event_group", {
   id: serial('id').primaryKey(),
 
-  name: text('name'),
+  name: text('name').notNull(),
 
   eventId: integer("event_id")
     .notNull()
@@ -14,3 +14,6 @@ export const eventGroup = pgTable("event_group", {
   eventCategoryId: integer("event_category_id")
     .references(() => eventCategory.id, { onDelete: "set null" }),
 });
+
+
+export type EventGroupType = typeof eventGroup.$inferSelect
