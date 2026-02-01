@@ -2,7 +2,7 @@ import {getEventById} from "@/db/query/event-query";
 import {redirect} from "next/navigation";
 import {getCategoryByEvent} from "@/db/query/event-category.query";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle,} from "@/components/ui/card"
-import {CategorySelection} from "@/app/(home)/(manage)/event/[id]/category/category-selection";
+import {CategorySelection} from "@/components/checkout/category-selection";
 
 export default async function Page({params,}: { params: Promise<{ id: number }> }) {
 
