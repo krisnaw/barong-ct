@@ -4,11 +4,16 @@ import {db} from "@/db/db";
 import {eventGroup} from "@/db/schema";
 import {revalidatePath} from "next/cache";
 
-export async function createGroupAction(payload: {name: string, eventId: number, categoryId: number}) : Promise<ActionResponse> {
-  await db.insert(eventGroup).values(payload);
+export async function createGroupAction(payload: {name: string, eventId: number, eventCategoryId: number}) : Promise<ActionResponse> {
+  const [group] = await db.insert(eventGroup).values(payload).returning();
+
+  console.log('created', group);
+
   revalidatePath('/', 'page')
+
   return {
     success: true,
-    message: `Create a new event group`,
+    message: `Success, group was created.`,
+    data: group.id
   }
 }

@@ -1,6 +1,8 @@
 import {getEventById} from "@/db/query/event-query";
 import {redirect} from "next/navigation";
 import {getCategoryByEvent} from "@/db/query/event-category.query";
+import {Card, CardContent, CardDescription, CardHeader, CardTitle,} from "@/components/ui/card"
+import {CategorySelection} from "@/app/(home)/(manage)/event/[id]/category/category-selection";
 
 export default async function Page({params,}: { params: Promise<{ id: number }> }) {
 
@@ -13,16 +15,23 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
     redirect('/');
   }
 
-  // if categories, direct to category page first
-  if (categories.length > 0) {
-    redirect(`/event/${id}/category`);
+  if (categories.length > 0 ) {
+    redirect(`/event/${id}/category`)
   }
 
   return (
-    <div className="mx-auto max-w-4xl">
-
-
-
+    <div className="mx-auto max-w-xl">
+      <Card>
+        <CardHeader>
+          <CardTitle>Category and Group</CardTitle>
+          <CardDescription>Card Description</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div>
+            <CategorySelection categories={categories}  />
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }
