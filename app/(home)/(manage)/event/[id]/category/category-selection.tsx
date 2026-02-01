@@ -12,7 +12,7 @@ export function CategorySelection({categories} : {categories : EventCategoryType
   const router = useRouter();
   function onChangeHandler(id : string) {
     setCategory(id).then(r => {
-      router.push(`/event/${eventId}/group`)
+      router.push(`/event/${eventId}/group?category=${id}`);
     })
   }
   return (

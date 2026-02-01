@@ -6,6 +6,7 @@ import {Plus, Search} from 'lucide-react';
 import {useRouter} from "next/navigation";
 import {useQueryState} from "nuqs";
 import {EventGroupType} from "@/db/schema";
+import {createGroupAction} from "@/app/actions/event-group/event-group.action";
 
 interface SearchGroupInputProps {
   eventId: number;
@@ -30,7 +31,11 @@ export function SearchGroupInput({
                                  }: SearchGroupInputProps) {
 
 
-  const [selectedGroup, setSelectedGroup] = useQueryState('group')
+
+  const [category, setCategory] = useQueryState('category', { shallow: true });
+
+
+  const [selectedGroup, setSelectedGroup] = useQueryState('group', { shallow: true })
   const [searchValue, setSearchValue] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
@@ -64,15 +69,16 @@ export function SearchGroupInput({
       setSearchValue('');
       setIsOpen(false);
 
-      // const res = await createGroupAction({
-      //   eventId,
-      //   name: searchValue,
-      // })
-      //
-      // if (res.success) {
-      //   const newGroupId = res.data
-      //   setSelectedGroup(newGroupId as string)
-      // }
+      const res = await createGroupAction({
+        eventId,
+        name: searchValue,
+        categoryId: Number(category),
+      })
+
+      if (res.success) {
+        const newGroupId = res.data
+        setSelectedGroup(newGroupId as string)
+      }
 
     }
   };
