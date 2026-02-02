@@ -3,11 +3,14 @@
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
 import {useParams, useSearchParams} from "next/navigation";
+import {useActionState} from "react";
+import {initialState} from "@/types/types";
 
 export function StepPayment() {
   const params = useParams<{ id: string }>();
   const searchParams = useSearchParams();
   const order = searchParams.get("order");
+
   const eventId = params.id;
 
   const price = 1000000
@@ -15,17 +18,24 @@ export function StepPayment() {
   const total = price + fee;
 
 
-  // const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(async () => {
-  //   // const updateOrder = await updateOrder(params);
-  //   return {
-  //     submitting: true,
-  //     message: "",
-  //   }
-  // }, initialState)
+  const [state, formAction, isPending] = useActionState(async () => {
+
+    // create payment
+
+    // const payment = await createPayment();
+
+    // update order
+
+
+    return {
+      success: true,
+      message: ''
+    }
+  }, initialState)
 
 
   return (
-    <form >
+    <form action={formAction}>
       <Card>
         <CardHeader>
           <CardTitle>Order Summary</CardTitle>
@@ -61,8 +71,8 @@ export function StepPayment() {
             </div>
 
             <div className="mt-6">
-              <Button className="w-full" disabled={!(jerseyGender && jerseySize)}>
-                Checkout
+              <Button className="w-full" disabled={isPending} type="submit">
+                Complete Order
               </Button>
             </div>
           </div>
@@ -74,15 +84,6 @@ export function StepPayment() {
   )
 }
 
-const product =
-  {
-    id: 1,
-    name: 'Jersey Barong Melali 2026',
-    href: '#',
-    size: 'L',
-    imageSrc: 'https://tailwindcss.com/plus-assets/img/ecommerce-images/confirmation-page-06-product-01.jpg',
-    imageAlt: "Model wearing cycling jersey",
-  };
 
 const formatMoney = (amount: number, currency = 'IDR', locale = 'id-ID') => {
   return new Intl.NumberFormat(locale, {
