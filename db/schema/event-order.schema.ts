@@ -1,4 +1,4 @@
-import {integer, pgTable, serial, text, timestamp} from "drizzle-orm/pg-core";
+import {doublePrecision, integer, pgTable, serial, text, timestamp} from "drizzle-orm/pg-core";
 import {EventSchema} from "@/db/schema/event-schema";
 import {eventCategory} from "@/db/schema/event-category-schema";
 import {eventGroup} from "@/db/schema/event-group-schema";
@@ -23,6 +23,9 @@ export const eventOrder = pgTable("event_order", {
 
   groupId: integer("event_group_id")
     .references(() => eventGroup.id, {onDelete: "set null"}),
+
+  price: doublePrecision('price'),
+  currency: text("currency"),
 
   jerseyGender: text("jersey_gender"),
   jerseySize: text("jersey_size"),

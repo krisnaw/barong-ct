@@ -127,6 +127,13 @@
       "when": 1770019587048,
       "tag": "0017_eminent_moon_knight",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1770019624728,
+      "tag": "0018_cheerful_fallen_one",
+      "breakpoints": true
     }
   ]
 }
