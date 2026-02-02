@@ -112,6 +112,8 @@ export function CategorySelection({event, categories, order}: { event: EventType
       groupId: Number(group),
       jerseyGender: jerseyGender,
       jerseySize: jerseySize,
+      price: event.price,
+      currency: event.currency,
     }
 
     const  res = order ?  await updateOrderAction(order) :  await createOrderAction(payload)
