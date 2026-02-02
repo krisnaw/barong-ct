@@ -1,10 +1,23 @@
 'use server'
 
-import {eventOrder} from "@/db/schema";
+import {eventOrder, orderSelectSchema} from "@/db/schema";
 import {db} from "@/db/db";
 import {auth} from "@/lib/auth";
 import {headers} from "next/headers";
 import {redirect} from "next/navigation";
+import {z} from "zod";
+import {ActionResponse} from "@/types/types";
+
+export type orderData = z.infer<typeof orderSelectSchema>;
+
+export async function updateOrderAction(formData: orderData) : Promise<ActionResponse> {
+  await db.update(eventOrder).set(formData);
+  return {
+    success:  true,
+    message: 'Successfully created order',
+    data: formData.id
+  }
+}
 
 export async function createOrderAction(payload: {
   eventId: number, categoryId: number, groupId: number
@@ -21,7 +34,6 @@ export async function createOrderAction(payload: {
 
   let orderId: number
 
-  console.log(payload)
 
   try {
     const [order] = await db.insert(eventOrder).values({

@@ -5,21 +5,31 @@ import {Button} from "@/components/ui/button";
 import {Field, FieldContent, FieldLabel, FieldTitle} from "@/components/ui/field";
 import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
 import {useQueryState} from "nuqs";
+import {useParams, useSearchParams} from "next/navigation";
 
 export function StepPayment() {
+  const params = useParams<{ id: string }>();
+  const searchParams = useSearchParams();
+  const order = searchParams.get("order");
+  const eventId = params.id;
+
   const price = 1000000
   const fee = 25000;
   const total = price + fee;
   const [jerseyGender, setJerseyGender] = useQueryState("gender", { shallow: true});
   const [jerseySize, setJerseySize] = useQueryState("size", {shallow: true});
 
-  // const [state, formAction, isPending] = useActionState(async () => {
-  //
-  // })
+  // const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(async () => {
+  //   // const updateOrder = await updateOrder(params);
+  //   return {
+  //     submitting: true,
+  //     message: "",
+  //   }
+  // }, initialState)
 
 
   return (
-    <form>
+    <form >
       <Card>
         <CardHeader>
           <CardTitle>Order Summary</CardTitle>
@@ -83,7 +93,7 @@ export function StepPayment() {
             </div>
 
             <div className="mt-6">
-              <Button className="w-full">
+              <Button className="w-full" disabled={!(jerseyGender && jerseySize)}>
                 Checkout
               </Button>
             </div>

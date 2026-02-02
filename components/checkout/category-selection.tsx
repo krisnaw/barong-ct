@@ -13,7 +13,7 @@ import {BadgeCheckIcon} from "lucide-react";
 import {Card, CardContent, CardFooter} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
 import {initialState} from "@/types/types";
-import {createOrderAction} from "@/app/actions/event-order/event-order.action";
+import {createOrderAction, updateOrderAction} from "@/app/actions/event-order/event-order.action";
 import {toast} from "sonner";
 
 export function CategorySelection({categories, order}: { categories: EventCategoryType[], order?: EventOrderType | null }) {
@@ -25,6 +25,7 @@ export function CategorySelection({categories, order}: { categories: EventCatego
   const [availableGroup, setAvailableGroup] = useState<EventGroupType[]>()
   const [selectedGroup, setSelectedGroup] = useState<EventGroupType>()
   const router = useRouter();
+  console.log(order)
 
   useEffect(() => {
 
@@ -39,7 +40,12 @@ export function CategorySelection({categories, order}: { categories: EventCatego
           const data = await response.json();
           setSelectedGroup(data.group)
         } catch (error) {
-          console.error(error);
+          if (error instanceof Error) {
+            if (error.name === 'AbortError') {
+              return; // Ignore abort error
+            }
+          }
+          console.error('Fetch error:', error);
         }
       }
 
@@ -99,7 +105,12 @@ export function CategorySelection({categories, order}: { categories: EventCatego
       groupId: Number(group),
     }
 
-    const res = await createOrderAction(payload)
+    console.log("payload", payload)
+
+
+    const  res = order ?  await updateOrderAction(order) :  await createOrderAction(payload)
+
+
     if (res.success) {
       if(res.data) {
         const newParam = new URLSearchParams(searchParams);
