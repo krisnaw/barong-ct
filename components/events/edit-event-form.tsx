@@ -1,5 +1,6 @@
 'use client'
 
+import * as React from "react";
 import {useActionState, useState} from "react";
 import {ActionResponse, initialState} from "@/types/types";
 import {Field, FieldGroup, FieldLabel} from "@/components/ui/field";
@@ -14,6 +15,7 @@ import {UpdateEventAction} from "@/app/actions/event/event.action";
 import {format, parse} from "date-fns";
 import {ContentEditor} from "@/components/events/content-editor";
 import {fromZonedTime, toZonedTime} from "date-fns-tz";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 
 export function EditEventForm({event} : {event: EventType}) {
   const eventDate = new Date(event.startDate);
@@ -46,6 +48,8 @@ export function EditEventForm({event} : {event: EventType}) {
       locationName: formData.get("location") as string,
       locationLink: formData.get("map") as string,
       maxParticipants: Number(formData.get("maxParticipants")),
+      price: Number(formData.get("price")),
+      currency: formData.get("currency") as string,
     }
 
     const res = await UpdateEventAction(payload)
@@ -103,6 +107,31 @@ export function EditEventForm({event} : {event: EventType}) {
 
             </div>
           </Field>
+
+
+          <Field>
+            <FieldLabel htmlFor="price">Price</FieldLabel>
+            <div className="flex gap-2">
+              <Select defaultValue={event.currency ?? "idr"} name="currency">
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="$" />
+                </SelectTrigger>
+                <SelectContent>
+                  {CURRENCIES.map((currency) => (
+                    <SelectItem key={currency.value} value={currency.label}>
+                      {currency.value}{" "}
+                      <span className="text-muted-foreground">
+                    {currency.label}
+                  </span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Input name="price" placeholder="1.000.000" pattern="[0-9]*" />
+            </div>
+          </Field>
+
 
           <Field>
             <FieldLabel htmlFor="name">Name</FieldLabel>
@@ -197,3 +226,8 @@ export function EditEventForm({event} : {event: EventType}) {
   )
 }
 
+const CURRENCIES = [
+  {
+    value: 'idr', label: 'Rp',
+  }
+]
