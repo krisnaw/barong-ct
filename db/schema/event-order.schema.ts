@@ -32,3 +32,5 @@ export const eventOrder = pgTable("event_order", {
     .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
 });
+
+export type EventOrderType = typeof eventOrder.$inferSelect

@@ -10,8 +10,8 @@ export function StepPayment() {
   const price = 1000000
   const fee = 25000;
   const total = price + fee;
-  const [jerseyGender, setJerseyGender] = useQueryState("gender", {shallow: true});
-  const [size, setSize] = useQueryState("size", {shallow: true});
+  const [jerseyGender, setJerseyGender] = useQueryState("gender", { shallow: true});
+  const [jerseySize, setJerseySize] = useQueryState("size", {shallow: true});
 
   // const [state, formAction, isPending] = useActionState(async () => {
   //
@@ -27,7 +27,7 @@ export function StepPayment() {
         </CardHeader>
         <CardContent>
 
-          <RadioGroup onValueChange={(value) => setJerseyGender(value)} defaultValue="male" className="grid grid-cols-2">
+          <RadioGroup onValueChange={(value) => setJerseyGender(value)} defaultValue={jerseyGender || ""} className="grid grid-cols-2">
             {gender.map((item) => (
               <FieldLabel key={item.id} htmlFor={item.id}>
                 <Field orientation="horizontal">
@@ -40,8 +40,8 @@ export function StepPayment() {
             ))}
           </RadioGroup>
 
-          <RadioGroup onValueChange={(value) => setSize(value)}
-                      defaultValue="m" className="mt-4 grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2">
+          <RadioGroup onValueChange={(value) => setJerseySize(value)}
+                      defaultValue={jerseySize || ""}  className="mt-4 grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2">
             {sizes.map((size) => (
               <FieldLabel key={size.id} htmlFor={size.id}>
                 <Field orientation="horizontal">
