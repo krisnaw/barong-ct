@@ -89,6 +89,7 @@ export function CategorySelection({categories}: { categories: EventCategoryType[
   }
 
   function onClickContinue() {
+    // store order
     router.push(`/event/${eventId}/profile?${searchParams.toString()}`)
   }
 

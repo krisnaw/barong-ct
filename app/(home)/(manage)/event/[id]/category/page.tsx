@@ -6,8 +6,8 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
   const categories = await getCategoryByEvent(id)
 
   return (
-    <>
-      <CategorySelection eventId={id} categories={categories}  />
-    </>
+    <div>
+      <CategorySelection categories={categories}  />
+    </div>
   )
 }
