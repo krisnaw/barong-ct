@@ -5,15 +5,17 @@ import {Button} from "@/components/ui/button";
 import {useParams, useSearchParams} from "next/navigation";
 import {useActionState} from "react";
 import {initialState} from "@/types/types";
+import {EventType} from "@/db/schema";
+import {createPayment} from "@/app/actions/payment/payment.action";
 
-export function StepPayment() {
+export function StepPayment({event} : {event: EventType & { participantCount: number }}) {
   const params = useParams<{ id: string }>();
   const searchParams = useSearchParams();
   const order = searchParams.get("order");
 
   const eventId = params.id;
 
-  const price = 1000000
+  const price = Number(event.price);
   const fee = 25000;
   const total = price + fee;
 
@@ -22,7 +24,8 @@ export function StepPayment() {
 
     // create payment
 
-    // const payment = await createPayment();
+    const payment = await createPayment({oderId: Number(order)});
+
 
     // update order
 

@@ -1,4 +1,3 @@
-/*
 "use server"
 
 import {ActionResponse} from "@/types/types";
@@ -12,17 +11,6 @@ import {eq} from "drizzle-orm";
 import {eventOrder} from "@/db/schema";
 import {redirect} from "next/navigation";
 
-interface OrderAction {
-  userId: string,
-  eventId: number,
-  groupId: number,
-  amount: number,
-  currency: string,
-  jerseyGender: string,
-  jerseySize: string
-
-}
-
 const dokuURL = `https://api-sandbox.doku.com/checkout/v1/payment`
 const clientID = "BRN-0214-1768988713930";
 const clientSecret = "SK-gNOBMPI626KaB8Uw39Ij";
@@ -30,13 +18,13 @@ const requestTimestamp = new Date().toISOString().slice(0, 19) + "Z"
 const baseURL = process.env.BETTER_AUTH_URL!
 
 
-export async function createOrder(payload: { oderId: number }): Promise<ActionResponse> {
+export async function createPayment(payload: { oderId: number }): Promise<ActionResponse> {
 
   const order = await db.query.eventOrder.findFirst({
     where: eq(eventOrder.id, payload.oderId),
   })
 
-  if (!oder) {
+  if (!order) {
     redirect('/')
   }
 
@@ -56,16 +44,16 @@ export async function createOrder(payload: { oderId: number }): Promise<ActionRe
   // create payment
   const raw = JSON.stringify({
     "order": {
-      "amount": order.amount,
+      "amount": order.price,
       "invoice_number": invoiceNumber,
-      "currency": event.currency,
-      "callback_url": `${baseURL}/event/${payload.eventId}`,
+      "currency": order.currency,
+      "callback_url": `${baseURL}/event/${order.eventId}`,
       "callback_url_cancel": `${baseURL}/payment/cancel`,
-      "callback_url_result": `${baseURL}/event/${payload.eventId}`,
+      "callback_url_result": `${baseURL}/event/${order.eventId}`,
       "line_items": [
         {
           "name": event.name,
-          "price": order[0].amount,
+          "price": order.price,
           "quantity": 1
         }
       ]
@@ -111,10 +99,11 @@ export async function createOrder(payload: { oderId: number }): Promise<ActionRe
     const body = await res.json();
     console.log(body);
 
+    const invoiceNumber = generateInvoiceNumber(order.eventId, order.userId);
     // create payment
     const paymentPayload = {
-      orderId: order[0].id,
-      invoiceNumber: order[0].invoiceNumber,
+      orderId: order.id,
+      invoiceNumber: invoiceNumber,
       dokuRequestId: requestId,
       amount: body.response.order.amount,
       currency: body.response.order.currency,
@@ -160,4 +149,4 @@ function generateInvoiceNumber(
   const userShort = userId.replace(/-/g, "").slice(0, 4).toUpperCase();
 
   return `EVT-${eventId}-${timestamp}-${userShort}`;
-}*/
+}
