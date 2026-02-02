@@ -8,7 +8,7 @@ import {getEventById} from "@/db/query/event-query";
 import crypto from "crypto";
 import {generateDigest, generateSignature} from "@/utils/doku-helper";
 import {eq} from "drizzle-orm";
-import {eventOrder} from "@/db/schema";
+import {eventOrder, eventPayment} from "@/db/schema";
 import {redirect} from "next/navigation";
 
 const dokuURL = `https://api-sandbox.doku.com/checkout/v1/payment`
@@ -16,7 +16,6 @@ const clientID = "BRN-0214-1768988713930";
 const clientSecret = "SK-gNOBMPI626KaB8Uw39Ij";
 const requestTimestamp = new Date().toISOString().slice(0, 19) + "Z"
 const baseURL = process.env.BETTER_AUTH_URL!
-
 
 export async function createPayment(payload: { oderId: number }): Promise<ActionResponse> {
 
@@ -28,7 +27,7 @@ export async function createPayment(payload: { oderId: number }): Promise<Action
     redirect('/')
   }
 
-  const invoiceNumber = generateInvoiceNumber(Number(order.eventId), order.userId);
+  const invoiceNumber = generateInvoiceNumber(order.eventId, order.userId);
 
   const user = await getUserWithDetail(order.userId);
   const event = await getEventById(order.eventId);
@@ -39,7 +38,6 @@ export async function createPayment(payload: { oderId: number }): Promise<Action
       message: "Sorry, please try again later",
     }
   }
-
 
   // create payment
   const raw = JSON.stringify({
@@ -95,38 +93,43 @@ export async function createPayment(payload: { oderId: number }): Promise<Action
 
   const res = await fetch(dokuURL, requestOptions);
 
-  if (res.ok) {
-    const body = await res.json();
-    console.log(body);
 
-    const invoiceNumber = generateInvoiceNumber(order.eventId, order.userId);
-    // create payment
-    const paymentPayload = {
-      orderId: order.id,
-      invoiceNumber: invoiceNumber,
-      dokuRequestId: requestId,
-      amount: body.response.order.amount,
-      currency: body.response.order.currency,
-      paymentUrl: body.response.payment.url,
-      expiresAt: new Date(body.response.payment.expired_datetime),
-    }
+  const body = await res.json();
 
-    console.log(paymentPayload);
+  if (!res.ok) {
+    const message = Array.isArray(body.message)
+      ? body.message.join(", ")
+      : body.message;
 
-    await db.insert(paymentSchema)
-      .values(paymentPayload)
-      .returning();
-
-    return {
-      success: true,
-      message: "Success, ",
-      data: body.response.payment.url
-    }
+    console.error("Fetch failed:", message);
   }
+
+
+  console.log(body);
+
+
+  // create payment
+  const paymentPayload = {
+    orderId: order.id,
+    invoiceNumber: invoiceNumber,
+    price: body.response.order.amount,
+    currency: body.response.order.currency,
+    paymentUrl: body.response.payment.url,
+    expiresAt: new Date(body.response.payment.expired_datetime),
+  }
+
+  await db.insert(eventPayment)
+    .values(paymentPayload)
+    .returning();
+
+  await db.update(eventOrder).set({
+    status: "payment",
+  }).where(eq(eventOrder.id, order.id));
 
   return {
     success: true,
-    message: "Update Profile",
+    message: "Success, ",
+    data: body.response.payment.url
   }
 }
 

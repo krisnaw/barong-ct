@@ -2,11 +2,12 @@
 
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
-import {useParams, useSearchParams} from "next/navigation";
+import {useParams, useRouter, useSearchParams} from "next/navigation";
 import {useActionState} from "react";
 import {initialState} from "@/types/types";
 import {EventType} from "@/db/schema";
 import {createPayment} from "@/app/actions/payment/payment.action";
+import {Spinner} from "@/components/ui/spinner";
 
 export function StepPayment({event} : {event: EventType & { participantCount: number }}) {
   const params = useParams<{ id: string }>();
@@ -14,6 +15,7 @@ export function StepPayment({event} : {event: EventType & { participantCount: nu
   const order = searchParams.get("order");
 
   const eventId = params.id;
+  const router = useRouter();
 
   const price = Number(event.price);
   const fee = 25000;
@@ -23,17 +25,13 @@ export function StepPayment({event} : {event: EventType & { participantCount: nu
   const [state, formAction, isPending] = useActionState(async () => {
 
     // create payment
-
-    const payment = await createPayment({oderId: Number(order)});
-
-
-    // update order
-
-
-    return {
-      success: true,
-      message: ''
+    const res = await createPayment({oderId: Number(order)});
+    console.log(res);
+    if (res.success) {
+      router.push(res.data as string);
     }
+
+    return res
   }, initialState)
 
 
@@ -75,6 +73,7 @@ export function StepPayment({event} : {event: EventType & { participantCount: nu
 
             <div className="mt-6">
               <Button className="w-full" disabled={isPending} type="submit">
+                {isPending ? <Spinner/> : null}
                 Complete Order
               </Button>
             </div>

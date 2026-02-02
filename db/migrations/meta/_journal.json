@@ -134,6 +134,13 @@
       "when": 1770019624728,
       "tag": "0018_cheerful_fallen_one",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1770026171533,
+      "tag": "0019_serious_gamma_corps",
+      "breakpoints": true
     }
   ]
 }
