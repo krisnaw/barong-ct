@@ -1,4 +1,4 @@
-import {date, integer, pgTable, serial, text, time, timestamp} from "drizzle-orm/pg-core";
+import {boolean, date, doublePrecision, integer, pgTable, serial, text, time, timestamp} from "drizzle-orm/pg-core";
 import {createInsertSchema} from "drizzle-zod";
 import {relations} from "drizzle-orm";
 import {participant} from "@/db/schema/participant-schema";
@@ -16,6 +16,10 @@ export const EventSchema = pgTable("event", {
 
   eventDate: date(),
   eventTime: time({ withTimezone: true }),
+
+  isPaid: boolean('is_paid').default(false),
+  price: doublePrecision('price'),
+  currency: text("currency"),
 
   locationName: text("location_name"),
   locationLink: text("location_link"), // Link to google maps
