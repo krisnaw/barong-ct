@@ -1,3 +1,4 @@
+/*
 "use server"
 
 import {ActionResponse} from "@/types/types";
@@ -7,6 +8,9 @@ import {getUserWithDetail} from "@/db/query/user-query";
 import {getEventById} from "@/db/query/event-query";
 import crypto from "crypto";
 import {generateDigest, generateSignature} from "@/utils/doku-helper";
+import {eq} from "drizzle-orm";
+import {eventOrder} from "@/db/schema";
+import {redirect} from "next/navigation";
 
 interface OrderAction {
   userId: string,
@@ -26,12 +30,20 @@ const requestTimestamp = new Date().toISOString().slice(0, 19) + "Z"
 const baseURL = process.env.BETTER_AUTH_URL!
 
 
-export async function createOrder(payload: OrderAction): Promise<ActionResponse> {
+export async function createOrder(payload: { oderId: number }): Promise<ActionResponse> {
 
-  const invoiceNumber = generateInvoiceNumber(Number(payload.eventId), payload.userId);
+  const order = await db.query.eventOrder.findFirst({
+    where: eq(eventOrder.id, payload.oderId),
+  })
 
-  const user = await getUserWithDetail(payload.userId);
-  const event = await getEventById(payload.eventId);
+  if (!oder) {
+    redirect('/')
+  }
+
+  const invoiceNumber = generateInvoiceNumber(Number(order.eventId), order.userId);
+
+  const user = await getUserWithDetail(order.userId);
+  const event = await getEventById(order.eventId);
 
   if (!event) {
     return {
@@ -44,7 +56,7 @@ export async function createOrder(payload: OrderAction): Promise<ActionResponse>
   // create payment
   const raw = JSON.stringify({
     "order": {
-      "amount": order[0].amount,
+      "amount": order.amount,
       "invoice_number": invoiceNumber,
       "currency": event.currency,
       "callback_url": `${baseURL}/event/${payload.eventId}`,
@@ -148,4 +160,4 @@ function generateInvoiceNumber(
   const userShort = userId.replace(/-/g, "").slice(0, 4).toUpperCase();
 
   return `EVT-${eventId}-${timestamp}-${userShort}`;
-}
+}*/
