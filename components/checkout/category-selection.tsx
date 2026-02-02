@@ -1,7 +1,7 @@
 'use client'
 
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
-import {EventCategoryType, EventGroupType, EventOrderType} from "@/db/schema";
+import {EventCategoryType, EventGroupType, EventOrderType, EventType} from "@/db/schema";
 import {useQueryState} from "nuqs";
 import {useParams, useRouter, useSearchParams} from "next/navigation";
 import {Label} from "@/components/ui/label";
@@ -19,7 +19,7 @@ import {Separator} from "@radix-ui/react-menu";
 import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
 import {Field, FieldContent, FieldLabel, FieldTitle} from "@/components/ui/field";
 
-export function CategorySelection({categories, order}: { categories: EventCategoryType[], order?: EventOrderType | null }) {
+export function CategorySelection({event, categories, order}: { event: EventType & { participantCount: number }, categories: EventCategoryType[], order?: EventOrderType | null }) {
   const params = useParams<{ id: string }>();
   const searchParams = useSearchParams();
   const eventId = params.id;
