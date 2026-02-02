@@ -1,6 +1,6 @@
 'use server'
 
-import {eventOrder, orderSelectSchema} from "@/db/schema";
+import {eventOrder, orderInsertSchema, orderUpdateSchema} from "@/db/schema";
 import {db} from "@/db/db";
 import {auth} from "@/lib/auth";
 import {headers} from "next/headers";
@@ -8,9 +8,9 @@ import {redirect} from "next/navigation";
 import {z} from "zod";
 import {ActionResponse} from "@/types/types";
 
-export type orderData = z.infer<typeof orderSelectSchema>;
+export type updateData = z.infer<typeof orderUpdateSchema>;
 
-export async function updateOrderAction(formData: orderData) : Promise<ActionResponse> {
+export async function updateOrderAction(formData: updateData) : Promise<ActionResponse> {
   await db.update(eventOrder).set(formData);
   return {
     success:  true,
@@ -19,11 +19,9 @@ export async function updateOrderAction(formData: orderData) : Promise<ActionRes
   }
 }
 
-export async function createOrderAction(payload: {
-  eventId: number, categoryId: number, groupId: number
-}) {
 
-
+export type insertData = z.infer<typeof orderInsertSchema>;
+export async function createOrderAction(formData: insertData) {
   const session = await auth.api.getSession({
     headers: await headers() // you need to pass the headers object.
   })
@@ -34,14 +32,10 @@ export async function createOrderAction(payload: {
 
   let orderId: number
 
+  formData.userId = session.user.id
 
   try {
-    const [order] = await db.insert(eventOrder).values({
-      userId: session.user.id,
-      eventId: payload.eventId,
-      categoryId: payload.categoryId,
-      groupId: payload.groupId,
-    }).returning()
+    const [order] = await db.insert(eventOrder).values(formData).returning()
 
     orderId = order.id
 

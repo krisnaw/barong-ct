@@ -2,9 +2,6 @@
 
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
-import {Field, FieldContent, FieldLabel, FieldTitle} from "@/components/ui/field";
-import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
-import {useQueryState} from "nuqs";
 import {useParams, useSearchParams} from "next/navigation";
 
 export function StepPayment() {
@@ -16,8 +13,7 @@ export function StepPayment() {
   const price = 1000000
   const fee = 25000;
   const total = price + fee;
-  const [jerseyGender, setJerseyGender] = useQueryState("gender", { shallow: true});
-  const [jerseySize, setJerseySize] = useQueryState("size", {shallow: true});
+
 
   // const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(async () => {
   //   // const updateOrder = await updateOrder(params);
@@ -36,34 +32,6 @@ export function StepPayment() {
           <CardDescription>Card Description</CardDescription>
         </CardHeader>
         <CardContent>
-
-          <RadioGroup onValueChange={(value) => setJerseyGender(value)} defaultValue={jerseyGender || ""} className="grid grid-cols-2">
-            {gender.map((item) => (
-              <FieldLabel key={item.id} htmlFor={item.id}>
-                <Field orientation="horizontal">
-                  <FieldContent>
-                    <FieldTitle>{item.name}</FieldTitle>
-                  </FieldContent>
-                  <RadioGroupItem value={item.id} id={item.id} />
-                </Field>
-              </FieldLabel>
-            ))}
-          </RadioGroup>
-
-          <RadioGroup onValueChange={(value) => setJerseySize(value)}
-                      defaultValue={jerseySize || ""}  className="mt-4 grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2">
-            {sizes.map((size) => (
-              <FieldLabel key={size.id} htmlFor={size.id}>
-                <Field orientation="horizontal">
-                  <FieldContent>
-                    <FieldTitle>{size.name}</FieldTitle>
-                  </FieldContent>
-                  <RadioGroupItem value={size.id} id={size.id} />
-                </Field>
-              </FieldLabel>
-            ))}
-          </RadioGroup>
-
 
 
         </CardContent>
@@ -125,18 +93,3 @@ const formatMoney = (amount: number, currency = 'IDR', locale = 'id-ID') => {
   }).format(amount);
 };
 
-const gender = [
-  {id: "male", name: "Male"},
-  {id: "female", name: "Female"},
-]
-const sizes = [
-  {id: 'xxs', name: 'XXS',},
-  {id: 'xs', name: 'XS',},
-  {id: 's', name: 'S',},
-  {id: 'm', name: 'M',},
-  {id: 'l', name: 'L',},
-  {id: 'xl', name: 'XL',},
-  {id: 'xxl', name: 'XXL',},
-  {id: 'xxxl', name: 'XXXL',},
-  {id: 'xxxxl', name: 'XXXXL',},
-];

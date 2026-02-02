@@ -3,7 +3,7 @@ import {EventSchema} from "@/db/schema/event-schema";
 import {eventCategory} from "@/db/schema/event-category-schema";
 import {eventGroup} from "@/db/schema/event-group-schema";
 import {user} from "@/db/schema/auth-schema";
-import {createSelectSchema} from "drizzle-zod";
+import {createInsertSchema, createSelectSchema, createUpdateSchema} from "drizzle-zod";
 
 export const eventOrder = pgTable("event_order", {
   id: serial('id').primaryKey(),
@@ -37,3 +37,5 @@ export const eventOrder = pgTable("event_order", {
 export type EventOrderType = typeof eventOrder.$inferSelect
 
 export const orderSelectSchema = createSelectSchema(eventOrder);
+export const orderInsertSchema = createInsertSchema(eventOrder);
+export const orderUpdateSchema = createUpdateSchema(eventOrder);

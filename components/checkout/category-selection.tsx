@@ -15,18 +15,24 @@ import {Button} from "@/components/ui/button";
 import {initialState} from "@/types/types";
 import {createOrderAction, updateOrderAction} from "@/app/actions/event-order/event-order.action";
 import {toast} from "sonner";
+import {Separator} from "@radix-ui/react-menu";
+import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
+import {Field, FieldContent, FieldLabel, FieldTitle} from "@/components/ui/field";
 
 export function CategorySelection({categories, order}: { categories: EventCategoryType[], order?: EventOrderType | null }) {
   const params = useParams<{ id: string }>();
   const searchParams = useSearchParams();
   const eventId = params.id;
+
   const [category, setCategory] = useQueryState('category', { defaultValue: order ? String(order.categoryId) : "", shallow: true});
   const [group, setGroup] = useQueryState('group', {defaultValue: order ? String(order.groupId) : "",  shallow: true});
+
+  const [jerseyGender, setJerseyGender] = useQueryState("gender", { defaultValue: order ? String(order.jerseyGender) : "", shallow: true});
+  const [jerseySize, setJerseySize] = useQueryState("size", {defaultValue: order ? String(order.jerseySize) : "", shallow: true});
+
   const [availableGroup, setAvailableGroup] = useState<EventGroupType[]>()
   const [selectedGroup, setSelectedGroup] = useState<EventGroupType>()
   const router = useRouter();
-  console.log(order)
-
   useEffect(() => {
 
     const abortController = new AbortController();
@@ -100,13 +106,13 @@ export function CategorySelection({categories, order}: { categories: EventCatego
   const [state, formAction, isPending] = useActionState(async () => {
 
     const payload = {
+      userId: order ? order.userId : "",
       eventId: Number(eventId),
       categoryId: Number(category),
       groupId: Number(group),
+      jerseyGender: jerseyGender,
+      jerseySize: jerseySize,
     }
-
-    console.log("payload", payload)
-
 
     const  res = order ?  await updateOrderAction(order) :  await createOrderAction(payload)
 
@@ -117,6 +123,8 @@ export function CategorySelection({categories, order}: { categories: EventCatego
         newParam.set('order', String(res.data))
         newParam.set('category', String(category))
         newParam.set('group', String(group))
+        newParam.set('jerseyGender', String(jerseyGender))
+        newParam.set('size', String(jerseySize))
         router.push(`/event/${eventId}/profile?${newParam}`)
       }
     } else {
@@ -182,9 +190,44 @@ export function CategorySelection({categories, order}: { categories: EventCatego
             )}
 
           </div>
+
+          <Separator className="py-4" />
+
+          <div>
+            <div>
+
+              <RadioGroup onValueChange={(value) => setJerseyGender(value)} defaultValue={jerseyGender || ""} className="grid grid-cols-2">
+                {gender.map((item) => (
+                  <FieldLabel key={item.id} htmlFor={item.id}>
+                    <Field orientation="horizontal">
+                      <FieldContent>
+                        <FieldTitle>{item.name}</FieldTitle>
+                      </FieldContent>
+                      <RadioGroupItem value={item.id} id={item.id} />
+                    </Field>
+                  </FieldLabel>
+                ))}
+              </RadioGroup>
+
+              <RadioGroup onValueChange={(value) => setJerseySize(value)}
+                          defaultValue={jerseySize || ""}  className="mt-4 grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2">
+                {sizes.map((size) => (
+                  <FieldLabel key={size.id} htmlFor={size.id}>
+                    <Field orientation="horizontal">
+                      <FieldContent>
+                        <FieldTitle>{size.name}</FieldTitle>
+                      </FieldContent>
+                      <RadioGroupItem value={size.id} id={size.id} />
+                    </Field>
+                  </FieldLabel>
+                ))}
+              </RadioGroup>
+
+            </div>
+          </div>
         </CardContent>
         <CardFooter>
-          <Button type="submit" className="w-full" disabled={!group && !category || isPending}>
+          <Button type="submit" className="w-full" disabled={(!group && !category && !jerseyGender && !jerseySize)}>
             Continue
           </Button>
         </CardFooter>
@@ -192,3 +235,19 @@ export function CategorySelection({categories, order}: { categories: EventCatego
     </form>
   )
 }
+
+const gender = [
+  {id: "male", name: "Male"},
+  {id: "female", name: "Female"},
+]
+const sizes = [
+  {id: 'xxs', name: 'XXS',},
+  {id: 'xs', name: 'XS',},
+  {id: 's', name: 'S',},
+  {id: 'm', name: 'M',},
+  {id: 'l', name: 'L',},
+  {id: 'xl', name: 'XL',},
+  {id: 'xxl', name: 'XXL',},
+  {id: 'xxxl', name: 'XXXL',},
+  {id: 'xxxxl', name: 'XXXXL',},
+];
