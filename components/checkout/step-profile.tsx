@@ -9,12 +9,14 @@ import {ActionResponse, initialState} from "@/types/types";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {Textarea} from "@/components/ui/textarea";
 import {Button} from "@/components/ui/button";
-import {UserDetailType} from "@/db/schema";
+import {EventOrderType, UserDetailType} from "@/db/schema";
 import {UpdateProfileAction} from "@/app/actions/profile/profile.action";
 import {toast} from "sonner";
 import {useParams, useRouter, useSearchParams} from "next/navigation";
+import {updateOrderAction} from "@/app/actions/event-order/event-order.action";
 
-export function StepProfile({user}: { user: UserWithDetail }) {
+export function StepProfile({user, order}: { user: UserWithDetail, order: EventOrderType }) {
+  console.log(order)
   const router = useRouter();
   const params = useParams<{ id: string }>();
   const eventId = params.id;
@@ -46,6 +48,13 @@ export function StepProfile({user}: { user: UserWithDetail }) {
     const res = await UpdateProfileAction(payload)
 
     if (res.success) {
+      // update order status
+      const orderPayload = {
+        ...order,          // copy
+        status: "profile",  // modify ONE field
+      };
+      await updateOrderAction(orderPayload)
+
       toast.success(res.message)
       router.push(`/event/${eventId}/payment?${searchParams.toString()}`)
     } else {

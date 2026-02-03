@@ -17,6 +17,7 @@ import {toast} from "sonner";
 import {Separator} from "@radix-ui/react-menu";
 import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
 import {Field, FieldContent, FieldLabel, FieldTitle} from "@/components/ui/field";
+import {Spinner} from "@/components/ui/spinner";
 
 export function CategorySelection({event, categories, order}: {
   event: EventType & { participantCount: number },
@@ -27,11 +28,11 @@ export function CategorySelection({event, categories, order}: {
   const searchParams = useSearchParams();
   const eventId = params.id;
 
-  const [category, setCategory] = useState<string>();
-  const [group, setGroup] = useState<string>();
+  const [category, setCategory] = useState<string | undefined>(order?.categoryId  ? String(order.categoryId) :  undefined);
+  const [group, setGroup] = useState<string | undefined>(order?.groupId  ? String(order.groupId) :  undefined);
 
-  const [jerseyGender, setJerseyGender] = useState<string>();
-  const [jerseySize, setJerseySize] = useState<string>();
+  const [jerseyGender, setJerseyGender] = useState<string>(order?.jerseyGender ?? "");
+  const [jerseySize, setJerseySize] = useState<string>(order?.jerseySize ?? "");
 
   const [availableGroup, setAvailableGroup] = useState<EventGroupType[]>()
   const [selectedGroup, setSelectedGroup] = useState<EventGroupType>()
@@ -143,7 +144,7 @@ export function CategorySelection({event, categories, order}: {
             <div>
               <Label>Category</Label>
               <div className="mt-2">
-                <Select value={category || ""} onValueChange={(id) => setCategory(id)}>
+                <Select value={category} onValueChange={(id) => setCategory(id)}>
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select category"/>
                   </SelectTrigger>
@@ -230,7 +231,8 @@ export function CategorySelection({event, categories, order}: {
           </div>
         </CardContent>
         <CardFooter>
-          <Button type="submit" className="w-full" disabled={(!group && !category && !jerseyGender && !jerseySize)}>
+          <Button type="submit" className="w-full" disabled={(!group && !category && !jerseyGender && !jerseySize) || isPending}>
+            {isPending ? <Spinner /> : null}
             Continue
           </Button>
         </CardFooter>
