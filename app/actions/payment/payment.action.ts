@@ -17,7 +17,7 @@ const clientSecret = "SK-gNOBMPI626KaB8Uw39Ij";
 const requestTimestamp = new Date().toISOString().slice(0, 19) + "Z"
 const baseURL = process.env.BETTER_AUTH_URL!
 
-export async function createPayment(payload: { oderId: number }): Promise<ActionResponse> {
+export async function createPayment(payload: { oderId: number, total: number }): Promise<ActionResponse> {
 
   const order = await db.query.eventOrder.findFirst({
     where: eq(eventOrder.id, payload.oderId),
@@ -42,7 +42,7 @@ export async function createPayment(payload: { oderId: number }): Promise<Action
   // create payment
   const raw = JSON.stringify({
     "order": {
-      "amount": order.price,
+      "amount": payload.total,
       "invoice_number": invoiceNumber,
       "currency": order.currency,
       "callback_url": `${baseURL}/event/${order.eventId}`,
@@ -51,7 +51,7 @@ export async function createPayment(payload: { oderId: number }): Promise<Action
       "line_items": [
         {
           "name": event.name,
-          "price": order.price,
+          "price": payload.total,
           "quantity": 1
         }
       ]
@@ -93,8 +93,8 @@ export async function createPayment(payload: { oderId: number }): Promise<Action
 
   const res = await fetch(dokuURL, requestOptions);
 
-
   const body = await res.json();
+  console.log(body);
 
   if (!res.ok) {
     const message = Array.isArray(body.message)
@@ -103,10 +103,6 @@ export async function createPayment(payload: { oderId: number }): Promise<Action
 
     console.error("Fetch failed:", message);
   }
-
-
-  console.log(body);
-
 
   // create payment
   const paymentPayload = {
@@ -121,10 +117,6 @@ export async function createPayment(payload: { oderId: number }): Promise<Action
   await db.insert(eventPayment)
     .values(paymentPayload)
     .returning();
-
-  await db.update(eventOrder).set({
-    status: "payment",
-  }).where(eq(eventOrder.id, order.id));
 
   return {
     success: true,

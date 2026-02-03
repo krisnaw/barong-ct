@@ -24,6 +24,10 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
 
   const order = await getOngoingOrder(id, userId)
 
+  if (order && order.status === 'payment') {
+    redirect(`/event/${id}/progress`)
+  }
+
   return (
     <div>
       <CategorySelection event={event} categories={categories} order={order}  />

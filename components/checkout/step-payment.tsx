@@ -2,19 +2,15 @@
 
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
-import {useParams, useRouter, useSearchParams} from "next/navigation";
+import {useRouter} from "next/navigation";
 import {useActionState} from "react";
 import {initialState} from "@/types/types";
-import {EventType} from "@/db/schema";
+import {EventOrderType, EventType} from "@/db/schema";
 import {createPayment} from "@/app/actions/payment/payment.action";
 import {Spinner} from "@/components/ui/spinner";
+import {updateOrderAction} from "@/app/actions/event-order/event-order.action";
 
-export function StepPayment({event} : {event: EventType & { participantCount: number }}) {
-  const params = useParams<{ id: string }>();
-  const searchParams = useSearchParams();
-  const order = searchParams.get("order");
-
-  const eventId = params.id;
+export function StepPayment({event, order} : {event: EventType & { participantCount: number }, order: EventOrderType}) {
   const router = useRouter();
 
   const price = Number(event.price);
@@ -25,9 +21,16 @@ export function StepPayment({event} : {event: EventType & { participantCount: nu
   const [state, formAction, isPending] = useActionState(async () => {
 
     // create payment
-    const res = await createPayment({oderId: Number(order)});
-    console.log(res);
+    const res = await createPayment({oderId: order.id, total});
     if (res.success) {
+
+      // update order status
+      const orderPayload = {
+        ...order,          // copy
+        status: "payment",  // modify ONE field
+      };
+      await updateOrderAction(orderPayload)
+
       router.push(res.data as string);
     }
 
