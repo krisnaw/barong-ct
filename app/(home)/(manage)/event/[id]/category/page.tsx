@@ -6,7 +6,7 @@ import {headers} from "next/headers";
 import {redirect} from "next/navigation";
 import {getEventById} from "@/db/query/event-query";
 
-export default async function Page({params,}: { params: Promise<{ id: number }> }) {
+export default async function Page({params}: { params: Promise<{ id: number }> }) {
   const {id} = await params;
   const event = await getEventById(id)
   if (!event) {
@@ -25,7 +25,7 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
   const order = await getOngoingOrder(id, userId)
 
   if (order && order.status === 'payment') {
-    redirect(`/event/${id}/progress`)
+    redirect(`/event/${id}/progress?orderId=${order.id}`)
   }
 
   return (

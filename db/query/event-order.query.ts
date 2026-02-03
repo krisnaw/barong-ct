@@ -9,3 +9,10 @@ export async function getOngoingOrder(eventId: number, userId: string) {
     where: and(eq(eventOrder.eventId, eventId), eq(eventOrder.userId, userId))
   })
 }
+
+export async function getOrderByIdAndUser(orderId: number, userId: string) {
+  console.log(orderId, userId);
+  return await db.query.eventOrder.findFirst({
+    where: and(eq(eventOrder.id, orderId), eq(eventOrder.userId, userId))
+  })
+}
