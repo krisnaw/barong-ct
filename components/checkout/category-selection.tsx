@@ -2,7 +2,6 @@
 
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {EventCategoryType, EventGroupType, EventOrderType, EventType} from "@/db/schema";
-import {useQueryState} from "nuqs";
 import {useParams, useRouter, useSearchParams} from "next/navigation";
 import {Label} from "@/components/ui/label";
 import {SearchGroupInput} from "@/components/checkout/search-group-input";
@@ -19,20 +18,26 @@ import {Separator} from "@radix-ui/react-menu";
 import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
 import {Field, FieldContent, FieldLabel, FieldTitle} from "@/components/ui/field";
 
-export function CategorySelection({event, categories, order}: { event: EventType & { participantCount: number }, categories: EventCategoryType[], order?: EventOrderType | null }) {
+export function CategorySelection({event, categories, order}: {
+  event: EventType & { participantCount: number },
+  categories: EventCategoryType[],
+  order?: EventOrderType | null
+}) {
   const params = useParams<{ id: string }>();
   const searchParams = useSearchParams();
   const eventId = params.id;
 
-  const [category, setCategory] = useQueryState('category', { defaultValue: order ? String(order.categoryId) : "", shallow: true});
-  const [group, setGroup] = useQueryState('group', {defaultValue: order ? String(order.groupId) : "",  shallow: true});
+  const [category, setCategory] = useState<string>();
+  const [group, setGroup] = useState<string>();
 
-  const [jerseyGender, setJerseyGender] = useQueryState("gender", { defaultValue: order ? String(order.jerseyGender) : "", shallow: true});
-  const [jerseySize, setJerseySize] = useQueryState("size", {defaultValue: order ? String(order.jerseySize) : "", shallow: true});
+  const [jerseyGender, setJerseyGender] = useState<string>();
+  const [jerseySize, setJerseySize] = useState<string>();
 
   const [availableGroup, setAvailableGroup] = useState<EventGroupType[]>()
   const [selectedGroup, setSelectedGroup] = useState<EventGroupType>()
+
   const router = useRouter();
+
   useEffect(() => {
 
     const abortController = new AbortController();
@@ -86,7 +91,6 @@ export function CategorySelection({event, categories, order}: { event: EventType
   }
 
   async function handleCreate(value: string) {
-    setGroup('1')
     const res = await createGroupAction({
       name: value,
       eventId: Number(eventId),
@@ -116,17 +120,12 @@ export function CategorySelection({event, categories, order}: { event: EventType
       currency: event.currency,
     }
 
-    const  res = order ?  await updateOrderAction(order) :  await createOrderAction(payload)
-
+    const res = order ? await updateOrderAction(order) : await createOrderAction(payload)
 
     if (res.success) {
-      if(res.data) {
+      if (res.data) {
         const newParam = new URLSearchParams(searchParams);
         newParam.set('order', String(res.data))
-        newParam.set('category', String(category))
-        newParam.set('group', String(group))
-        newParam.set('jerseyGender', String(jerseyGender))
-        newParam.set('size', String(jerseySize))
         router.push(`/event/${eventId}/profile?${newParam}`)
       }
     } else {
@@ -179,7 +178,7 @@ export function CategorySelection({event, categories, order}: { event: EventType
                   <div>
                     <Item variant="outline">
                       <ItemMedia>
-                        <BadgeCheckIcon className="size-5" />
+                        <BadgeCheckIcon className="size-5"/>
                       </ItemMedia>
                       <ItemContent>
                         <ItemTitle>{selectedGroup.name}</ItemTitle>
@@ -193,33 +192,35 @@ export function CategorySelection({event, categories, order}: { event: EventType
 
           </div>
 
-          <Separator className="py-4" />
+          <Separator className="py-4"/>
 
           <div>
             <div>
 
-              <RadioGroup onValueChange={(value) => setJerseyGender(value)} defaultValue={jerseyGender || ""} className="grid grid-cols-2">
+              <RadioGroup onValueChange={(value) => setJerseyGender(value)} defaultValue={jerseyGender || ""}
+                          className="grid grid-cols-2">
                 {gender.map((item) => (
                   <FieldLabel key={item.id} htmlFor={item.id}>
                     <Field orientation="horizontal">
                       <FieldContent>
                         <FieldTitle>{item.name}</FieldTitle>
                       </FieldContent>
-                      <RadioGroupItem value={item.id} id={item.id} />
+                      <RadioGroupItem value={item.id} id={item.id}/>
                     </Field>
                   </FieldLabel>
                 ))}
               </RadioGroup>
 
               <RadioGroup onValueChange={(value) => setJerseySize(value)}
-                          defaultValue={jerseySize || ""}  className="mt-4 grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2">
+                          defaultValue={jerseySize || ""}
+                          className="mt-4 grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2">
                 {sizes.map((size) => (
                   <FieldLabel key={size.id} htmlFor={size.id}>
                     <Field orientation="horizontal">
                       <FieldContent>
                         <FieldTitle>{size.name}</FieldTitle>
                       </FieldContent>
-                      <RadioGroupItem value={size.id} id={size.id} />
+                      <RadioGroupItem value={size.id} id={size.id}/>
                     </Field>
                   </FieldLabel>
                 ))}
