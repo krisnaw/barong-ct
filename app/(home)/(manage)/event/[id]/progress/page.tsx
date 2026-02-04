@@ -27,9 +27,20 @@ export default async function Page({params, searchParams}: { params: Promise<{ i
   const order = await getOrderByIdAndUser(Number(orderId), session.user.id);
   const payment = await getPaymentByOrder(Number(orderId));
 
+  if (!payment) {
+    redirect(`/event`);
+  }
+
+  if (!payment.invoiceNumber) {
+    redirect(`/event`);
+  }
+
+  console.log(payment);
+  console.log(order);
+
   return (
     <div>
-      <ButtonCheckPayment />
+      <ButtonCheckPayment invoiceNumber={payment.invoiceNumber} />
     </div>
   )
 }

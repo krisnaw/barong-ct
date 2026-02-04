@@ -11,9 +11,10 @@ import {eq} from "drizzle-orm";
 import {eventOrder, eventPayment} from "@/db/schema";
 import {redirect} from "next/navigation";
 
-const dokuURL = `https://api-sandbox.doku.com/checkout/v1/payment`
-const clientID = "BRN-0214-1768988713930";
-const clientSecret = "SK-gNOBMPI626KaB8Uw39Ij";
+const dokuBaseURL = process.env.DOKU_API_URL
+const dokuReqPath = '/checkout/v1/payment'
+const clientID = process.env.DOKU_CLIENT_ID!
+const clientSecret = process.env.DOKU_SECRET_KEY!
 const requestTimestamp = new Date().toISOString().slice(0, 19) + "Z"
 const baseURL = process.env.BETTER_AUTH_URL!
 
@@ -27,7 +28,7 @@ export async function createPayment(payload: { oderId: number, total: number }):
     redirect('/')
   }
 
-  const invoiceNumber = generateInvoiceNumber(order.eventId, order.userId);
+  const invoiceNumber = generateInvoiceNumber();
 
   const user = await getUserWithDetail(order.userId);
   const event = await getEventById(order.eventId);
@@ -67,15 +68,15 @@ export async function createPayment(payload: { oderId: number, total: number }):
   });
 
   const requestId = crypto.randomUUID().toString();
-  const requestTarget = "/checkout/v1/payment";
+
   const digest = generateDigest(raw);
   const signature = generateSignature(
     clientID,
     requestId,
     requestTimestamp,
-    requestTarget,
-    digest,
-    clientSecret
+    dokuReqPath,
+    clientSecret,
+    digest
   );
   const myHeaders = new Headers();
   myHeaders.append("Client-Id", clientID);
@@ -91,7 +92,7 @@ export async function createPayment(payload: { oderId: number, total: number }):
     redirect: "follow"
   };
 
-  const res = await fetch(dokuURL, requestOptions);
+  const res = await fetch(`${dokuBaseURL}${dokuReqPath}`, requestOptions);
 
   const body = await res.json();
   console.log(body);
@@ -110,8 +111,9 @@ export async function createPayment(payload: { oderId: number, total: number }):
     invoiceNumber: invoiceNumber,
     price: body.response.order.amount,
     currency: body.response.order.currency,
-    paymentUrl: body.response.payment.url,
+    paymentURL: body.response.payment.url,
     expiresAt: new Date(body.response.payment.expired_datetime),
+    status: "PENDING"
   }
 
   await db.insert(eventPayment)
@@ -125,23 +127,6 @@ export async function createPayment(payload: { oderId: number, total: number }):
   }
 }
 
-function generateInvoiceNumber(
-  eventId: number,
-  userId: string
-): string {
-  const now = new Date();
-
-  const timestamp =
-    now.getFullYear().toString() +
-    String(now.getMonth() + 1).padStart(2, "0") +
-    String(now.getDate()).padStart(2, "0") +
-    String(now.getHours()).padStart(2, "0") +
-    String(now.getMinutes()).padStart(2, "0") +
-    String(now.getSeconds()).padStart(2, "0") +
-    String(now.getMilliseconds()).padStart(3, "0");
-
-  // Take first 4 chars of UUID (safe, non-PII)
-  const userShort = userId.replace(/-/g, "").slice(0, 4).toUpperCase();
-
-  return `EVT-${eventId}-${timestamp}-${userShort}`;
+function generateInvoiceNumber(): string {
+  return `INV${Math.floor(Date.now() / 1000)}`;
 }

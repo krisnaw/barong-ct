@@ -7,7 +7,7 @@ export function generateDigest(jsonBody: string) {
   return bufferFromJsonStringHash256.toString('base64');
 }
 
-export function generateSignature(clientId: string, requestId: string, requestTimestamp: string, requestTarget: string, digest: string, secret: string) {
+export function generateSignature(clientId: string, requestId: string, requestTimestamp: string, requestTarget: string, secret: string, digest?: string) {
   // Prepare Signature Component
   console.log("----- Component Signature -----")
   let componentSignature = "Client-Id:" + clientId;
