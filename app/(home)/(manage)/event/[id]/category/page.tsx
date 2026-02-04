@@ -24,7 +24,8 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
 
   const order = await getOngoingOrder(id, userId)
 
-  if (order && order.status === 'payment') {
+  // if status payment or paid, go to progress page
+  if (order && (order.status === 'payment' || order.status === 'paid')) {
     redirect(`/event/${id}/progress?orderId=${order.id}`)
   }
 
