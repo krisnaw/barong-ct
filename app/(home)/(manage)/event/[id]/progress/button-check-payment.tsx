@@ -6,8 +6,7 @@ import {checkPaymentStatus} from "@/app/actions/payment/payment-status.action";
 export function ButtonCheckPayment({invoiceNumber}: {invoiceNumber: string}) {
   return (
     <>
-      <Button onClick={() => {
-        checkPaymentStatus(invoiceNumber);
+      <Button onClick={() => {checkPaymentStatus(invoiceNumber);
       }}>Check Payment</Button>
     </>
   )

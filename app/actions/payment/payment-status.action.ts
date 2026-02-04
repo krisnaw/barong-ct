@@ -28,29 +28,27 @@ export async function checkPaymentStatus(invoiceId: string) {
   myHeaders.append("Request-Timestamp", requestTimestamp);
   myHeaders.append("Signature", signature);
   myHeaders.append("Content-Type", "application/json");
-
-
+  
   const requestOptions: RequestInit = {
     method: "GET",
     headers: myHeaders,
     redirect: "follow"
   };
 
-
   const res = await fetch(`${dokuBaseURL}${dokuReqPath}${invoiceId}`, requestOptions);
 
-  const body = await res.json();
+  if (res.ok) {
+    const body = await res.json();
+    if (body.transaction.status === "SUCCESS") {
+      // update payment
+      const [payment] = await db.update(eventPayment).set({status: body.transaction.status}).where(eq(eventPayment.invoiceNumber, invoiceId)).returning()
 
-  console.log(body);
-
-  if (body.transaction.status === "SUCCESS") {
-    // update payment
-    const [payment] = await db.update(eventPayment).set({status: body.transaction.status}).where(eq(eventPayment.invoiceNumber, invoiceId)).returning()
-
-    // update order
-    if (payment) {
-      await db.update(eventOrder).set({status: 'paid'}).where(eq(eventOrder.id, payment.orderId))
+      // update order
+      if (payment) {
+        await db.update(eventOrder).set({status: 'paid'}).where(eq(eventOrder.id, payment.orderId))
+      }
     }
-
   }
+
+
 }

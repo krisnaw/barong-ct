@@ -1,10 +1,11 @@
-import {ButtonCheckPayment} from "@/app/(home)/(manage)/event/[id]/progress/button-check-payment";
 import {getEventById} from "@/db/query/event-query";
 import {redirect} from "next/navigation";
 import {auth} from "@/lib/auth";
 import {headers} from "next/headers";
 import {getOrderByIdAndUser} from "@/db/query/event-order.query";
 import {getPaymentByOrder} from "@/db/query/event-payment.query";
+import {checkPaymentStatus} from "@/app/actions/payment/payment-status.action";
+import {Card} from "@/components/ui/card";
 
 export default async function Page({params, searchParams}: { params: Promise<{ id: number }> , searchParams: Promise<{ [key: string]: string | string[] | undefined }>}) {
   const {id} = await params;
@@ -27,7 +28,7 @@ export default async function Page({params, searchParams}: { params: Promise<{ i
   const order = await getOrderByIdAndUser(Number(orderId), session.user.id);
   const payment = await getPaymentByOrder(Number(orderId));
 
-  if (!payment) {
+  if (!payment || !order) {
     redirect(`/event`);
   }
 
@@ -35,12 +36,19 @@ export default async function Page({params, searchParams}: { params: Promise<{ i
     redirect(`/event`);
   }
 
-  console.log(payment);
-  console.log(order);
+  if (order.status === "payment" && payment.status === "PENDING") {
+    await checkPaymentStatus(payment.invoiceNumber)
+  }
 
   return (
     <div>
-      <ButtonCheckPayment invoiceNumber={payment.invoiceNumber} />
+      <Card>
+        Order Card
+      </Card>
+
+      <Card>
+        Payment Card
+      </Card>
     </div>
   )
 }
