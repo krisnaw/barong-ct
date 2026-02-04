@@ -29,8 +29,6 @@ export async function updateProfileFromDashAction(formData: UserDetailType & { n
 
     validate.data.dateOfBirth = validate.data.dateOfBirth ? validate.data.dateOfBirth : null;
 
-    console.log(validate.data);
-
     await db.insert(userDetail)
       .values(validate.data)
       .onConflictDoUpdate({

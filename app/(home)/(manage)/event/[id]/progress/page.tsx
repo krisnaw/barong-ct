@@ -4,7 +4,6 @@ import {auth} from "@/lib/auth";
 import {headers} from "next/headers";
 import {getOrderByIdAndUser} from "@/db/query/event-order.query";
 import {getPaymentByOrder} from "@/db/query/event-payment.query";
-import {checkPaymentStatus} from "@/app/actions/payment/payment-status.action";
 import {Card} from "@/components/ui/card";
 
 export default async function Page({params, searchParams}: { params: Promise<{ id: number }> , searchParams: Promise<{ [key: string]: string | string[] | undefined }>}) {
@@ -36,18 +35,24 @@ export default async function Page({params, searchParams}: { params: Promise<{ i
     redirect(`/event`);
   }
 
-  if (order.status === "payment" && payment.status === "PENDING") {
-    await checkPaymentStatus(payment.invoiceNumber)
-  }
+  // if (order.status === "payment" && payment.status === "PENDING") {
+  //   await checkPaymentStatus(payment.invoiceNumber)
+  // }
 
   return (
     <div>
       <Card>
         Order Card
+        <div>
+          {order.status}
+        </div>
       </Card>
 
       <Card>
         Payment Card
+        <div>
+          {payment.invoiceNumber} - {payment.status}
+        </div>
       </Card>
     </div>
   )

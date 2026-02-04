@@ -7,8 +7,6 @@ import {revalidatePath} from "next/cache";
 export async function createGroupAction(payload: {name: string, eventId: number, eventCategoryId: number}) : Promise<ActionResponse> {
   const [group] = await db.insert(eventGroup).values(payload).returning();
 
-  console.log('created', group);
-
   revalidatePath('/', 'page')
 
   return {
