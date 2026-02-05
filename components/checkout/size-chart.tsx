@@ -1,4 +1,5 @@
 import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,} from "@/components/ui/dialog"
+import Image from "next/image";
 
 export function SizeChart() {
   return (
@@ -11,7 +12,7 @@ export function SizeChart() {
           <DialogTitle>Size Chart</DialogTitle>
         </DialogHeader>
         <div>
-          <img src="https://subjersey.com/cdn/shop/files/Series_Pro_1200x.jpg?v=1753949490" alt=""/>
+          <Image height={1200} width={500} src="/size-chart.png" alt=""/>
         </div>
       </DialogContent>
     </Dialog>

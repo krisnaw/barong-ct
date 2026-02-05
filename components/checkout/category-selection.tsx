@@ -6,9 +6,9 @@ import {Label} from "@/components/ui/label";
 import {SearchGroupInput} from "@/components/checkout/search-group-input";
 import {createGroupAction} from "@/app/actions/event-group/event-group.action";
 import {useActionState, useEffect, useState} from "react";
-import {Item, ItemContent, ItemMedia, ItemTitle} from "@/components/ui/item";
-import {BadgeCheckIcon} from "lucide-react";
-import {Card, CardContent, CardFooter} from "@/components/ui/card";
+import {Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle} from "@/components/ui/item";
+import {CirclePile} from "lucide-react";
+import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
 import {initialState} from "@/types/types";
 import {createOrderAction, updateOrderAction} from "@/app/actions/event-order/event-order.action";
@@ -17,6 +17,7 @@ import {Separator} from "@radix-ui/react-menu";
 import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
 import {Field, FieldContent, FieldLabel, FieldTitle} from "@/components/ui/field";
 import {Spinner} from "@/components/ui/spinner";
+import {SizeChart} from "@/components/checkout/size-chart";
 
 export function CategorySelection({event, order}: {
   event: EventType & { participantCount: number },
@@ -33,6 +34,8 @@ export function CategorySelection({event, order}: {
 
   const [availableGroup, setAvailableGroup] = useState<EventGroupType[]>()
   const [selectedGroup, setSelectedGroup] = useState<EventGroupType>()
+
+  console.log("selectedGroup", selectedGroup)
 
   const router = useRouter();
 
@@ -133,11 +136,19 @@ export function CategorySelection({event, order}: {
   return (
     <form action={formAction}>
       <Card>
+        <CardHeader>
+          <CardTitle>
+            Step 1: Group Ride and Jersey Size.
+          </CardTitle>
+          <CardDescription>
+            Search or Create Group Ride and select your jersey size.
+          </CardDescription>
+        </CardHeader>
         <CardContent>
           <div className="space-y-4">
 
             <div>
-              <Label>Group</Label>
+              <Label>Group Ride</Label>
               <div className="mt-2">
                 <SearchGroupInput eventId={Number(eventId)}
                                   availableGroups={availableGroup}
@@ -151,57 +162,79 @@ export function CategorySelection({event, order}: {
             {selectedGroup && (
               <div>
                 <Item variant="outline">
-                  <ItemMedia>
-                    <BadgeCheckIcon className="size-5"/>
+                  <ItemMedia variant="icon">
+                    <CirclePile />
                   </ItemMedia>
                   <ItemContent>
-                    <ItemTitle>{selectedGroup.name}</ItemTitle>
+                    <ItemTitle className="font-bold text-lg">
+                      {selectedGroup.name}
+                    </ItemTitle>
+                    <ItemDescription className="line-clamp-none">
+                      <ul className="grid grid-cols-2 ">
+                        <li>Name</li>
+
+                        <li>Name</li>
+
+                        <li>Name</li>
+
+                        <li>Name</li>
+
+                        <li>Name</li>
+                      </ul>
+                    </ItemDescription>
                   </ItemContent>
+                  <ItemActions>
+                    <ItemDescription>
+                      4/5
+                    </ItemDescription>
+                  </ItemActions>
                 </Item>
               </div>
-
             )}
           </div>
 
           <Separator className="py-4"/>
 
-          <div>
-            <div>
+          {selectedGroup && (
+            <>
 
-              <RadioGroup onValueChange={(value) => setJerseyGender(value)} defaultValue={jerseyGender || ""}
-                          className="grid grid-cols-2">
-                {gender.map((item) => (
-                  <FieldLabel key={item.id} htmlFor={item.id}>
-                    <Field orientation="horizontal">
-                      <FieldContent>
-                        <FieldTitle>{item.name}</FieldTitle>
-                      </FieldContent>
-                      <RadioGroupItem value={item.id} id={item.id}/>
-                    </Field>
-                  </FieldLabel>
-                ))}
-              </RadioGroup>
+              <div>
+                <div>
+                  <div className="flex justify-between">
+                    <Label>Jersey</Label>
+                    <SizeChart />
+                  </div>
 
-              <RadioGroup onValueChange={(value) => setJerseySize(value)}
-                          defaultValue={jerseySize || ""}
-                          className="mt-4 grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2">
-                {sizes.map((size) => (
-                  <FieldLabel key={size.id} htmlFor={size.id}>
-                    <Field orientation="horizontal">
-                      <FieldContent>
-                        <FieldTitle>{size.name}</FieldTitle>
-                      </FieldContent>
-                      <RadioGroupItem value={size.id} id={size.id}/>
-                    </Field>
-                  </FieldLabel>
-                ))}
-              </RadioGroup>
+                  <div className="mt-4">
 
-            </div>
-          </div>
+                    <RadioGroup onValueChange={(value) => setJerseySize(value)}
+                                defaultValue={jerseySize || ""}
+                                className="mt-4 grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2">
+                      {sizes.map((size) => (
+                        <FieldLabel key={size.id} htmlFor={size.id}>
+                          <Field orientation="horizontal">
+                            <FieldContent>
+                              <FieldTitle>{size.name}</FieldTitle>
+                            </FieldContent>
+                            <RadioGroupItem value={size.id} id={size.id}/>
+                          </Field>
+                        </FieldLabel>
+                      ))}
+                    </RadioGroup>
+                  </div>
+
+                </div>
+              </div>
+
+            </>
+          )}
+
+
+
+
         </CardContent>
         <CardFooter>
-          <Button type="submit" className="w-full" disabled={(!group && !jerseyGender && !jerseySize) || isPending}>
+          <Button type="submit" className="w-full" disabled={(!group || !jerseySize) || isPending}>
             {isPending ? <Spinner /> : null}
             Continue
           </Button>
@@ -216,13 +249,27 @@ const gender = [
   {id: "female", name: "Female"},
 ]
 const sizes = [
-  {id: 'xxs', name: 'XXS',},
-  {id: 'xs', name: 'XS',},
-  {id: 's', name: 'S',},
-  {id: 'm', name: 'M',},
-  {id: 'l', name: 'L',},
-  {id: 'xl', name: 'XL',},
-  {id: 'xxl', name: 'XXL',},
-  {id: 'xxxl', name: 'XXXL',},
-  {id: 'xxxxl', name: 'XXXXL',},
+  // ASIA Sizing
+  { id: 'xxs', name: 'XXS' },
+  { id: 'xs', name: 'XS' },
+  { id: 's', name: 'S' },
+  { id: 'm', name: 'M' },
+  { id: 'l', name: 'L' },
+  { id: 'xl', name: 'XL' },
+  { id: 'xxl', name: 'XXL' },
+  { id: '3xl', name: '3XL' },
+  { id: '4xl', name: '4XL' },
+  { id: '5xl', name: '5XL' },
+  { id: '6xl', name: '6XL' },
+
+  // INTERNATIONAL Sizing
+  { id: 'is', name: 'iS' },
+  { id: 'im', name: 'iM' },
+  { id: 'il', name: 'iL' },
+  { id: 'ixl', name: 'iXL' },
+  { id: 'ixxl', name: 'iXXL' },
+  { id: 'i3xl', name: 'i3XL' },
+  { id: 'i4xl', name: 'i4XL' },
+  { id: 'i5xl', name: 'i5XL' },
+  { id: 'i6xl', name: 'i6XL' }
 ];

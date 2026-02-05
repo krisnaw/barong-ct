@@ -3,7 +3,7 @@
 import {UserWithDetail} from "@/types/auth-types";
 import {Field, FieldGroup, FieldLabel, FieldLegend, FieldSeparator, FieldSet} from "@/components/ui/field";
 import {Input} from "@/components/ui/input";
-import {Card, CardContent, CardFooter} from "@/components/ui/card";
+import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {useActionState} from "react";
 import {ActionResponse, initialState} from "@/types/types";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
@@ -70,6 +70,14 @@ export function StepProfile({user, order}: { user: UserWithDetail, order: EventO
   return (
     <form action={formAction}>
       <Card>
+        <CardHeader>
+          <CardTitle>
+            Step 2: Complete Profile
+          </CardTitle>
+          <CardDescription>
+            Please complete your profile to continue. 
+          </CardDescription>
+        </CardHeader>
         <CardContent>
 
           <FieldGroup>
