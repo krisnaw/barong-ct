@@ -7,3 +7,6 @@ export const formatMoney = (amount: number, currency = 'IDR', locale = 'id-ID') 
   }).format(amount);
 };
 
+export function formatBibNumber(bib: number, length = 3): string {
+  return bib.toString().padStart(length, "0")
+}

@@ -4,6 +4,12 @@ import {db} from "@/db/db";
 import {and, asc, desc, eq, getTableColumns, isNull} from "drizzle-orm";
 import {participant, user, userDetail} from "@/db/schema";
 
+export async function getParticipantByEventUser(eventId: number, userId: string) {
+  return  await db.query.participant.findFirst({
+    where: and(eq(participant.eventId, eventId), eq(participant.userId, userId)),
+  })
+}
+
 export async function checkParticipantByEvent(eventId: number, userId: string): Promise<boolean> {
   const user = await db.query.participant.findFirst({
     where: and(eq(participant.eventId, eventId), eq(participant.userId, userId)),

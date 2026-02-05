@@ -4,10 +4,11 @@ import {auth} from "@/lib/auth";
 import {headers} from "next/headers";
 import {getOrderByIdAndUser} from "@/db/query/event-order.query";
 import {getPaymentByOrder} from "@/db/query/event-payment.query";
-import {Card, CardAction, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
-import {formatMoney} from "@/utils/money-helper";
+import {Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
+import {formatBibNumber, formatMoney} from "@/utils/money-helper";
 import {SERVICE_FEE} from "@/types/constant";
 import {Badge} from "@/components/ui/badge";
+import {getParticipantByEventUser} from "@/db/query/participant-query";
 
 export default async function Page({params, searchParams}: { params: Promise<{ id: number }> , searchParams: Promise<{ [key: string]: string | string[] | undefined }>}) {
   const {id} = await params;
@@ -29,6 +30,7 @@ export default async function Page({params, searchParams}: { params: Promise<{ i
 
   const order = await getOrderByIdAndUser(Number(orderId), session.user.id);
   const payment = await getPaymentByOrder(Number(orderId));
+  const participant = await getParticipantByEventUser(id, session.user.id)
 
   if (!payment || !order) {
     redirect(`/event`);
@@ -38,15 +40,18 @@ export default async function Page({params, searchParams}: { params: Promise<{ i
     redirect(`/event`);
   }
 
-  const price = event.price;
-
   return (
     <div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Card>
           <CardHeader>
-            <CardTitle>Order summary</CardTitle>
+            <CardTitle>Registrations</CardTitle>
+            <CardAction>
+              <Badge className="uppercase bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300">
+                {participant?.status}
+              </Badge>
+            </CardAction>
           </CardHeader>
           <CardContent>
             <dl className="divide-y divide-pink-300 border-t border-b border-pink-500">
@@ -59,6 +64,14 @@ export default async function Page({params, searchParams}: { params: Promise<{ i
                 <dt className="text-muted-foreground">Group</dt>
                 <dd className="whitespace-nowrap  font-bold">M</dd>
               </div>
+
+              {participant && participant.bibNumber && (
+                <div  className="flex justify-between py-3 text-sm font-medium">
+                  <dt className="text-muted-foreground">BIB Number</dt>
+                  <dd className="whitespace-nowrap  font-bold">{formatBibNumber(participant.bibNumber)}</dd>
+                </div>
+              )}
+
             </dl>
           </CardContent>
         </Card>
@@ -66,6 +79,7 @@ export default async function Page({params, searchParams}: { params: Promise<{ i
         <Card>
           <CardHeader>
             <CardTitle>Payment detail</CardTitle>
+            <CardDescription>{payment.invoiceNumber}</CardDescription>
             <CardAction>
               <Badge className="bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300">
                 {payment.status}
@@ -98,20 +112,6 @@ export default async function Page({params, searchParams}: { params: Promise<{ i
       </div>
 
 
-
-      <Card>
-        Order Card
-        <div>
-          {order.status}
-        </div>
-      </Card>
-
-      <Card>
-        Payment Card
-        <div>
-          {payment.invoiceNumber} - {payment.status}
-        </div>
-      </Card>
     </div>
   )
 }
