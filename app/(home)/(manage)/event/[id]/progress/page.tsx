@@ -4,7 +4,7 @@ import {auth} from "@/lib/auth";
 import {headers} from "next/headers";
 import {getOrderByIdAndUser} from "@/db/query/event-order.query";
 import {getPaymentByOrder} from "@/db/query/event-payment.query";
-import {Card} from "@/components/ui/card";
+import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 
 export default async function Page({params, searchParams}: { params: Promise<{ id: number }> , searchParams: Promise<{ [key: string]: string | string[] | undefined }>}) {
   const {id} = await params;
@@ -35,12 +35,55 @@ export default async function Page({params, searchParams}: { params: Promise<{ i
     redirect(`/event`);
   }
 
-  // if (order.status === "payment" && payment.status === "PENDING") {
-  //   await checkPaymentStatus(payment.invoiceNumber)
-  // }
-
   return (
     <div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>Order summary</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <dl className="divide-y divide-pink-300 border-t border-b border-pink-500">
+              <div  className="flex justify-between py-3 text-sm font-medium">
+                <dt className="text-muted-foreground">Jersey</dt>
+                <dd className="whitespace-nowrap  font-bold">M</dd>
+              </div>
+            </dl>
+
+            <dl className="divide-y divide-pink-300 border-b border-pink-500">
+              <div  className="flex justify-between py-3 text-sm font-medium">
+                <dt className="text-muted-foreground">Group</dt>
+                <dd className="whitespace-nowrap  font-bold">M</dd>
+              </div>
+            </dl>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Payment detail</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <dl className="divide-y divide-pink-300 border-t border-b border-pink-500">
+              <div  className="flex justify-between py-3 text-sm font-medium">
+                <dt className="text-muted-foreground">Jersey</dt>
+                <dd className="whitespace-nowrap  font-bold">M</dd>
+              </div>
+            </dl>
+
+            <dl className="divide-y divide-pink-300 border-b border-pink-500">
+              <div  className="flex justify-between py-3 text-sm font-medium">
+                <dt className="text-muted-foreground">Group</dt>
+                <dd className="whitespace-nowrap  font-bold">M</dd>
+              </div>
+            </dl>
+          </CardContent>
+        </Card>
+      </div>
+
+
+
       <Card>
         Order Card
         <div>
