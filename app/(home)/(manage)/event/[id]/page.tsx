@@ -1,19 +1,17 @@
 import {getEventById} from "@/db/query/event-query";
 import {redirect} from "next/navigation";
-import {getCategoryByEvent} from "@/db/query/event-category.query";
 
 export default async function Page({params,}: { params: Promise<{ id: number }> }) {
 
   const {id} = await params;
 
   const event = await getEventById(id);
-  const categories = await getCategoryByEvent(id)
 
   if (!event) {
     redirect('/');
   }
 
-  if (categories.length > 0 ) {
+  if (event.price) {
     redirect(`/event/${id}/category`)
   }
 

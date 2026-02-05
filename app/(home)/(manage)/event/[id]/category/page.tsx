@@ -1,4 +1,3 @@
-import {getCategoryByEvent} from "@/db/query/event-category.query";
 import {CategorySelection} from "@/components/checkout/category-selection";
 import {getOngoingOrder} from "@/db/query/event-order.query";
 import {auth} from "@/lib/auth";
@@ -12,7 +11,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
   if (!event) {
     redirect(`/event`);
   }
-  const categories = await getCategoryByEvent(id)
+
   const session = await auth.api.getSession({
     headers: await headers() // you need to pass the headers object.
   })
@@ -31,7 +30,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
 
   return (
     <div>
-      <CategorySelection event={event} categories={categories} order={order}  />
+      <CategorySelection event={event} order={order}  />
     </div>
   )
 }

@@ -1,7 +1,6 @@
 'use client'
 
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
-import {EventCategoryType, EventGroupType, EventOrderType, EventType} from "@/db/schema";
+import {EventGroupType, EventOrderType, EventType} from "@/db/schema";
 import {useParams, useRouter, useSearchParams} from "next/navigation";
 import {Label} from "@/components/ui/label";
 import {SearchGroupInput} from "@/components/checkout/search-group-input";
@@ -19,16 +18,14 @@ import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
 import {Field, FieldContent, FieldLabel, FieldTitle} from "@/components/ui/field";
 import {Spinner} from "@/components/ui/spinner";
 
-export function CategorySelection({event, categories, order}: {
+export function CategorySelection({event, order}: {
   event: EventType & { participantCount: number },
-  categories: EventCategoryType[],
   order?: EventOrderType | null
 }) {
   const params = useParams<{ id: string }>();
   const searchParams = useSearchParams();
   const eventId = params.id;
 
-  const [category, setCategory] = useState<string | undefined>(order?.categoryId  ? String(order.categoryId) :  undefined);
   const [group, setGroup] = useState<string | undefined>(order?.groupId  ? String(order.groupId) :  undefined);
 
   const [jerseyGender, setJerseyGender] = useState<string>(order?.jerseyGender ?? "");
@@ -74,7 +71,6 @@ export function CategorySelection({event, categories, order}: {
     try {
       const newParam = new URLSearchParams(searchParams);
       newParam.set("name", value)
-      newParam.set("category", String(category))
       const response = await fetch(`/api/event/${eventId}?${newParam}`, {
         method: 'GET',
       })
@@ -95,7 +91,6 @@ export function CategorySelection({event, categories, order}: {
     const res = await createGroupAction({
       name: value,
       eventId: Number(eventId),
-      eventCategoryId: Number(category),
     })
 
     if (res.success && res.data) {
@@ -113,7 +108,6 @@ export function CategorySelection({event, categories, order}: {
     const payload = {
       userId: order ? order.userId : "",
       eventId: Number(eventId),
-      categoryId: Number(category),
       groupId: Number(group),
       jerseyGender: jerseyGender,
       jerseySize: jerseySize,
@@ -141,56 +135,32 @@ export function CategorySelection({event, categories, order}: {
       <Card>
         <CardContent>
           <div className="space-y-4">
+
             <div>
-              <Label>Category</Label>
+              <Label>Group</Label>
               <div className="mt-2">
-                <Select value={category} onValueChange={(id) => setCategory(id)}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select category"/>
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map(category => (
-                      <SelectItem value={String(category.id)} key={category.id}>
-                        {category.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <SearchGroupInput eventId={Number(eventId)}
+                                  availableGroups={availableGroup}
+                                  onSelectGroup={(group: EventGroupType) => onSelectHandler(group)}
+                                  onCreate={(value: string) => handleCreate(value)}
+                                  onSearch={(value: string) => onSearchHandler(value)}/>
               </div>
 
             </div>
 
-            {category && (
-              <div className="space-y-4">
-
-                <div>
-                  <Label>Group</Label>
-                  <div className="mt-2">
-                    <SearchGroupInput eventId={Number(eventId)}
-                                      availableGroups={availableGroup}
-                                      onSelectGroup={(group: EventGroupType) => onSelectHandler(group)}
-                                      onCreate={(value: string) => handleCreate(value)}
-                                      onSearch={(value: string) => onSearchHandler(value)}/>
-                  </div>
-
-                </div>
-
-                {selectedGroup && (
-                  <div>
-                    <Item variant="outline">
-                      <ItemMedia>
-                        <BadgeCheckIcon className="size-5"/>
-                      </ItemMedia>
-                      <ItemContent>
-                        <ItemTitle>{selectedGroup.name}</ItemTitle>
-                      </ItemContent>
-                    </Item>
-                  </div>
-
-                )}
+            {selectedGroup && (
+              <div>
+                <Item variant="outline">
+                  <ItemMedia>
+                    <BadgeCheckIcon className="size-5"/>
+                  </ItemMedia>
+                  <ItemContent>
+                    <ItemTitle>{selectedGroup.name}</ItemTitle>
+                  </ItemContent>
+                </Item>
               </div>
-            )}
 
+            )}
           </div>
 
           <Separator className="py-4"/>
@@ -231,7 +201,7 @@ export function CategorySelection({event, categories, order}: {
           </div>
         </CardContent>
         <CardFooter>
-          <Button type="submit" className="w-full" disabled={(!group && !category && !jerseyGender && !jerseySize) || isPending}>
+          <Button type="submit" className="w-full" disabled={(!group && !jerseyGender && !jerseySize) || isPending}>
             {isPending ? <Spinner /> : null}
             Continue
           </Button>

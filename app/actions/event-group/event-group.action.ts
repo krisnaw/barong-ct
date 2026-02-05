@@ -4,7 +4,7 @@ import {db} from "@/db/db";
 import {eventGroup} from "@/db/schema";
 import {revalidatePath} from "next/cache";
 
-export async function createGroupAction(payload: {name: string, eventId: number, eventCategoryId: number}) : Promise<ActionResponse> {
+export async function createGroupAction(payload: {name: string, eventId: number}) : Promise<ActionResponse> {
   const [group] = await db.insert(eventGroup).values(payload).returning();
 
   revalidatePath('/', 'page')
