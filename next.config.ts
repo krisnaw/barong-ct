@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [new URL('https://www.mainsepeda.com/**')],
   },
-  allowedDevOrigins: ['*.5734050f10fe38.lhr.life']
+  allowedDevOrigins: ['*.17247bb55cfbd5.lhr.life']
 };
 
 export default nextConfig;

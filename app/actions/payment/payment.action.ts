@@ -10,6 +10,7 @@ import {generateDigest, generateSignature} from "@/utils/doku-helper";
 import {eq} from "drizzle-orm";
 import {eventOrder, eventPayment} from "@/db/schema";
 import {redirect} from "next/navigation";
+import {SERVICE_FEE} from "@/types/constant";
 
 const dokuBaseURL = process.env.DOKU_API_URL
 const dokuReqPath = '/checkout/v1/payment'
@@ -18,7 +19,8 @@ const clientSecret = process.env.DOKU_SECRET_KEY!
 const requestTimestamp = new Date().toISOString().slice(0, 19) + "Z"
 const baseURL = process.env.BETTER_AUTH_URL!
 
-export async function createPayment(payload: { oderId: number, total: number }): Promise<ActionResponse> {
+
+export async function createPayment(payload: { oderId: number }): Promise<ActionResponse> {
 
   const order = await db.query.eventOrder.findFirst({
     where: eq(eventOrder.id, payload.oderId),
@@ -43,7 +45,7 @@ export async function createPayment(payload: { oderId: number, total: number }):
   // create payment
   const raw = JSON.stringify({
     "order": {
-      "amount": payload.total,
+      "amount": event.price! + SERVICE_FEE,
       "invoice_number": invoiceNumber,
       "currency": order.currency,
       "callback_url": `${baseURL}/event/${order.eventId}`,
@@ -52,7 +54,12 @@ export async function createPayment(payload: { oderId: number, total: number }):
       "line_items": [
         {
           "name": event.name,
-          "price": payload.total,
+          "price": event.price,
+          "quantity": 1
+        },
+        {
+          "name": "service fee",
+          "price" : SERVICE_FEE,
           "quantity": 1
         }
       ]

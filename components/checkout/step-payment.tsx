@@ -15,13 +15,11 @@ export function StepPayment({event, order} : {event: EventType & { participantCo
 
   const price = Number(event.price);
   const fee = 25000;
-  const total = price + fee;
-
 
   const [state, formAction, isPending] = useActionState(async () => {
 
     // create payment
-    const res = await createPayment({oderId: order.id, total});
+    const res = await createPayment({oderId: order.id});
     if (res.success) {
 
       // update order status
@@ -67,7 +65,7 @@ export function StepPayment({event, order} : {event: EventType & { participantCo
                 <div className="flex items-center justify-between border-t border-gray-200 pt-6 text-gray-900">
                   <dt className="text-base">Total</dt>
                   <dd className="text-base">
-                    {formatMoney(Number(total))}
+                    {formatMoney(Number(price + fee))}
                   </dd>
                 </div>
               </dl>

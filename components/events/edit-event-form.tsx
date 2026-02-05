@@ -118,7 +118,7 @@ export function EditEventForm({event} : {event: EventType}) {
                 </SelectTrigger>
                 <SelectContent>
                   {CURRENCIES.map((currency) => (
-                    <SelectItem key={currency.value} value={currency.label}>
+                    <SelectItem key={currency.value} value={currency.value}>
                       {currency.value}{" "}
                       <span className="text-muted-foreground">
                     {currency.label}
@@ -228,6 +228,6 @@ export function EditEventForm({event} : {event: EventType}) {
 
 const CURRENCIES = [
   {
-    value: 'idr', label: 'Rp',
+    value: 'IDR', label: 'Rp',
   }
 ]
