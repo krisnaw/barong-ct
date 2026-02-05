@@ -9,6 +9,7 @@ import {EventOrderType, EventType} from "@/db/schema";
 import {createPayment} from "@/app/actions/payment/payment.action";
 import {Spinner} from "@/components/ui/spinner";
 import {updateOrderAction} from "@/app/actions/event-order/event-order.action";
+import {formatMoney} from "@/utils/money-helper";
 
 export function StepPayment({event, order} : {event: EventType & { participantCount: number }, order: EventOrderType}) {
   const router = useRouter();
@@ -69,7 +70,6 @@ export function StepPayment({event, order} : {event: EventType & { participantCo
                   </dd>
                 </div>
               </dl>
-
             </div>
 
             <div className="mt-6">
@@ -87,13 +87,4 @@ export function StepPayment({event, order} : {event: EventType & { participantCo
   )
 }
 
-
-const formatMoney = (amount: number, currency = 'IDR', locale = 'id-ID') => {
-  return new Intl.NumberFormat(locale, {
-    style: 'currency',
-    currency: currency,
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(amount);
-};
 
