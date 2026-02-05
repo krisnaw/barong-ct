@@ -16,7 +16,7 @@ import {useParams, useRouter, useSearchParams} from "next/navigation";
 import {updateOrderAction} from "@/app/actions/event-order/event-order.action";
 
 export function StepProfile({user, order}: { user: UserWithDetail, order: EventOrderType }) {
-  console.log(order)
+
   const router = useRouter();
   const params = useParams<{ id: string }>();
   const eventId = params.id;

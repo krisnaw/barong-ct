@@ -7,11 +7,18 @@ import {headers} from "next/headers";
 import {redirect} from "next/navigation";
 import {z} from "zod";
 import {ActionResponse} from "@/types/types";
+import {eq} from "drizzle-orm";
 
 export type updateData = z.infer<typeof orderUpdateSchema>;
 
 export async function updateOrderAction(formData: updateData) : Promise<ActionResponse> {
-  await db.update(eventOrder).set(formData);
+  try {
+    await db.update(eventOrder).set(formData).where(eq(eventOrder.id, Number(formData.id)))
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(error);
+    }
+  }
   return {
     success:  true,
     message: 'Successfully created order',
