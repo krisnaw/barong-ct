@@ -11,9 +11,6 @@ import {format} from "date-fns";
 import {id as idLocale} from "date-fns/locale";
 import {BtnResendConfirm} from "@/components/button/btn-resend-confirm";
 import {ButtonDownloadParticipant} from "@/components/button/button-download-participant";
-import {ButtonAddCategory} from "@/components/button-add-category";
-import {getCategoryByEvent} from "@/db/query/event-category.query";
-import {EventCategories} from "@/app/dashboard/events/[id]/event-categories";
 
 export default async function Page({params}: { params: Promise<{ id: number }> }) {
   const {id} = await params;
@@ -23,7 +20,6 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
   }
 
   const participants = await getParticipantByEvent(id)
-  const categories = await getCategoryByEvent(id)
 
   return (
     <div className="flex flex-col gap-6">
@@ -51,24 +47,11 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
 
         </div>
         <div className="mt-4 flex md:mt-0 md:ml-4">
-          <div className="inline-flex gap-2">
-            <ButtonAddCategory eventId={id} />
-            <Button variant="outline">
-              <Link href={`/dashboard/events/${id}`}>
-                Edit
-              </Link>
-            </Button>
-          </div>
-
-        </div>
-      </div>
-
-      <div>
-        <div>
-          <h2 className="text-base/7 font-semibold text-gray-900">Event Categories</h2>
-        </div>
-        <div className="mt-2">
-          <EventCategories categories={categories} />
+          <Button variant="outline">
+            <Link href={`/dashboard/events/${id}`}>
+              Edit
+            </Link>
+          </Button>
         </div>
       </div>
 
@@ -81,6 +64,15 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
           <Card>
             <CardHeader>
               <CardDescription>Total participants</CardDescription>
+              <CardTitle className="text-3xl">
+                {participants.length}
+              </CardTitle>
+            </CardHeader>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardDescription>Total Revenue</CardDescription>
               <CardTitle className="text-3xl">
                 {participants.length}
               </CardTitle>

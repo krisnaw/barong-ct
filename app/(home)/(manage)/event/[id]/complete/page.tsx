@@ -28,15 +28,13 @@ export default async function Page({params, searchParams}: { params: Promise<{ i
   }
 
 
-  const order = await getOrderByIdAndUser(Number(orderId), session.user.id);
-  const payment = await getPaymentByOrder(Number(orderId));
-  const participant = await getParticipantByEventUser(id, session.user.id)
+  const [order, payment, participant] = await Promise.all([
+     getOrderByIdAndUser(Number(orderId), session.user.id),
+     getPaymentByOrder(Number(orderId)),
+     getParticipantByEventUser(id, session.user.id)
+  ])
 
   if (!payment || !order) {
-    redirect(`/event`);
-  }
-
-  if (!payment.invoiceNumber) {
     redirect(`/event`);
   }
 
@@ -57,7 +55,7 @@ export default async function Page({params, searchParams}: { params: Promise<{ i
             <dl className="divide-y divide-pink-300 border-t border-b border-pink-500">
               <div  className="flex justify-between py-3 text-sm font-medium">
                 <dt className="text-muted-foreground">Jersey</dt>
-                <dd className="whitespace-nowrap  font-bold">M</dd>
+                <dd className="whitespace-nowrap  font-bold">{order.jerseySize}</dd>
               </div>
 
               <div  className="flex justify-between py-3 text-sm font-medium">
