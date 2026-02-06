@@ -2,8 +2,6 @@
 
 import {eventOrder, orderInsertSchema, orderUpdateSchema} from "@/db/schema";
 import {db} from "@/db/db";
-import {auth} from "@/lib/auth";
-import {headers} from "next/headers";
 import {redirect} from "next/navigation";
 import {z} from "zod";
 import {ActionResponse} from "@/types/types";
@@ -11,7 +9,7 @@ import {eq} from "drizzle-orm";
 
 export type updateData = z.infer<typeof orderUpdateSchema>;
 
-export async function updateOrderAction(formData: updateData) : Promise<ActionResponse> {
+export async function updateOrderAction(formData: updateData): Promise<ActionResponse> {
   try {
     await db.update(eventOrder).set(formData).where(eq(eventOrder.id, Number(formData.id)))
   } catch (error) {
@@ -20,31 +18,19 @@ export async function updateOrderAction(formData: updateData) : Promise<ActionRe
     }
   }
   return {
-    success:  true,
+    success: true,
     message: 'Successfully created order',
     data: formData.id
   }
 }
 
 export type insertData = z.infer<typeof orderInsertSchema>;
+
 export async function createOrderAction(formData: insertData) {
-  const session = await auth.api.getSession({
-    headers: await headers() // you need to pass the headers object.
-  })
-
-  if (!session) {
-    redirect('/auth/signup')
-  }
-
-  let orderId: number
-
-  formData.userId = session.user.id
-
+  let url = ""
   try {
     const [order] = await db.insert(eventOrder).values(formData).returning()
-
-    orderId = order.id
-
+    url = `/event/${order.eventId}/category`
   } catch (error) {
     console.log(error)
 
@@ -53,14 +39,9 @@ export async function createOrderAction(formData: insertData) {
     }
 
     return {
-      success:  false,
+      success: false,
       message: 'Sorry, something went wrong',
     }
   }
-
-  return {
-    success:  true,
-    message: 'Successfully created order',
-    data: orderId
-  }
+  redirect(url)
 }

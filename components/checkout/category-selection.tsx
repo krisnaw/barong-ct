@@ -11,9 +11,8 @@ import {CirclePile} from "lucide-react";
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
 import {initialState} from "@/types/types";
-import {createOrderAction, updateOrderAction} from "@/app/actions/event-order/event-order.action";
+import {updateOrderAction} from "@/app/actions/event-order/event-order.action";
 import {toast} from "sonner";
-import {Separator} from "@radix-ui/react-menu";
 import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
 import {Field, FieldContent, FieldLabel, FieldTitle} from "@/components/ui/field";
 import {Spinner} from "@/components/ui/spinner";
@@ -22,7 +21,7 @@ import {SizeChart} from "@/components/checkout/size-chart";
 export function CategorySelection({event, groups, order}: {
   event: EventType & { participantCount: number },
   groups: GroupWithParticipant[],
-  order?: EventOrderType | null
+  order: EventOrderType
 }) {
   const params = useParams<{ id: string }>();
   const searchParams = useSearchParams();
@@ -42,10 +41,11 @@ export function CategorySelection({event, groups, order}: {
     const res = await createGroupAction({
       name: value,
       eventId: Number(eventId),
+      orderId: order.id
     })
 
     if (res.success && res.data) {
-      // setGroup(res.data as string)
+      toast.success(res.message);
     }
   }
 
@@ -55,17 +55,14 @@ export function CategorySelection({event, groups, order}: {
 
   const [state, formAction, isPending] = useActionState(async () => {
 
-    const payload = {
-      userId: order ? order.userId : "",
-      eventId: Number(eventId),
-      groupId: Number(selectedGroup?.id),
-      jerseyGender: "",
+    const newPayload = {
+      ...order,
+      status: "group",
       jerseySize: jerseySize,
-      price: event.price,
-      currency: event.currency,
+      groupId: Number(selectedGroup?.id),
     }
 
-    const res = order ? await updateOrderAction(order) : await createOrderAction(payload)
+    const res = await updateOrderAction(newPayload)
 
     if (res.success) {
       if (res.data) {
@@ -108,38 +105,41 @@ export function CategorySelection({event, groups, order}: {
 
             {selectedGroup && (
               <div>
-                <Item variant="outline">
-                  <ItemMedia variant="icon">
-                    <CirclePile />
-                  </ItemMedia>
-                  <ItemContent>
-                    <ItemTitle className="font-bold text-lg">
-                      {selectedGroup.name}
-                    </ItemTitle>
-                    <div className="line-clamp-none">
-                      <ul className="grid grid-cols-2 list-disc list-inside">
-                        {selectedGroup.participants.map((name: string, index) => (
-                          <li key={index}>{name}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  </ItemContent>
-                  <ItemActions>
-                    <ItemDescription>
-                      {selectedGroup.participants.length}/5 members
-                    </ItemDescription>
-                  </ItemActions>
-                </Item>
+                <Label>Selected Group Ride</Label>
+                <div className="mt-2">
+                  <Item variant="outline">
+                    <ItemMedia variant="icon">
+                      <CirclePile />
+                    </ItemMedia>
+                    <ItemContent>
+                      <ItemTitle className="font-bold text-lg">
+                        {selectedGroup.name}
+                      </ItemTitle>
+                      <div className="line-clamp-none">
+                        <ul className="grid grid-cols-2 list-disc list-inside">
+                          {selectedGroup.participants.map((name: string, index) => (
+                            <li key={index}>{name}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </ItemContent>
+                    <ItemActions>
+                      <ItemDescription>
+                        {selectedGroup.participants.length}/5 members
+                      </ItemDescription>
+                    </ItemActions>
+                  </Item>
+                </div>
               </div>
             )}
           </div>
 
-          <Separator className="py-4"/>
 
           {selectedGroup && (
             <>
 
-              <div>
+
+              <div className="mt-6">
                 <div>
                   <div className="flex justify-between">
                     <Label>Jersey</Label>
