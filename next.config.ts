@@ -7,7 +7,12 @@ const nextConfig: NextConfig = {
     root: path.join(__dirname, '..'),
   },
   images: {
-    remotePatterns: [new URL('https://www.mainsepeda.com/**')],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "placeholdit.com",
+      },
+    ],
   },
   allowedDevOrigins: ['*.faef4b1426d4d1.lhr.life']
 };
