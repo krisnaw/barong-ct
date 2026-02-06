@@ -2,10 +2,10 @@
 
 import {db} from "@/db/db";
 import {eq} from "drizzle-orm";
-import {eventGroup} from "@/db/schema";
+import {eventGroup, GroupWithParticipant} from "@/db/schema";
 
 export async function getGroupByEvent(eventId: number) {
-  const groups = await db.query.eventGroup.findMany({
+  const query = await db.query.eventGroup.findMany({
     where: eq(eventGroup.eventId, eventId),
     with: {
       eventOrders: {
@@ -24,10 +24,12 @@ export async function getGroupByEvent(eventId: number) {
     }
   });
 
-  return groups.map(group => ({
+  const groups =  query.map(group => ({
     ...group,
     participants: group.eventOrders
       .map(order => order.participant?.user?.name)
       .filter(Boolean)
   }));
+
+  return groups as unknown as GroupWithParticipant[]
 }
