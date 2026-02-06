@@ -30,10 +30,11 @@ export function CategorySelection({event, groups, order}: {
 
   const [jerseySize, setJerseySize] = useState<string>(order?.jerseySize ?? "");
 
-  const [availableGroup, setAvailableGroup] = useState<GroupWithParticipant[]>(groups)
-  const [selectedGroup, setSelectedGroup] = useState<GroupWithParticipant>()
-
-  console.log("selectedGroup", selectedGroup)
+  const [availableGroup] = useState<GroupWithParticipant[]>(groups)
+  const [selectedGroup, setSelectedGroup] = useState<GroupWithParticipant | null>(() => {
+    if (!order) return null;
+    return availableGroup.find(group => group.id === order.groupId) || null;
+  });
 
   const router = useRouter();
 
