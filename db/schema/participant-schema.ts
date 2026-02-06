@@ -4,6 +4,7 @@ import {EventSchema} from "@/db/schema/event-schema";
 import {relations} from "drizzle-orm";
 import {User} from "@/types/auth-types";
 import {createInsertSchema} from "drizzle-zod";
+import {eventOrder} from "@/db/schema/event-order.schema";
 
 export const participant = pgTable("event_participant", {
   id: serial('id').primaryKey(),
@@ -41,6 +42,10 @@ export const participantRelations = relations(participant, ({ one }) => ({
   event: one(EventSchema, {
     fields: [participant.eventId],
     references: [EventSchema.id],
+  }),
+  eventOrder: one(eventOrder, {
+    fields: [participant.userId, participant.eventId],
+    references: [eventOrder.userId, eventOrder.eventId],
   }),
 }));
 

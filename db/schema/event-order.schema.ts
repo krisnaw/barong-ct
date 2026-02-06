@@ -1,8 +1,10 @@
 import {doublePrecision, integer, pgTable, serial, text, timestamp} from "drizzle-orm/pg-core";
+import {relations} from "drizzle-orm";
 import {EventSchema} from "@/db/schema/event-schema";
 import {eventCategory} from "@/db/schema/event-category-schema";
 import {eventGroup} from "@/db/schema/event-group-schema";
 import {user} from "@/db/schema/auth-schema";
+import {participant} from "@/db/schema/participant-schema";
 import {createInsertSchema, createSelectSchema, createUpdateSchema} from "drizzle-zod";
 
 export const eventOrder = pgTable("event_order", {
@@ -36,6 +38,29 @@ export const eventOrder = pgTable("event_order", {
     .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
 });
+
+export const eventOrderRelations = relations(eventOrder, ({ one }) => ({
+  event: one(EventSchema, {
+    fields: [eventOrder.eventId],
+    references: [EventSchema.id],
+  }),
+  user: one(user, {
+    fields: [eventOrder.userId],
+    references: [user.id],
+  }),
+  category: one(eventCategory, {
+    fields: [eventOrder.categoryId],
+    references: [eventCategory.id],
+  }),
+  group: one(eventGroup, {
+    fields: [eventOrder.groupId],
+    references: [eventGroup.id],
+  }),
+  participant: one(participant, {
+    fields: [eventOrder.userId, eventOrder.eventId],
+    references: [participant.userId, participant.eventId],
+  }),
+}));
 
 export type EventOrderType = typeof eventOrder.$inferSelect
 

@@ -23,7 +23,8 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
   const userId = session.user.id;
 
   const order = await getOngoingOrder(id, userId);
-  const groups = await getGroupByEvent(id)
+  const groups = await getGroupByEvent(id);
+
 
   // if status payment or paid, go to complete page
   if (order && (order.status === 'payment' || order.status === 'paid')) {

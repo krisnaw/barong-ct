@@ -1,11 +1,11 @@
 'use client'
 
-import {EventGroupType, EventOrderType, EventType} from "@/db/schema";
+import {EventOrderType, EventType, GroupWithParticipant} from "@/db/schema";
 import {useParams, useRouter, useSearchParams} from "next/navigation";
 import {Label} from "@/components/ui/label";
 import {SearchGroupInput} from "@/components/checkout/search-group-input";
 import {createGroupAction} from "@/app/actions/event-group/event-group.action";
-import {useActionState, useEffect, useState} from "react";
+import {useActionState, useState} from "react";
 import {Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle} from "@/components/ui/item";
 import {CirclePile} from "lucide-react";
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
@@ -21,55 +21,21 @@ import {SizeChart} from "@/components/checkout/size-chart";
 
 export function CategorySelection({event, groups, order}: {
   event: EventType & { participantCount: number },
-  groups: EventGroupType[],
+  groups: GroupWithParticipant[],
   order?: EventOrderType | null
 }) {
   const params = useParams<{ id: string }>();
   const searchParams = useSearchParams();
   const eventId = params.id;
 
-  const [group, setGroup] = useState<string | undefined>(order?.groupId  ? String(order.groupId) :  undefined);
-
-  const [jerseyGender, setJerseyGender] = useState<string>(order?.jerseyGender ?? "");
   const [jerseySize, setJerseySize] = useState<string>(order?.jerseySize ?? "");
 
-  const [availableGroup, setAvailableGroup] = useState<EventGroupType[]>(groups)
-  const [selectedGroup, setSelectedGroup] = useState<EventGroupType>()
+  const [availableGroup, setAvailableGroup] = useState<GroupWithParticipant[]>(groups)
+  const [selectedGroup, setSelectedGroup] = useState<GroupWithParticipant>()
 
   console.log("selectedGroup", selectedGroup)
 
   const router = useRouter();
-
-  useEffect(() => {
-
-    const abortController = new AbortController();
-    const signal = abortController.signal;
-
-    if (group) {
-
-      const fetchGroup = async () => {
-        try {
-          const response = await fetch(`/api/event/group/${group}`, {signal})
-          const data = await response.json();
-          setSelectedGroup(data.group)
-        } catch (error) {
-          if (error instanceof Error) {
-            if (error.name === 'AbortError') {
-              return; // Ignore abort error
-            }
-          }
-          console.error('Fetch error:', error);
-        }
-      }
-
-      fetchGroup()
-
-      return () => {
-        abortController.abort()
-      }
-
-    }
-  }, [group]);
 
   async function handleCreate(value: string) {
     const res = await createGroupAction({
@@ -78,13 +44,12 @@ export function CategorySelection({event, groups, order}: {
     })
 
     if (res.success && res.data) {
-      setGroup(res.data as string)
+      // setGroup(res.data as string)
     }
   }
 
-  function onSelectHandler(item: EventGroupType) {
-    setGroup(String(item.id))
-    setSelectedGroup(item)
+  function onSelectHandler(group: GroupWithParticipant) {
+    setSelectedGroup(group)
   }
 
   const [state, formAction, isPending] = useActionState(async () => {
@@ -92,8 +57,8 @@ export function CategorySelection({event, groups, order}: {
     const payload = {
       userId: order ? order.userId : "",
       eventId: Number(eventId),
-      groupId: Number(group),
-      jerseyGender: jerseyGender,
+      groupId: Number(selectedGroup?.id),
+      jerseyGender: "",
       jerseySize: jerseySize,
       price: event.price,
       currency: event.currency,
@@ -131,9 +96,9 @@ export function CategorySelection({event, groups, order}: {
             <div>
               <Label>Group Ride</Label>
               <div className="mt-2">
-                <SearchGroupInput eventId={Number(eventId)}
+                <SearchGroupInput
                                   availableGroups={availableGroup}
-                                  onSelectGroup={(group: EventGroupType) => onSelectHandler(group)}
+                                  onSelectGroup={(group: GroupWithParticipant) => onSelectHandler(group)}
                                   onCreate={(value: string) => handleCreate(value)}
                                  />
               </div>
@@ -150,23 +115,17 @@ export function CategorySelection({event, groups, order}: {
                     <ItemTitle className="font-bold text-lg">
                       {selectedGroup.name}
                     </ItemTitle>
-                    <ItemDescription className="line-clamp-none">
-                      <ul className="grid grid-cols-2 ">
-                        <li>Name</li>
-
-                        <li>Name</li>
-
-                        <li>Name</li>
-
-                        <li>Name</li>
-
-                        <li>Name</li>
+                    <div className="line-clamp-none">
+                      <ul className="grid grid-cols-2 list-disc list-inside">
+                        {selectedGroup.participants.map((name: string, index) => (
+                          <li key={index}>{name}</li>
+                        ))}
                       </ul>
-                    </ItemDescription>
+                    </div>
                   </ItemContent>
                   <ItemActions>
                     <ItemDescription>
-                      4/5
+                      {selectedGroup.participants.length}/5 members
                     </ItemDescription>
                   </ItemActions>
                 </Item>
@@ -211,11 +170,9 @@ export function CategorySelection({event, groups, order}: {
           )}
 
 
-
-
         </CardContent>
         <CardFooter>
-          <Button type="submit" className="w-full" disabled={(!group || !jerseySize) || isPending}>
+          <Button type="submit" className="w-full" disabled={(!selectedGroup || !jerseySize) || isPending}>
             {isPending ? <Spinner /> : null}
             Continue
           </Button>
@@ -225,10 +182,6 @@ export function CategorySelection({event, groups, order}: {
   )
 }
 
-const gender = [
-  {id: "male", name: "Male"},
-  {id: "female", name: "Female"},
-]
 const sizes = [
   // ASIA Sizing
   { id: 'xxs', name: 'XXS' },

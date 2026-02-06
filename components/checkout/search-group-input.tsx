@@ -3,22 +3,19 @@
 import React, {useState} from 'react';
 import {Input} from '@/components/ui/input';
 import {Plus, Search} from 'lucide-react';
-import {useQueryState} from "nuqs";
-import {EventGroupType} from "@/db/schema";
+import {GroupWithParticipant} from "@/db/schema";
 
 interface SearchGroupInputProps {
-  eventId: number;
-  availableGroups?: EventGroupType[];
+  availableGroups?: GroupWithParticipant[];
   onSearch?: (value: string) => void;
   onCreate?: (groupName: string) => void;
-  onSelectGroup?: (group: EventGroupType) => void;
+  onSelectGroup?: (group: GroupWithParticipant) => void;
   placeholder?: string;
   createButtonText?: string;
   maxMembers?: number;
 }
 
 export function SearchGroupInput({
-                                   eventId,
                                    availableGroups = [],
                                    onSearch,
                                    onCreate,
@@ -27,12 +24,11 @@ export function SearchGroupInput({
                                    createButtonText = 'Create Group',
                                    maxMembers = 5,
                                  }: SearchGroupInputProps) {
-  const [selectedGroup, setSelectedGroup] = useQueryState('group', { shallow: true })
   const [searchValue, setSearchValue] = useState('');
   const [isOpen, setIsOpen] = useState(false);
 
   const filteredGroups = searchValue.trim()
-    ? availableGroups.filter((group: EventGroupType) =>
+    ? availableGroups.filter((group: GroupWithParticipant) =>
       group.name.toLowerCase().includes(searchValue.toLowerCase())
     )
     : availableGroups;
@@ -48,7 +44,7 @@ export function SearchGroupInput({
     onSearch?.(value);
   };
 
-  const handleSelectGroup = (group: EventGroupType) => {
+  const handleSelectGroup = (group: GroupWithParticipant) => {
     onSelectGroup?.(group);
     setSearchValue('');
     setIsOpen(false);
@@ -103,7 +99,7 @@ export function SearchGroupInput({
                   <div className="flex flex-col gap-1 text-left">
                     <span className="font-medium">{group.name}</span>
                     <span className="text-xs text-muted-foreground">
-                      {/*{group.participants.length}/{maxMembers} members*/}
+                      {group.participants.length}/{maxMembers} members
                     </span>
                   </div>
                 </button>
