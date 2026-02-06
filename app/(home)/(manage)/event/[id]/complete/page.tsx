@@ -9,8 +9,17 @@ import {formatBibNumber, formatMoney} from "@/utils/money-helper";
 import {SERVICE_FEE} from "@/types/constant";
 import {Badge} from "@/components/ui/badge";
 import {getParticipantByEventUser} from "@/db/query/participant-query";
+import {getGroupById} from "@/db/query/event-group.query";
+import {GroupWithParticipant} from "@/db/schema";
+import {GroupItem} from "@/components/group/group-item";
+import {Item, ItemContent, ItemDescription, ItemMedia, ItemTitle} from "@/components/ui/item";
+import {ReceiptIcon, TicketCheck} from "lucide-react";
+import EventConfirmation from "@/app/(home)/(manage)/event/[id]/complete/event-confirmation";
 
-export default async function Page({params, searchParams}: { params: Promise<{ id: number }> , searchParams: Promise<{ [key: string]: string | string[] | undefined }>}) {
+export default async function Page({params, searchParams}: {
+  params: Promise<{ id: number }>,
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}) {
   const {id} = await params;
   const orderId = (await searchParams).orderId;
 
@@ -27,21 +36,80 @@ export default async function Page({params, searchParams}: { params: Promise<{ i
     redirect(`/event`);
   }
 
-
   const [order, payment, participant] = await Promise.all([
-     getOrderByIdAndUser(Number(orderId), session.user.id),
-     getPaymentByOrder(Number(orderId)),
-     getParticipantByEventUser(id, session.user.id)
+    getOrderByIdAndUser(Number(orderId), session.user.id),
+    getPaymentByOrder(Number(orderId)),
+    getParticipantByEventUser(id, session.user.id)
   ])
+
+  let group: GroupWithParticipant | null = null;
+  if (order?.groupId) {
+    group = await getGroupById(order?.groupId)
+  }
 
   if (!payment || !order) {
     redirect(`/event`);
   }
 
   return (
-    <div>
+    <div className="mx-auto max-w-lg">
+
+      <div>
+        <EventConfirmation />
+      </div>
+
+      <div className="space-y-2">
+        {group && (
+          <GroupItem group={group}/>
+        )}
+
+        <Item variant="outline">
+          <ItemMedia variant="icon">
+            <ReceiptIcon/>
+          </ItemMedia>
+          <ItemContent>
+            <ItemTitle>Payment</ItemTitle>
+            <ItemDescription>
+              {payment.invoiceNumber}
+            </ItemDescription>
+          </ItemContent>
+          <ItemContent className="flex-none text-center">
+            <ItemDescription>
+              <Badge className="bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300">
+                {payment.status}
+              </Badge>
+            </ItemDescription>
+          </ItemContent>
+        </Item>
+
+        <Item variant="outline">
+          <ItemMedia variant="icon">
+            <TicketCheck/>
+          </ItemMedia>
+          <ItemContent>
+            <ItemTitle>Registrations</ItemTitle>
+            <ItemDescription>
+              Transparent background with no border.
+            </ItemDescription>
+          </ItemContent>
+
+          {participant && (
+            <ItemContent className="flex-none text-center py-1">
+              <ItemDescription>
+                <Badge className="uppercase bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300">
+                  {participant?.status}
+                </Badge>
+              </ItemDescription>
+            </ItemContent>
+          )}
+
+        </Item>
+
+      </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+
         <Card>
           <CardHeader>
             <CardTitle>Registrations</CardTitle>
@@ -54,20 +122,23 @@ export default async function Page({params, searchParams}: { params: Promise<{ i
             )}
 
           </CardHeader>
+
           <CardContent>
             <dl className="divide-y divide-gray-200 border-t border-b border-gray-200">
-              <div  className="flex justify-between py-3 text-sm font-medium">
+              <div className="flex justify-between py-3 text-sm font-medium">
                 <dt className="text-muted-foreground">Jersey</dt>
                 <dd className="whitespace-nowrap  font-bold">{order.jerseySize}</dd>
               </div>
 
-              <div  className="flex justify-between py-3 text-sm font-medium">
-                <dt className="text-muted-foreground">Group</dt>
-                <dd className="whitespace-nowrap  font-bold">M</dd>
-              </div>
+              {group && (
+                <div className="flex justify-between py-3 text-sm font-medium">
+                  <dt className="text-muted-foreground">Group</dt>
+                  <dd className="whitespace-nowrap  font-bold">{group.name}</dd>
+                </div>
+              )}
 
               {participant && participant.bibNumber && (
-                <div  className="flex justify-between py-3 text-sm font-medium">
+                <div className="flex justify-between py-3 text-sm font-medium">
                   <dt className="text-muted-foreground">BIB Number</dt>
                   <dd className="whitespace-nowrap  font-bold">{formatBibNumber(participant.bibNumber)}</dd>
                 </div>
@@ -82,9 +153,7 @@ export default async function Page({params, searchParams}: { params: Promise<{ i
             <CardTitle>Payment detail</CardTitle>
             <CardDescription>{payment.invoiceNumber}</CardDescription>
             <CardAction>
-              <Badge className="bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300">
-                {payment.status}
-              </Badge>
+
             </CardAction>
           </CardHeader>
           <CardContent>

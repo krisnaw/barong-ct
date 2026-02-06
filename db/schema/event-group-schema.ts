@@ -22,4 +22,4 @@ export const eventGroupRelations = relations(eventGroup, ({ many }) => ({
 }));
 
 export type EventGroupType = typeof eventGroup.$inferSelect
-export type GroupWithParticipant = EventGroupType & { participants: [] }
+export type GroupWithParticipant = EventGroupType & { participants: string[] }

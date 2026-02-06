@@ -6,8 +6,6 @@ import {Label} from "@/components/ui/label";
 import {SearchGroupInput} from "@/components/checkout/search-group-input";
 import {createGroupAction} from "@/app/actions/event-group/event-group.action";
 import {useActionState, useState} from "react";
-import {Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle} from "@/components/ui/item";
-import {CirclePile} from "lucide-react";
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
 import {initialState} from "@/types/types";
@@ -17,6 +15,7 @@ import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
 import {Field, FieldContent, FieldLabel, FieldTitle} from "@/components/ui/field";
 import {Spinner} from "@/components/ui/spinner";
 import {SizeChart} from "@/components/checkout/size-chart";
+import {GroupItem} from "@/components/group/group-item";
 
 export function CategorySelection({event, groups, order}: {
   event: EventType & { participantCount: number },
@@ -107,28 +106,7 @@ export function CategorySelection({event, groups, order}: {
               <div>
                 <Label>Selected Group Ride</Label>
                 <div className="mt-2">
-                  <Item variant="outline">
-                    <ItemMedia variant="icon">
-                      <CirclePile />
-                    </ItemMedia>
-                    <ItemContent>
-                      <ItemTitle className="font-bold text-lg">
-                        {selectedGroup.name}
-                      </ItemTitle>
-                      <div className="line-clamp-none">
-                        <ul className="grid grid-cols-2 list-disc list-inside">
-                          {selectedGroup.participants.map((name: string, index) => (
-                            <li key={index}>{name}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    </ItemContent>
-                    <ItemActions>
-                      <ItemDescription>
-                        {selectedGroup.participants.length}/5 members
-                      </ItemDescription>
-                    </ItemActions>
-                  </Item>
+                  <GroupItem group={selectedGroup} />
                 </div>
               </div>
             )}
