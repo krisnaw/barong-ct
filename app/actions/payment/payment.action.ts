@@ -6,7 +6,7 @@ import {db} from "@/db/db";
 import {getUserWithDetail} from "@/db/query/user-query";
 import {getEventById} from "@/db/query/event-query";
 import crypto from "crypto";
-import {generateDigest, generateSignature} from "@/utils/doku-helper";
+import {generateDigest, generateSignature, PM} from "@/utils/doku-helper";
 import {eq} from "drizzle-orm";
 import {eventOrder, eventPayment} from "@/db/schema";
 import {redirect} from "next/navigation";
@@ -51,6 +51,7 @@ export async function createPayment(payload: { oderId: number }): Promise<Action
       "callback_url": `${baseURL}/event/${order.eventId}`,
       "callback_url_cancel": `${baseURL}/payment/cancel`,
       "callback_url_result": `${baseURL}/event/${order.eventId}`,
+      "auto_redirect":true,
       "line_items": [
         {
           "name": event.name,
@@ -65,7 +66,8 @@ export async function createPayment(payload: { oderId: number }): Promise<Action
       ]
     },
     "payment": {
-      "payment_due_date": 60
+      "payment_due_date": 60,
+      "payment_method_types": PM
     },
     "customer": {
       "name": user.name,
@@ -137,3 +139,4 @@ export async function createPayment(payload: { oderId: number }): Promise<Action
 function generateInvoiceNumber(): string {
   return `INV${Math.floor(Date.now() / 1000)}`;
 }
+

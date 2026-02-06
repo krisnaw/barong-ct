@@ -45,14 +45,17 @@ export default async function Page({params, searchParams}: { params: Promise<{ i
         <Card>
           <CardHeader>
             <CardTitle>Registrations</CardTitle>
-            <CardAction>
-              <Badge className="uppercase bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300">
-                {participant?.status}
-              </Badge>
-            </CardAction>
+            {participant && (
+              <CardAction>
+                <Badge className="uppercase bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300">
+                  {participant?.status}
+                </Badge>
+              </CardAction>
+            )}
+
           </CardHeader>
           <CardContent>
-            <dl className="divide-y divide-pink-300 border-t border-b border-pink-500">
+            <dl className="divide-y divide-gray-200 border-t border-b border-gray-200">
               <div  className="flex justify-between py-3 text-sm font-medium">
                 <dt className="text-muted-foreground">Jersey</dt>
                 <dd className="whitespace-nowrap  font-bold">{order.jerseySize}</dd>
