@@ -19,8 +19,9 @@ import {Field, FieldContent, FieldLabel, FieldTitle} from "@/components/ui/field
 import {Spinner} from "@/components/ui/spinner";
 import {SizeChart} from "@/components/checkout/size-chart";
 
-export function CategorySelection({event, order}: {
+export function CategorySelection({event, groups, order}: {
   event: EventType & { participantCount: number },
+  groups: EventGroupType[],
   order?: EventOrderType | null
 }) {
   const params = useParams<{ id: string }>();
@@ -32,7 +33,7 @@ export function CategorySelection({event, order}: {
   const [jerseyGender, setJerseyGender] = useState<string>(order?.jerseyGender ?? "");
   const [jerseySize, setJerseySize] = useState<string>(order?.jerseySize ?? "");
 
-  const [availableGroup, setAvailableGroup] = useState<EventGroupType[]>()
+  const [availableGroup, setAvailableGroup] = useState<EventGroupType[]>(groups)
   const [selectedGroup, setSelectedGroup] = useState<EventGroupType>()
 
   console.log("selectedGroup", selectedGroup)
@@ -69,26 +70,6 @@ export function CategorySelection({event, order}: {
 
     }
   }, [group]);
-
-  async function onSearchHandler(value: string) {
-    try {
-      const newParam = new URLSearchParams(searchParams);
-      newParam.set("name", value)
-      const response = await fetch(`/api/event/${eventId}?${newParam}`, {
-        method: 'GET',
-      })
-
-      if (!response.ok) {
-        console.log(`Response status: ${response.status}`);
-      }
-
-      const result = await response.json();
-      setAvailableGroup(result.groups)
-
-    } catch (error) {
-      console.error(error);
-    }
-  }
 
   async function handleCreate(value: string) {
     const res = await createGroupAction({
@@ -154,7 +135,7 @@ export function CategorySelection({event, order}: {
                                   availableGroups={availableGroup}
                                   onSelectGroup={(group: EventGroupType) => onSelectHandler(group)}
                                   onCreate={(value: string) => handleCreate(value)}
-                                  onSearch={(value: string) => onSearchHandler(value)}/>
+                                 />
               </div>
 
             </div>

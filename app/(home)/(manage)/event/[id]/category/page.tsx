@@ -4,6 +4,7 @@ import {auth} from "@/lib/auth";
 import {headers} from "next/headers";
 import {redirect} from "next/navigation";
 import {getEventById} from "@/db/query/event-query";
+import {getGroupByEvent} from "@/db/query/event-group.query";
 
 export default async function Page({params}: { params: Promise<{ id: number }> }) {
   const {id} = await params;
@@ -21,7 +22,8 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
   }
   const userId = session.user.id;
 
-  const order = await getOngoingOrder(id, userId)
+  const order = await getOngoingOrder(id, userId);
+  const groups = await getGroupByEvent(id)
 
   // if status payment or paid, go to complete page
   if (order && (order.status === 'payment' || order.status === 'paid')) {
@@ -30,7 +32,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
 
   return (
     <div>
-      <CategorySelection event={event} order={order}  />
+      <CategorySelection event={event} order={order} groups={groups}  />
     </div>
   )
 }

@@ -23,7 +23,7 @@ export function SearchGroupInput({
                                    onSearch,
                                    onCreate,
                                    onSelectGroup,
-                                   placeholder = 'Search groups...',
+                                   placeholder = 'Search groups or create group',
                                    createButtonText = 'Create Group',
                                    maxMembers = 5,
                                  }: SearchGroupInputProps) {
