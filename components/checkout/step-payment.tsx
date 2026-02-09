@@ -23,6 +23,7 @@ export function StepPayment({event, order, promos} : Props) {
   const router = useRouter();
   const [promoCode, setPromoCode] = useState('');
   const [discount, setDiscount] = useState(0);
+  const [promoId, setPromoId] = useState(0);
 
   const price = Number(event.price);
   const fee = 25000;
@@ -32,17 +33,21 @@ export function StepPayment({event, order, promos} : Props) {
 
   const [state, formAction, isPending] = useActionState(async () => {
 
+
+    // update order status
+    const orderPayload = {
+      ...order,          // copy
+      promoCode,
+      promoId,
+      discountAmount: discount,
+      finalPrice: totalPrice,
+      status: "payment",
+    };
+    await updateOrderAction(orderPayload)
+
     // create payment
     const res = await createPayment({oderId: order.id});
     if (res.success) {
-
-      // update order status
-      const orderPayload = {
-        ...order,          // copy
-        status: "payment",  // modify ONE field
-      };
-      await updateOrderAction(orderPayload)
-
       router.push(res.data as string);
     }
 
@@ -61,6 +66,7 @@ export function StepPayment({event, order, promos} : Props) {
 
     if (foundPromo) {
       setDiscount(foundPromo.discountValue);
+      setPromoId(foundPromo.id);
     } else {
       setDiscount(0);
     }
@@ -78,6 +84,9 @@ export function StepPayment({event, order, promos} : Props) {
           <div className="flex flex-col w-full">
 
             <div className="mb-4 w-full flex-1">
+
+              {promoId} - {promoCode} - {discount}
+
               <div className="flex space-x-2">
                 <Input
                   type="text"

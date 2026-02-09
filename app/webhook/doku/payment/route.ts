@@ -8,6 +8,7 @@ import {createParticipant} from "@/service/participant.service";
 export async function POST(request: NextRequest) {
   const header = request.headers;
   const rawBody = await request.text()
+  console.log(rawBody)
   const digest = generateDigest(rawBody);
 
   const headerSignature = header.get("signature") as string;
@@ -22,6 +23,7 @@ export async function POST(request: NextRequest) {
   if (headerSignature === signature) {
     console.log("Signature match ")
     const body = JSON.parse(rawBody)
+    console.log("body", body)
 
     const invoiceNumber = body.order.invoice_number;
     const transactionStatus = body.transaction.status;

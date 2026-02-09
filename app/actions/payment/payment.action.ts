@@ -45,7 +45,7 @@ export async function createPayment(payload: { oderId: number }): Promise<Action
   // create payment
   const raw = JSON.stringify({
     "order": {
-      "amount": event.price! + SERVICE_FEE,
+      "amount": order.finalPrice,
       "invoice_number": invoiceNumber,
       "currency": order.currency,
       "callback_url": `${baseURL}/event/${order.eventId}`,
@@ -55,7 +55,7 @@ export async function createPayment(payload: { oderId: number }): Promise<Action
       "line_items": [
         {
           "name": event.name,
-          "price": event.price,
+          "price": (order.price! - (order.discountAmount ?? 0)),
           "quantity": 1
         },
         {
@@ -66,7 +66,7 @@ export async function createPayment(payload: { oderId: number }): Promise<Action
       ]
     },
     "payment": {
-      "payment_due_date": 60,
+      "payment_due_date": 5,
       "payment_method_types": PM
     },
     "customer": {
@@ -75,6 +75,7 @@ export async function createPayment(payload: { oderId: number }): Promise<Action
       "phone": user.detail.phoneNumber
     }
   });
+
 
   const requestId = crypto.randomUUID().toString();
 

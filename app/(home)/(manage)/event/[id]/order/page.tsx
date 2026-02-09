@@ -49,6 +49,10 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
     if (order.status === "profile") {
       redirect(`/event/${id}/payment?orderId=${order.id}`)
     }
+
+    if (order.status === "payment") {
+      redirect(`/event/${id}/payment?orderId=${order.id}`)
+    }
   }
 
   return (
