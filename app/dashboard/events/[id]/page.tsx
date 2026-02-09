@@ -24,6 +24,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
   return (
     <div className="flex flex-col gap-6">
 
+
       <div className="md:flex md:items-center md:justify-between">
         <div className="min-w-0 flex-1">
           <h2 className="text-2xl/7 font-bold  sm:truncate sm:text-3xl sm:tracking-tight">
@@ -47,6 +48,13 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
 
         </div>
         <div className="mt-4 flex md:mt-0 md:ml-4">
+
+          <Button variant="outline">
+            <Link href={`/dashboard/events/${id}/promo`}>
+              Promo
+            </Link>
+          </Button>
+
           <Button variant="outline">
             <Link href={`/dashboard/events/${id}`}>
               Edit

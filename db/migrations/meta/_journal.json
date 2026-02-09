@@ -148,6 +148,13 @@
       "when": 1770616000600,
       "tag": "0020_smart_madame_masque",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1770624728445,
+      "tag": "0021_wild_triathlon",
+      "breakpoints": true
     }
   ]
 }

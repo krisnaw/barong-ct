@@ -19,6 +19,9 @@ export function StepPayment({event, order} : {event: EventType & { participantCo
 
   const price = Number(event.price);
   const fee = 25000;
+  
+  // Calculate total price with or without discount
+  const totalPrice = price + fee - discount;
 
   const [state, formAction, isPending] = useActionState(async () => {
 
@@ -58,8 +61,6 @@ export function StepPayment({event, order} : {event: EventType & { participantCo
           <CardTitle>Order Summary</CardTitle>
         </CardHeader>
         <CardFooter>
-
-
 
           <div className="flex flex-col w-full">
 
@@ -105,7 +106,7 @@ export function StepPayment({event, order} : {event: EventType & { participantCo
                 <div className="flex items-center justify-between border-t border-gray-200 pt-6 text-gray-900">
                   <dt className="text-base">Total</dt>
                   <dd className="text-base">
-                    {formatMoney(Number(price + fee - discount))}
+                    {formatMoney(Number(totalPrice))}
                   </dd>
                 </div>
               </dl>
