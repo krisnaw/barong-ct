@@ -17,6 +17,8 @@ export const EventSchema = pgTable("event", {
   eventDate: date(),
   eventTime: time({ withTimezone: true }),
 
+  isGroupRide: integer("is_group_ride"),
+
   isPaid: boolean('is_paid').default(false),
   price: doublePrecision('price'),
   currency: text("currency"),

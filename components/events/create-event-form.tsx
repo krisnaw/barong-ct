@@ -1,8 +1,9 @@
 'use client'
 
+import * as React from "react";
 import {useActionState, useState} from "react";
 import {ActionResponse, initialState} from "@/types/types";
-import {Field, FieldGroup, FieldLabel} from "@/components/ui/field";
+import {Field, FieldDescription, FieldGroup, FieldLabel} from "@/components/ui/field";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {Spinner} from "@/components/ui/spinner";
@@ -12,6 +13,7 @@ import {UploadButton} from "@/utils/uploadthing";
 import {createEventAction} from "@/app/actions/event/event.action";
 import {format} from 'date-fns';
 import {ContentEditor} from "@/components/events/content-editor";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 
 export function CreateEventForm() {
   const [image, setImage] = useState<string | null>(null);
@@ -30,6 +32,9 @@ export function CreateEventForm() {
       locationName: formData.get("location") as string,
       locationLink: formData.get("map") as string,
       maxParticipants: Number(formData.get("maxParticipants")),
+      isGroupRide : Number(formData.get("isGroupRide")),
+      price: Number(formData.get("price")),
+      currency: formData.get("currency") as string,
     }
 
     const res = await createEventAction(payload)
@@ -106,7 +111,6 @@ export function CreateEventForm() {
             />
           </Field>
 
-
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
 
             <Field>
@@ -143,6 +147,42 @@ export function CreateEventForm() {
           </div>
 
           <Field>
+            <FieldLabel htmlFor="price">Price</FieldLabel>
+            <div className="flex gap-2">
+              <Select defaultValue="IDR" name="currency">
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="$" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="IDR">
+                    IDR
+                    <span className="text-muted-foreground">
+                        Rp
+                  </span>
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Input name="price" placeholder="1.000.000" pattern="[0-9]*" />
+            </div>
+          </Field>
+
+          <Field>
+            <FieldLabel htmlFor="isGroupRide">
+              Require Group Ride
+            </FieldLabel>
+            <Input
+              type="number"
+              id="isGroupRide"
+              name="isGroupRide"
+              placeholder="0"
+            />
+            <FieldDescription>
+              Set a number to require participants to form a group ride.
+            </FieldDescription>
+          </Field>
+
+          <Field>
             <FieldLabel htmlFor="location">Meeting Location</FieldLabel>
             <Input
               id="location"
@@ -175,3 +215,4 @@ export function CreateEventForm() {
     </div>
   )
 }
+

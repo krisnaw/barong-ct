@@ -22,16 +22,10 @@ export async function createEventAction(payload: Partial<EventType & { eventDate
     }
   }
 
+  validate.data.startDate = localDate;
+
   try {
-    await db.insert(EventSchema).values({
-      name: validate.data.name,
-      feature_image: validate.data.feature_image,
-      description: validate.data.description,
-      startDate: localDate,
-      locationLink: validate.data.locationLink,
-      locationName: validate.data.locationName,
-      maxParticipants: validate.data.maxParticipants
-    });
+    await db.insert(EventSchema).values(validate.data);
 
   } catch (error) {
     if (error instanceof Error) {
