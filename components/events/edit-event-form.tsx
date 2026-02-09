@@ -48,6 +48,7 @@ export function EditEventForm({event} : {event: EventType}) {
       locationName: formData.get("location") as string,
       locationLink: formData.get("map") as string,
       maxParticipants: Number(formData.get("maxParticipants")),
+      isGroupRide : Number(formData.get("isGroupRide")),
       price: Number(formData.get("price")),
       currency: formData.get("currency") as string,
     }
@@ -154,7 +155,7 @@ export function EditEventForm({event} : {event: EventType}) {
                 </SelectContent>
               </Select>
 
-              <Input name="price" placeholder="1.000.000" pattern="[0-9]*" />
+              <Input defaultValue={event.price ?? ""} name="price" placeholder="1.000.000" pattern="[0-9]*" />
             </div>
           </Field>
 
