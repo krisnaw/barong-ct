@@ -1,17 +1,15 @@
 import {getEventById} from "@/db/query/event-query";
 import {redirect} from "next/navigation";
-import Link from "next/link";
 import {getOngoingOrder} from "@/db/query/event-order.query";
 import {auth} from "@/lib/auth";
 import {headers} from "next/headers";
-import {EventStatus} from "@/components/events/event-status";
-import {CalendarDays, MapPin, TicketCheck} from "lucide-react";
-import {EventDate} from "@/components/events/event-date";
+import {MapPin, TicketCheck} from "lucide-react";
 import {EventCard} from "@/components/events/event-card";
 import {getPaymentByOrder} from "@/db/query/event-payment.query";
 import {EventPaymentCard} from "@/components/events/event-payment-card";
 import {getParticipantByEventUser} from "@/db/query/participant-query";
 import {Item, ItemContent, ItemDescription, ItemFooter, ItemMedia, ItemTitle} from "@/components/ui/item";
+import * as React from "react";
 
 export default async function Page({params,}: { params: Promise<{ id: number }> }) {
 
@@ -42,12 +40,6 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
 
   return (
     <div>
-
-
-      <Link href={`/event/${id}/order`}>
-        Join
-      </Link>
-
       <div className="mx-auto max-w-lg space-y-2">
         <EventCard event={event} />
 
@@ -55,15 +47,15 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
           <EventPaymentCard payment={payment} />
         )}
 
-        <Item variant="outline">
-          <ItemMedia variant="icon">
-            <TicketCheck/>
-          </ItemMedia>
-          <ItemContent>
-            <ItemTitle>Registrations</ItemTitle>
-          </ItemContent>
+        {participant && (
+          <Item variant="outline">
+            <ItemMedia variant="icon">
+              <TicketCheck/>
+            </ItemMedia>
+            <ItemContent>
+              <ItemTitle>Registrations</ItemTitle>
+            </ItemContent>
 
-          {participant && (
             <ItemContent className="flex-none text-center py-1">
               <ItemDescription>
                 <span className="uppercase inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
@@ -71,10 +63,11 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
                 </span>
               </ItemDescription>
             </ItemContent>
-          )}
 
-        </Item>
 
+
+          </Item>
+        )}
         <Item variant="outline">
 
           <ItemMedia variant="icon">
@@ -93,132 +86,9 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
             </div>
           </ItemFooter>
         </Item>
-      </div>
-
-
-      <div className="mx-auto max-w-4xl">
-        <div className="sm:flex gap-8">
-
-
-          <div className="w-full mt-8">
-
-            <div>
-              <h2 className="text-2xl font-semibold">
-                {event.name}
-              </h2>
-
-              <ul className="mt-4 grid grid-cols-1 gap-8">
-                <li>
-                  <div className="flex">
-
-                    <div className="mr-4 shrink-0">
-
-                      <div className="outline rounded-xl outline-gray-300 p-2.5">
-                        <CalendarDays size="32" className="text-gray-500"/>
-                      </div>
-                    </div>
-
-                    <div>
-                      <h4 className="text-lg font-semibold text-gray-800">
-                        <EventDate eventDate={event.startDate} type="date"/>
-                      </h4>
-                      <p className="mt-1 text-gray-400">
-                        <EventDate eventDate={event.startDate} type="time"/>
-                      </p>
-                    </div>
-                  </div>
-                </li>
-
-                <li>
-                  <div className="flex items-center">
-                    <div className="mr-4 shrink-0">
-
-                      <div className="outline rounded-xl outline-gray-300 p-2.5">
-                        <MapPin size="32" className="text-gray-500"/>
-                      </div>
-                    </div>
-                    <div>
-                      <h4 className="text-lg font-semibold text-gray-800">
-                        {event.locationName}
-                      </h4>
-                    </div>
-                  </div>
-                </li>
-              </ul>
-
-              <div className="mt-8">
-                <div className="outline outline-gold-500 rounded-lg p-4 text-center">
-
-                  {Number(event.maxParticipants) - event.participantCount == 0 ? (
-                    <>
-                      <div className="text-lg font-bold text-gray-600">
-                        Event is full
-                      </div>
-                      <div className="text-lg font-bold text-red-600">
-                        All slots have been taken.
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div className="text-lg font-bold text-gray-600">
-                        Limited slots available
-                      </div>
-
-                      <div className="text-lg font-bold text-red-600">
-                        {Number(event.maxParticipants) - event.participantCount} spots left
-                      </div>
-
-                      <div className="mt-2">
-                        <EventStatus eventId={event.id} max={event.maxParticipants ?? 0} current={event.participantCount}/>
-                      </div>
-                    </>
-
-                  )}
-
-
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-10">
-
-              <div className="space-y-6">
-
-                <div>
-
-                  <div className="border-b border-gray-200">
-                    <h3 className="text-base/7 font-semibold text-muted-foreground">Location</h3>
-                  </div>
-
-                  <div className="mt-4">
-
-                  </div>
-                </div>
-
-                <div>
-                  <div className="border-b border-gray-200">
-                    <h3 className="text-base/7 font-semibold text-muted-foreground">About Event</h3>
-                  </div>
-                  <div>
-
-                    <article className="prose prose-sm">
-                      <div dangerouslySetInnerHTML={{__html: event.description}}/>
-                    </article>
-
-                  </div>
-                </div>
-
-
-
-              </div>
-
-            </div>
-          </div>
-
-        </div>
-
 
       </div>
+
     </div>
   )
 }
