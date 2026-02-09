@@ -4,6 +4,7 @@ import {redirect} from "next/navigation";
 import {getOngoingOrder} from "@/db/query/event-order.query";
 import {auth} from "@/lib/auth";
 import {headers} from "next/headers";
+import {getPromoByEvent} from "@/db/query/event-promo.query";
 
 export default async function Page({params,}: { params: Promise<{ id: number }> }) {
   const {id} = await params;
@@ -25,9 +26,11 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
     redirect("/event")
   }
 
+  const promos = await getPromoByEvent(id)
+
   return (
     <div>
-      <StepPayment event={event} order={order} />
+      <StepPayment event={event} order={order} promos={promos} />
     </div>
   )
 }

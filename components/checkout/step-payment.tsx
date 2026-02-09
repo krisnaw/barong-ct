@@ -5,14 +5,20 @@ import {Button} from "@/components/ui/button";
 import {useRouter} from "next/navigation";
 import {useActionState, useState} from "react";
 import {initialState} from "@/types/types";
-import {EventOrderType, EventType} from "@/db/schema";
+import {EventOrderType, EventType, PromoType} from "@/db/schema";
 import {createPayment} from "@/app/actions/payment/payment.action";
 import {Spinner} from "@/components/ui/spinner";
 import {updateOrderAction} from "@/app/actions/event-order/event-order.action";
 import {formatMoney} from "@/utils/money-helper";
 import {Input} from "@/components/ui/input";
 
-export function StepPayment({event, order} : {event: EventType & { participantCount: number }, order: EventOrderType}) {
+interface Props {
+  event: EventType & { participantCount: number },
+  order: EventOrderType,
+  promos: PromoType[] | null
+}
+
+export function StepPayment({event, order, promos} : Props) {
   const router = useRouter();
   const [promoCode, setPromoCode] = useState('');
   const [discount, setDiscount] = useState(0);
