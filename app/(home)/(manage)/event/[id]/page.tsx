@@ -42,14 +42,13 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
   return (
     <div>
       <div className="mx-auto max-w-lg space-y-2">
-        <EventCard event={event} />
 
         {payment && (
           <EventPaymentCard payment={payment} />
         )}
 
         {participant && (
-          <Item variant="outline">
+          <Item size="sm" variant="outline">
             <ItemMedia variant="icon">
               <TicketCheck/>
             </ItemMedia>
@@ -64,16 +63,17 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
 
             <ItemContent className="flex-none text-center py-1">
               <ItemDescription>
-                <span className="uppercase inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
+                <span className="uppercase inline-flex items-center rounded-md bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
                     {participant?.status}
                 </span>
               </ItemDescription>
             </ItemContent>
-
-
-
           </Item>
         )}
+
+
+        <EventCard event={event} participant={participant} />
+
         <Item variant="outline">
 
           <ItemMedia variant="icon">
