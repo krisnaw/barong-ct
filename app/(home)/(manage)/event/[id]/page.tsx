@@ -10,6 +10,7 @@ import {EventPaymentCard} from "@/components/events/event-payment-card";
 import {getParticipantByEventUser} from "@/db/query/participant-query";
 import {Item, ItemContent, ItemDescription, ItemFooter, ItemMedia, ItemTitle} from "@/components/ui/item";
 import * as React from "react";
+import {formatBibNumber} from "@/utils/money-helper";
 
 export default async function Page({params,}: { params: Promise<{ id: number }> }) {
 
@@ -54,6 +55,11 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
             </ItemMedia>
             <ItemContent>
               <ItemTitle>Registrations</ItemTitle>
+              {participant.bibNumber && (
+                <ItemDescription>
+                  {formatBibNumber(participant.bibNumber)}
+                </ItemDescription>
+              )}
             </ItemContent>
 
             <ItemContent className="flex-none text-center py-1">

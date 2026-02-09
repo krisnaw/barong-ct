@@ -89,7 +89,7 @@ export default async function Page({params, searchParams}: {
           {participant && (
             <ItemContent className="flex-none text-center py-1">
               <ItemDescription>
-                <span className="uppercase inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
+                <span className="uppercase inline-flex items-center rounded-fullg-green-100 px-2 py-1 text-xs font-medium text-green-700">
                     {participant?.status}
                 </span>
               </ItemDescription>
