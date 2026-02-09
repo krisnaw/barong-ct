@@ -38,8 +38,15 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
   }
 
   // Always redirect to order
-  if (order && order.status === "draft") {
-    redirect(`/event/${id}/profile?orderId=${order.id}`)
+  if (order) {
+    if (order.status === "draft") {
+      redirect(`/event/${id}/profile?orderId=${order.id}`)
+    }
+
+    if (order.status === "profile") {
+      redirect(`/event/${id}/payment?orderId=${order.id}`)
+    }
+
   }
 
   return (

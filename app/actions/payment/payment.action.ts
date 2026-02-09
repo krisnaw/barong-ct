@@ -59,7 +59,7 @@ export async function createPayment(payload: { oderId: number }): Promise<Action
           "quantity": 1
         },
         {
-          "name": "service fee",
+          "name": "Service Fee",
           "price" : SERVICE_FEE,
           "quantity": 1
         }

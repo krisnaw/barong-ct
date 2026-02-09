@@ -56,7 +56,7 @@ export function StepProfile({user, order}: { user: UserWithDetail, order: EventO
       await updateOrderAction(orderPayload)
 
       toast.success(res.message)
-      router.push(`/event/${eventId}/payment?${searchParams.toString()}`)
+      router.push(`/event/${eventId}/order`)
     } else {
       toast.error(res.message)
     }
