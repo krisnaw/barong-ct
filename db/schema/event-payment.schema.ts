@@ -24,3 +24,5 @@ export const eventPayment = pgTable("event_payment", {
     .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
 });
+
+export type EventPaymentType = typeof eventPayment.$inferSelect

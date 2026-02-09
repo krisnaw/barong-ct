@@ -10,7 +10,6 @@ import {GroupWithParticipant} from "@/db/schema";
 import {GroupItem} from "@/components/group/group-item";
 import {Item, ItemContent, ItemDescription, ItemMedia, ItemTitle} from "@/components/ui/item";
 import {ReceiptIcon, TicketCheck} from "lucide-react";
-import {EventCard} from "@/components/events/event-card";
 
 export default async function Page({params, searchParams}: {
   params: Promise<{ id: number }>,
@@ -54,7 +53,7 @@ export default async function Page({params, searchParams}: {
 
       <div className="space-y-2.5">
 
-        <EventCard event={event} />
+
 
         {group && (
           <GroupItem group={group}/>

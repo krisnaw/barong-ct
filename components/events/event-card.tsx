@@ -1,5 +1,6 @@
 import * as React from "react";
 import {EventType} from "@/db/schema";
+import {emptyBanner} from "@/types/date-helper";
 
 export function EventCard({event} : {event: EventType}) {
   return (
@@ -12,7 +13,7 @@ export function EventCard({event} : {event: EventType}) {
 
           className="size-full aspect-square flex-none  object-cover outline -outline-offset-1 outline-white/10"
 
-          src="https://placeholdit.com/400x400/f3f4f6/9da8bf?text=Banner" alt=""/>
+          src={event.feature_image ?? emptyBanner} alt=""/>
       </div>
       <div className="px-4 py-5 sm:p-6">
 

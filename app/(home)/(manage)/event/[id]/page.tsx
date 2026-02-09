@@ -1,6 +1,15 @@
 import {getEventById} from "@/db/query/event-query";
 import {redirect} from "next/navigation";
 import Link from "next/link";
+import {getOngoingOrder} from "@/db/query/event-order.query";
+import {auth} from "@/lib/auth";
+import {headers} from "next/headers";
+import {EventStatus} from "@/components/events/event-status";
+import {CalendarDays, MapPin} from "lucide-react";
+import {EventDate} from "@/components/events/event-date";
+import {EventCard} from "@/components/events/event-card";
+import {getPaymentByOrder} from "@/db/query/event-payment.query";
+import {EventPaymentCard} from "@/components/events/event-payment-card";
 
 export default async function Page({params,}: { params: Promise<{ id: number }> }) {
 
@@ -12,13 +21,166 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
     redirect('/');
   }
 
+  const session = await auth.api.getSession({
+    headers: await headers() // you need to pass the headers object.
+  })
+  if (!session) {
+    redirect('/auth/signup')
+  }
+
+
+  const userId = session.user.id;
+  const order = await getOngoingOrder(id, userId);
+  let payment = null
+  if (order) {
+    payment = await getPaymentByOrder(order.id)
+  }
+
   return (
     <div>
-      Show Event Details
+
 
       <Link href={`/event/${id}/order`}>
         Join
       </Link>
+
+      <div className="mx-auto max-w-lg space-y-2">
+        <EventCard event={event} />
+
+        {payment && (
+          <EventPaymentCard payment={payment} />
+        )}
+      </div>
+
+
+      <div className="mx-auto max-w-4xl">
+        <div className="sm:flex gap-8">
+
+
+          <div className="w-full mt-8">
+
+            <div>
+              <h2 className="text-2xl font-semibold">
+                {event.name}
+              </h2>
+
+              <ul className="mt-4 grid grid-cols-1 gap-8">
+                <li>
+                  <div className="flex">
+
+                    <div className="mr-4 shrink-0">
+
+                      <div className="outline rounded-xl outline-gray-300 p-2.5">
+                        <CalendarDays size="32" className="text-gray-500"/>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h4 className="text-lg font-semibold text-gray-800">
+                        <EventDate eventDate={event.startDate} type="date"/>
+                      </h4>
+                      <p className="mt-1 text-gray-400">
+                        <EventDate eventDate={event.startDate} type="time"/>
+                      </p>
+                    </div>
+                  </div>
+                </li>
+
+                <li>
+                  <div className="flex items-center">
+                    <div className="mr-4 shrink-0">
+
+                      <div className="outline rounded-xl outline-gray-300 p-2.5">
+                        <MapPin size="32" className="text-gray-500"/>
+                      </div>
+                    </div>
+                    <div>
+                      <h4 className="text-lg font-semibold text-gray-800">
+                        {event.locationName}
+                      </h4>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+
+              <div className="mt-8">
+                <div className="outline outline-gold-500 rounded-lg p-4 text-center">
+
+                  {Number(event.maxParticipants) - event.participantCount == 0 ? (
+                    <>
+                      <div className="text-lg font-bold text-gray-600">
+                        Event is full
+                      </div>
+                      <div className="text-lg font-bold text-red-600">
+                        All slots have been taken.
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="text-lg font-bold text-gray-600">
+                        Limited slots available
+                      </div>
+
+                      <div className="text-lg font-bold text-red-600">
+                        {Number(event.maxParticipants) - event.participantCount} spots left
+                      </div>
+
+                      <div className="mt-2">
+                        <EventStatus eventId={event.id} max={event.maxParticipants ?? 0} current={event.participantCount}/>
+                      </div>
+                    </>
+
+                  )}
+
+
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-10">
+
+              <div className="space-y-6">
+
+                <div>
+
+                  <div className="border-b border-gray-200">
+                    <h3 className="text-base/7 font-semibold text-muted-foreground">Location</h3>
+                  </div>
+
+                  <div className="mt-4">
+                    <div className="w-full aspect-[16/9] rounded-lg overflow-hidden">
+                      <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3944.3628429589126!2d115.26138180000001!3d-8.656998999999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd241007ff18975%3A0x90cb3b1c40257b08!2sXavi%20Croissanterie!5e0!3m2!1sen!2sid!4v1768382812451!5m2!1sen!2sid"
+                        width="600" height="450" style={{border: 0}} allowFullScreen={false} loading="lazy"
+                        referrerPolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <div className="border-b border-gray-200">
+                    <h3 className="text-base/7 font-semibold text-muted-foreground">About Event</h3>
+                  </div>
+                  <div>
+
+                    <article className="prose prose-sm">
+                      <div dangerouslySetInnerHTML={{__html: event.description}}/>
+                    </article>
+
+                  </div>
+                </div>
+
+
+
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+
+      </div>
     </div>
   )
 }
