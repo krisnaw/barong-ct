@@ -30,7 +30,7 @@ export async function createOrderAction(formData: insertData) {
   let url = ""
   try {
     const [order] = await db.insert(eventOrder).values(formData).returning()
-    url = `/event/${order.eventId}/category`
+    url = `/event/${order.eventId}/order`
   } catch (error) {
     console.log(error)
 

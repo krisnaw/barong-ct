@@ -1,6 +1,6 @@
 'use client'
 
-import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
+import {Card, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
 import {useRouter} from "next/navigation";
 import {useActionState} from "react";
@@ -42,12 +42,7 @@ export function StepPayment({event, order} : {event: EventType & { participantCo
       <Card>
         <CardHeader>
           <CardTitle>Order Summary</CardTitle>
-          <CardDescription>Card Description</CardDescription>
         </CardHeader>
-        <CardContent>
-
-
-        </CardContent>
         <CardFooter>
 
           <div className="flex flex-col w-full">
@@ -79,7 +74,6 @@ export function StepPayment({event, order} : {event: EventType & { participantCo
               </Button>
             </div>
           </div>
-
 
         </CardFooter>
       </Card>
