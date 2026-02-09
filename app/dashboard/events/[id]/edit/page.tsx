@@ -17,7 +17,7 @@ export default async function Page({
   }
 
   return (
-    <div>
+    <div className="max-w-xl">
       <EditEventForm event={event} />
     </div>
   )

@@ -3,7 +3,7 @@
 import * as React from "react";
 import {useActionState, useState} from "react";
 import {ActionResponse, initialState} from "@/types/types";
-import {Field, FieldGroup, FieldLabel} from "@/components/ui/field";
+import {Field, FieldDescription, FieldGroup, FieldLabel} from "@/components/ui/field";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {Spinner} from "@/components/ui/spinner";
@@ -109,28 +109,6 @@ export function EditEventForm({event} : {event: EventType}) {
           </Field>
 
 
-          <Field>
-            <FieldLabel htmlFor="price">Price</FieldLabel>
-            <div className="flex gap-2">
-              <Select defaultValue={event.currency ?? "idr"} name="currency">
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="$" />
-                </SelectTrigger>
-                <SelectContent>
-                  {CURRENCIES.map((currency) => (
-                    <SelectItem key={currency.value} value={currency.value}>
-                      {currency.value}{" "}
-                      <span className="text-muted-foreground">
-                    {currency.label}
-                  </span>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Input name="price" placeholder="1.000.000" pattern="[0-9]*" />
-            </div>
-          </Field>
 
 
           <Field>
@@ -154,6 +132,45 @@ export function EditEventForm({event} : {event: EventType}) {
               editable={!isPending}
               placeholder="Enter description..."
             />
+          </Field>
+
+
+          <Field>
+            <FieldLabel htmlFor="price">Price</FieldLabel>
+            <div className="flex gap-2">
+              <Select defaultValue={event.currency ?? "idr"} name="currency">
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="$" />
+                </SelectTrigger>
+                <SelectContent>
+                  {CURRENCIES.map((currency) => (
+                    <SelectItem key={currency.value} value={currency.value}>
+                      {currency.value}{" "}
+                      <span className="text-muted-foreground">
+                    {currency.label}
+                  </span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Input name="price" placeholder="1.000.000" pattern="[0-9]*" />
+            </div>
+          </Field>
+
+          <Field>
+            <FieldLabel htmlFor="isGroupRide">
+              Require Group Ride
+            </FieldLabel>
+            <Input
+              type="number"
+              id="isGroupRide"
+              name="isGroupRide"
+              placeholder="0"
+            />
+            <FieldDescription>
+              Set a number to require participants to form a group ride.
+            </FieldDescription>
           </Field>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

@@ -23,6 +23,7 @@ export async function createEventAction(payload: Partial<EventType & { eventDate
   }
 
   validate.data.startDate = localDate;
+  validate.data.isPaid = !!validate.data.price;
 
   try {
     await db.insert(EventSchema).values(validate.data);
