@@ -1,0 +1,1 @@
+ALTER TABLE "event" ADD COLUMN "is_group_ride" integer;

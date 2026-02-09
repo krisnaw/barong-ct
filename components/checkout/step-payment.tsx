@@ -3,16 +3,19 @@
 import {Card, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
 import {useRouter} from "next/navigation";
-import {useActionState} from "react";
+import {useActionState, useState} from "react";
 import {initialState} from "@/types/types";
 import {EventOrderType, EventType} from "@/db/schema";
 import {createPayment} from "@/app/actions/payment/payment.action";
 import {Spinner} from "@/components/ui/spinner";
 import {updateOrderAction} from "@/app/actions/event-order/event-order.action";
 import {formatMoney} from "@/utils/money-helper";
+import {Input} from "@/components/ui/input";
 
 export function StepPayment({event, order} : {event: EventType & { participantCount: number }, order: EventOrderType}) {
   const router = useRouter();
+  const [promoCode, setPromoCode] = useState('');
+  const [discount, setDiscount] = useState(0);
 
   const price = Number(event.price);
   const fee = 25000;
@@ -36,6 +39,17 @@ export function StepPayment({event, order} : {event: EventType & { participantCo
     return res
   }, initialState)
 
+  const applyPromoCode = () => {
+    // Here you would typically validate the promo code against a backend service
+    // For now, we'll simulate a 10% discount for promo code "SAVE10"
+    if (promoCode === 'SAVE10') {
+      setDiscount(price * 0.1);
+    } else {
+      setDiscount(0);
+      // You could show an error message here
+    }
+  };
+
 
   return (
     <form action={formAction}>
@@ -45,7 +59,30 @@ export function StepPayment({event, order} : {event: EventType & { participantCo
         </CardHeader>
         <CardFooter>
 
+
+
           <div className="flex flex-col w-full">
+
+            <div className="mb-4 w-full flex-1">
+              <div className="flex space-x-2">
+                <Input
+                  type="text"
+                  placeholder="Enter promo code"
+                  value={promoCode}
+                  onChange={(e) => setPromoCode(e.target.value)}
+                  className="flex-1"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={applyPromoCode}
+                  disabled={!promoCode.trim()}
+                >
+                  Apply
+                </Button>
+              </div>
+            </div>
+
             <div className="w-full">
               <dl className="space-y-6 border-t border-gray-200 pt-6 text-sm font-medium text-gray-500">
                 <div className="flex justify-between">
@@ -58,10 +95,17 @@ export function StepPayment({event, order} : {event: EventType & { participantCo
                   <dd className="text-gray-900">{formatMoney(Number(25000))}</dd>
                 </div>
 
+                {discount > 0 && (
+                  <div className="flex justify-between">
+                    <dt>Promo discount</dt>
+                    <dd className="text-green-600">-{formatMoney(Number(discount))}</dd>
+                  </div>
+                )}
+
                 <div className="flex items-center justify-between border-t border-gray-200 pt-6 text-gray-900">
                   <dt className="text-base">Total</dt>
                   <dd className="text-base">
-                    {formatMoney(Number(price + fee))}
+                    {formatMoney(Number(price + fee - discount))}
                   </dd>
                 </div>
               </dl>
