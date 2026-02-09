@@ -5,7 +5,8 @@ import {Button} from "@/components/ui/button";
 import {useRouter} from "next/navigation";
 import {useActionState, useState} from "react";
 import {initialState} from "@/types/types";
-import {EventOrderType, EventType, PromoType} from "@/db/schema";
+import {EventOrderType, EventType} from "@/db/schema";
+import {PromoType} from "@/db/schema/event-promo.schema";
 import {createPayment} from "@/app/actions/payment/payment.action";
 import {Spinner} from "@/components/ui/spinner";
 import {updateOrderAction} from "@/app/actions/event-order/event-order.action";
@@ -49,13 +50,19 @@ export function StepPayment({event, order, promos} : Props) {
   }, initialState)
 
   const applyPromoCode = () => {
-    // Here you would typically validate the promo code against a backend service
-    // For now, we'll simulate a 10% discount for promo code "SAVE10"
-    if (promoCode === 'SAVE10') {
-      setDiscount(price * 0.1);
+    if (!promos || promos.length === 0) {
+      setDiscount(0);
+      return;
+    }
+
+    const foundPromo = promos.find(promo => 
+      promo.promo.toLowerCase() === promoCode.toLowerCase()
+    );
+
+    if (foundPromo) {
+      setDiscount(foundPromo.discountValue);
     } else {
       setDiscount(0);
-      // You could show an error message here
     }
   };
 

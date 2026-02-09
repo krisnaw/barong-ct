@@ -6,6 +6,7 @@ import {eventGroup} from "@/db/schema/event-group-schema";
 import {user} from "@/db/schema/auth-schema";
 import {participant} from "@/db/schema/participant-schema";
 import {createInsertSchema, createSelectSchema, createUpdateSchema} from "drizzle-zod";
+import {eventPromoSchema} from "@/db/schema/event-promo.schema";
 
 export const eventOrder = pgTable("event_order", {
   id: serial('id').primaryKey(),
@@ -28,6 +29,13 @@ export const eventOrder = pgTable("event_order", {
 
   price: doublePrecision('price'),
   currency: text("currency"),
+
+  promoId: integer("promo_id")
+    .references(() => eventPromoSchema.id, {onDelete: "set null"}),
+
+  promoCode: text('promo_code'),
+  discountAmount: doublePrecision('discount_amount').default(0),
+  finalPrice: doublePrecision('final_price'),
 
   jerseyGender: text("jersey_gender"),
   jerseySize: text("jersey_size"),
