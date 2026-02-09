@@ -72,7 +72,7 @@ export function StepProfile({user, order}: { user: UserWithDetail, order: EventO
       <Card>
         <CardHeader>
           <CardTitle>
-            Step 2: Complete Profile
+            Complete Profile
           </CardTitle>
           <CardDescription>
             Please complete your profile to continue. 

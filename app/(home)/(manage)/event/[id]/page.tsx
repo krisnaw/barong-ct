@@ -1,5 +1,6 @@
 import {getEventById} from "@/db/query/event-query";
 import {redirect} from "next/navigation";
+import Link from "next/link";
 
 export default async function Page({params,}: { params: Promise<{ id: number }> }) {
 
@@ -11,12 +12,13 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
     redirect('/');
   }
 
-  if (event.price) {
-    redirect(`/event/${id}/category`)
-  }
-
   return (
     <div>
+      Show Event Details
+
+      <Link href={`/event/${id}/order`}>
+        Join
+      </Link>
     </div>
   )
 }
