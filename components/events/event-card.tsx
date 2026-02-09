@@ -1,5 +1,5 @@
 import * as React from "react";
-import {EventType} from "@/db/schema";
+import {EventType, ParticipantType} from "@/db/schema";
 import {emptyBanner} from "@/types/date-helper";
 import {CalendarDays, CreditCard, MapPin, TimerIcon, Users} from "lucide-react";
 import {EventDate} from "@/components/events/event-date";
@@ -7,7 +7,7 @@ import {formatMoney} from "@/utils/money-helper";
 import {Button} from "@/components/ui/button";
 import Link from "next/link";
 
-export function EventCard({event} : {event: EventType}) {
+export function EventCard({event, participant} : {event: EventType, participant? : ParticipantType}) {
   return (
     <div className="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow-sm">
       <div>
@@ -82,15 +82,17 @@ export function EventCard({event} : {event: EventType}) {
           </dl>
         </div>
 
-        <div className="mt-4">
+        {!participant && (
+          <div className="mt-4">
 
-          <Button className="w-full" asChild={true}>
-            <Link href={`/event/${event.id}/order`}>
-              Join Event
-            </Link>
-          </Button>
+            <Button className="w-full" asChild={true}>
+              <Link href={`/event/${event.id}/order`}>
+                Join Event
+              </Link>
+            </Button>
 
-        </div>
+          </div>
+        )}
 
       </div>
       <div className="px-4 py-4 sm:px-6">
