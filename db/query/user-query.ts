@@ -15,6 +15,12 @@ export async function getUsers( name?  : string) {
     .limit(150);
 }
 
+export async function getUserById(userId: string) {
+  return db.query.user.findFirst({
+    where: eq(user.id, userId),
+  })
+}
+
 export async function getUserWithDetail(id: string): Promise<UserWithDetail> {
   const userDetail = await db.query.user.findFirst({
     where: eq(user.id, id),
