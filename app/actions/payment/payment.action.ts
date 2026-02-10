@@ -16,11 +16,11 @@ const dokuBaseURL = process.env.DOKU_API_URL
 const dokuReqPath = '/checkout/v1/payment'
 const clientID = process.env.DOKU_CLIENT_ID!
 const clientSecret = process.env.DOKU_SECRET_KEY!
-const requestTimestamp = new Date().toISOString().slice(0, 19) + "Z"
 const baseURL = process.env.BETTER_AUTH_URL!
 
-
 export async function createPayment(payload: { oderId: number }): Promise<ActionResponse> {
+
+  const requestTimestamp = new Date().toISOString().slice(0, 19) + "Z"
 
   const order = await db.query.eventOrder.findFirst({
     where: eq(eventOrder.id, payload.oderId),
