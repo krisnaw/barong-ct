@@ -74,7 +74,6 @@ export async function createPayment(payload: { oderId: number }): Promise<Action
     "customer": {
       "name": user.name,
       "email": user.email,
-      "phone": user.detail.phoneNumber
     }
   });
 
