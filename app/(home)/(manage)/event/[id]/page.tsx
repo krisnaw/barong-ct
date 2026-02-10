@@ -89,24 +89,28 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
 
         <EventCard event={event} participant={participant} />
 
-        <Item variant="outline">
+        {event.locationLink && (
+          <Item variant="outline">
 
-          <ItemMedia variant="icon">
-            <MapPin/>
-          </ItemMedia>
-          <ItemContent>
-            <ItemTitle>Locations</ItemTitle>
-          </ItemContent>
+            <ItemMedia variant="icon">
+              <MapPin/>
+            </ItemMedia>
+            <ItemContent>
+              <ItemTitle>Locations</ItemTitle>
+            </ItemContent>
 
-          <ItemFooter>
-            <div className="w-full overflow-hidden">
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3944.3628429589126!2d115.26138180000001!3d-8.656998999999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd241007ff18975%3A0x90cb3b1c40257b08!2sXavi%20Croissanterie!5e0!3m2!1sen!2sid!4v1768382812451!5m2!1sen!2sid"
-                width="470" height="450" style={{border: 0}} allowFullScreen={false} loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"></iframe>
-            </div>
-          </ItemFooter>
-        </Item>
+            <ItemFooter>
+              <div className="w-full overflow-hidden">
+                <iframe
+                  src={event.locationLink}
+                  width="470" height="450" style={{border: 0}} allowFullScreen={false} loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"></iframe>
+              </div>
+            </ItemFooter>
+          </Item>
+        )}
+
+
 
       </div>
 
