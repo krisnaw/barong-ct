@@ -33,7 +33,6 @@ export function StepPayment({event, order, promos} : Props) {
 
   const [state, formAction, isPending] = useActionState(async () => {
 
-
     // update order status
     const orderPayload = {
       ...order,          // copy
@@ -84,8 +83,6 @@ export function StepPayment({event, order, promos} : Props) {
           <div className="flex flex-col w-full">
 
             <div className="mb-4 w-full flex-1">
-
-              {promoId} - {promoCode} - {discount}
 
               <div className="flex space-x-2">
                 <Input

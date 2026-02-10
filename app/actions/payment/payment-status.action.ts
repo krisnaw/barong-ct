@@ -5,6 +5,7 @@ import {generateSignature} from "@/utils/doku-helper";
 import {db} from "@/db/db";
 import {eventOrder, eventPayment} from "@/db/schema";
 import {eq} from "drizzle-orm";
+import {createParticipant} from "@/service/participant.service";
 
 const dokuBaseURL = process.env.DOKU_API_URL
 const dokuReqPath = '/orders/v1/status/'
@@ -35,20 +36,36 @@ export async function checkPaymentStatus(invoiceId: string) {
     redirect: "follow"
   };
 
-  const res = await fetch(`${dokuBaseURL}${dokuReqPath}${invoiceId}`, requestOptions);
+  try {
+    const res = await fetch(`${dokuBaseURL}${dokuReqPath}${invoiceId}`, requestOptions);
 
-  if (res.ok) {
-    const body = await res.json();
-    if (body.transaction.status === "SUCCESS") {
-      // update payment
-      const [payment] = await db.update(eventPayment).set({status: body.transaction.status}).where(eq(eventPayment.invoiceNumber, invoiceId)).returning()
+    if (res.ok) {
+      const body = await res.json();
+      console.log(body);
+      if (body.transaction.status === "SUCCESS") {
+        // update payment
+        const [payment] = await db.update(eventPayment).set({status: body.transaction.status}).where(eq(eventPayment.invoiceNumber, invoiceId)).returning()
 
-      // update order
-      if (payment) {
-        await db.update(eventOrder).set({status: 'paid'}).where(eq(eventOrder.id, payment.orderId))
+        const [order] = await db.update(eventOrder).set({status: 'paid'}).where(eq(eventOrder.id, payment.orderId)).returning({
+          eventId: eventOrder.eventId,
+          userId: eventOrder.userId,
+        })
+
+        if (order) {
+          await createParticipant(order.eventId, order.userId)
+        }
+
+      } else if (body.transaction.status === "EXPIRED" || body.order.status === "ORDER_EXPIRED") {
+        // update payment
+        const setStatus = "EXPIRED"
+        const [payment] = await db.update(eventPayment).set({status: setStatus}).where(eq(eventPayment.invoiceNumber, invoiceId)).returning();
       }
     }
+  } catch (error) {
+    console.log(error);
   }
+
+
 
 
 }

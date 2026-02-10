@@ -11,6 +11,9 @@ import {getParticipantByEventUser} from "@/db/query/participant-query";
 import {Item, ItemContent, ItemDescription, ItemFooter, ItemMedia, ItemTitle} from "@/components/ui/item";
 import * as React from "react";
 import {formatBibNumber} from "@/utils/money-helper";
+import {checkPaymentStatus} from "@/app/actions/payment/payment-status.action";
+import Link from "next/link";
+import {Button} from "@/components/ui/button";
 
 export default async function Page({params,}: { params: Promise<{ id: number }> }) {
 
@@ -35,6 +38,9 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
   let payment = null
   if (order) {
     payment = await getPaymentByOrder(order.id)
+    if (payment && payment.status === "PENDING") {
+      await checkPaymentStatus(payment.invoiceNumber!)
+    }
   }
 
   const participant =  await getParticipantByEventUser(id, userId)
@@ -44,7 +50,16 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
       <div className="mx-auto max-w-lg space-y-2">
 
         {payment && (
-          <EventPaymentCard payment={payment} />
+          <>
+            <EventPaymentCard payment={payment} />
+            {payment.status === "PENDING" && payment.paymentURL && (
+              <Button asChild className="w-full">
+                <Link href={payment.paymentURL}>
+                  Complete payment
+                </Link>
+              </Button>
+            )}
+          </>
         )}
 
         {participant && (
