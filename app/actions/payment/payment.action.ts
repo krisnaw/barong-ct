@@ -26,6 +26,8 @@ export async function createPayment(payload: { oderId: number }): Promise<Action
     where: eq(eventOrder.id, payload.oderId),
   })
 
+  console.log(order)
+
   if (!order) {
     redirect('/')
   }
@@ -113,6 +115,9 @@ export async function createPayment(payload: { oderId: number }): Promise<Action
       : body.message;
 
     console.error("Fetch failed:", message);
+    return {
+      success: false, message: "Sorry, please try again later",
+    }
   }
 
   // create payment

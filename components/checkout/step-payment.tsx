@@ -7,11 +7,11 @@ import {useActionState, useState} from "react";
 import {initialState} from "@/types/types";
 import {EventOrderType, EventType} from "@/db/schema";
 import {PromoType} from "@/db/schema/event-promo.schema";
-import {createPayment} from "@/app/actions/payment/payment.action";
 import {Spinner} from "@/components/ui/spinner";
 import {updateOrderAction} from "@/app/actions/event-order/event-order.action";
 import {formatMoney} from "@/utils/money-helper";
 import {Input} from "@/components/ui/input";
+import {createPayment} from "@/app/actions/payment/payment.action";
 
 interface Props {
   event: EventType & { participantCount: number },
@@ -23,7 +23,7 @@ export function StepPayment({event, order, promos} : Props) {
   const router = useRouter();
   const [promoCode, setPromoCode] = useState('');
   const [discount, setDiscount] = useState(0);
-  const [promoId, setPromoId] = useState(0);
+  const [promoId, setPromoId] = useState<number | undefined>(undefined);
 
   const price = Number(event.price);
   const fee = 25000;
@@ -37,7 +37,7 @@ export function StepPayment({event, order, promos} : Props) {
     const orderPayload = {
       ...order,          // copy
       promoCode,
-      promoId,
+      promoId: promoId,
       discountAmount: discount,
       finalPrice: totalPrice,
       status: "payment",
@@ -45,12 +45,17 @@ export function StepPayment({event, order, promos} : Props) {
     await updateOrderAction(orderPayload)
 
     // create payment
+
     const res = await createPayment({oderId: order.id});
+
     if (res.success) {
       router.push(res.data as string);
     }
 
     return res
+
+
+
   }, initialState)
 
   const applyPromoCode = () => {
@@ -71,6 +76,8 @@ export function StepPayment({event, order, promos} : Props) {
     }
   };
 
+  console.log(promos);
+
 
   return (
     <form action={formAction}>
@@ -82,26 +89,28 @@ export function StepPayment({event, order, promos} : Props) {
 
           <div className="flex flex-col w-full">
 
-            <div className="mb-4 w-full flex-1">
+            {promos && promos.length < 0 && (
+              <div className="mb-4 w-full flex-1">
 
-              <div className="flex space-x-2">
-                <Input
-                  type="text"
-                  placeholder="Enter promo code"
-                  value={promoCode}
-                  onChange={(e) => setPromoCode(e.target.value)}
-                  className="flex-1"
-                />
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={applyPromoCode}
-                  disabled={!promoCode.trim()}
-                >
-                  Apply
-                </Button>
+                <div className="flex space-x-2">
+                  <Input
+                    type="text"
+                    placeholder="Enter promo code"
+                    value={promoCode}
+                    onChange={(e) => setPromoCode(e.target.value)}
+                    className="flex-1"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={applyPromoCode}
+                    disabled={!promoCode.trim()}
+                  >
+                    Apply
+                  </Button>
+                </div>
               </div>
-            </div>
+            )}
 
             <div className="w-full">
               <dl className="space-y-6 border-t border-gray-200 pt-6 text-sm font-medium text-gray-500">
