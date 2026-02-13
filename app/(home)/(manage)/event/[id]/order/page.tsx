@@ -41,7 +41,7 @@ export default async function Page({params, searchParams}: { params: Promise<{ i
 
   // Always redirect to order
   if (order) {
-    if (order.status === "draft") {
+    if (order.status === "draft" || order.status === "group") {
       if (event.isGroupRide == 0) {
         redirect(`/event/${id}/profile?orderId=${order.id}`)
       }
@@ -56,6 +56,8 @@ export default async function Page({params, searchParams}: { params: Promise<{ i
       redirect(`/event/${id}/payment?orderId=${order.id}`)
     }
   }
+
+  console.log(order)
 
   return (
     <div>

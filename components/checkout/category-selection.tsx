@@ -96,13 +96,14 @@ export function CategorySelection({event, groups, order}: {
       <CardContent>
         <div className="space-y-4">
 
-          <div>
-            <Label>Group Ride</Label>
-            <div className="mt-2">
-              <SimpleGroupInput existingGroups={availableGroup} onCreate={(value: string) => handleCreate(value)} />
+          {!selectedGroup && (
+            <div>
+              <Label>Group Ride</Label>
+              <div className="mt-2">
+                <SimpleGroupInput existingGroups={availableGroup} onCreate={(value: string) => handleCreate(value)} />
+              </div>
             </div>
-
-          </div>
+          )}
 
           {selectedGroup && (
             <div>

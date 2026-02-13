@@ -41,7 +41,6 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
 
   const groups = await getGroupByEvent(id);
 
-
   return (
     <div>
       {order ? (
