@@ -16,6 +16,7 @@ import Link from "next/link";
 import {Button} from "@/components/ui/button";
 import {getGroupById} from "@/db/query/event-group.query";
 import {GroupItem} from "@/components/group/group-item";
+import {InviteItem} from "@/app/(home)/(manage)/event/[id]/invite-item";
 
 export default async function Page({params,}: { params: Promise<{ id: number }> }) {
 
@@ -90,8 +91,13 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
         )}
 
         {group && (
-          <GroupItem group={group} />
+          <>
+            <GroupItem group={group} />
+            <InviteItem eventId={event.id} group={group}  />
+          </>
         )}
+
+
 
         <EventCard event={event} participant={participant} />
 

@@ -5,9 +5,10 @@ import {getOngoingOrder} from "@/db/query/event-order.query";
 import {createOrderAction} from "@/app/actions/event-order/event-order.action";
 import {getEventById} from "@/db/query/event-query";
 
-export default async function Page({params,}: { params: Promise<{ id: number }> }) {
+export default async function Page({params, searchParams}: { params: Promise<{ id: number }>, searchParams: Promise<{ [key: string]: string | string[] | undefined }>}) {
 
   const {id} = await params;
+  const group = (await searchParams).group
   const event = await getEventById(id)
   if (!event) {
     redirect(`/event`);
@@ -33,6 +34,7 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
       status: "draft",
       price: event.price,
       currency: event.currency,
+      groupId: Number(group) ?? undefined
     }
     await createOrderAction(payload)
   }
