@@ -1,5 +1,5 @@
 import {boolean, date, doublePrecision, integer, pgTable, serial, text, time, timestamp} from "drizzle-orm/pg-core";
-import {createInsertSchema} from "drizzle-zod";
+import {createInsertSchema, createUpdateSchema} from "drizzle-zod";
 import {relations} from "drizzle-orm";
 import {participant} from "@/db/schema/participant-schema";
 import {eventCategory} from "@/db/schema/event-category-schema";
@@ -22,6 +22,8 @@ export const EventSchema = pgTable("event", {
   isPaid: boolean('is_paid').default(false),
   price: doublePrecision('price'),
   currency: text("currency"),
+  serviceFee: doublePrecision("service_fee").default(5000),
+  registrationClosesAt: timestamp('registration_closes_at'),
 
   locationName: text("location_name"),
   locationLink: text("location_link"), // Link to google maps
@@ -40,3 +42,4 @@ export const eventRelations = relations(EventSchema, ({ many }) => ({
 
 export type EventType = typeof EventSchema.$inferSelect
 export const EventInsertSchema = createInsertSchema(EventSchema);
+export const EventUpdateSchema = createUpdateSchema(EventSchema);

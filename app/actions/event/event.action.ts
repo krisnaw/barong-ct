@@ -1,17 +1,16 @@
 'use server'
 
-import {EventInsertSchema, EventSchema, EventType} from "@/db/schema";
+import {EventInsertSchema, EventSchema, EventUpdateSchema} from "@/db/schema";
 import {z} from "zod";
 import {db} from "@/db/db";
 import {redirect} from "next/navigation";
 import {eq} from "drizzle-orm";
 import {revalidatePath} from "next/cache";
 
-export async function createEventAction(payload: Partial<EventType & { eventDate: string, eventTime: string }>) {
+export type insertData = z.infer<typeof EventInsertSchema>;
+export async function createEventAction(formData: insertData) {
 
-  const validate = EventInsertSchema.safeParse(payload);
-  const dateTimeString = `${payload.eventDate}T${payload.eventTime}`; // "2025-01-31T14:30:00"
-  const localDate = new Date(dateTimeString);
+  const validate = EventInsertSchema.safeParse(formData);
 
   if (!validate.success) {
     return {
@@ -22,8 +21,6 @@ export async function createEventAction(payload: Partial<EventType & { eventDate
     }
   }
 
-  validate.data.startDate = localDate;
-  validate.data.isPaid = !!validate.data.price;
 
   try {
     await db.insert(EventSchema).values(validate.data);
@@ -50,12 +47,13 @@ export async function createEventAction(payload: Partial<EventType & { eventDate
   }
 }
 
-export async function UpdateEventAction(payload: Partial<EventType & { eventDate: string, eventTime: string }>) {
+export type updateData = z.infer<typeof EventUpdateSchema>;
 
+export async function UpdateEventAction(formData: updateData) {
   try {
     await db.update(EventSchema)
-      .set(payload)
-      .where(eq(EventSchema.id, Number(payload.id)))
+      .set(formData)
+      .where(eq(EventSchema.id, Number(formData.id)))
   } catch (error) {
     if (error instanceof Error) {
       console.log(error.message)

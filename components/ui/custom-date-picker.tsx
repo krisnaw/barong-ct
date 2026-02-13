@@ -9,10 +9,11 @@ import {Calendar} from "@/components/ui/calendar"
 import {Popover, PopoverContent, PopoverTrigger,} from "@/components/ui/popover"
 
 interface CustomDatePickerProps {
+  name?: string
   value?: Date;
 }
 
-export function CustomDatePicker({ value = new Date() }: CustomDatePickerProps) {
+export function CustomDatePicker({ name = "date", value = new Date() }: CustomDatePickerProps) {
   const [open, setOpen] = React.useState(false)
   const [date, setDate] = React.useState<Date>(value)
   const [timeZone, setTimeZone] = React.useState<string | undefined>(undefined)
@@ -23,7 +24,7 @@ export function CustomDatePicker({ value = new Date() }: CustomDatePickerProps) 
 
   return (
     <>
-      <input className="hidden" name="date" id="date" type="text" defaultValue={date.toLocaleDateString()}  />
+      <input className="hidden" name={name} id="date" type="text" defaultValue={date.toLocaleDateString()}  />
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button

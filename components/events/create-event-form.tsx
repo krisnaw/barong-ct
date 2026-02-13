@@ -11,7 +11,6 @@ import {CustomDatePicker} from "@/components/ui/custom-date-picker";
 import {toast} from "sonner";
 import {UploadButton} from "@/utils/uploadthing";
 import {createEventAction} from "@/app/actions/event/event.action";
-import {format} from 'date-fns';
 import {ContentEditor} from "@/components/events/content-editor";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 
@@ -20,21 +19,20 @@ export function CreateEventForm() {
   const [description, setDescription] = useState<string>("")
   const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(async (prevState: ActionResponse, formData: FormData) => {
 
-    const inputDate = formData.get('date') as string
-    const inputTime = formData.get('time') as string
-
     const payload = {
       name: formData.get("name") as string,
       feature_image: image,
       description: description,
-      eventDate:  format(inputDate, 'yyyy-MM-dd'),
-      eventTime: inputTime,
+      startDate: new Date(formData.get('date') as string),
       locationName: formData.get("location") as string,
       locationLink: formData.get("map") as string,
       maxParticipants: Number(formData.get("maxParticipants")),
       isGroupRide : Number(formData.get("isGroupRide")),
       price: Number(formData.get("price")),
       currency: formData.get("currency") as string,
+      isPaid: !!Number(formData.get("price")),
+      serviceFee: Number(formData.get("serviceFee")),
+      registrationClosesAt: new Date(formData.get("registrationClosesAt") as string),
     }
 
     const res = await createEventAction(payload)
@@ -165,6 +163,16 @@ export function CreateEventForm() {
 
               <Input name="price" placeholder="1.000.000" pattern="[0-9]*" />
             </div>
+          </Field>
+
+          <Field>
+            <FieldLabel htmlFor="service_fee">Service Fee</FieldLabel>
+            <Input defaultValue={15000} name="service_fee" placeholder="5.000" pattern="[0-9]*" />
+          </Field>
+
+          <Field>
+            <FieldLabel htmlFor="name">Registration Closed At</FieldLabel>
+            <CustomDatePicker name="closedAt" />
           </Field>
 
           <Field>

@@ -18,6 +18,7 @@ import {fromZonedTime, toZonedTime} from "date-fns-tz";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 
 export function EditEventForm({event} : {event: EventType}) {
+  const regClosedAt = event.registrationClosesAt ? new Date(event.registrationClosesAt)  : new Date();
   const eventDate = new Date(event.startDate);
   const eventTime = toZonedTime(event.startDate, "Asia/Singapore")
   const [description, setDescription] = useState<string>(event.description);
@@ -43,14 +44,15 @@ export function EditEventForm({event} : {event: EventType}) {
       feature_image: image,
       description: description,
       startDate: utcDate,
-      eventDate:  format(inputDate, 'yyyy-MM-dd'),
-      eventTime: inputTime,
       locationName: formData.get("location") as string,
       locationLink: formData.get("map") as string,
       maxParticipants: Number(formData.get("maxParticipants")),
       isGroupRide : Number(formData.get("isGroupRide")),
       price: Number(formData.get("price")),
       currency: formData.get("currency") as string,
+      isPaid: !!Number(formData.get("price")),
+      serviceFee: Number(formData.get("serviceFee")),
+      registrationClosesAt: new Date(formData.get("registrationClosesAt") as string),
     }
 
     const res = await UpdateEventAction(payload)
@@ -109,9 +111,6 @@ export function EditEventForm({event} : {event: EventType}) {
             </div>
           </Field>
 
-
-
-
           <Field>
             <FieldLabel htmlFor="name">Name</FieldLabel>
             <Input
@@ -124,7 +123,6 @@ export function EditEventForm({event} : {event: EventType}) {
             />
           </Field>
 
-
           <Field>
             <FieldLabel htmlFor="description">Descriptions</FieldLabel>
             <ContentEditor
@@ -134,7 +132,6 @@ export function EditEventForm({event} : {event: EventType}) {
               placeholder="Enter description..."
             />
           </Field>
-
 
           <Field>
             <FieldLabel htmlFor="price">Price</FieldLabel>
@@ -157,6 +154,16 @@ export function EditEventForm({event} : {event: EventType}) {
 
               <Input defaultValue={event.price ?? ""} name="price" placeholder="1.000.000" pattern="[0-9]*" />
             </div>
+          </Field>
+
+          <Field>
+            <FieldLabel htmlFor="service_fee">Service Fee</FieldLabel>
+            <Input defaultValue={event.serviceFee ?? ""} name="service_fee" placeholder="5.000" pattern="[0-9]*" />
+          </Field>
+
+          <Field>
+            <FieldLabel htmlFor="name">Registration Closed At</FieldLabel>
+            <CustomDatePicker name="closedAt" value={regClosedAt} />
           </Field>
 
           <Field>
@@ -189,7 +196,7 @@ export function EditEventForm({event} : {event: EventType}) {
             </Field>
 
             <Field>
-              <FieldLabel htmlFor="date">Date</FieldLabel>
+              <FieldLabel htmlFor="date">Event Date</FieldLabel>
               <CustomDatePicker value={eventDate} />
             </Field>
 
