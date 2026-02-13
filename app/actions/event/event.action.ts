@@ -22,8 +22,10 @@ export async function createEventAction(formData: insertData) {
   }
 
 
+  let eventId : number;
   try {
-    await db.insert(EventSchema).values(validate.data);
+    const [event] = await db.insert(EventSchema).values(validate.data).returning()
+    eventId = event.id
 
   } catch (error) {
     if (error instanceof Error) {
@@ -43,7 +45,8 @@ export async function createEventAction(formData: insertData) {
 
   return {
     success: true,
-    message: 'Success, event was created.'
+    message: 'Success, event was created.',
+    data: eventId
   }
 }
 

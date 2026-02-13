@@ -13,17 +13,32 @@ import {UploadButton} from "@/utils/uploadthing";
 import {createEventAction} from "@/app/actions/event/event.action";
 import {ContentEditor} from "@/components/events/content-editor";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
+import {parse} from "date-fns";
+import {fromZonedTime} from "date-fns-tz";
+import {useRouter} from "next/navigation";
 
 export function CreateEventForm() {
   const [image, setImage] = useState<string | null>(null);
   const [description, setDescription] = useState<string>("")
+  const router = useRouter();
   const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(async (prevState: ActionResponse, formData: FormData) => {
+
+    const inputDate = formData.get('date') as string
+    const inputTime = formData.get('time') as string
+
+    const localDate = parse(
+      `${inputDate} ${inputTime}`,
+      "M/d/yyyy HH:mm:ss",
+      new Date()
+    )
+
+    const utcDate = fromZonedTime(localDate, "Asia/Singapore")
 
     const payload = {
       name: formData.get("name") as string,
       feature_image: image,
       description: description,
-      startDate: new Date(formData.get('date') as string),
+      startDate: utcDate,
       locationName: formData.get("location") as string,
       locationLink: formData.get("map") as string,
       maxParticipants: Number(formData.get("maxParticipants")),
@@ -36,6 +51,10 @@ export function CreateEventForm() {
     }
 
     const res = await createEventAction(payload)
+
+    if (res.success) {
+      router.push(`/dashboard/events/${res.data}`)
+    }
 
     toast.info(res.message)
 
