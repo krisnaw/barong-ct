@@ -14,6 +14,8 @@ import {formatBibNumber} from "@/utils/money-helper";
 import {checkPaymentStatus} from "@/app/actions/payment/payment-status.action";
 import Link from "next/link";
 import {Button} from "@/components/ui/button";
+import {getGroupById} from "@/db/query/event-group.query";
+import {GroupItem} from "@/components/group/group-item";
 
 export default async function Page({params,}: { params: Promise<{ id: number }> }) {
 
@@ -44,6 +46,7 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
   }
 
   const participant =  await getParticipantByEventUser(id, userId)
+  const group = order?.groupId ? await getGroupById(order.groupId) : undefined
 
   return (
     <div>
@@ -84,6 +87,10 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
               </ItemDescription>
             </ItemContent>
           </Item>
+        )}
+
+        {group && (
+          <GroupItem group={group} />
         )}
 
         <EventCard event={event} participant={participant} />
