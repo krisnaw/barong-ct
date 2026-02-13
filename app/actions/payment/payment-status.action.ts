@@ -62,7 +62,11 @@ export async function checkPaymentStatus(invoiceId: string) {
       }
     }
   } catch (error) {
-    console.log(error);
+    if (error instanceof Error) {
+      console.log(error.message);
+      throw error;
+    }
+
   }
 
 
