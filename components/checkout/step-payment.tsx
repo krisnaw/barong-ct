@@ -42,10 +42,10 @@ export function StepPayment({event, order, promos} : Props) {
       finalPrice: totalPrice,
       status: "payment",
     };
+
     await updateOrderAction(orderPayload)
 
     // create payment
-
     const res = await createPayment({oderId: order.id});
 
     if (res.success) {
@@ -53,9 +53,6 @@ export function StepPayment({event, order, promos} : Props) {
     }
 
     return res
-
-
-
   }, initialState)
 
   const applyPromoCode = () => {
@@ -119,7 +116,7 @@ export function StepPayment({event, order, promos} : Props) {
 
                 <div className="flex justify-between">
                   <dt>Service fee</dt>
-                  <dd className="text-gray-900">{formatMoney(Number(25000))}</dd>
+                  <dd className="text-gray-900">{formatMoney(Number(fee))}</dd>
                 </div>
 
                 {discount > 0 && (

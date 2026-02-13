@@ -10,7 +10,6 @@ import {generateDigest, generateSignature, PM} from "@/utils/doku-helper";
 import {eq} from "drizzle-orm";
 import {eventOrder, eventPayment} from "@/db/schema";
 import {redirect} from "next/navigation";
-import {SERVICE_FEE} from "@/types/constant";
 
 const dokuBaseURL = process.env.DOKU_API_URL
 const dokuReqPath = '/checkout/v1/payment'
@@ -62,7 +61,7 @@ export async function createPayment(payload: { oderId: number }): Promise<Action
         },
         {
           "name": "Service Fee",
-          "price" : SERVICE_FEE,
+          "price" : event.serviceFee,
           "quantity": 1
         }
       ]
