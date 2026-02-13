@@ -84,7 +84,7 @@ export function StepPayment({event, order, promos} : Props) {
 
           <div className="flex flex-col w-full">
 
-            {promos && promos.length < 0 && (
+            {promos && promos.length > 0 && (
               <div className="mb-4 w-full flex-1">
 
                 <div className="flex space-x-2">
