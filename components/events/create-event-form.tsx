@@ -46,8 +46,8 @@ export function CreateEventForm() {
       price: Number(formData.get("price")),
       currency: formData.get("currency") as string,
       isPaid: !!Number(formData.get("price")),
-      serviceFee: Number(formData.get("serviceFee")),
-      registrationClosesAt: new Date(formData.get("registrationClosesAt") as string),
+      serviceFee: Number(formData.get("service_fee")),
+      registrationClosesAt: new Date(formData.get("closedAt") as string),
     }
 
     const res = await createEventAction(payload)

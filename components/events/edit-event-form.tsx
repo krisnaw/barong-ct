@@ -18,6 +18,7 @@ import {fromZonedTime, toZonedTime} from "date-fns-tz";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 
 export function EditEventForm({event} : {event: EventType}) {
+  console.log(event);
   const regClosedAt = event.registrationClosesAt ? new Date(event.registrationClosesAt)  : new Date();
   const eventDate = new Date(event.startDate);
   const eventTime = toZonedTime(event.startDate, "Asia/Singapore")
@@ -174,6 +175,7 @@ export function EditEventForm({event} : {event: EventType}) {
               type="number"
               id="isGroupRide"
               name="isGroupRide"
+              defaultValue={event.isGroupRide ?? ""}
               placeholder="0"
             />
             <FieldDescription>

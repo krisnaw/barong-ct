@@ -26,7 +26,7 @@ export function StepPayment({event, order, promos} : Props) {
   const [promoId, setPromoId] = useState<number | undefined>(undefined);
 
   const price = Number(event.price);
-  const fee = 25000;
+  const fee = event.serviceFee ?? 0;
   
   // Calculate total price with or without discount
   const totalPrice = price + fee - discount;
@@ -75,8 +75,6 @@ export function StepPayment({event, order, promos} : Props) {
       setDiscount(0);
     }
   };
-
-  console.log(promos);
 
 
   return (
