@@ -101,8 +101,6 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
 
         <EventCard event={event} participant={participant} />
 
-
-
         {event.locationLink && (
           <div className="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow-sm">
             <div className="px-4 py-5 sm:px-6">
@@ -130,8 +128,6 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
             </div>
           </div>
         )}
-
-
 
       </div>
 

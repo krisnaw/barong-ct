@@ -9,6 +9,7 @@ export default async function Page({params, searchParams}: { params: Promise<{ i
 
   const {id} = await params;
   const group = (await searchParams).group
+  console.log(group)
   const event = await getEventById(id)
   if (!event) {
     redirect(`/event`);
@@ -34,7 +35,7 @@ export default async function Page({params, searchParams}: { params: Promise<{ i
       status: "draft",
       price: event.price,
       currency: event.currency,
-      groupId: Number(group) ?? undefined
+      ...(group && { groupId: Number(group) })
     }
     await createOrderAction(payload)
   }
