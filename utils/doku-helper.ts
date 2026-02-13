@@ -1,17 +1,8 @@
 import crypto from "crypto";
 
 export const PM = [
-  "VIRTUAL_ACCOUNT_BRI",
-  "VIRTUAL_ACCOUNT_BNI",
-  "VIRTUAL_ACCOUNT_BANK_PERMATA",
-  "VIRTUAL_ACCOUNT_BANK_CIMB",
-  "VIRTUAL_ACCOUNT_BANK_DANAMON",
-  "VIRTUAL_ACCOUNT_BNC",
-  "VIRTUAL_ACCOUNT_BTN",
-  "ONLINE_TO_OFFLINE_ALFA",
+  "QRIS",
   "CREDIT_CARD",
-  "PEER_TO_PEER_AKULAKU",
-  "PEER_TO_PEER_KREDIVO",
 ]
 
 export function generateDigest(jsonBody: string) {
