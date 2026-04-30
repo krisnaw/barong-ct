@@ -15,8 +15,6 @@ import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/
 import {UserDetailType} from "@/db/schema";
 import {useRouter} from "next/navigation";
 
-const redirect_url = 'https://www.barongmelali.com/event/1'
-
 export function ProfileForm({user}: { user: UserWithDetail }) {
   const router = useRouter();
 
@@ -50,7 +48,6 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
     
     if (res.success) {
       toast.success(res.message)
-      router.push(redirect_url)
     } else {
       toast.error(res.message)
     }
