@@ -43,7 +43,7 @@ export function ListItemEvent({event}: { event: EventType & { participantCount?:
 
           </div>
           <div className="mt-4 shrink-0">
-            <Button variant="outline" className="w-full sm:" asChild>
+            <Button variant="outline" className="w-full sm:">
               <Link href={`/event/${event.id}`}>
                 View
               </Link>

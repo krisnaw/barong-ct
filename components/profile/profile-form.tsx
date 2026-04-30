@@ -13,10 +13,8 @@ import {UserWithDetail} from "@/types/auth-types";
 import {Textarea} from "@/components/ui/textarea";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select";
 import {UserDetailType} from "@/db/schema";
-import {useRouter} from "next/navigation";
 
 export function ProfileForm({user}: { user: UserWithDetail }) {
-  const router = useRouter();
 
   const [profileImage, setProfileImage] = useState<string | null>(user.image ?? null);
   const [state, formAction, isPending] = useActionState(async (_: ActionResponse<UserDetailData & {
@@ -66,7 +64,7 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
         <FieldGroup>
 
           <FieldSet>
-            <FieldLegend>Personal Information - {user.email}</FieldLegend>
+            <FieldLegend>Personal Information</FieldLegend>
 
             <FieldGroup>
 
