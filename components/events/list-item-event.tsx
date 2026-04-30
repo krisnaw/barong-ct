@@ -1,87 +1,60 @@
 import {EventType} from "@/db/schema";
-import {emptyBanner} from "@/types/date-helper";
-import {MapPin, Users} from "lucide-react";
-import {EventDate} from "@/components/events/event-date";
+import Image from "next/image";
 import {Button} from "@/components/ui/button";
 import Link from "next/link";
+import {ArrowRight} from "lucide-react";
+import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
+import {Item, ItemContent} from "@/components/ui/item";
+import {EventDate} from "@/components/events/event-date";
 
 export function ListItemEvent({event}: { event: EventType & { participantCount?: number } }) {
   return (
-    <div className="sm:flex outline rounded-xl p-4">
-      <div className="mb-4 shrink-0 sm:mr-4 sm:mb-0 flex items-center justify-center">
-        <div className="mr-0 shrink-0 w-full">
-          <img
-            alt=""
-            src={event.feature_image ?? emptyBanner}
-            className="aspect-square  lg:size-24   rounded-2xl  object-cover"
+    <div className="gap-4">
+      <Card className="cn-card group/card flex flex-col relative w-full overflow-hidden pt-0">
+        <div className="h-64 overflow-hidden">
+          <Image
+            src="https://images.unsplash.com/photo-1650804068570-7fb2e3dbf888?q=80&w=640&auto=format&fit=crop"
+            alt="Valeria Reverdo on Unsplash"
+            width={128}
+            height={128}
+            sizes="100"
+            className="aspect-square w-full  object-cover"
           />
         </div>
-      </div>
-      <div className="flex-1">
 
-        <div className="sm:flex items-center justify-between">
-          <div>
-            <p className="text-gray-500 text-xs lg:text-lg">
-              <EventDate eventDate={event.startDate} type="date"/> - <EventDate eventDate={event.startDate} type="time"/>
+        <CardContent>
+          <Item variant="muted">
+            <ItemContent>
+              <small className="text-base leading-none font-bold">
+                <EventDate eventDate={event.startDate} type="date"/>
+              </small>
+            </ItemContent>
+
+            <p className="text-lg font-semibold tabular-nums">
+              Rp1.450.000
             </p>
+          </Item>
+        </CardContent>
 
-            <h3 className="text-lg font-bold ">
+        <CardHeader>
+          <CardTitle>
+            <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
               {event.name}
-            </h3>
-
-            <div className="flex gap-4">
-              <p className="mt-1 inline-flex items-center text-gray-500 gap-2">
-                <MapPin size={18}/> {event.locationName}
-              </p>
-
-              {event.participantCount !== undefined && (
-                <p className="mt-1 inline-flex items-center text-gray-500 gap-2">
-                  <Users size={18}/> {event.participantCount} / {event.maxParticipants}
-                </p>
-              )}
-            </div>
-
-          </div>
-          <div className="mt-4 shrink-0">
-            <Button variant="outline" className="w-full sm:">
-              <Link href={`/event/${event.id}`}>
-                View
-              </Link>
-            </Button>
-          </div>
-        </div>
-
-
-      </div>
+            </h4>
+          </CardTitle>
+          <CardDescription>
+            Technology group and play a vital function on one of two Apple teams
+          </CardDescription>
+        </CardHeader>
+        
+        <CardFooter>
+          <Button variant="default" className="w-full">
+            <Link href={`/event/${event.id}`} className="inline-flex items-center gap-2">
+              View event <ArrowRight />
+            </Link>
+          </Button>
+        </CardFooter>
+      </Card>
     </div>
-
-    // <div className="sm:flex outline rounded-xl p-4">
-    //
-    //   <div className="mr-4 shrink-0">
-    //     <img
-    //       alt=""
-    //       src={event.feature_image ?? emptyBanner}
-    //       className="inline-block size-24 object-cover rounded-md outline -outline-offset-1 outline-white/10"
-    //     />
-    //   </div>
-    //
-    //   <div className="w-full flex flex-wrap items-center justify-between sm:flex-nowrap">
-    //     <div>
-
-    //       <h4 className="text-lg font-bold ">
-    //         {event.name}
-    //       </h4>
-
-    //     </div>
-    //     <div className="shrink-0 flex gap-2">
-    //       <Button variant="outline" asChild>
-    //         <Link href={`/event/${event.id}`}>
-    //           View
-    //         </Link>
-    //       </Button>
-    //     </div>
-    //   </div>
-    //
-    // </div>
   )
 }
