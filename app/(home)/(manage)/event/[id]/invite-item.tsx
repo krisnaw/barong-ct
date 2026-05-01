@@ -1,12 +1,12 @@
 'use client'
 
-import {Input} from "@/components/ui/input";
-import {Button} from "@/components/ui/button";
-import {CheckIcon, CopyIcon, ShareIcon} from "lucide-react";
-import {ButtonGroup} from "@/components/ui/button-group";
+import {CheckIcon, CopyIcon} from "lucide-react";
 import {toast} from "sonner";
+import * as React from "react";
 import {useState} from "react";
 import {GroupWithParticipant} from "@/db/schema";
+import {Field, FieldLabel} from "@/components/ui/field";
+import {InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput} from "@/components/ui/input-group";
 
 export function InviteItem({ eventId, group }: { eventId: number, group: GroupWithParticipant }) {
   const shareUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/event/${eventId}/order?group=${group.id}`
@@ -23,34 +23,24 @@ export function InviteItem({ eventId, group }: { eventId: number, group: GroupWi
     }
   }
 
-
   return (
-
-    <div className="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow-sm">
-      <div className="px-4 py-5 sm:px-6">
-
-        <div className="flex">
-          <div className="mr-4 shrink-0 ">
-            <div className="size-8 [&_svg:not([class*='size-'])]:size-4 border rounded-sm bg-muted flex items-center justify-center">
-              <ShareIcon />
-            </div>
-
-          </div>
-          <div>
-            <h3 className="text-base font-semibold text-gray-900">Share and invite </h3>
-          </div>
-        </div>
-
-      </div>
-      <div className="px-4 py-5 sm:p-6">
-        <ButtonGroup className="w-full">
-          <Input defaultValue={shareUrl} disabled={true} />
-          <Button variant="outline" aria-label="Search" onClick={handleCopyLink}>
-            {copied ? <CheckIcon /> :        <CopyIcon />}
-          </Button>
-        </ButtonGroup>
-      </div>
-    </div>
+    <>
+      <Field>
+        <FieldLabel htmlFor="invite-link">Share link below to invite</FieldLabel>
+        <InputGroup        className="bg-white">
+          <InputGroupInput
+            id="invite-link"
+            defaultValue={shareUrl}
+            readOnly
+          />
+          <InputGroupAddon align="inline-end">
+            <InputGroupButton size="icon-xs" aria-label="Copy link" onClick={handleCopyLink}>
+              {copied ? <CheckIcon /> : <CopyIcon />}
+            </InputGroupButton>
+          </InputGroupAddon>
+        </InputGroup>
+      </Field>
+    </>
 
   )
 }

@@ -16,6 +16,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "images.unsplash.com",
       },
+      {
+        protocol: "https",
+        hostname: "images.lumacdn.com",
+      },
     ],
   },
   allowedDevOrigins: ['*.75231597a14c45.lhr.life']

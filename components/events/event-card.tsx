@@ -1,105 +1,109 @@
 import * as React from "react";
 import {EventType, ParticipantType} from "@/db/schema";
-import {emptyBanner} from "@/types/date-helper";
-import {CalendarDays, CreditCard, MapPin, TimerIcon, Users} from "lucide-react";
+import {CalendarDays, MapPin, Ticket, Users} from "lucide-react";
 import {EventDate} from "@/components/events/event-date";
 import {formatMoney} from "@/utils/money-helper";
+import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
+import Image from "next/image";
+import {Item} from "@/components/ui/item";
 import {Button} from "@/components/ui/button";
 import Link from "next/link";
 
-export function EventCard({event, participant} : {event: EventType, participant? : ParticipantType}) {
+export function EventCard({event, withFooter = false, participant} : {event: EventType, withFooter?: boolean, participant? : ParticipantType}) {
   return (
-    <div className="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow-sm">
-      <div>
-        <img className="size-full aspect-square flex-none  object-cover outline -outline-offset-1 outline-white/10"
-               src={emptyBanner} alt=""/>
+    <Card className="cn-card group/card flex flex-col relative w-full overflow-hidden pt-0">
+      <div className="max-h-96 overflow-hidden rounded-b-4xl shadow-xl">
+        <Image
+          src="https://images.lumacdn.com/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=400,height=400/event-covers/vl/d915ba91-1698-484a-9d45-4787d8112668.png"
+          alt="Valeria Reverdo on Unsplash"
+          width={128}
+          height={128}
+          sizes="100"
+          className="aspect-square w-full rounded-b-2xl  object-cover"
+        />
       </div>
 
-      <div className="px-4 py-5 sm:p-6">
-        <div>
-          <h3 className=" text-lg/6 font-semibold text-gray-900 group-hover:text-gray-600">
+      <CardHeader className="mt-2">
+        <CardTitle>
+          <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight text-balance">
             {event.name}
-          </h3>
+          </h1>
+        </CardTitle>
+        <CardDescription>
+          Technology group and play a vital function on one of two Apple teams
+        </CardDescription>
+      </CardHeader>
+
+      <CardContent className="mt-4">
+
+        <div className="space-y-4  mb-4">
+
+          <div className="flex">
+            <div className="mr-4 shrink-0">
+              <div className="flex size-10 items-center justify-center rounded-lg  outline outline-foreground/10">
+                <CalendarDays size={20} className="text-muted-foreground"/>
+              </div>
+            </div>
+            <div>
+              <p className="font-bold">
+                <EventDate eventDate={event.startDate} type="date"/>
+              </p>
+              <p className="text-sm font-semibold text-muted-foreground">
+                <EventDate eventDate={event.startDate} type="time"/>
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center">
+            <div className="mr-4 shrink-0">
+              <div className="flex size-10 items-center justify-center rounded-lg  outline outline-foreground/10">
+                <MapPin size={20} className="text-muted-foreground"/>
+              </div>
+            </div>
+            <div>
+              <p className="font-bold">SANA by NUMA</p>
+            </div>
+          </div>
+
+          <div className="flex items-center">
+            <div className="mr-4 shrink-0">
+              <div className="flex size-10 items-center justify-center rounded-lg  outline outline-foreground/10">
+                <Users size={20} className="text-muted-foreground"/>
+              </div>
+            </div>
+            <div>
+              <p className="font-bold">Limited to 300 riders</p>
+            </div>
+          </div>
+
         </div>
 
-        <div>
-          <dl className="flex flex-wrap">
+        <Item className="bg-muted">
 
-            <div className="mt-4 flex w-full flex-none gap-x-4 border-t border-gray-900/5 pt-4">
-              <dt className="flex-none">
-                <span className="sr-only">Date</span>
-                <CalendarDays aria-hidden="true" className="h-6 w-5 text-gray-400" />
-              </dt>
-              <dd className=" text-sm/6 font-bold text-gray-900">
-                <time dateTime={event.startDate.toDateString()}>
-                  <EventDate eventDate={event.startDate} type="date"/>
-                </time>
-              </dd>
-            </div>
+          <div className="inline-flex gap-3 items-center">
+            <Ticket />
+            <p className="cn-card-title cn-font-heading text-2xl tabular-nums">
+              {formatMoney(Number(event.price))}
+            </p>
+          </div>
 
-            <div className="mt-2 flex w-full flex-none gap-x-4">
-              <dt className="flex-none">
-                <span className="sr-only">Due date</span>
-                <TimerIcon aria-hidden="true" className="h-6 w-5 text-gray-400" />
-              </dt>
-              <dd className="text-sm/6 text-gray-500">
-                <time dateTime={event.startDate.toTimeString()}>
-                  <EventDate eventDate={event.startDate} type="time"/>
-                </time>
-              </dd>
-            </div>
+        </Item>
+      </CardContent>
 
-            <div className="mt-2 flex w-full flex-none gap-x-4">
-              <dt className="flex-none">
-                <span className="sr-only">Due date</span>
-                <MapPin aria-hidden="true" className="h-6 w-5 text-gray-400" />
-              </dt>
-              <dd className="text-sm/6 text-gray-500">
-                {event.locationName}
-              </dd>
-            </div>
-
-            <div className="mt-2 flex w-full flex-none gap-x-4">
-              <dt className="flex-none">
-                <span className="sr-only">Status</span>
-                <CreditCard aria-hidden="true" className="h-6 w-5 text-gray-400" />
-              </dt>
-              <dd className="text-sm/6 text-green-500 font-semibold">
-                {formatMoney(Number(event.price))}
-              </dd>
-            </div>
-
-            <div className="mt-2 flex w-full flex-none gap-x-4">
-              <dt className="flex-none">
-                <span className="sr-only">Due date</span>
-                <Users aria-hidden="true" className="h-6 w-5 text-gray-400" />
-              </dt>
-              <dd className="text-sm/6 text-gray-500">
-                Limited to <span className="font-bold text-primary">{event.maxParticipants} </span> Slots
-              </dd>
-            </div>
-
-          </dl>
-        </div>
-
-        {!participant && (
-          <div className="mt-4">
-
-            <Button className="w-full" asChild={true}>
+      {withFooter ? (
+        <CardFooter>
+          {!participant && (
+            <Button className="w-full">
               <Link href={`/event/${event.id}/order`}>
                 Join Event
               </Link>
             </Button>
+          )}
+        </CardFooter>
+      ) : null}
 
-          </div>
-        )}
 
-      </div>
-      <div className="px-4 py-4 sm:px-6">
-        <article className="prose prose-sm">
-          <div dangerouslySetInnerHTML={{__html: event.description}}/>
-        </article>
-      </div>
-    </div>
+
+    </Card>
   )
 }

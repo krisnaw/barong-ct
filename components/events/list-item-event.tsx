@@ -2,10 +2,11 @@ import {EventType} from "@/db/schema";
 import Image from "next/image";
 import {Button} from "@/components/ui/button";
 import Link from "next/link";
-import {ArrowRight} from "lucide-react";
+import {ArrowRight, CalendarDays, MapPin} from "lucide-react";
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {Item, ItemContent} from "@/components/ui/item";
 import {EventDate} from "@/components/events/event-date";
+import * as React from "react";
 
 export function ListItemEvent({event}: { event: EventType & { participantCount?: number } }) {
   return (
@@ -22,20 +23,6 @@ export function ListItemEvent({event}: { event: EventType & { participantCount?:
           />
         </div>
 
-        <CardContent>
-          <Item variant="muted">
-            <ItemContent>
-              <small className="text-base leading-none font-bold">
-                <EventDate eventDate={event.startDate} type="date"/>
-              </small>
-            </ItemContent>
-
-            <p className="text-lg font-semibold tabular-nums">
-              Rp1.450.000
-            </p>
-          </Item>
-        </CardContent>
-
         <CardHeader>
           <CardTitle>
             <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
@@ -46,6 +33,55 @@ export function ListItemEvent({event}: { event: EventType & { participantCount?:
             Technology group and play a vital function on one of two Apple teams
           </CardDescription>
         </CardHeader>
+
+        <CardContent>
+
+          <div className="flex justify-between mb-4">
+
+            <div className="flex">
+              <div className="mr-4 shrink-0">
+                <div className="flex size-10 items-center justify-center rounded-lg  outline outline-foreground/10">
+                  <CalendarDays size={24} className="text-muted-foreground"/>
+                </div>
+              </div>
+              <div>
+                <p className="font-bold">
+                  <EventDate eventDate={event.startDate} type="date"/>
+                </p>
+                <p className="text-sm font-semibold text-muted-foreground">
+                  <EventDate eventDate={event.startDate} type="time"/>
+                </p>
+              </div>
+            </div>
+
+            <div className="flex">
+              <div className="mr-4 shrink-0">
+                <div className="flex size-10 items-center justify-center rounded-lg  outline outline-foreground/10">
+                  <MapPin size={24} className="text-muted-foreground"/>
+                </div>
+              </div>
+              <div>
+                <p className="font-bold">SANA by NUMA</p>
+                <p className="text-sm font-semibold text-muted-foreground">Kabupaten Badung, Bali</p>
+              </div>
+            </div>
+
+          </div>
+
+          <Item variant="muted">
+            <ItemContent>
+              <small className="text-base leading-none font-bold">
+                Limited to 300 riders
+              </small>
+            </ItemContent>
+
+            <p className="text-lg font-semibold tabular-nums">
+              Rp1.450.000
+            </p>
+          </Item>
+        </CardContent>
+
+
         
         <CardFooter>
           <Button variant="default" className="w-full">

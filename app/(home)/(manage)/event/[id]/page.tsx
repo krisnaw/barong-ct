@@ -3,20 +3,17 @@ import {redirect} from "next/navigation";
 import {getOngoingOrder} from "@/db/query/event-order.query";
 import {auth} from "@/lib/auth";
 import {headers} from "next/headers";
-import {MapPin, TicketCheck} from "lucide-react";
-import {EventCard} from "@/components/events/event-card";
 import {getPaymentByOrder} from "@/db/query/event-payment.query";
-import {EventPaymentCard} from "@/components/events/event-payment-card";
 import {getParticipantByEventUser} from "@/db/query/participant-query";
-import {Item, ItemContent, ItemDescription, ItemMedia, ItemTitle} from "@/components/ui/item";
 import * as React from "react";
 import {formatBibNumber} from "@/utils/money-helper";
 import {checkPaymentStatus} from "@/app/actions/payment/payment-status.action";
-import Link from "next/link";
-import {Button} from "@/components/ui/button";
 import {getGroupById} from "@/db/query/event-group.query";
-import {GroupItem} from "@/components/group/group-item";
 import {InviteItem} from "@/app/(home)/(manage)/event/[id]/invite-item";
+import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
+import {EventCard} from "@/components/events/event-card";
+import {Item, ItemContent, ItemDescription, ItemTitle} from "@/components/ui/item";
 
 export default async function Page({params,}: { params: Promise<{ id: number }> }) {
 
@@ -35,7 +32,6 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
     redirect('/auth/signup')
   }
 
-
   const userId = session.user.id;
   const order = await getOngoingOrder(id, userId);
   let payment = null
@@ -46,91 +42,127 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
     }
   }
 
-  const participant =  await getParticipantByEventUser(id, userId)
+  const participant = await getParticipantByEventUser(id, userId)
   const group = order?.groupId ? await getGroupById(order.groupId) : undefined
 
   return (
     <div>
-      <div className="mx-auto max-w-lg space-y-2">
 
-        {payment && (
-          <>
-            <EventPaymentCard payment={payment} />
-            {payment.status === "PENDING" && payment.paymentURL && (
-              <Button asChild className="w-full">
-                <Link href={payment.paymentURL}>
-                  Complete payment
-                </Link>
-              </Button>
-            )}
-          </>
-        )}
+      <div className="mx-auto max-w-xl px-4 md:px-6 lg:px-8 mt-8">
 
-        {participant && (
-          <>
-            <Item size="sm" variant="outline">
-              <ItemMedia variant="icon">
-                <TicketCheck/>
-              </ItemMedia>
-              <ItemContent>
-                <ItemTitle>Registrations</ItemTitle>
-                {participant.bibNumber && (
-                  <ItemDescription>
-                    {formatBibNumber(participant.bibNumber)}
-                  </ItemDescription>
+        <EventCard event={event} withFooter={false} participant={participant}/>
+
+        <div className="mt-6 space-y-6">
+
+          <Card className="pt-0">
+            <CardHeader className="bg-muted/50 border-b p-4 items-center">
+              <CardTitle className="font-bold leading-7">
+                Registrations
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 gap-2">
+
+                <Item className="bg-green-50 col-span-2 inset-ring inset-ring-green-600/20">
+                  <ItemContent>
+                    <ItemTitle className="uppercase cn-card-title cn-font-heading text-xl tabular-nums  text-green-700 text-center">
+                      Registration Confirmed
+                    </ItemTitle>
+                  </ItemContent>
+                </Item>
+
+
+                {participant && (
+                  <Item className="bg-muted">
+                    <ItemContent>
+                      <ItemDescription>Bib Number</ItemDescription>
+                      <ItemTitle className="cn-card-title cn-font-heading text-2xl tabular-nums text-primary">
+                        {participant.bibNumber && formatBibNumber(participant.bibNumber)}
+                      </ItemTitle>
+                    </ItemContent>
+                  </Item>
                 )}
-              </ItemContent>
 
-              <ItemContent className="flex-none text-center py-1">
-                <ItemDescription>
-                <span className="uppercase inline-flex items-center rounded-md bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
-                    {participant?.status}
-                </span>
-                </ItemDescription>
-              </ItemContent>
-            </Item>
 
-            {group && (
-              <>
-                <GroupItem group={group} />
-                <InviteItem eventId={event.id} group={group}  />
-              </>
-            )}
-          </>
-        )}
+                {participant && (
+                  <Item className="bg-muted">
+                    <ItemContent>
+                      <ItemDescription>Jersey Size</ItemDescription>
+                      <ItemTitle className="cn-card-title cn-font-heading text-2xl tabular-nums text-primary">
+                        M
+                      </ItemTitle>
+                    </ItemContent>
+                  </Item>
+                )}
 
-        <EventCard event={event} participant={participant} />
+                {payment && (
+                  <Item className="bg-muted col-span-2">
+                    <ItemContent>
+                      <ItemDescription>
+                        Payment Success
+                      </ItemDescription>
+                      <ItemTitle className="cn-card-title cn-font-heading text-2xl tabular-nums text-primary">
+                        {payment.invoiceNumber}
+                      </ItemTitle>
+                    </ItemContent>
+                  </Item>
+                )}
 
-        {event.locationLink && (
-          <div className="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow-sm">
-            <div className="px-4 py-5 sm:px-6">
-
-              <div className="flex">
-                <div className="mr-4 shrink-0 ">
-                  <div className="size-8 [&_svg:not([class*='size-'])]:size-4 border rounded-sm bg-muted flex items-center justify-center">
-                    <MapPin />
-                  </div>
-
-                </div>
-                <div>
-                  <h3 className="text-base font-semibold text-gray-900">Locations</h3>
-                </div>
               </div>
+            </CardContent>
+          </Card>
 
-            </div>
-            <div className="px-4 py-5 sm:p-6">
-              <div className="w-full overflow-hidden">
-                <iframe
-                  src={event.locationLink}
-                  width="470" height="450" style={{border: 0}} allowFullScreen={false} loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"></iframe>
-              </div>
-            </div>
-          </div>
-        )}
+          {group && (
+            <Card className="pt-0">
+              <CardHeader className="bg-muted/50 border-b p-4 items-center">
+                <CardTitle className="font-bold leading-7">
+                  Group: {group.name}
+                </CardTitle>
+                <CardDescription className="text-muted-foreground">
+                  {group.participants.length}/5 members
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className="flex flex-col space-y-4">
+                  {group.participants.map((name: string, index: number) => (
+                    <li className="inline-flex items-center gap-2" key={index}>
+                      <Avatar>
+                        <AvatarImage src="https://github.com/shadcn.png"/>
+                        <AvatarFallback>CN</AvatarFallback>
+                      </Avatar>
+                      <p className="font-bold">{name}</p>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+              <CardFooter>
+                <InviteItem eventId={event.id} group={group}/>
+              </CardFooter>
+            </Card>
+          )}
 
+          {event.locationLink && (
+            <Card>
+              <CardHeader>
+                <CardTitle>
+                  Texas Tech University -Costa Rica
+                </CardTitle>
+                <CardDescription>
+                  Avenida Escazú, Edificio AE205, San José Province, Escazu, 10201, Costa Rica
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="w-full overflow-hidden">
+                  <iframe
+                    src={event.locationLink}
+                    width="470" height="450" style={{border: 0}} allowFullScreen={false} loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </div>
       </div>
-
     </div>
   )
 }
