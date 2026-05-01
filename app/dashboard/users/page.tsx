@@ -52,12 +52,12 @@ export default async function UsersPage({searchParams}: {
                 </TableCell>
                 <TableCell>{format(user.createdAt.toLocaleString(), 'PPpp', {locale: id})}</TableCell>
                 <TableCell className="inline-flex gap-2">
-                  <Button asChild size="icon-sm" variant="outline">
+                  <Button size="icon-sm" variant="outline">
                     <Link href={`/dashboard/users/${user.id}/edit`}>
                       <PencilIcon/>
                     </Link>
                   </Button>
-                  <Button variant="outline" size="sm" asChild>
+                  <Button variant="outline" size="sm">
                     <Link href={`/dashboard/users/${user.id}`}>
                       View
                     </Link>

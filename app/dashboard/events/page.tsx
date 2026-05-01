@@ -10,7 +10,7 @@ export default async function EventsPage() {
 
   if (events.length === 0) {
     return (
-      <Button asChild>
+      <Button >
         <Link href="/dashboard/events/create">
           Create Event
         </Link>
@@ -23,7 +23,7 @@ export default async function EventsPage() {
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Events</h1>
 
-        <Button asChild>
+        <Button >
           <Link href="/dashboard/events/create">
             Create Event
           </Link>
