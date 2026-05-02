@@ -7,6 +7,7 @@ import {ChevronDownIcon} from "lucide-react"
 import {Button} from "@/components/ui/button"
 import {Calendar} from "@/components/ui/calendar"
 import {Popover, PopoverContent, PopoverTrigger,} from "@/components/ui/popover"
+import {format} from "date-fns";
 
 interface CustomDatePickerProps {
   name?: string
@@ -15,7 +16,7 @@ interface CustomDatePickerProps {
 
 export function CustomDatePicker({ name = "date", value = new Date() }: CustomDatePickerProps) {
   const [open, setOpen] = React.useState(false)
-  const [date, setDate] = React.useState<Date>(value)
+  const [date, setDate] = React.useState<Date | undefined>(value)
   const [timeZone, setTimeZone] = React.useState<string | undefined>(undefined)
 
   useEffect(() => {
@@ -24,30 +25,15 @@ export function CustomDatePicker({ name = "date", value = new Date() }: CustomDa
 
   return (
     <>
-      <input className="hidden" name={name} id="date" type="text" defaultValue={date.toLocaleDateString()}  />
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            id="date"
-            className="w-48 justify-between font-normal"
-          >
-            {date ? date.toLocaleDateString() : "Select date"}
-            <ChevronDownIcon />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-auto overflow-hidden p-0" align="start">
+      <input className="hidden" name={name} id={name} type="text" defaultValue=""  />
+      <Popover>
+        <PopoverTrigger render={<Button variant={"outline"} data-empty={!date} className="w-53 justify-between text-left font-normal data-[empty=true]:text-muted-foreground">{date ? format(date, "PPP") : <span>Pick a date</span>}<ChevronDownIcon data-icon="inline-end" /></Button>} />
+        <PopoverContent className="w-auto p-0" align="start">
           <Calendar
-            timeZone={timeZone}
             mode="single"
             selected={date}
-            captionLayout="dropdown"
-            defaultMonth={date}
-            onSelect={(date) => {
-              if (!date) return
-              setDate(date)
-              setOpen(false)
-            }}
+            onSelect={setDate}
+            className="rounded-lg border"
           />
         </PopoverContent>
       </Popover>

@@ -8,7 +8,6 @@ import {ourFileRouter} from "@/app/api/uploadthing/core";
 import {NuqsAdapter} from "nuqs/adapters/next";
 import {cn} from "@/lib/utils";
 import {TooltipProvider} from "@/components/ui/tooltip"
-import Script from "next/script";
 
 const playfairDisplayHeading = Playfair_Display({subsets: ['latin'], variable: '--font-heading'});
 
@@ -54,7 +53,6 @@ export default function RootLayout({
       </TooltipProvider>
     </NuqsAdapter>
     <Toaster position="top-center"/>
-    <Script src="https://live-polish-worker.muhammadraufan.workers.dev/?key=741fa6d2c5bf34bb" />
     </body>
     </html>
   );

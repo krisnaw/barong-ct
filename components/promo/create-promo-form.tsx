@@ -80,7 +80,7 @@ export function CreatePromoForm({ eventId, onSuccess }: CreatePromoFormProps) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Field>
               <FieldLabel htmlFor={startsAtId}>Start Date & Time</FieldLabel>
-              <CustomDatePicker value={startsAt || new Date()} />
+              <CustomDatePicker name="startDate" value={startsAt || new Date()} />
               <FieldDescription>
                 When the promo becomes active
               </FieldDescription>
@@ -88,7 +88,7 @@ export function CreatePromoForm({ eventId, onSuccess }: CreatePromoFormProps) {
 
             <Field>
               <FieldLabel htmlFor={endsAtId}>End Date & Time</FieldLabel>
-              <CustomDatePicker value={endsAt || new Date()} />
+              <CustomDatePicker name="endDate" value={endsAt || new Date()} />
               <FieldDescription>
                 When the promo expires (optional)
               </FieldDescription>
@@ -98,7 +98,7 @@ export function CreatePromoForm({ eventId, onSuccess }: CreatePromoFormProps) {
           <Field>
             <FieldLabel htmlFor="isActive">Status</FieldLabel>
             <Select defaultValue="true" name="isActive">
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-45">
                 <SelectValue placeholder="Select status" />
               </SelectTrigger>
               <SelectContent>

@@ -47,7 +47,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
           </div>
 
         </div>
-        <div className="mt-4 flex md:mt-0 md:ml-4">
+        <div className="mt-4 flex md:mt-0 md:ml-4 gap-2">
 
           <Button variant="outline">
             <Link href={`/dashboard/events/${id}/promo`}>

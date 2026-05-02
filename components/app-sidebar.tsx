@@ -9,13 +9,12 @@ import {
   AudioLinesIcon,
   BookOpenIcon,
   BotIcon,
-  FrameIcon,
   GalleryVerticalEndIcon,
-  MapIcon,
-  PieChartIcon,
   Settings2Icon,
   TerminalIcon,
-  TerminalSquareIcon
+  TerminalSquareIcon,
+  Tickets,
+  Users
 } from "lucide-react"
 
 // This is sample data.
@@ -155,7 +154,7 @@ const data = {
       name: "Events",
       url: "/dashboard/events",
       icon: (
-        <FrameIcon
+        <Tickets
         />
       ),
     },
@@ -163,16 +162,7 @@ const data = {
       name: "Users",
       url: "/dashboard/users",
       icon: (
-        <PieChartIcon
-        />
-      ),
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: (
-        <MapIcon
-        />
+        <Users />
       ),
     },
   ],
