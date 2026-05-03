@@ -14,17 +14,14 @@ export function EventCard({event, withFooter = false, participant}: {
   withFooter?: boolean,
   participant?: ParticipantType
 }) {
-  console.log("event", event);
   return (
     <Card className="cn-card group/card flex flex-col relative w-full overflow-hidden pt-0">
-      <div className="max-h-96 overflow-hidden rounded-b-4xl shadow-xl">
+      <div className="relative h-96 w-full overflow-hidden rounded-b-4xl shadow">
         <Image
-          src="https://images.lumacdn.com/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=400,height=400/event-covers/vl/d915ba91-1698-484a-9d45-4787d8112668.png"
-          alt="Valeria Reverdo on Unsplash"
-          width={128}
-          height={128}
-          sizes="100"
-          className="aspect-square w-full rounded-b-2xl  object-cover"
+          src={event.feature_image ?? "/empty-banner.png"}
+          alt={event.name}
+          fill
+          className="object-cover"
         />
       </div>
 
@@ -34,8 +31,8 @@ export function EventCard({event, withFooter = false, participant}: {
             {event.name}
           </h1>
         </CardTitle>
-        <CardDescription>
-          Technology group and play a vital function on one of two Apple teams
+        <CardDescription className="truncate">
+          <div dangerouslySetInnerHTML={{ __html: event.description }} />
         </CardDescription>
       </CardHeader>
 
