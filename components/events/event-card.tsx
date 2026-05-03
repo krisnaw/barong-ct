@@ -14,6 +14,7 @@ export function EventCard({event, withFooter = false, participant}: {
   withFooter?: boolean,
   participant?: ParticipantType
 }) {
+  console.log("event", event);
   return (
     <Card className="cn-card group/card flex flex-col relative w-full overflow-hidden pt-0">
       <div className="max-h-96 overflow-hidden rounded-b-4xl shadow-xl">
@@ -76,7 +77,7 @@ export function EventCard({event, withFooter = false, participant}: {
               </div>
             </div>
             <div>
-              <p className="font-bold">Limited to 300 riders</p>
+              <p className="font-bold">Limited to {event.maxParticipants} riders</p>
             </div>
           </div>
 
@@ -92,7 +93,6 @@ export function EventCard({event, withFooter = false, participant}: {
             </div>
           </Item>
         ) : null}
-
       </CardContent>
 
       {withFooter ? (

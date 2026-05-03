@@ -41,7 +41,7 @@ export function ContentEditor({
     editorProps: {
       attributes: {
         class: cn(
-          'prose prose-sm max-w-none rounded-b-md px-3 py-2 min-h-full',
+          'prose prose-sm max-w-none rounded-b-md px-3 py-2 h-24',
           editorClassName
         ),
       },
@@ -175,7 +175,7 @@ export function ContentEditor({
           </Toggle>
         </div>
       )}
-      <EditorContent editor={editor} className="flex flex-col flex-1 min-h-[200px] focus:outline-none focus:ring-0 focus:ring-offset-0 focus:border-transparent" />
+      <EditorContent editor={editor} className="flex flex-col flex-1 focus:outline-none focus:ring-0 focus:ring-offset-0 focus:border-transparent" />
     </div>
   );
 }
