@@ -21,7 +21,7 @@ export function CreateEventForm() {
   const [image, setImage] = useState<string | null>(null);
   const [description, setDescription] = useState<string>("")
   const router = useRouter();
-  const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(async (prevState: ActionResponse, formData: FormData) => {
+  const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(async (_: ActionResponse, formData: FormData) => {
 
     const inputDate = formData.get('date') as string
     const inputTime = formData.get('time') as string
@@ -115,6 +115,7 @@ export function CreateEventForm() {
               name="name"
               placeholder="Barong X Anniversary"
               required
+              defaultValue="Free Event"
             />
           </Field>
 
@@ -145,7 +146,7 @@ export function CreateEventForm() {
             
             <Field>
               <FieldLabel htmlFor="date">Date</FieldLabel>
-              <CustomDatePicker />
+              <CustomDatePicker name="date" />
             </Field>
 
             <Field>
@@ -167,7 +168,7 @@ export function CreateEventForm() {
             <FieldLabel htmlFor="price">Price</FieldLabel>
             <div className="flex gap-2">
               <Select defaultValue="IDR" name="currency">
-                <SelectTrigger className="w-[180px]">
+                <SelectTrigger className="w-45">
                   <SelectValue placeholder="$" />
                 </SelectTrigger>
                 <SelectContent>

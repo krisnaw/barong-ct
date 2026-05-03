@@ -25,7 +25,7 @@ export function CustomDatePicker({ name = "date", value = new Date() }: CustomDa
 
   return (
     <>
-      <input className="hidden" name={name} id={name} type="text" defaultValue=""  />
+      <input className="hidden" name={name} id={name} type="text" value={date?.toLocaleDateString()} readOnly  />
       <Popover>
         <PopoverTrigger render={<Button variant={"outline"} data-empty={!date} className="w-53 justify-between text-left font-normal data-[empty=true]:text-muted-foreground">{date ? format(date, "PPP") : <span>Pick a date</span>}<ChevronDownIcon data-icon="inline-end" /></Button>} />
         <PopoverContent className="w-auto p-0" align="start">

@@ -9,7 +9,11 @@ import {Item} from "@/components/ui/item";
 import {Button} from "@/components/ui/button";
 import Link from "next/link";
 
-export function EventCard({event, withFooter = false, participant} : {event: EventType, withFooter?: boolean, participant? : ParticipantType}) {
+export function EventCard({event, withFooter = false, participant}: {
+  event: EventType,
+  withFooter?: boolean,
+  participant?: ParticipantType
+}) {
   return (
     <Card className="cn-card group/card flex flex-col relative w-full overflow-hidden pt-0">
       <div className="max-h-96 overflow-hidden rounded-b-4xl shadow-xl">
@@ -78,16 +82,17 @@ export function EventCard({event, withFooter = false, participant} : {event: Eve
 
         </div>
 
-        <Item className="bg-muted">
+        {event.price ? (
+          <Item className="bg-muted">
+            <div className="inline-flex gap-3 items-center">
+              <Ticket/>
+              <p className="cn-card-title cn-font-heading text-2xl tabular-nums">
+                {formatMoney(Number(event.price))}
+              </p>
+            </div>
+          </Item>
+        ) : null}
 
-          <div className="inline-flex gap-3 items-center">
-            <Ticket />
-            <p className="cn-card-title cn-font-heading text-2xl tabular-nums">
-              {formatMoney(Number(event.price))}
-            </p>
-          </div>
-
-        </Item>
       </CardContent>
 
       {withFooter ? (
@@ -101,7 +106,6 @@ export function EventCard({event, withFooter = false, participant} : {event: Eve
           )}
         </CardFooter>
       ) : null}
-
 
 
     </Card>
