@@ -3,7 +3,7 @@
 import {EventSchema, EventType} from "@/db/schema";
 import {participant} from "@/db/schema/participant-schema";
 import {db} from "@/db/db";
-import {count, eq, getTableColumns} from "drizzle-orm";
+import {count, desc, eq, getTableColumns} from "drizzle-orm";
 
 export async function getEvents(): Promise<(EventType & { participantCount: number })[] | []> {
 
@@ -14,7 +14,8 @@ export async function getEvents(): Promise<(EventType & { participantCount: numb
     })
     .from(EventSchema)
     .leftJoin(participant, eq(EventSchema.id, participant.eventId))
-    .groupBy(EventSchema.id,)
+    .groupBy(EventSchema.id)
+    .orderBy(desc(EventSchema.createdAt))
     .limit(10);
 
   return events as (EventType & { participantCount: number })[]
