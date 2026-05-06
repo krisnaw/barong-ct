@@ -56,6 +56,10 @@ export default async function Page({params, searchParams}: { params: Promise<{ i
     if (order.status === "payment") {
       redirect(`/event/${id}/payment?orderId=${order.id}`)
     }
+
+    if (order.status === "paid") {
+      redirect(`/event/${id}/payment?orderId=${order.id}`)
+    }
   }
 
   return (

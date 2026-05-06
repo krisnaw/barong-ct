@@ -105,7 +105,7 @@ export function EventCard({event, withFooter = false, participant}: {
         <CardFooter>
           {!participant && (
             <Button className="w-full">
-              <Link href={`/event/${event.id}/order`}>
+              <Link href={`/event/${event.id}/order`} prefetch={true}>
                 Join Event
               </Link>
             </Button>
