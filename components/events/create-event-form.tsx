@@ -115,7 +115,6 @@ export function CreateEventForm() {
               name="name"
               placeholder="Barong X Anniversary"
               required
-              defaultValue="Free Event"
             />
           </Field>
 

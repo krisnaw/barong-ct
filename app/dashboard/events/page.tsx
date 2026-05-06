@@ -27,7 +27,7 @@ export default async function EventsPage() {
           </EmptyHeader>
           <EmptyContent className="flex-row justify-center gap-2">
             <Button>
-              <Link href="/dashboard/events/create">
+              <Link href="/dashboard/events/create" prefetch={true}>
                 Create Event
               </Link>
             </Button>
