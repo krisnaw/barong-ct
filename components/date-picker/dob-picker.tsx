@@ -21,7 +21,7 @@ export function DobPicker({ value }: CustomDatePickerProps) {
       <input className="sr-only" required name="date" id="date" type="text" defaultValue={date ? date.toLocaleDateString() : undefined}  />
       <div>
         <Popover open={open} onOpenChange={setOpen} >
-          <PopoverTrigger asChild>
+          <PopoverTrigger>
             <Button
               variant="outline"
               id="date"

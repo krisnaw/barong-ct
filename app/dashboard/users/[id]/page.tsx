@@ -29,7 +29,7 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Button variant="outline" size="sm" asChild>
+          <Button variant="outline" size="sm">
             <Link href="/dashboard/users">
               <ArrowLeft className="size-4 mr-2" />
               Back to Users

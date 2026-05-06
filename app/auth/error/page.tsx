@@ -10,7 +10,7 @@ export default async function callbackPage() {
         <Card>
           <CardContent>
             <h2 className="text-lg font-medium">This sign-in link has expired or has already been used.</h2>
-            <Button asChild={true}>
+            <Button>
               <Link href="/auth/signup">
                 Get a new link
               </Link>

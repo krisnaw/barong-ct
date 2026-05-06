@@ -48,7 +48,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
 
                   <ButtonAddParticipant eventId={event.id} userId={user.id} name={user.name} email={user.email} />
 
-                  <Button variant="outline" size="sm" asChild>
+                  <Button variant="outline" size="sm">
                     <Link href={`/dashboard/users/${user.id}`}>
                       View Details
                     </Link>
