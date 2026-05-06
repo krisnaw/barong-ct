@@ -1,0 +1,3 @@
+[build]
+# Skip problematic apt packages
+apt_packages = []
