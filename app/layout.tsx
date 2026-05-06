@@ -8,7 +8,7 @@ import {TooltipProvider} from "@/components/ui/tooltip"
 
 const playfairDisplayHeading = Playfair_Display({subsets: ['latin'], variable: '--font-heading'});
 
-const inter = Inter({subsets: ['latin'], variable: '--font-sans'});
+const inter = Inter({subsets:['latin'],variable:'--font-sans'});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

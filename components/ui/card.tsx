@@ -1,12 +1,12 @@
 import * as React from "react"
 
-import {cn} from "@/lib/utils"
+import { cn } from "@/lib/utils"
 
 function Card({
-                className,
-                size = "default",
-                ...props
-              }: React.ComponentProps<"div"> & { size?: "default" | "sm" }) {
+  className,
+  size = "default",
+  ...props
+}: React.ComponentProps<"div"> & { size?: "default" | "sm" }) {
   return (
     <div
       data-slot="card"
@@ -38,7 +38,7 @@ function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="card-title"
       className={cn(
-        "cn-font-heading text-base leading-snug font-medium group-data-[size=sm]/card:text-sm",
+        "font-heading text-base leading-snug font-medium group-data-[size=sm]/card:text-sm",
         className
       )}
       {...props}
