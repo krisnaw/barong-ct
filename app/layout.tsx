@@ -2,12 +2,12 @@ import type {Metadata} from "next";
 import {Geist, Geist_Mono, Inter, Playfair_Display} from "next/font/google";
 import "./globals.css";
 import {Toaster} from "sonner";
-import {NuqsAdapter} from "nuqs/adapters/next";
-import {cn} from "@/lib/utils";
-import {TooltipProvider} from "@/components/ui/tooltip"
 import {NextSSRPlugin} from "@uploadthing/react/next-ssr-plugin";
 import {extractRouterConfig} from "uploadthing/server";
 import {ourFileRouter} from "@/app/api/uploadthing/core";
+import {NuqsAdapter} from "nuqs/adapters/next";
+import {cn} from "@/lib/utils";
+import {TooltipProvider} from "@/components/ui/tooltip"
 
 const playfairDisplayHeading = Playfair_Display({subsets: ['latin'], variable: '--font-heading'});
 
