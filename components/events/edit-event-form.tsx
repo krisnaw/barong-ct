@@ -9,7 +9,6 @@ import {Button} from "@/components/ui/button";
 import {Spinner} from "@/components/ui/spinner";
 import {CustomDatePicker} from "@/components/ui/custom-date-picker";
 import {toast} from "sonner";
-import {UploadButton} from "@/utils/uploadthing";
 import {EventType} from "@/db/schema";
 import {UpdateEventAction} from "@/app/actions/event/event.action";
 import {format, parse} from "date-fns";
@@ -18,7 +17,6 @@ import {fromZonedTime, toZonedTime} from "date-fns-tz";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 
 export function EditEventForm({event} : {event: EventType}) {
-  console.log(event);
   const regClosedAt = event.registrationClosesAt ? new Date(event.registrationClosesAt)  : new Date();
   const eventDate = new Date(event.startDate);
   const eventTime = toZonedTime(event.startDate, "Asia/Singapore")
@@ -95,20 +93,6 @@ export function EditEventForm({event} : {event: EventType}) {
                 )}
 
               </div>
-
-              <div>
-                <UploadButton
-                  endpoint="imageUploader"
-                  onClientUploadComplete={(res) => {
-                    setImage(res[0].appUrl);
-                  }}
-                  onUploadError={(error: Error) => {
-                    // Do something with the error.
-                    toast.error(`ERROR! ${error.message}`);
-                  }}
-                />
-              </div>
-
             </div>
           </Field>
 

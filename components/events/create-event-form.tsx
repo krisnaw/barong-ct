@@ -9,7 +9,6 @@ import {Button} from "@/components/ui/button";
 import {Spinner} from "@/components/ui/spinner";
 import {CustomDatePicker} from "@/components/ui/custom-date-picker";
 import {toast} from "sonner";
-import {UploadButton} from "@/utils/uploadthing";
 import {createEventAction} from "@/app/actions/event/event.action";
 import {ContentEditor} from "@/components/events/content-editor";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
@@ -90,20 +89,6 @@ export function CreateEventForm() {
                 )}
 
               </div>
-
-              <div>
-                <UploadButton
-                  endpoint="imageUploader"
-                  onClientUploadComplete={(res) => {
-                    setImage(res[0].appUrl);
-                  }}
-                  onUploadError={(error: Error) => {
-                    // Do something with the error.
-                    toast.error(`ERROR! ${error.message}`);
-                  }}
-                />
-              </div>
-
             </div>
           </Field>
 
@@ -242,4 +227,3 @@ export function CreateEventForm() {
     </div>
   )
 }
-
