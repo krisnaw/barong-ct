@@ -1,5 +1,4 @@
-import {Body, Button, Container, Head, Html, Img, Section, Tailwind, Text,} from '@react-email/components';
-import * as React from "react";
+import {Body, Button, Container, Head, Html, Img, Section, Tailwind, Text,} from 'react-email';
 
 interface EmailProps {
   name: string,
