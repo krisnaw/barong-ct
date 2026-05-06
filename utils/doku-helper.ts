@@ -3,6 +3,7 @@ import crypto from "crypto";
 export const PM = [
   "QRIS",
   "CREDIT_CARD",
+  "VIRTUAL_ACCOUNT_BNI"
 ]
 
 export function generateDigest(jsonBody: string) {

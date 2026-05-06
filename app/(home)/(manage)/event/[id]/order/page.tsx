@@ -58,8 +58,6 @@ export default async function Page({params, searchParams}: { params: Promise<{ i
     }
   }
 
-  console.log(order)
-
   return (
     <div>
       Creating order...

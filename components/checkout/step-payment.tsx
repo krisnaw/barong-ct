@@ -1,6 +1,6 @@
 'use client'
 
-import {Card, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
+import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
 import {useRouter} from "next/navigation";
 import {useActionState, useState} from "react";
@@ -12,11 +12,34 @@ import {updateOrderAction} from "@/app/actions/event-order/event-order.action";
 import {formatMoney} from "@/utils/money-helper";
 import {Input} from "@/components/ui/input";
 import {createPayment} from "@/app/actions/payment/payment.action";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
+import {Item, ItemContent} from "@/components/ui/item";
 
 interface Props {
   event: EventType & { participantCount: number },
   order: EventOrderType,
   promos: PromoType[] | null
+}
+
+const INVOICE_ITEMS = [
+  { item: "Design System License", qty: 1, unitPrice: 499 },
+  { item: "Priority Support", qty: 12, unitPrice: 99 },
+  { item: "Custom Components", qty: 3, unitPrice: 250 },
+] as const
+
+const subtotal = INVOICE_ITEMS.reduce(
+  (sum, row) => sum + row.qty * row.unitPrice,
+  0
+)
+const tax = 0
+const totalDue = subtotal + tax
+
+function formatCurrency(value: number) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 2,
+  }).format(value)
 }
 
 export function StepPayment({event, order, promos} : Props) {
@@ -80,69 +103,82 @@ export function StepPayment({event, order, promos} : Props) {
         <CardHeader>
           <CardTitle>Order Summary</CardTitle>
         </CardHeader>
-        <CardFooter>
+        <CardContent>
+          <Item variant="muted">
+            <ItemContent>
+              {promos && promos.length > 0 && (
+                <div className="mb-4 w-full flex-1">
 
-          <div className="flex flex-col w-full">
-
-            {promos && promos.length > 0 && (
-              <div className="mb-4 w-full flex-1">
-
-                <div className="flex space-x-2">
-                  <Input
-                    type="text"
-                    placeholder="Enter promo code"
-                    value={promoCode}
-                    onChange={(e) => setPromoCode(e.target.value)}
-                    className="flex-1"
-                  />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={applyPromoCode}
-                    disabled={!promoCode.trim()}
-                  >
-                    Apply
-                  </Button>
-                </div>
-              </div>
-            )}
-
-            <div className="w-full">
-              <dl className="space-y-6 border-t border-gray-200 pt-6 text-sm font-medium text-gray-500">
-                <div className="flex justify-between">
-                  <dt>Registration fee</dt>
-                  <dd className="text-gray-900">{formatMoney(Number(price))}</dd>
-                </div>
-
-                <div className="flex justify-between">
-                  <dt>Service fee</dt>
-                  <dd className="text-gray-900">{formatMoney(Number(fee))}</dd>
-                </div>
-
-                {discount > 0 && (
-                  <div className="flex justify-between">
-                    <dt>Promo discount</dt>
-                    <dd className="text-green-600">-{formatMoney(Number(discount))}</dd>
+                  <div className="flex space-x-2">
+                    <Input
+                      type="text"
+                      placeholder="Enter promo code"
+                      value={promoCode}
+                      onChange={(e) => setPromoCode(e.target.value)}
+                      className="flex-1 bg-white"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={applyPromoCode}
+                      disabled={!promoCode.trim()}
+                    >
+                      Apply
+                    </Button>
                   </div>
-                )}
-
-                <div className="flex items-center justify-between border-t border-gray-200 pt-6 text-gray-900">
-                  <dt className="text-base">Total</dt>
-                  <dd className="text-base">
-                    {formatMoney(Number(totalPrice))}
-                  </dd>
                 </div>
-              </dl>
-            </div>
+              )}
+            </ItemContent>
+          </Item>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Item</TableHead>
+                <TableHead colSpan={3} className="text-right">Amount</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
 
-            <div className="mt-6">
-              <Button className="w-full" disabled={isPending} type="submit">
-                {isPending ? <Spinner/> : null}
-                Complete Order
-              </Button>
-            </div>
-          </div>
+              <TableRow>
+                <TableCell>Ticket Price</TableCell>
+                <TableCell colSpan={3} className="text-right tabular-nums">
+                  {formatMoney(Number(price))}
+                </TableCell>
+              </TableRow>
 
+              {discount > 0 && (
+                <TableRow>
+                  <TableCell colSpan={3} className="text-right text-green-600">
+                    Discount
+                  </TableCell>
+                  <TableCell className="text-right tabular-nums text-green-600">{formatMoney(Number(discount))}</TableCell>
+                </TableRow>
+              )}
+
+              <TableRow>
+                <TableCell colSpan={3} className="text-right">
+                  Service Fee
+                </TableCell>
+                <TableCell className="text-right tabular-nums max-w-sm">{formatMoney(Number(fee))}</TableCell>
+              </TableRow>
+
+
+              <TableRow>
+                <TableCell colSpan={3} className="text-right">
+                  Total
+                </TableCell>
+                <TableCell className="text-right tabular-nums">
+                  {formatMoney(Number(totalPrice))}
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </CardContent>
+        <CardFooter>
+          <Button className="w-full" disabled={isPending} type="submit">
+            {isPending ? <Spinner/> : null}
+            Complete Order
+          </Button>
         </CardFooter>
       </Card>
     </form>

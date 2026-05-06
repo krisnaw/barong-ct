@@ -27,7 +27,7 @@ export function InviteItem({ eventId, group }: { eventId: number, group: GroupWi
     <>
       <Field>
         <FieldLabel htmlFor="invite-link">Share link below to invite</FieldLabel>
-        <InputGroup        className="bg-white">
+        <InputGroup className="bg-white">
           <InputGroupInput
             id="invite-link"
             defaultValue={shareUrl}

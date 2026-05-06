@@ -12,7 +12,7 @@ import {Button} from "@/components/ui/button";
 import {EventOrderType, UserDetailType} from "@/db/schema";
 import {UpdateProfileAction} from "@/app/actions/profile/profile.action";
 import {toast} from "sonner";
-import {useParams, useRouter, useSearchParams} from "next/navigation";
+import {useParams, useRouter} from "next/navigation";
 import {updateOrderAction} from "@/app/actions/event-order/event-order.action";
 
 export function StepProfile({user, order}: { user: UserWithDetail, order: EventOrderType }) {
@@ -20,8 +20,10 @@ export function StepProfile({user, order}: { user: UserWithDetail, order: EventO
   const router = useRouter();
   const params = useParams<{ id: string }>();
   const eventId = params.id;
-  const searchParams = useSearchParams();
   const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(async (_: ActionResponse, formData: FormData) => {
+
+
+    console.log("payload");
 
     const payload: UserDetailType & { name: string, image: string | null } = {
       userId: user.id as string,
@@ -44,6 +46,7 @@ export function StepProfile({user, order}: { user: UserWithDetail, order: EventO
       address: formData.get("address") as string,
       clubName: "",
     }
+
 
     const res = await UpdateProfileAction(payload)
 
@@ -285,7 +288,7 @@ export function StepProfile({user, order}: { user: UserWithDetail, order: EventO
           </FieldGroup>
         </CardContent>
         <CardFooter>
-          <Button className="w-full" disabled={isPending}>Continue</Button>
+          <Button className="w-full" type="submit" disabled={isPending}>Continue</Button>
         </CardFooter>
       </Card>
     </form>
