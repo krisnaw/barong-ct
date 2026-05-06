@@ -13,6 +13,7 @@ import {Textarea} from "@/components/ui/textarea";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select";
 import {UserDetailType} from "@/db/schema";
 import {updateProfileFromDashAction} from "@/app/actions/profile/dashboard-profile.action";
+import {UploadButton} from "@/utils/uploadthing";
 
 export function DashboardProfileForm({user}: { user: UserWithDetail }) {
 
@@ -94,6 +95,18 @@ export function DashboardProfileForm({user}: { user: UserWithDetail }) {
                       </svg>
                     </>
                   )}
+                  <div>
+                    <UploadButton
+                      endpoint="imageUploader"
+                      onClientUploadComplete={(res) => {
+                        setProfileImage(res[0].appUrl);
+                      }}
+                      onUploadError={(error: Error) => {
+                        // Do something with the error.
+                        toast.error(`ERROR! ${error.message}`);
+                      }}
+                    />
+                  </div>
                 </div>
               </Field>
 

@@ -15,6 +15,7 @@ import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/c
 import {parse} from "date-fns";
 import {fromZonedTime} from "date-fns-tz";
 import {useRouter} from "next/navigation";
+import {UploadButton} from "@/utils/uploadthing";
 
 export function CreateEventForm() {
   const [image, setImage] = useState<string | null>(null);
@@ -88,6 +89,19 @@ export function CreateEventForm() {
                     src="https://placeholdit.com/400x400/f3f4f6/9da8bf?text=Banner" alt=""/>
                 )}
 
+              </div>
+
+              <div>
+                <UploadButton
+                  endpoint="imageUploader"
+                  onClientUploadComplete={(res) => {
+                    setImage(res[0].appUrl);
+                  }}
+                  onUploadError={(error: Error) => {
+                    // Do something with the error.
+                    toast.error(`ERROR! ${error.message}`);
+                  }}
+                />
               </div>
             </div>
           </Field>

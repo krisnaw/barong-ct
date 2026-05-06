@@ -15,6 +15,7 @@ import {format, parse} from "date-fns";
 import {ContentEditor} from "@/components/events/content-editor";
 import {fromZonedTime, toZonedTime} from "date-fns-tz";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
+import {UploadButton} from "@/utils/uploadthing";
 
 export function EditEventForm({event} : {event: EventType}) {
   const regClosedAt = event.registrationClosesAt ? new Date(event.registrationClosesAt)  : new Date();
@@ -93,6 +94,21 @@ export function EditEventForm({event} : {event: EventType}) {
                 )}
 
               </div>
+
+
+              <div>
+                <UploadButton
+                  endpoint="imageUploader"
+                  onClientUploadComplete={(res) => {
+                    setImage(res[0].appUrl);
+                  }}
+                  onUploadError={(error: Error) => {
+                    // Do something with the error.
+                    toast.error(`ERROR! ${error.message}`);
+                  }}
+                />
+              </div>
+
             </div>
           </Field>
 
