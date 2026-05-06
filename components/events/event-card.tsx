@@ -89,7 +89,16 @@ export function EventCard({event, withFooter = false, participant}: {
               </p>
             </div>
           </Item>
-        ) : null}
+        ) : (
+          <Item className="bg-muted">
+            <div className="inline-flex gap-3 items-center">
+              <Ticket/>
+              <p className="cn-card-title cn-font-heading text-2xl tabular-nums">
+                FREE
+              </p>
+            </div>
+          </Item>
+        )}
       </CardContent>
 
       {withFooter ? (

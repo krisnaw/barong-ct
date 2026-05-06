@@ -3,6 +3,8 @@ import {Button} from "@/components/ui/button";
 import Link from "next/link";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {EventDate} from "@/components/events/event-date";
+import {Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle} from "@/components/ui/empty";
+import {UserIcon} from "lucide-react";
 
 export default async function EventsPage() {
 
@@ -10,11 +12,28 @@ export default async function EventsPage() {
 
   if (events.length === 0) {
     return (
-      <Button >
-        <Link href="/dashboard/events/create">
-          Create Event
-        </Link>
-      </Button>
+      <>
+
+        <Empty>
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <UserIcon />
+            </EmptyMedia>
+            <EmptyTitle>No Event Yet</EmptyTitle>
+            <EmptyDescription>
+              You haven&apos;t created any event yet. Get started by creating
+              your first event.
+            </EmptyDescription>
+          </EmptyHeader>
+          <EmptyContent className="flex-row justify-center gap-2">
+            <Button>
+              <Link href="/dashboard/events/create">
+                Create Event
+              </Link>
+            </Button>
+          </EmptyContent>
+        </Empty>
+      </>
     )
   }
 
