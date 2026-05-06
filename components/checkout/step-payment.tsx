@@ -22,9 +22,9 @@ interface Props {
 }
 
 const INVOICE_ITEMS = [
-  { item: "Design System License", qty: 1, unitPrice: 499 },
-  { item: "Priority Support", qty: 12, unitPrice: 99 },
-  { item: "Custom Components", qty: 3, unitPrice: 250 },
+  {item: "Design System License", qty: 1, unitPrice: 499},
+  {item: "Priority Support", qty: 12, unitPrice: 99},
+  {item: "Custom Components", qty: 3, unitPrice: 250},
 ] as const
 
 const subtotal = INVOICE_ITEMS.reduce(
@@ -42,7 +42,7 @@ function formatCurrency(value: number) {
   }).format(value)
 }
 
-export function StepPayment({event, order, promos} : Props) {
+export function StepPayment({event, order, promos}: Props) {
   const router = useRouter();
   const [promoCode, setPromoCode] = useState('');
   const [discount, setDiscount] = useState(0);
@@ -50,7 +50,7 @@ export function StepPayment({event, order, promos} : Props) {
 
   const price = Number(event.price);
   const fee = event.serviceFee ?? 0;
-  
+
   // Calculate total price with or without discount
   const totalPrice = price + fee - discount;
 
@@ -84,7 +84,7 @@ export function StepPayment({event, order, promos} : Props) {
       return;
     }
 
-    const foundPromo = promos.find(promo => 
+    const foundPromo = promos.find(promo =>
       promo.promo.toLowerCase() === promoCode.toLowerCase()
     );
 
@@ -96,7 +96,6 @@ export function StepPayment({event, order, promos} : Props) {
     }
   };
 
-
   return (
     <form action={formAction}>
       <Card>
@@ -104,9 +103,9 @@ export function StepPayment({event, order, promos} : Props) {
           <CardTitle>Order Summary</CardTitle>
         </CardHeader>
         <CardContent>
-          <Item variant="muted">
-            <ItemContent>
-              {promos && promos.length > 0 && (
+          {promos && promos.length > 0 && (
+            <Item variant="muted">
+              <ItemContent>
                 <div className="mb-4 w-full flex-1">
 
                   <div className="flex space-x-2">
@@ -127,9 +126,9 @@ export function StepPayment({event, order, promos} : Props) {
                     </Button>
                   </div>
                 </div>
-              )}
-            </ItemContent>
-          </Item>
+              </ItemContent>
+            </Item>
+          )}
           <Table>
             <TableHeader>
               <TableRow>
@@ -151,7 +150,8 @@ export function StepPayment({event, order, promos} : Props) {
                   <TableCell colSpan={3} className="text-right text-green-600">
                     Discount
                   </TableCell>
-                  <TableCell className="text-right tabular-nums text-green-600">{formatMoney(Number(discount))}</TableCell>
+                  <TableCell
+                    className="text-right tabular-nums text-green-600">{formatMoney(Number(discount))}</TableCell>
                 </TableRow>
               )}
 

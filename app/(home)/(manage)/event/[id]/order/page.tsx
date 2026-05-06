@@ -42,23 +42,22 @@ export default async function Page({params, searchParams}: { params: Promise<{ i
 
   // Always redirect to order
   if (order) {
-    if (order.status === "draft" || order.status === "group") {
-      if (event.isGroupRide == 0) {
-        redirect(`/event/${id}/profile?orderId=${order.id}`)
-      }
-      redirect(`/event/${id}/category?orderId=${order.id}`)
-    }
-
-    if (order.status === "profile") {
-      redirect(`/event/${id}/payment?orderId=${order.id}`)
-    }
-
-    if (order.status === "payment") {
-      redirect(`/event/${id}/payment?orderId=${order.id}`)
-    }
-
-    if (order.status === "paid") {
-      redirect(`/event/${id}/payment?orderId=${order.id}`)
+    switch (order.status) {
+      case "draft":
+      case "group":
+        return event.isGroupRide == 0 ?  redirect(`/event/${id}/profile?orderId=${order.id}`) : redirect(`/event/${id}/category?orderId=${order.id}`)
+      case "profile":
+        return redirect(`/event/${id}/payment?orderId=${order.id}`)
+      case "payment":
+        return redirect(`/event/${id}/payment?orderId=${order.id}`)
+      case "paid":
+        return    redirect(`/event/${id}`)
+      default:
+        return (
+          <div>
+            Sorry, something wrong.
+          </div>
+        )
     }
   }
 
