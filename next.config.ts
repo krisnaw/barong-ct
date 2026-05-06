@@ -24,6 +24,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "placeholdit.com",
       },
+      {
+        protocol: "https",
+        hostname: "utfs.io",
+      },
     ],
   },
   allowedDevOrigins: ['*.75231597a14c45.lhr.life']
