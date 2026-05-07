@@ -44,8 +44,6 @@ export function CategorySelection({event, groups, order}: {
       orderId: order.id
     })
 
-    console.log(res)
-
     if (res.success && res.data) {
       const newParam = new URLSearchParams(searchParams);
       // @ts-ignore
@@ -55,9 +53,6 @@ export function CategorySelection({event, groups, order}: {
     }
   }
 
-  function onSelectHandler(group: GroupWithParticipant) {
-    setSelectedGroup(group)
-  }
 
   const [state, formAction, isPending] = useActionState(async () => {
 
@@ -156,8 +151,8 @@ export function CategorySelection({event, groups, order}: {
       <CardFooter>
         <form action={formAction} className="w-full">
           <Button type="submit" className="w-full" disabled={(!selectedGroup || !jerseySize) || isPending}>
-            {isPending ? <Spinner /> : null}
             Continue
+            {isPending ? <Spinner /> : null}
           </Button>
         </form>
 

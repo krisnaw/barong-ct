@@ -35,8 +35,9 @@ export default function Footer() {
                 <Image
                   src={item.icon}
                   alt={item.name}
-                  width={120}
-                  height={24}
+                  width={139}
+                  height={27}
+                  className="h-6 w-auto"
                 />
               ) : (
                 <item.icon aria-hidden="true" className="size-6" />

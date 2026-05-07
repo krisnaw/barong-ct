@@ -9,7 +9,6 @@ export default async function Page({params, searchParams}: { params: Promise<{ i
 
   const {id} = await params;
   const group = (await searchParams).group
-  console.log(group)
   const event = await getEventById(id)
   if (!event) {
     redirect(`/event`);
@@ -42,22 +41,22 @@ export default async function Page({params, searchParams}: { params: Promise<{ i
 
   // Always redirect to order
   if (order) {
-    switch (order.status) {
-      case "draft":
-      case "group":
-        return event.isGroupRide == 0 ?  redirect(`/event/${id}/profile?orderId=${order.id}`) : redirect(`/event/${id}/category?orderId=${order.id}`)
-      case "profile":
-        return redirect(`/event/${id}/payment?orderId=${order.id}`)
-      case "payment":
-        return redirect(`/event/${id}/payment?orderId=${order.id}`)
-      case "paid":
-        return    redirect(`/event/${id}`)
-      default:
-        return (
-          <div>
-            Sorry, something wrong.
-          </div>
-        )
+    const status = order.status;
+
+    if (status == 'draft' || status == 'group') {
+      return event.isGroupRide == 0 ?  redirect(`/event/${id}/profile?orderId=${order.id}`) : redirect(`/event/${id}/category?orderId=${order.id}`)
+    }
+
+    if (status == 'profile') {
+      redirect(`/event/${id}/payment?orderId=${order.id}`)
+    }
+
+    if (status == 'payment') {
+      redirect(`/event/${id}/payment?orderId=${order.id}`)
+    }
+
+    if (status == 'payment') {
+      redirect(`/event/${id}`)
     }
   }
 
