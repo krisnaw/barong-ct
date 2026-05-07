@@ -67,7 +67,7 @@ export async function createPayment(payload: { oderId: number }): Promise<Action
       ]
     },
     "payment": {
-      "payment_due_date": 15,
+      "payment_due_date": 45,
       "payment_method_types": PM
     },
     "customer": {
