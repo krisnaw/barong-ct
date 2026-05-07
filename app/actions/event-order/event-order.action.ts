@@ -6,6 +6,7 @@ import {redirect} from "next/navigation";
 import {z} from "zod";
 import {ActionResponse} from "@/types/types";
 import {eq} from "drizzle-orm";
+import {revalidatePath} from "next/cache";
 
 export type updateData = z.infer<typeof orderUpdateSchema>;
 
@@ -50,5 +51,6 @@ export async function createOrderAction(formData: insertData) {
       message: 'Sorry, something went wrong',
     }
   }
+  revalidatePath(url)
   redirect(url)
 }
