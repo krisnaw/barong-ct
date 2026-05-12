@@ -63,7 +63,9 @@ export function EventCard({event, withFooter = false, participant}: {
               </div>
             </div>
             <div>
-              <p className="font-bold">SANA by NUMA</p>
+              <p className="font-bold">
+                {event.locationName}
+              </p>
             </div>
           </div>
 

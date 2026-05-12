@@ -1,6 +1,6 @@
 'use client'
 
-import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
+import {Card, CardContent, CardFooter} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
 import {useRouter} from "next/navigation";
 import {useActionState, useState} from "react";
@@ -12,8 +12,10 @@ import {updateOrderAction} from "@/app/actions/event-order/event-order.action";
 import {formatMoney} from "@/utils/money-helper";
 import {Input} from "@/components/ui/input";
 import {createPayment} from "@/app/actions/payment/payment.action";
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {Item, ItemContent} from "@/components/ui/item";
+import {Separator} from "@/components/ui/separator";
+import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
+import {Field, FieldContent, FieldDescription, FieldLabel, FieldTitle} from "@/components/ui/field";
 
 interface Props {
   event: EventType & { participantCount: number },
@@ -99,15 +101,44 @@ export function StepPayment({event, order, promos}: Props) {
   return (
     <form action={formAction}>
       <Card>
-        <CardHeader>
-          <CardTitle>Order Summary</CardTitle>
-        </CardHeader>
         <CardContent>
-          {promos && promos.length > 0 && (
-            <Item variant="muted">
-              <ItemContent>
-                <div className="mb-4 w-full flex-1">
 
+          <div className="space-y-4">
+            <div>
+              <h2 className="cn-font-heading text-xs font-medium tracking-wider text-muted-foreground uppercase">Payment Method</h2>
+              <div className="mt-2">
+                <RadioGroup
+                  defaultValue="bank"
+                  className="grid grid-cols-1 items-start gap-3 md:grid-cols-2 style-sera:grid-cols-1"
+                >
+                  <FieldLabel htmlFor="method-bank">
+                    <Field orientation="horizontal" className="pb-2.5">
+                      <RadioGroupItem value="bank" id="method-bank" />
+                      <FieldContent>
+                        <FieldTitle>BNI Virtual Account</FieldTitle>
+                        <FieldDescription>20% OFF WITH BNI VA</FieldDescription>
+                      </FieldContent>
+                    </Field>
+                  </FieldLabel>
+                  <FieldLabel htmlFor="method-paypal">
+                    <Field orientation="horizontal" className="pb-2.5">
+                      <RadioGroupItem value="paypal" id="method-paypal" />
+                      <FieldContent>
+                        <FieldTitle>QRIS / CREDIT CARD</FieldTitle>
+                        <FieldDescription className="line-clamp-1">
+                          Pay using QRIS or Credit Card
+                        </FieldDescription>
+                      </FieldContent>
+                    </Field>
+                  </FieldLabel>
+                </RadioGroup>
+              </div>
+            </div>
+
+            <div>
+              <h2 className="cn-font-heading text-xs font-medium tracking-wider text-muted-foreground uppercase">Discount</h2>
+              <div className="mt-2">
+                {promos && promos.length > 0 && (
                   <div className="flex space-x-2">
                     <Input
                       type="text"
@@ -118,61 +149,63 @@ export function StepPayment({event, order, promos}: Props) {
                     />
                     <Button
                       type="button"
-                      variant="outline"
+                      variant={promoCode.trim() ? 'default' : 'outline'}
                       onClick={applyPromoCode}
                       disabled={!promoCode.trim()}
                     >
                       Apply
                     </Button>
                   </div>
-                </div>
-              </ItemContent>
-            </Item>
-          )}
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Item</TableHead>
-                <TableHead colSpan={3} className="text-right">Amount</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
+                )}
+              </div>
+            </div>
+          </div>
 
-              <TableRow>
-                <TableCell>Ticket Price</TableCell>
-                <TableCell colSpan={3} className="text-right tabular-nums">
-                  {formatMoney(Number(price))}
-                </TableCell>
-              </TableRow>
-
-              {discount > 0 && (
-                <TableRow>
-                  <TableCell colSpan={3} className="text-right text-green-600">
+          <div className="mt-6">
+            <h2 className="cn-font-heading text-xs font-medium tracking-wider text-muted-foreground uppercase">Order Summary</h2>
+            <div className="mt-2">
+              <Item variant="muted" className="flex-col items-stretch">
+                <ItemContent className="gap-3">
+                  <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">
+                    Barong Melali 2026
+                  </span>
+                    <span className="text-sm font-medium tabular-nums">
+                    {formatMoney(Number(price))}
+                  </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">
+                    Processing Fee
+                  </span>
+                    <span className="text-sm font-medium tabular-nums">
+                    {formatMoney(Number(fee))}
+                  </span>
+                  </div>
+                  <Separator/>
+                  {discount > 0 && (
+                    <div className="flex items-center justify-between">
+                  <span className="text-sm text-green-600">
                     Discount
-                  </TableCell>
-                  <TableCell
-                    className="text-right tabular-nums text-green-600">{formatMoney(Number(discount))}</TableCell>
-                </TableRow>
-              )}
-
-              <TableRow>
-                <TableCell colSpan={3} className="text-right">
-                  Service Fee
-                </TableCell>
-                <TableCell className="text-right tabular-nums max-w-sm">{formatMoney(Number(fee))}</TableCell>
-              </TableRow>
-
-
-              <TableRow>
-                <TableCell colSpan={3} className="text-right">
-                  Total
-                </TableCell>
-                <TableCell className="text-right tabular-nums">
+                  </span>
+                      <span className="text-sm font-medium tabular-nums">
+                    {formatMoney(Number(discount))}
+                  </span>
+                    </div>
+                  )}
+                  <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">
+                    Total
+                  </span>
+                    <span className="text-sm font-semibold tabular-nums">
                   {formatMoney(Number(totalPrice))}
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
+                  </span>
+                  </div>
+                </ItemContent>
+              </Item>
+            </div>
+          </div>
+
         </CardContent>
         <CardFooter>
           <Button className="w-full" disabled={isPending} type="submit">
