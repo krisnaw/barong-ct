@@ -23,32 +23,27 @@ interface Props {
   promos: PromoType[] | null
 }
 
-const INVOICE_ITEMS = [
-  {item: "Design System License", qty: 1, unitPrice: 499},
-  {item: "Priority Support", qty: 12, unitPrice: 99},
-  {item: "Custom Components", qty: 3, unitPrice: 250},
-] as const
-
-const subtotal = INVOICE_ITEMS.reduce(
-  (sum, row) => sum + row.qty * row.unitPrice,
-  0
-)
-const tax = 0
-const totalDue = subtotal + tax
-
-function formatCurrency(value: number) {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 2,
-  }).format(value)
-}
+const methods = [
+  {
+    formID : 'pm-bni-va',
+    value: ["VIRTUAL_ACCOUNT_BNI"],
+    label: "BNI Virtual Account",
+    description: "20% OFF WITH BNI VA",
+  },
+  {
+    formID: 'pm-qris-cc',
+    value: ["QRIS", "CREDIT_CARD"],
+    label: "QRIS / CREDIT CARD",
+    description: "Pay using QRIS or Credit Card",
+  },
+]
 
 export function StepPayment({event, order, promos}: Props) {
   const router = useRouter();
   const [promoCode, setPromoCode] = useState('');
   const [discount, setDiscount] = useState(0);
   const [promoId, setPromoId] = useState<number | undefined>(undefined);
+  const [pm, setPM] = useState<string[]>(methods[0].value)
 
   const price = Number(event.price);
   const fee = event.serviceFee ?? 0;
@@ -71,7 +66,7 @@ export function StepPayment({event, order, promos}: Props) {
     await updateOrderAction(orderPayload)
 
     // create payment
-    const res = await createPayment({oderId: order.id});
+    const res = await createPayment({oderId: order.id, pm});
 
     if (res.success) {
       router.push(res.data as string);
@@ -108,29 +103,23 @@ export function StepPayment({event, order, promos}: Props) {
               <h2 className="cn-font-heading text-xs font-medium tracking-wider text-muted-foreground uppercase">Payment Method</h2>
               <div className="mt-2">
                 <RadioGroup
-                  defaultValue="bank"
+                  defaultValue={pm}
+                  value={pm}
+                  onValueChange={(value) => setPM(value)}
                   className="grid grid-cols-1 items-start gap-3 md:grid-cols-2 style-sera:grid-cols-1"
                 >
-                  <FieldLabel htmlFor="method-bank">
-                    <Field orientation="horizontal" className="pb-2.5">
-                      <RadioGroupItem value="bank" id="method-bank" />
-                      <FieldContent>
-                        <FieldTitle>BNI Virtual Account</FieldTitle>
-                        <FieldDescription>20% OFF WITH BNI VA</FieldDescription>
-                      </FieldContent>
-                    </Field>
-                  </FieldLabel>
-                  <FieldLabel htmlFor="method-paypal">
-                    <Field orientation="horizontal" className="pb-2.5">
-                      <RadioGroupItem value="paypal" id="method-paypal" />
-                      <FieldContent>
-                        <FieldTitle>QRIS / CREDIT CARD</FieldTitle>
-                        <FieldDescription className="line-clamp-1">
-                          Pay using QRIS or Credit Card
-                        </FieldDescription>
-                      </FieldContent>
-                    </Field>
-                  </FieldLabel>
+
+                  {methods.map((item) => (
+                    <FieldLabel htmlFor={item.formID} key={item.formID}>
+                      <Field orientation="horizontal" className="pb-2.5">
+                        <RadioGroupItem value={item.value} id={item.formID} />
+                        <FieldContent>
+                          <FieldTitle>{item.label}</FieldTitle>
+                          <FieldDescription>{item.description}</FieldDescription>
+                        </FieldContent>
+                      </Field>
+                    </FieldLabel>
+                  ))}
                 </RadioGroup>
               </div>
             </div>

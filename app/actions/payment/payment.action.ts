@@ -6,7 +6,7 @@ import {db} from "@/db/db";
 import {getUserWithDetail} from "@/db/query/user-query";
 import {getEventById} from "@/db/query/event-query";
 import crypto from "crypto";
-import {generateDigest, generateSignature, PM} from "@/utils/doku-helper";
+import {generateDigest, generateSignature} from "@/utils/doku-helper";
 import {eq} from "drizzle-orm";
 import {eventOrder, eventPayment} from "@/db/schema";
 import {redirect} from "next/navigation";
@@ -17,15 +17,13 @@ const clientID = process.env.DOKU_CLIENT_ID!
 const clientSecret = process.env.DOKU_SECRET_KEY!
 const baseURL = process.env.BETTER_AUTH_URL!
 
-export async function createPayment(payload: { oderId: number }): Promise<ActionResponse> {
+export async function createPayment(payload: { oderId: number, pm : string[] }): Promise<ActionResponse> {
 
   const requestTimestamp = new Date().toISOString().slice(0, 19) + "Z"
 
   const order = await db.query.eventOrder.findFirst({
     where: eq(eventOrder.id, payload.oderId),
   })
-
-  console.log(order)
 
   if (!order) {
     redirect('/')
@@ -68,7 +66,7 @@ export async function createPayment(payload: { oderId: number }): Promise<Action
     },
     "payment": {
       "payment_due_date": 45,
-      "payment_method_types": PM
+      "payment_method_types": payload.pm
     },
     "customer": {
       "name": user.name,

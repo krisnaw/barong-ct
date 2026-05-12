@@ -11,7 +11,7 @@ import {revalidatePath} from "next/cache";
 export type updateData = z.infer<typeof orderUpdateSchema>;
 
 export async function updateOrderAction(formData: updateData): Promise<ActionResponse> {
-  console.log(formData)
+
   try {
     await db.update(eventOrder).set(formData).where(eq(eventOrder.id, Number(formData.id)))
   } catch (error) {
