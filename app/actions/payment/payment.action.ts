@@ -103,7 +103,6 @@ export async function createPayment(payload: { oderId: number, pm : string[] }):
   const res = await fetch(`${dokuBaseURL}${dokuReqPath}`, requestOptions);
 
   const body = await res.json();
-  console.log(body);
 
   if (!res.ok) {
     const message = Array.isArray(body.message)
