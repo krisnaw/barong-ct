@@ -1,90 +1,36 @@
-import {Heading} from "@/components/landing/heading";
-import {Container} from "@/components/landing/container";
-import Link from "next/link";
 import Image from "next/image";
 
-// If loading a variable font, you don't need to specify the font weight
-
 export default async function Home() {
-
   return (
-    <div>
-      <div className="relative isolate overflow-hidden pt-14 h-screen">
-        <Image
-          alt=""
-          src="/bg-image-opt.jpg"
-          fill={true}
-          className="absolute inset-0 -z-10 size-full object-cover grayscale brightness-50 contrast-100"
-        />
-        {/*<div*/}
-        {/*  aria-hidden="true"*/}
-        {/*  className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"*/}
-        {/*>*/}
-        {/*  <div*/}
-        {/*    style={{*/}
-        {/*      clipPath:*/}
-        {/*        'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)',*/}
-        {/*    }}*/}
+    <div className="flex-1 h-[95vh]">
+      <div className="relative isolate overflow-hidden h-full">
+        {/* Background Image */}
 
-        {/*    className="relative left-[calc(50%-11rem)] aspect-1155/678 w-144.5 -translate-x-1/2 rotate-30 bg-linear-to-tr from-[#3b2f0a] via-[#8f7a1e] to-[#f5d76e] opacity-20 sm:left-[calc(50%-30rem)] sm:w-288.75"*/}
-        {/*  />*/}
-        {/*</div>*/}
+        <div>
 
-
-        <Container className="flex flex-col gap-16 mt-24">
-          <div className="flex gap-x-10 gap-y-16 max-lg:flex-col sm:gap-y-24">
-            <div className="flex shrink-0 flex-col items-start gap-6 pt-16 sm:pt-32 lg:basis-2xl lg:py-40">
-              <Heading className="text-gold-500 font-bold">
-                Barong Cycling X Anniversary
-              </Heading>
-              <div className="flex max-w-3xl flex-col gap-4 text-lg/8 text-white/70">
-                <p>
-                  Join us in celebrating our 10th anniversary! Explore exciting cycling events, connect with fellow enthusiasts, and create unforgettable memories.
-                </p>
-              </div>
-
-              <button
-                type="button"
-                className="rounded-full w-full bg-gold-500 px-3.5 py-2.5 text-sm font-semibold text-white hover:bg-gold-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500"
-              >
-                <Link href="/event">
-                  Join Now
-                </Link>
-              </button>
-            </div>
-
-
-            {/*<div className="lg:pt-24">*/}
-            {/*  <div className="relative h-72 sm:h-92 md:h-125 lg:size-full">*/}
-            {/*    <div className="absolute inset-y-0 left-0 flex w-screen overflow-hidden *:h-full *:w-auto *:max-w-none max-lg:rounded-t-lg lg:rounded-tl-lg">*/}
-            {/*      <img*/}
-            {/*        className="bg-white/75 "*/}
-            {/*        src="https://assets.tailwindplus.com/screenshots/1.webp?top=900"*/}
-            {/*        alt=""*/}
-            {/*        width="3440"*/}
-            {/*        height="1500"*/}
-            {/*      />*/}
-            {/*    </div>*/}
-            {/*  </div>*/}
-            {/*</div>*/}
-
-
-          </div>
-        </Container>
-
-        <div
-          aria-hidden="true"
-          className="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"
-        >
-          <div
-            style={{
-              clipPath:
-                'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)',
-            }}
-            className="relative left-[calc(50%+3rem)] aspect-1155/678 w-144.5 -translate-x-1/2 bg-linear-to-tr from-[#3b2f0a] via-[#8f7a1e] to-[#f5d76e] opacity-20 sm:left-[calc(50%+36rem)] sm:w-288.75"
+          <Image
+            alt=""
+            src="/bg-image-opt.jpg"
+            fill={true}
+            className="absolute inset-0 -z-10 size-full object-cover"
           />
+
+          <div className="absolute inset-0 bg-black/40"></div>
         </div>
 
+        {/* Text Container */}
+        {/* Added 'relative' and flex properties to center the text */}
+        <div className="relative z-10 flex flex-col h-full items-center justify-center text-center">
+          <h2 className={`text-white font-bold text-5xl md:text-7xl leading-relaxed`}>
+            Barong Melali 2026
+          </h2>
+          <button
+            type="button"
+            className=" mt-4 bg-orange-600 px-3.5 py-2.5 text-sm lg:px-8.5 lg:py-4.5 lg:text-2xl font-semibold text-white shadow-xs hover:bg-orange-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+          >
+            Coming Soon
+          </button>
+        </div>
       </div>
     </div>
   );

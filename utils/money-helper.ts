@@ -4,7 +4,7 @@ export const formatMoney = (amount: number, currency = 'IDR', locale = 'id-ID') 
     currency: currency,
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
-  }).format(amount);
+  }).format(amount).replace(/\s/g, '');
 };
 
 export function formatBibNumber(bib: number, length = 3): string {

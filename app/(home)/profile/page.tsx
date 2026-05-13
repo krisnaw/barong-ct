@@ -26,7 +26,7 @@ export default async function ProfilePage() {
   const joinedEvents = await getEventsByUserId(session.user.id)
 
   return (
-    <div>
+    <div className="mx-auto max-w-3xl px-4 md:px-6 lg:px-8 pt-24 pb-24">
       <Tabs defaultValue="account" className="w-full">
         <TabsList>
           <TabsTrigger value="account">Account</TabsTrigger>
@@ -35,7 +35,7 @@ export default async function ProfilePage() {
         <TabsContent value="account" className="pt-6">
           <ProfileForm user={userDetail} />
         </TabsContent>
-        <TabsContent value="joined-events" className="pt-6">
+        <TabsContent value="joined-events" className="">
           {joinedEvents.length > 0 ? (
             <ListEvent events={joinedEvents} />
           ) : (

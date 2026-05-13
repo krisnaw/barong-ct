@@ -3,17 +3,25 @@ import {redirect} from "next/navigation";
 import {getOngoingOrder} from "@/db/query/event-order.query";
 import {auth} from "@/lib/auth";
 import {headers} from "next/headers";
-import {getPaymentByOrder} from "@/db/query/event-payment.query";
 import {getParticipantByEventUser} from "@/db/query/participant-query";
 import * as React from "react";
 import {formatBibNumber} from "@/utils/money-helper";
-import {checkPaymentStatus} from "@/app/actions/payment/payment-status.action";
 import {getGroupById} from "@/db/query/event-group.query";
 import {InviteItem} from "@/app/(home)/(manage)/event/[id]/invite-item";
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {EventCard} from "@/components/events/event-card";
 import {Item, ItemContent, ItemDescription, ItemTitle} from "@/components/ui/item";
+import {getPaymentByOrder} from "@/db/query/event-payment.query";
+import {checkPaymentStatus} from "@/app/actions/payment/payment-status.action";
+import {EventPaymentType} from "@/db/schema";
+
+const stats = [
+  { name: 'Distance', value: '140', unit: 'km' },
+  { name: 'Elevation Gain', value: '2,370', unit: 'm' },
+  { name: 'Pit stops', value: '3' },
+  { name: 'Cutoff time', value: '5', unit: 'hours' },
+]
 
 export default async function Page({params,}: { params: Promise<{ id: number }> }) {
 
@@ -28,13 +36,15 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
   const session = await auth.api.getSession({
     headers: await headers() // you need to pass the headers object.
   })
+
   if (!session) {
     redirect('/auth/signup')
   }
 
   const userId = session.user.id;
   const order = await getOngoingOrder(id, userId);
-  let payment = null
+  console.log(order);
+  let payment : EventPaymentType | undefined = undefined
   if (order) {
     payment = await getPaymentByOrder(order.id)
     if (payment && payment.status === "PENDING") {
@@ -50,66 +60,90 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
 
       <div className="mx-auto max-w-xl px-4 md:px-6 lg:px-8 mt-8 space-y-6">
 
-        <Card className="pt-0">
-          <CardHeader className="bg-muted/50 border-b p-4 items-center">
-            <CardTitle className="font-bold leading-7">
-              Registrations
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 gap-2">
+        {order ? (
+          <Card className="pt-0">
+            <CardHeader className="bg-muted/50 border-b p-4 items-center">
+              <CardTitle className="font-bold leading-7">
+                Registrations
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 gap-2">
 
-              <Item className="bg-green-50 col-span-2 inset-ring inset-ring-green-600/20">
-                <ItemContent>
-                  <ItemTitle
-                    className="uppercase cn-card-title cn-font-heading text-xl tabular-nums  text-green-700 text-center">
-                    Registration Confirmed
-                  </ItemTitle>
-                </ItemContent>
-              </Item>
-
-
-              {participant && (
-                <Item className="bg-muted">
+                <Item className="bg-green-50 col-span-2 inset-ring inset-ring-green-600/20">
                   <ItemContent>
-                    <ItemDescription>Bib Number</ItemDescription>
-                    <ItemTitle className="cn-card-title cn-font-heading text-2xl tabular-nums text-primary">
-                      {participant.bibNumber && formatBibNumber(participant.bibNumber)}
+                    <ItemTitle
+                      className="uppercase cn-card-title cn-font-heading text-xl tabular-nums  text-green-700 text-center">
+                      Registration Confirmed
                     </ItemTitle>
                   </ItemContent>
                 </Item>
-              )}
 
 
-              {participant && (
-                <Item className="bg-muted">
-                  <ItemContent>
-                    <ItemDescription>Jersey Size</ItemDescription>
-                    <ItemTitle className="cn-card-title cn-font-heading text-2xl tabular-nums text-primary">
-                      M
-                    </ItemTitle>
-                  </ItemContent>
-                </Item>
-              )}
+                {participant && (
+                  <Item className="bg-muted">
+                    <ItemContent>
+                      <ItemDescription>Bib Number</ItemDescription>
+                      <ItemTitle className="cn-card-title cn-font-heading text-2xl tabular-nums text-primary">
+                        {participant.bibNumber && formatBibNumber(participant.bibNumber)}
+                      </ItemTitle>
+                    </ItemContent>
+                  </Item>
+                )}
 
-              {payment && (
-                <Item className="bg-muted col-span-2">
-                  <ItemContent>
-                    <ItemDescription>
-                      Payment Success
-                    </ItemDescription>
-                    <ItemTitle className="cn-card-title cn-font-heading text-2xl tabular-nums text-primary">
-                      {payment.invoiceNumber}
-                    </ItemTitle>
-                  </ItemContent>
-                </Item>
-              )}
 
+                {participant && (
+                  <Item className="bg-muted">
+                    <ItemContent>
+                      <ItemDescription>Jersey Size</ItemDescription>
+                      <ItemTitle className="cn-card-title cn-font-heading text-2xl tabular-nums text-primary">
+                        M
+                      </ItemTitle>
+                    </ItemContent>
+                  </Item>
+                )}
+
+                {payment ? (
+                  <Item className="bg-muted col-span-2">
+                    <ItemContent>
+                      <ItemDescription>
+                        Payment Success
+                      </ItemDescription>
+                      <ItemTitle className="cn-card-title cn-font-heading text-2xl tabular-nums text-primary">
+                        {payment.invoiceNumber}
+                      </ItemTitle>
+                    </ItemContent>
+                  </Item>
+                ) : null}
+
+              </div>
+            </CardContent>
+          </Card>
+        ) : null}
+
+        <EventCard event={event} footerType={order ? 'none' : 'join'} participant={participant}/>
+
+        <Card className="p-0">
+          <CardContent className="px-0">
+            <div>
+              <div className="bg-white">
+                <div className="mx-auto max-w-7xl">
+                  <div className="grid grid-cols-1 gap-px bg-gray-900/10 sm:grid-cols-2">
+                    {stats.map((stat) => (
+                      <div key={stat.name} className="bg-white px-4 py-6 sm:px-6 lg:px-8">
+                        <p className="flex items-baseline gap-x-2">
+                          <span className="text-4xl font-semibold tracking-tight text-gray-900">{stat.value}</span>
+                          {stat.unit ? <span className="text-sm text-gray-500">{stat.unit}</span> : null}
+                        </p>
+                        <p className="mt-2 text-sm/6 font-medium text-gray-500">{stat.name}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>
-
-        <EventCard event={event} withFooter={false} participant={participant}/>
 
         {group && (
           <Card className="pt-0">

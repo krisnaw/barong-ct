@@ -1,14 +1,7 @@
 import {auth} from "@/lib/auth";
 import {headers} from "next/headers";
-import {Mona_Sans} from "next/font/google";
 import Header from "@/components/landing/header";
 import Footer from "@/components/landing/footer";
-
-const instrumentSerif = Mona_Sans({
-  subsets: ["latin"],
-  style: "normal",
-  weight: "400"
-})
 
 export default async function HomeLayout({children,}: Readonly<{ children: React.ReactNode; }>) {
 
@@ -17,9 +10,9 @@ export default async function HomeLayout({children,}: Readonly<{ children: React
   })
 
   return (
-    <div className={`${instrumentSerif.className} min-h-screen flex flex-col bg-muted`}>
+    <div className="flex flex-col">
       <Header user={session?.user ? session.user : undefined}/>
-      <div className="flex-1">
+      <div className="grow">
         {children}
       </div>
       <Footer />
