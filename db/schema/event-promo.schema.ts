@@ -11,6 +11,7 @@ export const eventPromoSchema = pgTable("event_promo", {
 
   promo: text("promo").notNull(),
   discountValue: doublePrecision('discount_value').notNull(),
+  discountType: text("discount_type").notNull().default('fixed'),
   currency: text("currency").default("IDR"),
 
   startsAt: timestamp('starts_at'),
