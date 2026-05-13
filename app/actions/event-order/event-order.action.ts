@@ -6,7 +6,6 @@ import {redirect} from "next/navigation";
 import {z} from "zod";
 import {ActionResponse} from "@/types/types";
 import {eq} from "drizzle-orm";
-import {revalidatePath} from "next/cache";
 
 export type updateData = z.infer<typeof orderUpdateSchema>;
 
@@ -38,7 +37,7 @@ export async function createOrderAction(formData: insertData) {
   let url = ""
   try {
     const [order] = await db.insert(eventOrder).values(formData).returning()
-    url = `/event/${order.eventId}/order`
+    url = `/event/${order.eventId}/register`
   } catch (error) {
     console.log(error)
 
@@ -51,6 +50,5 @@ export async function createOrderAction(formData: insertData) {
       message: 'Sorry, something went wrong',
     }
   }
-  revalidatePath(url)
   redirect(url)
 }

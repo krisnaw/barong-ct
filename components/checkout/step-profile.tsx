@@ -23,8 +23,6 @@ export function StepProfile({user, order}: { user: UserWithDetail, order: EventO
   const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(async (_: ActionResponse, formData: FormData) => {
 
 
-    console.log("payload");
-
     const payload: UserDetailType & { name: string, image: string | null } = {
       userId: user.id as string,
       name: formData.get("full_name") as string,
@@ -59,7 +57,7 @@ export function StepProfile({user, order}: { user: UserWithDetail, order: EventO
       await updateOrderAction(orderPayload)
 
       toast.success(res.message)
-      router.push(`/event/${eventId}/order`)
+      router.push(`/event/${eventId}/register`)
     } else {
       toast.error(res.message)
     }

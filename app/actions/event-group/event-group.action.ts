@@ -11,7 +11,7 @@ export async function createGroupAction(payload: {name: string, eventId: number,
     groupId: group.id,
   }).where(eq(eventOrder.id, payload.orderId))
 
-  revalidatePath(`/event/${group.eventId}/category`, 'page')
+  revalidatePath(`/event/${group.eventId}/register/group`, 'page')
 
   return {
     success: true,

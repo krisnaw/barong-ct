@@ -48,7 +48,7 @@ export function CategorySelection({event, groups, order}: {
       const newParam = new URLSearchParams(searchParams);
       // @ts-ignore
       newParam.set('group', String(res.data.id))
-      router.push(`/event/${eventId}/category?${newParam}`)
+      router.push(`/event/${eventId}/register/group?${newParam}`)
       toast.success(res.message);
     }
   }
@@ -68,7 +68,7 @@ export function CategorySelection({event, groups, order}: {
     if (res.success) {
       if (res.data) {
         const newParam = new URLSearchParams(searchParams);
-        router.push(`/event/${eventId}/profile?${newParam}`)
+        router.push(`/event/${eventId}/register/profile?${newParam}`)
       }
     } else {
       toast.error("this toas is clicked")

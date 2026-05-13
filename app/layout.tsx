@@ -11,7 +11,7 @@ import {TooltipProvider} from "@/components/ui/tooltip"
 
 const playfairDisplayHeading = Playfair_Display({subsets: ['latin'], variable: '--font-heading'});
 
-const inter = Inter({subsets:['latin'],variable:'--font-sans'});
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,7 +36,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en"
-          className={cn("h-full overscroll-none", "font-sans", inter.variable, playfairDisplayHeading.variable)}>
+          className={cn("h-full overscroll-none", "font-sans", geist.variable, playfairDisplayHeading.variable)}>
     <body className={`${geistSans.variable} ${geistMono.variable} antialiased h-full`}>
     <NextSSRPlugin
       /**

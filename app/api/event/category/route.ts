@@ -12,8 +12,5 @@ export async function POST(req: NextRequest) {
     )
   })
 
-  console.log(groups);
-
-
   return NextResponse.json({message: "success"}, { status: 200, });
 }

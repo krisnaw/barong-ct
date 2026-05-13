@@ -1,10 +1,10 @@
-import * as React from "react";
 import {auth} from "@/lib/auth";
 import {headers} from "next/headers";
 import {redirect} from "next/navigation";
-import {getUserWithDetail} from "@/db/query/user-query";
+import {getEventById} from "@/db/query/event-query";
 import {getOngoingOrder} from "@/db/query/event-order.query";
-import {StepProfile} from "@/components/checkout/step-profile";
+import {getPromoByEvent} from "@/db/query/event-promo.query";
+import {StepPayment} from "@/components/checkout/step-payment";
 
 export default async function Page({params,}: { params: Promise<{ id: number }> }) {
   const {id} = await params;
@@ -16,14 +16,21 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
     redirect(`/auth/signup`)
   }
 
-  const user = await getUserWithDetail(session.user.id)
-  const order = await getOngoingOrder(id, user.id)
+  const event = await getEventById(id)
+  if (!event) {
+    redirect(`/event`);
+  }
+
+  const order = await getOngoingOrder(id, session.user.id)
   if (!order) {
     redirect("/event")
   }
+
+  const promos = await getPromoByEvent(id)
+
   return (
     <div>
-      <StepProfile user={user} order={order}  />
+      <StepPayment event={event} order={order} promos={promos} />
     </div>
   )
 }

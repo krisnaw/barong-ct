@@ -66,7 +66,7 @@ export function SimpleGroupInput({
           placeholder={placeholder}
           className={error ? 'border-destructive focus-visible:ring-destructive' : ''}
         />
-        <Button onClick={handleCreate} size="sm" className="gap-2">
+        <Button onClick={handleCreate} className="gap-2" disabled={groupName.length === 0}>
           <Plus className="h-4 w-4" />
           Create
         </Button>
