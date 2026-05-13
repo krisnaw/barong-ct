@@ -7,7 +7,6 @@ export default async function Home() {
         {/* Background Image */}
 
         <div>
-
           <Image
             alt=""
             src="/bg-image-opt.jpg"

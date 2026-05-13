@@ -4,6 +4,6 @@ import {EventCard} from "@/components/events/event-card";
 
 export function ListItemEvent({event}: { event: EventType & { participantCount?: number } }) {
   return (
-    <EventCard event={event} footerType="detail" />
+    <EventCard event={event} />
   )
 }

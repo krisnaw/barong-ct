@@ -1,22 +1,19 @@
 import * as React from "react";
-import {EventType, ParticipantType} from "@/db/schema";
+import {EventType} from "@/db/schema";
 import {EventDate} from "@/components/events/event-date";
 import {formatMoney} from "@/utils/money-helper";
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import Image from "next/image";
 import {Item, ItemContent} from "@/components/ui/item";
-import {Button} from "@/components/ui/button";
-import Link from "next/link";
 import {Separator} from "@/components/ui/separator";
+import {buttonVariants} from "@/components/ui/button";
+import Link from "next/link";
 
 type Props = {
   event: EventType,
-  withFooter?: boolean,
-  participant?: ParticipantType
-  footerType : 'none' | 'detail' | 'join'
 }
 
-export function EventCard({event, footerType = 'none', withFooter = false, participant} : Props) {
+export function EventCard({event} : Props) {
   return (
     <Card className="pt-0">
       <div className="relative h-56 w-full overflow-hidden shadow">
@@ -87,31 +84,11 @@ export function EventCard({event, footerType = 'none', withFooter = false, parti
         </Item>
 
       </CardContent>
-
-      {footerType == 'join' && (
-        <CardFooter>
-          {!participant && (
-            <Button className="w-full font-bold uppercase" size="lg">
-              <Link href={`/event/${event.id}/order`} prefetch={true}>
-                Register Now
-              </Link>
-            </Button>
-          )}
-        </CardFooter>
-      )}
-
-      {footerType == 'detail' && (
-        <CardFooter>
-          {!participant && (
-            <Button className="w-full font-bold uppercase" size="lg">
-              <Link href={`/event/${event.id}`} prefetch={true}>
-                See Detail
-              </Link>
-            </Button>
-          )}
-        </CardFooter>
-      )}
-
+      <CardFooter>
+        <Link href={`/event/${event.id}`} prefetch={true} className={`${buttonVariants({ variant: "default", size: "lg" })} w-full uppercase`}>
+          See details
+        </Link>
+      </CardFooter>
     </Card>
   )
 }
