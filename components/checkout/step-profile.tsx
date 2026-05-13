@@ -26,7 +26,7 @@ export function StepProfile({user, order}: { user: UserWithDetail, order: EventO
     const payload: UserDetailType & { name: string, image: string | null } = {
       userId: user.id as string,
       name: formData.get("full_name") as string,
-      image: null,
+      image: user.image ?? null,
       phoneNumber: formData.get("phone_number") as string,
       dateOfBirth: formData.get('date') as string,
       emergencyContactName: formData.get("emergency_contact_name") as string,
@@ -44,7 +44,6 @@ export function StepProfile({user, order}: { user: UserWithDetail, order: EventO
       address: formData.get("address") as string,
       clubName: "",
     }
-
 
     const res = await UpdateProfileAction(payload)
 
