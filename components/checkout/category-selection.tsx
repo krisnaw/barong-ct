@@ -1,7 +1,7 @@
 'use client'
 
 import {EventOrderType, EventType, GroupWithParticipant} from "@/db/schema";
-import {useParams, useRouter, useSearchParams} from "next/navigation";
+import {useRouter, useSearchParams} from "next/navigation";
 import {Label} from "@/components/ui/label";
 import {useActionState, useState} from "react";
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
@@ -22,9 +22,8 @@ export function CategorySelection({event, groups, order}: {
   groups: GroupWithParticipant[],
   order: EventOrderType
 }) {
-  const params = useParams<{ id: string }>();
   const searchParams = useSearchParams();
-  const eventId = params.id;
+  const eventId = event.id
 
   const [jerseySize, setJerseySize] = useState<string>(order?.jerseySize ?? "");
 
@@ -43,6 +42,8 @@ export function CategorySelection({event, groups, order}: {
       eventId: Number(eventId),
       orderId: order.id
     })
+
+    console.log(res)
 
     if (res.success && res.data) {
       const newParam = new URLSearchParams(searchParams);
@@ -85,7 +86,7 @@ export function CategorySelection({event, groups, order}: {
           Step 1: Group Ride and Jersey Size.
         </CardTitle>
         <CardDescription>
-          Search or Create Group Ride and select your jersey size.
+          All riders must be part of a group. Create or join one now, then select your jersey size to finalize your spot.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -113,8 +114,6 @@ export function CategorySelection({event, groups, order}: {
 
         {selectedGroup && (
           <>
-
-
             <div className="mt-6">
               <div>
                 <div className="flex justify-between">
