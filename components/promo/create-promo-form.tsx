@@ -44,9 +44,6 @@ export function CreatePromoForm({ eventId, price }: CreatePromoFormProps) {
       endsAt: endsAt,
       isActive: formData.get("isActive") === "true",
     }
-
-    console.log("payload", payload)
-
     // Here you would create the actual action
     // For now, simulating response
     return await createPromoAction(payload)

@@ -26,3 +26,4 @@ export const eventPayment = pgTable("event_payment", {
 });
 
 export type EventPaymentType = typeof eventPayment.$inferSelect
+export type EventPaymentInsert = Omit<EventPaymentType, 'id' | 'createdAt' | 'updatedAt'>

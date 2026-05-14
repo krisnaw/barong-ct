@@ -4,6 +4,7 @@ import {auth} from "@/lib/auth";
 import {headers} from "next/headers";
 import {getOngoingOrder} from "@/db/query/event-order.query";
 import {createOrderAction} from "@/app/actions/event-order/event-order.action";
+import {ORDER_STATUS} from "@/utils/event.helper";
 
 export default async function Page({params, searchParams}: {
   params: Promise<{ id: number }>,
@@ -24,7 +25,6 @@ export default async function Page({params, searchParams}: {
   }
 
   // Check to make sure user has an Order
-
   const userId = session.user.id;
   const order = await getOngoingOrder(id, userId);
 
@@ -45,7 +45,7 @@ export default async function Page({params, searchParams}: {
   if (order) {
     const status = order.status;
 
-    if (status == 'draft') {
+    if (status == ORDER_STATUS.DRAFT) {
       if (event.isGroupRide && event.isGroupRide > 0) {
         redirect(`/event/${id}/register/group?orderId=${order.id}`)
       } else {
@@ -53,15 +53,15 @@ export default async function Page({params, searchParams}: {
       }
     }
 
-    if (status == 'profile') {
+    if (status == ORDER_STATUS.PROFILE) {
       redirect(`/event/${id}/register/payment?orderId=${order.id}`)
     }
 
-    if (status == 'payment') {
+    if (status == ORDER_STATUS.PENDING_PAYMENT) {
       redirect(`/event/${id}/register/payment?orderId=${order.id}`)
     }
 
-    if (status == 'complete') {
+    if (status == ORDER_STATUS.COMPLETED) {
       redirect(`/event/${id}`)
     }
   }

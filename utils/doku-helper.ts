@@ -42,3 +42,7 @@ export function generateSignature(clientId: string, requestId: string, requestTi
   // Prepend encoded result with algorithm info HMACSHA256=
   return "HMACSHA256=" + signature
 }
+
+export function generateInvoiceNumber(): string {
+  return `INV${Math.floor(Date.now() / 1000)}`;
+}

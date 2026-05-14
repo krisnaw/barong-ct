@@ -6,10 +6,10 @@ import {db} from "@/db/db";
 import {getUserWithDetail} from "@/db/query/user-query";
 import {getEventById} from "@/db/query/event-query";
 import crypto from "crypto";
-import {generateDigest, generateSignature} from "@/utils/doku-helper";
-import {eq} from "drizzle-orm";
-import {eventOrder, eventPayment} from "@/db/schema";
+import {generateDigest, generateInvoiceNumber, generateSignature} from "@/utils/doku-helper";
+import {eventPayment} from "@/db/schema";
 import {redirect} from "next/navigation";
+import {getOrderById} from "@/db/query/event-order.query";
 
 const dokuBaseURL = process.env.DOKU_API_URL
 const dokuReqPath = '/checkout/v1/payment'
@@ -21,9 +21,7 @@ export async function createPayment(payload: { oderId: number, pm : string[] }):
 
   const requestTimestamp = new Date().toISOString().slice(0, 19) + "Z"
 
-  const order = await db.query.eventOrder.findFirst({
-    where: eq(eventOrder.id, payload.oderId),
-  })
+  const order = await getOrderById(payload.oderId)
 
   if (!order) {
     redirect('/')
@@ -137,7 +135,4 @@ export async function createPayment(payload: { oderId: number, pm : string[] }):
   }
 }
 
-function generateInvoiceNumber(): string {
-  return `INV${Math.floor(Date.now() / 1000)}`;
-}
 

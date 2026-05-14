@@ -2,7 +2,7 @@
 
 import {Card, CardContent, CardFooter} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
-import {useRouter} from "next/navigation";
+import {redirect, useRouter} from "next/navigation";
 import {useActionState, useState} from "react";
 import {initialState} from "@/types/types";
 import {EventOrderType, EventType} from "@/db/schema";
@@ -16,6 +16,7 @@ import {Item, ItemContent} from "@/components/ui/item";
 import {Separator} from "@/components/ui/separator";
 import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
 import {Field, FieldContent, FieldDescription, FieldLabel, FieldTitle} from "@/components/ui/field";
+import {processFreePass} from "@/app/actions/payment/freepass.action";
 
 interface Props {
   event: EventType & { participantCount: number },
@@ -48,8 +49,10 @@ export function StepPayment({event, order, promos}: Props) {
   const price = Number(event.price);
   const fee = event.serviceFee ?? 0;
 
+  const isFreePass = discount >= price;
+
   // Calculate total price with or without discount
-  const totalPrice = price + fee - discount;
+  const totalPrice = isFreePass ? 0 : price + fee - discount;
 
   const [state, formAction, isPending] = useActionState(async () => {
 
@@ -66,11 +69,21 @@ export function StepPayment({event, order, promos}: Props) {
     await updateOrderAction(orderPayload)
 
     // create payment
-    const res = await createPayment({oderId: order.id, pm});
-
-    if (res.success) {
-      router.push(res.data as string);
+    let res
+    if (totalPrice == 0) {
+      // store empty payment and create participant
+      res = await processFreePass({oderId: order.id})
+      if (res.success) {
+        redirect(`/event/${event.id}`)
+      }
+    } else {
+      res = await createPayment({oderId: order.id, pm});
+      if (res.success) {
+        router.push(res.data as string);
+      }
     }
+
+
 
     return res
   }, initialState)
@@ -163,14 +176,16 @@ export function StepPayment({event, order, promos}: Props) {
                     {formatMoney(Number(price))}
                   </span>
                   </div>
-                  <div className="flex items-center justify-between">
+                  {!isFreePass && (
+                    <div className="flex items-center justify-between">
                   <span className="text-sm text-muted-foreground">
                     Processing Fee
                   </span>
                     <span className="text-sm font-medium tabular-nums">
                     {formatMoney(Number(fee))}
                   </span>
-                  </div>
+                    </div>
+                  )}
                   <Separator/>
                   {discount > 0 && (
                     <div className="flex items-center justify-between">
