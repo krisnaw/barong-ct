@@ -169,6 +169,13 @@
       "when": 1770958085946,
       "tag": "0023_smart_dazzler",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1778657569336,
+      "tag": "0024_soft_ultron",
+      "breakpoints": true
     }
   ]
 }

@@ -5,8 +5,9 @@ import {Badge} from "@/components/ui/badge";
 import {Button} from "@/components/ui/button";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table";
 import {PromoType} from "@/db/schema";
-import {CopyIcon} from "lucide-react";
+import {CopyIcon, Trash2} from "lucide-react";
 import {toast} from "sonner";
+import {deletePromoAction} from "@/app/actions/profile/promo/promo.action";
 
 interface PromoListTableProps {
   promos: PromoType[];
@@ -33,15 +34,17 @@ export function PromoListTable({ promos }: PromoListTableProps) {
         <TableRow>
           <TableHead>Promo Code</TableHead>
           <TableHead>Discount</TableHead>
+          <TableHead>Discount Type</TableHead>
           <TableHead>Start Date</TableHead>
           <TableHead>End Date</TableHead>
           <TableHead>Status</TableHead>
+          <TableHead>Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {promos.length === 0 ? (
           <TableRow>
-            <TableCell colSpan={5} className="text-center text-muted-foreground">
+            <TableCell colSpan={7} className="text-center text-muted-foreground">
               No promos found
             </TableCell>
           </TableRow>
@@ -62,12 +65,21 @@ export function PromoListTable({ promos }: PromoListTableProps) {
                 </div>
               </TableCell>
               <TableCell>{formatMoney(promo.discountValue)}</TableCell>
+              <TableCell className="capitalize">{promo.discountType}</TableCell>
               <TableCell>{promo.startsAt ? formatDate(promo.startsAt) : "-"}</TableCell>
               <TableCell>{promo.endsAt ? formatDate(promo.endsAt) : "-"}</TableCell>
               <TableCell>
                 <Badge variant={promo.isActive ? "default" : "secondary"}>
                   {promo.isActive ? "Active" : "Inactive"}
                 </Badge>
+              </TableCell>
+              <TableCell>
+                <form action={deletePromoAction}>
+                  <input type="hidden" name="promoId" value={promo.id} />
+                  <Button type="submit" variant="ghost" size="sm" className="h-6 w-6 p-0 text-destructive">
+                    <Trash2 className="h-3 w-3" />
+                  </Button>
+                </form>
               </TableCell>
             </TableRow>
           ))

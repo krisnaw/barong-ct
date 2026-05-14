@@ -16,10 +16,10 @@ import {createPromoAction} from "@/app/actions/profile/promo/promo.action";
 
 interface CreatePromoFormProps {
   eventId: number;
-  onSuccess?: () => void;
+  price? : number;
 }
 
-export function CreatePromoForm({ eventId, onSuccess }: CreatePromoFormProps) {
+export function CreatePromoForm({ eventId, price }: CreatePromoFormProps) {
   const promoId = useId();
   const discountValueId = useId();
   const startsAtId = useId();
@@ -30,15 +30,22 @@ export function CreatePromoForm({ eventId, onSuccess }: CreatePromoFormProps) {
   const [discountPercentage, setDiscountPercentage] = useState(0)
 
   const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(async (prevState: ActionResponse, formData: FormData) => {
+    const discountType = formData.get("discount_type") as string;
+    const discountValue = discountType === "percentage" && price
+      ? Math.round(price * (discountPercentage / 100))
+      : Number(formData.get("discountValue"));
+
     const payload = {
       eventId: eventId,
       promo: formData.get("promo") as string,
-      discountType: formData.get("discount_type") as string,
-      discountValue: Number(formData.get("discountValue")),
+      discountType,
+      discountValue,
       startsAt: startsAt,
       endsAt: endsAt,
       isActive: formData.get("isActive") === "true",
     }
+
+    console.log("payload", payload)
 
     // Here you would create the actual action
     // For now, simulating response
@@ -120,7 +127,7 @@ export function CreatePromoForm({ eventId, onSuccess }: CreatePromoFormProps) {
               </FieldDescription>
             </Field>
           )}
-          
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Field>
               <FieldLabel htmlFor={startsAtId}>Start Date & Time</FieldLabel>

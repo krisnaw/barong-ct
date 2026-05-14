@@ -2,6 +2,7 @@
 
 import {db} from "@/db/db";
 import {eventPromoSchema, promoInsertSchema} from "@/db/schema";
+import {eq} from "drizzle-orm";
 import {z} from "zod";
 import {revalidatePath} from "next/cache";
 
@@ -26,4 +27,11 @@ export async function createPromoAction(formData: insertData) {
     success: true,
     message: "Promo created successfully",
   }
+}
+
+export async function deletePromoAction(formData: FormData) {
+  console.log('asf')
+  const promoId = formData.get("promoId");
+  await db.delete(eventPromoSchema).where(eq(eventPromoSchema.id, Number(promoId)));
+  revalidatePath('/', 'page');
 }
