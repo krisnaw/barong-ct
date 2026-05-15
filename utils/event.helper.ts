@@ -8,7 +8,8 @@ export const ORDER_STATUS = {
 export const PAYMENT_STATUS = {
   PENDING: "PENDING",
   SUCCESS: "SUCCESS",
-  EXPIRED: "EXPIRED"
+  EXPIRED: "EXPIRED",
+  ORDER_EXPIRED: "ORDER_EXPIRED",
 } as const;
 
 

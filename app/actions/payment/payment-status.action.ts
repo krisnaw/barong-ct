@@ -43,7 +43,6 @@ export async function checkPaymentStatus(invoiceId: string) {
 
     if (res.ok) {
       const body = await res.json();
-      console.log(body);
       if (body.transaction.status === PAYMENT_STATUS.SUCCESS) {
         // update payment
         const [payment] = await db.update(eventPayment).set({status: body.transaction.status}).where(eq(eventPayment.invoiceNumber, invoiceId)).returning()
@@ -57,9 +56,9 @@ export async function checkPaymentStatus(invoiceId: string) {
           await createParticipant(order.eventId, order.userId)
         }
 
-      } else if (body.transaction.status === PAYMENT_STATUS.EXPIRED || body.order.status === "ORDER_EXPIRED") {
+      } else if (body.transaction.status === PAYMENT_STATUS.EXPIRED || body.order.status === PAYMENT_STATUS.ORDER_EXPIRED) {
         // update payment
-        await db.update(eventPayment).set({status: PAYMENT_STATUS.EXPIRED}).where(eq(eventPayment.invoiceNumber, invoiceId)).returning();
+        await db.update(eventPayment).set({status: body.transaction.status}).where(eq(eventPayment.invoiceNumber, invoiceId)).returning();
       }
     }
   } catch (error) {

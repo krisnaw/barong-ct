@@ -32,7 +32,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
   const promos = await getPromoByEvent(id)
 
   // if there is pending payment, check the payment status.
-  const payment = await getPaymentByOrder(id)
+  const payment = await getPaymentByOrder(order.id)
   if (payment) {
     if (payment.status == PAYMENT_STATUS.PENDING && payment.invoiceNumber) {
       await checkPaymentStatus(payment.invoiceNumber)
@@ -41,6 +41,13 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
 
   return (
     <div>
+      <div>
+        {payment && (
+          <div>
+            {payment.status}
+          </div>
+        )}
+      </div>
       <StepPayment event={event} order={order} promos={promos} />
     </div>
   )
