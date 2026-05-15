@@ -9,6 +9,10 @@ import {getPaymentByOrder} from "@/db/query/event-payment.query";
 import {PAYMENT_STATUS} from "@/utils/event.helper";
 import {checkPaymentStatus} from "@/app/actions/payment/payment-status.action";
 import Link from "next/link";
+import {Card, CardAction, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
+import {Badge} from "@/components/ui/badge";
+import * as React from "react";
+import {buttonVariants} from "@/components/ui/button";
 
 export default async function Page({params}: { params: Promise<{ id: number }> }) {
   const {id} = await params;
@@ -43,16 +47,26 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
   return (
     <div>
       {payment ? (
-        <div>
-          {payment.status}
+        <>
           {payment.status == PAYMENT_STATUS.PENDING && payment.paymentURL && (
-            <Link href={payment.paymentURL}>Complete payment</Link>
+            <Card>
+              <CardHeader>
+                <CardTitle>Payment</CardTitle>
+                <CardAction>
+                  <Badge variant="secondary" className="uppercase">{payment.status}</Badge>
+                </CardAction>
+              </CardHeader>
+              <CardContent>
+                <Link href={payment.paymentURL} className={`${buttonVariants({variant: "default", size: "lg"})} w-full uppercase`}>
+                  Complete payment
+                </Link>
+              </CardContent>
+            </Card>
           )}
-
           {payment.status == PAYMENT_STATUS.EXPIRED && (
             <StepPayment event={event} order={order} promos={promos} />
           )}
-        </div>
+        </>
       ) : (
         <StepPayment event={event} order={order} promos={promos} />
       )}
