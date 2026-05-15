@@ -15,6 +15,7 @@ const clientSecret = process.env.DOKU_SECRET_KEY!
 const requestTimestamp = new Date().toISOString().slice(0, 19) + "Z"
 
 export async function checkPaymentStatus(invoiceId: string) {
+  console.log("Checking Payment Status...")
   const requestId = crypto.randomUUID().toString();
   const requestTarget = `${dokuReqPath}${invoiceId}`;
   const signature = generateSignature(
