@@ -6,6 +6,7 @@ import {db} from "@/db/db";
 import {eventOrder, eventPayment} from "@/db/schema";
 import {eq} from "drizzle-orm";
 import {createParticipant} from "@/service/participant.service";
+import {ORDER_STATUS, PAYMENT_STATUS} from "@/utils/event.helper";
 
 const dokuBaseURL = process.env.DOKU_API_URL
 const dokuReqPath = '/orders/v1/status/'
@@ -42,11 +43,11 @@ export async function checkPaymentStatus(invoiceId: string) {
     if (res.ok) {
       const body = await res.json();
       console.log(body);
-      if (body.transaction.status === "SUCCESS") {
+      if (body.transaction.status === PAYMENT_STATUS.SUCCESS) {
         // update payment
         const [payment] = await db.update(eventPayment).set({status: body.transaction.status}).where(eq(eventPayment.invoiceNumber, invoiceId)).returning()
 
-        const [order] = await db.update(eventOrder).set({status: 'paid'}).where(eq(eventOrder.id, payment.orderId)).returning({
+        const [order] = await db.update(eventOrder).set({status: ORDER_STATUS.COMPLETED}).where(eq(eventOrder.id, payment.orderId)).returning({
           eventId: eventOrder.eventId,
           userId: eventOrder.userId,
         })
@@ -55,10 +56,9 @@ export async function checkPaymentStatus(invoiceId: string) {
           await createParticipant(order.eventId, order.userId)
         }
 
-      } else if (body.transaction.status === "EXPIRED" || body.order.status === "ORDER_EXPIRED") {
+      } else if (body.transaction.status === PAYMENT_STATUS.EXPIRED || body.order.status === "ORDER_EXPIRED") {
         // update payment
-        const setStatus = "EXPIRED"
-        const [payment] = await db.update(eventPayment).set({status: setStatus}).where(eq(eventPayment.invoiceNumber, invoiceId)).returning();
+        await db.update(eventPayment).set({status: PAYMENT_STATUS.EXPIRED}).where(eq(eventPayment.invoiceNumber, invoiceId)).returning();
       }
     }
   } catch (error) {

@@ -8,7 +8,7 @@ import {Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle} f
 import Link from "next/link";
 import {getOngoingOrder} from "@/db/query/event-order.query";
 import {buttonVariants} from "@/components/ui/button";
-import {ORDER_STATUS, PAYMENT_STATUS} from "@/utils/event.helper";
+import {ORDER_STATUS} from "@/utils/event.helper";
 import {Item, ItemContent} from "@/components/ui/item";
 import {Badge} from "@/components/ui/badge";
 import {getPaymentByOrder} from "@/db/query/event-payment.query";
@@ -68,24 +68,9 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
                 <>
                   {order.status != ORDER_STATUS.COMPLETED ? (
                     <div>
-                      {order.status == ORDER_STATUS.PENDING_PAYMENT && payment?.status == PAYMENT_STATUS.PENDING ? (
-                        <div>
-                          {payment && payment.paymentURL ? (
-                            <Link href={payment.paymentURL} className={`${buttonVariants({variant: "default", size: "lg"})} w-full uppercase`}>
-                              Complete Payment
-                            </Link>
-                          ) : (
-                            <Link href={`/event/${id}/register`} className={`${buttonVariants({variant: "default", size: "lg"})} w-full uppercase`}>
-                              Continue Registrations
-                            </Link>
-                          )}
-                        </div>
-                        ) : (
-                        <Link href={`/event/${id}/register`} className={`${buttonVariants({variant: "default", size: "lg"})} w-full uppercase`}>
-                          Continue Registrations
-                        </Link>
-                      )}
-
+                      <Link href={`/event/${id}/register`} className={`${buttonVariants({variant: "default", size: "lg"})} w-full uppercase`}>
+                        Continue Registrations
+                      </Link>
                     </div>
                   ) : (
                     <div>
