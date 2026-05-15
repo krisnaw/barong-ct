@@ -8,6 +8,7 @@ import {StepPayment} from "@/components/checkout/step-payment";
 import {getPaymentByOrder} from "@/db/query/event-payment.query";
 import {PAYMENT_STATUS} from "@/utils/event.helper";
 import {checkPaymentStatus} from "@/app/actions/payment/payment-status.action";
+import Link from "next/link";
 
 export default async function Page({params}: { params: Promise<{ id: number }> }) {
   const {id} = await params;
@@ -41,14 +42,20 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
 
   return (
     <div>
-      <div>
-        {payment && (
-          <div>
-            {payment.status}
-          </div>
-        )}
-      </div>
-      <StepPayment event={event} order={order} promos={promos} />
+      {payment ? (
+        <div>
+          {payment.status}
+          {payment.status == PAYMENT_STATUS.PENDING && payment.paymentURL && (
+            <Link href={payment.paymentURL}>Complete payment</Link>
+          )}
+
+          {payment.status == PAYMENT_STATUS.EXPIRED && (
+            <StepPayment event={event} order={order} promos={promos} />
+          )}
+        </div>
+      ) : (
+        <StepPayment event={event} order={order} promos={promos} />
+      )}
     </div>
   )
 }
