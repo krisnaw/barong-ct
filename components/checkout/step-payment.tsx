@@ -44,7 +44,7 @@ export function StepPayment({event, order, promos}: Props) {
   const [promoCode, setPromoCode] = useState('');
   const [discount, setDiscount] = useState(0);
   const [promoId, setPromoId] = useState<number | undefined>(undefined);
-  const [pm, setPM] = useState<string[]>(methods[0].value)
+  const [pm, setPM] = useState<string[]>([])
 
   const price = Number(event.price);
   const fee = event.serviceFee ?? 0;
@@ -82,20 +82,41 @@ export function StepPayment({event, order, promos}: Props) {
         router.push(res.data as string);
       }
     }
-
-
-
     return res
   }, initialState)
 
-  const applyPromoCode = () => {
+  const onClickApplyPromo = () => {
+    if (!promos || promos.length === 0) {
+      setDiscount(0);
+      return;
+    }
+    applyPromoCode(promoCode)
+  }
+
+  const onChangePM = (value: string[]) => {
+    setPM(value)
+    if (!promos || promos.length === 0) {
+      return;
+    }
+    const foundPromo = promos.find(promo =>
+      promo.promo.toLowerCase() === value[0].toLowerCase()
+    );
+    if (foundPromo) {
+      applyPromoCode(foundPromo.promo)
+      setPromoCode(foundPromo.promo)
+    } else {
+      setDiscount(0)
+    }
+  }
+
+  const applyPromoCode = (value: string) => {
     if (!promos || promos.length === 0) {
       setDiscount(0);
       return;
     }
 
     const foundPromo = promos.find(promo =>
-      promo.promo.toLowerCase() === promoCode.toLowerCase()
+      promo.promo.toLowerCase() === value.toLowerCase()
     );
 
     if (foundPromo) {
@@ -113,12 +134,12 @@ export function StepPayment({event, order, promos}: Props) {
 
           <div className="space-y-4">
             <div>
-              <h2 className="cn-font-heading text-xs font-medium tracking-wider text-muted-foreground uppercase">Payment Method</h2>
+              <h2 className="cn-font-heading text-xs font-medium tracking-wider text-muted-foreground uppercase">Select Payment Method</h2>
               <div className="mt-2">
                 <RadioGroup
                   defaultValue={pm}
                   value={pm}
-                  onValueChange={(value) => setPM(value)}
+                  onValueChange={(value: string[]) => onChangePM(value)}
                   className="grid grid-cols-1 items-start gap-3 md:grid-cols-2 style-sera:grid-cols-1"
                 >
 
@@ -138,7 +159,7 @@ export function StepPayment({event, order, promos}: Props) {
             </div>
 
             <div>
-              <h2 className="cn-font-heading text-xs font-medium tracking-wider text-muted-foreground uppercase">Discount</h2>
+              <h2 className="cn-font-heading text-xs font-medium tracking-wider text-muted-foreground uppercase">Discount {promoCode}</h2>
               <div className="mt-2">
                 {promos && promos.length > 0 && (
                   <div className="flex space-x-2">
@@ -152,7 +173,7 @@ export function StepPayment({event, order, promos}: Props) {
                     <Button
                       type="button"
                       variant={promoCode.trim() ? 'default' : 'outline'}
-                      onClick={applyPromoCode}
+                      onClick={onClickApplyPromo}
                       disabled={!promoCode.trim()}
                     >
                       Apply
@@ -165,7 +186,7 @@ export function StepPayment({event, order, promos}: Props) {
 
           <div className="mt-6">
             <h2 className="cn-font-heading text-xs font-medium tracking-wider text-muted-foreground uppercase">Order Summary</h2>
-            <div className="mt-2">
+            <div className="mt-2 h-40">
               <Item variant="muted" className="flex-col items-stretch">
                 <ItemContent className="gap-3">
                   <div className="flex items-center justify-between">
@@ -189,12 +210,12 @@ export function StepPayment({event, order, promos}: Props) {
                   <Separator/>
                   {discount > 0 && (
                     <div className="flex items-center justify-between">
-                  <span className="text-sm text-green-600">
+                      <span className="text-sm text-green-600">
                     Discount
                   </span>
-                      <span className="text-sm font-medium tabular-nums">
-                    {formatMoney(Number(discount))}
-                  </span>
+                      <span className="text-sm font-semibold tabular-nums text-green-600">
+                        {formatMoney(Number(discount))}
+                      </span>
                     </div>
                   )}
                   <div className="flex items-center justify-between">
