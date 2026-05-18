@@ -12,6 +12,8 @@ import {revalidatePath} from "next/cache";
 import {formatEventDate, formatEventTime} from "@/types/date-helper";
 import {eq} from "drizzle-orm";
 import EventJoinedEmail from "@/react-email-starter/emails/event-joined-email";
+import {getParticipantByEventUser} from "@/db/query/participant-query";
+import {getOngoingOrder} from "@/db/query/event-order.query";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -25,13 +27,17 @@ export async function resendEmailConfirmation(payload: {eventId: string, userId:
     }
   }
 
+  const p = await getParticipantByEventUser(Number(payload.eventId), payload.userId)
+  const order = await getOngoingOrder(Number(payload.eventId), payload.userId)
   const param = {
     name: payload.name,
     eventName : event.name ?? "There",
     eventDate : formatEventDate(event.startDate),
     eventTime : formatEventTime(event.startDate),
     meetingPoint : event.locationName ?? "",
-    eventURL
+    eventURL,
+    bibNumber: p?.bibNumber ?? undefined,
+    jerseySize: order?.jerseySize ?? undefined,
   }
 
   await resend.emails.send({
@@ -63,13 +69,17 @@ export async function addParticipant(payload: {eventId: string, userId: string, 
       }
     }
 
+    const p = await getParticipantByEventUser(Number(payload.eventId), payload.userId)
+    const order = await getOngoingOrder(Number(payload.eventId), payload.userId)
     const param = {
       name: payload.name,
       eventName : event.name ?? "There",
       eventDate : formatEventDate(event.startDate),
       eventTime : formatEventTime(event.startDate),
       meetingPoint : event.locationName ?? "",
-      eventURL
+      eventURL,
+      bibNumber: p?.bibNumber ?? undefined,
+      jerseySize: order?.jerseySize ?? undefined,
     }
 
     await resend.emails.send({
@@ -116,13 +126,17 @@ export async function joinEventAction(payload: {  eventId: string }) : Promise<A
 
     const eventURL = `${process.env.BETTER_AUTH_URL}/event/${event.id}`
 
+    const p = await getParticipantByEventUser(Number(payload.eventId), session.user.id)
+    const order = await getOngoingOrder(Number(payload.eventId), session.user.id)
     const param = {
       name: session.user.name,
       eventName : event.name ?? "There",
       eventDate : formatEventDate(event.startDate),
       eventTime : formatEventTime(event.startDate),
       meetingPoint : event.locationName ?? "",
-      eventURL
+      eventURL,
+      bibNumber: p?.bibNumber ?? undefined,
+      jerseySize: order?.jerseySize ?? undefined,
     }
 
     await resend.emails.send({

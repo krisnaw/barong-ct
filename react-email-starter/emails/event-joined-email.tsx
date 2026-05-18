@@ -8,11 +8,13 @@ interface EmailProps {
   eventTime : string,
   meetingPoint : string,
   eventURL: string,
+  bibNumber?: number,
+  jerseySize?: string,
 }
 
 const imgURL = "https://fi7tj80kxj.ufs.sh/f/jjB2MlHJbriWIPo3tMP916KnsQXzrbZ8jdfDLy0eJwl3qaVC"
 
-export const EventJoinedEmail = ({name, eventName, eventDate, eventTime, meetingPoint, eventURL}: EmailProps) => (
+export const EventJoinedEmail = ({name, eventName, eventDate, eventTime, meetingPoint, eventURL, bibNumber, jerseySize}: EmailProps) => (
   <Html>
     <Head />
     <Tailwind>
@@ -34,6 +36,25 @@ export const EventJoinedEmail = ({name, eventName, eventDate, eventTime, meeting
           <Text className="text-[16px] leading-6.5">
             Great news! You&#39;ve successfully joined <strong>{eventName}</strong>. We&#39;re excited to have you ride with us!
           </Text>
+
+          {(bibNumber || jerseySize) && (
+            <Section className="mb-2">
+              <Row>
+                <Column className="rounded-md bg-gray-100 px-10 py-4">
+                  {bibNumber && (
+                    <Text className="text-[14px] text-gray-700 mb-0">
+                      <strong>Bib Number:</strong> {"#"+String(bibNumber).padStart(3, "0")}
+                    </Text>
+                  )}
+                  {jerseySize && (
+                    <Text className="text-[14px] text-gray-700 mb-0">
+                      <strong>Jersey Size:</strong> {jerseySize}
+                    </Text>
+                  )}
+                </Column>
+              </Row>
+            </Section>
+          )}
 
           <Section>
             <Row className="mb-2">

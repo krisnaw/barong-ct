@@ -8,6 +8,8 @@ import EventJoinedEmail from "@/react-email-starter/emails/event-joined-email";
 import {Resend} from "resend";
 import {getUserById} from "@/db/query/user-query";
 import {getEventById} from "@/db/query/event-query";
+import {getParticipantByEventUser} from "@/db/query/participant-query";
+import {getOngoingOrder} from "@/db/query/event-order.query";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -28,13 +30,17 @@ export async function createParticipant(eventId: number, userId: string) {
 
   if (user && event) {
     const eventURL = `${process.env.BETTER_AUTH_URL}/event/${eventId}`
+    const p = await getParticipantByEventUser(eventId, userId)
+    const order = await getOngoingOrder(eventId, userId)
     const param = {
       name: user.name,
       eventName : event.name ?? "There",
       eventDate : formatEventDate(event.startDate),
       eventTime : formatEventTime(event.startDate),
       meetingPoint : event.locationName ?? "",
-      eventURL
+      eventURL,
+      bibNumber: p?.bibNumber ?? undefined,
+      jerseySize: order?.jerseySize ?? undefined,
     }
 
     await resend.emails.send({
