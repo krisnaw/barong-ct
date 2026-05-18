@@ -28,26 +28,26 @@ export const EventJoinedEmail = ({name, eventName, eventDate, eventTime, meeting
             alt="Koala"
             className="mx-auto"
           />
-          <Text className="text-[16px] leading-[26px]">
+          <Text className="text-[16px] leading-6.5">
             Hey {name}!
           </Text>
-          <Text className="text-[16px] leading-[26px]">
+          <Text className="text-[16px] leading-6.5">
             Great news! You&#39;ve successfully joined <strong>{eventName}</strong>. We&#39;re excited to have you ride with us!
           </Text>
 
           <Section>
             <Row className="mb-2">
-              <Column className="min-h-[112px] rounded-md bg-gray-100 px-10 py-6">
+              <Column className="min-h-28 rounded-md bg-gray-100 px-10 py-6">
 
-                <Text className="text-[14px] text-gray-700 mb-[8px]">
+                <Text className="text-[14px] text-gray-700 mb-2">
                   <strong>📅 Date:</strong> {eventDate}
                 </Text>
 
-                <Text className="text-[14px] text-gray-700 mb-[8px]">
+                <Text className="text-[14px] text-gray-700 mb-2">
                   <strong>🕕 Time:</strong> {eventTime}
                 </Text>
 
-                <Text className="text-[14px] text-gray-700 mb-[8px]">
+                <Text className="text-[14px] text-gray-700 mb-2">
                   <strong>📍 Meeting Point:</strong> {meetingPoint}
                 </Text>
               </Column>
@@ -62,11 +62,11 @@ export const EventJoinedEmail = ({name, eventName, eventDate, eventTime, meeting
             </Button>
           </Section>
 
-          <Text className="text-[16px]  mb-[32px] leading-relaxed">
+          <Text className="text-[16px]  mb-8 leading-relaxed">
             Don&#39;t forget to bring your helmet, water bottle, and a positive attitude! See you at the starting line.
           </Text>
 
-          <Text className="text-[16px] leading-[26px]">
+          <Text className="text-[16px] leading-6.5">
             Best,
             <br />
             Barong Cycling Team
