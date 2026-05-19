@@ -1,0 +1,1 @@
+ALTER TABLE "event_promo" ADD COLUMN "discount_type" text DEFAULT 'fixed' NOT NULL;
