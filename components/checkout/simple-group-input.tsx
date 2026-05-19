@@ -38,7 +38,7 @@ export function SimpleGroupInput({
         (group) => group.name.toLowerCase() === trimmedName.toLowerCase()
       )
     ) {
-      setError(`"${trimmedName}" already exists`);
+      setError(`"${trimmedName}" already exists. Try adding a number, e.g., '${trimmedName} 1'.`);
       return;
     }
 
@@ -57,6 +57,7 @@ export function SimpleGroupInput({
     <div className="space-y-2">
       <div className="flex gap-2">
         <Input
+          name="create-group"
           value={groupName}
           onChange={(e) => {
             setGroupName(e.target.value);

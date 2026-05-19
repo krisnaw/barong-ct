@@ -94,7 +94,7 @@ export function StepGroup({event, groups, order}: {
 
           {!selectedGroup && (
             <div>
-              <Label>Group Ride</Label>
+              <Label htmlFor="create-group">Group Ride</Label>
               <div className="mt-2">
                 <SimpleGroupInput existingGroups={availableGroup} onCreate={(value: string) => handleCreate(value)} />
               </div>
