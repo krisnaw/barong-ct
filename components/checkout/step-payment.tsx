@@ -1,6 +1,6 @@
 'use client'
 
-import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
+import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
 import {redirect, useRouter} from "next/navigation";
 import {useActionState, useState} from "react";
@@ -106,6 +106,7 @@ export function StepPayment({event, order, promos}: Props) {
       setPromoCode(foundPromo.promo)
     } else {
       setDiscount(0)
+      setPromoCode("")
     }
   }
 
@@ -134,9 +135,6 @@ export function StepPayment({event, order, promos}: Props) {
           <CardTitle>
             Step 3: Payment
           </CardTitle>
-          <CardDescription>
-            Select Payment Method
-          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -166,7 +164,7 @@ export function StepPayment({event, order, promos}: Props) {
             </div>
 
             <div>
-              <h2 className="cn-font-heading text-xs font-medium tracking-wider text-muted-foreground uppercase">Discount {promoCode}</h2>
+              <h2 className="cn-font-heading text-xs font-medium tracking-wider text-muted-foreground uppercase">Discount</h2>
               <div className="mt-2">
                 {promos && promos.length > 0 && (
                   <div className="flex space-x-2">
@@ -240,7 +238,7 @@ export function StepPayment({event, order, promos}: Props) {
 
         </CardContent>
         <CardFooter>
-          <Button className="w-full" disabled={isPending} type="submit">
+          <Button className="w-full" disabled={isPending || pm.length == 0} type="submit">
             {isPending ? <Spinner/> : null}
             Complete Order
           </Button>

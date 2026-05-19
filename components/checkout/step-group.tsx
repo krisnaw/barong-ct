@@ -49,6 +49,8 @@ export function StepGroup({event, groups, order}: {
       newParam.set('group', String(res.data.id))
       router.push(`/event/${eventId}/register/group?${newParam}`)
       toast.success(res.message);
+    } else {
+      toast.error(res.message)
     }
   }
 
