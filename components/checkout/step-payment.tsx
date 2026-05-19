@@ -1,6 +1,6 @@
 'use client'
 
-import {Card, CardContent, CardFooter} from "@/components/ui/card";
+import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
 import {redirect, useRouter} from "next/navigation";
 import {useActionState, useState} from "react";
@@ -130,8 +130,15 @@ export function StepPayment({event, order, promos}: Props) {
   return (
     <form action={formAction}>
       <Card>
+        <CardHeader>
+          <CardTitle>
+            Step 3: Payment
+          </CardTitle>
+          <CardDescription>
+            Select Payment Method
+          </CardDescription>
+        </CardHeader>
         <CardContent>
-
           <div className="space-y-4">
             <div>
               <h2 className="cn-font-heading text-xs font-medium tracking-wider text-muted-foreground uppercase">Select Payment Method</h2>

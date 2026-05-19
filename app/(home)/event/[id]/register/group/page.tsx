@@ -1,4 +1,4 @@
-import {CategorySelection} from "@/components/checkout/category-selection";
+import {StepGroup} from "@/components/checkout/step-group";
 import {getOngoingOrder} from "@/db/query/event-order.query";
 import {auth} from "@/lib/auth";
 import {headers} from "next/headers";
@@ -31,7 +31,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
   }
   return (
     <div>
-      <CategorySelection key={groups.length} event={event} order={order} groups={groups}  />
+      <StepGroup key={groups.length} event={event} order={order} groups={groups}  />
     </div>
   )
 }

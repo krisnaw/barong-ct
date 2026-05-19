@@ -17,7 +17,7 @@ import {GroupItem} from "@/components/group/group-item";
 import {SimpleGroupInput} from "@/components/checkout/simple-group-input";
 import {createGroupAction} from "@/app/actions/event-group/event-group.action";
 
-export function CategorySelection({event, groups, order}: {
+export function StepGroup({event, groups, order}: {
   event: EventType & { participantCount: number },
   groups: GroupWithParticipant[],
   order: EventOrderType
@@ -42,8 +42,6 @@ export function CategorySelection({event, groups, order}: {
       eventId: Number(eventId),
       orderId: order.id
     })
-
-    console.log(res)
 
     if (res.success && res.data) {
       const newParam = new URLSearchParams(searchParams);

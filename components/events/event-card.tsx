@@ -2,7 +2,7 @@ import * as React from "react";
 import {EventType} from "@/db/schema";
 import {EventDate} from "@/components/events/event-date";
 import {formatMoney} from "@/utils/money-helper";
-import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
+import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import Image from "next/image";
 import {Item, ItemContent} from "@/components/ui/item";
 import {Separator} from "@/components/ui/separator";
@@ -31,9 +31,6 @@ export function EventCard({event} : Props) {
             {event.name}
           </h1>
         </CardTitle>
-        <CardDescription className="truncate">
-          Starting and finishing at Niseko Tokyu Grand Hirafu, the course passes through Rankoshi Town along the Shiribetsu River, renowned as one of the cleanest rivers in Japan
-        </CardDescription>
       </CardHeader>
 
       <CardContent>
