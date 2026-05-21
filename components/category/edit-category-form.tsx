@@ -17,17 +17,18 @@ import {
   SelectValue
 } from "@/components/ui/select";
 import {ActionResponse, initialState} from "@/types/types";
-import {createCategoryAction} from "@/app/actions/event-category/event-category.action";
+import {updateCategoryAction} from "@/app/actions/event-category/event-category.action";
 import {toast} from "sonner";
 import {Spinner} from "@/components/ui/spinner";
 import {useRouter} from "next/navigation";
+import {EventCategoryType} from "@/db/schema";
 
-export function EditCategoryForm({eventId}: { eventId: number }) {
+export function EditCategoryForm({category}: { category: EventCategoryType }) {
   const router = useRouter();
   const [state, formAction, isPending] = useActionState(async (_: ActionResponse, formData: FormData) => {
 
     const payload = {
-      eventId: Number(eventId),
+      id: category.id,
       name: formData.get("name") as string,
       description: formData.get("description") as string,
       price: Number(formData.get("price") as string),
@@ -35,9 +36,9 @@ export function EditCategoryForm({eventId}: { eventId: number }) {
       service_fee: formData.get("service_fee") as string,
     }
 
-    const res = await createCategoryAction(payload)
+    const res = await updateCategoryAction(payload)
     if (res.success) {
-      router.push(`/dashboard/events/${eventId}`)
+      router.push(`/dashboard/events/${category.eventId}`)
     }
 
     toast.info(res.message)
@@ -155,7 +156,7 @@ export function EditCategoryForm({eventId}: { eventId: number }) {
         <CardFooter>
           <Button type="submit" disabled={isPending} size="lg">
             {isPending ? <Spinner/> : null}
-            Save
+            Save changes
           </Button>
         </CardFooter>
       </Card>
