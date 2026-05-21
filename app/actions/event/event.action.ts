@@ -9,7 +9,6 @@ import {revalidatePath} from "next/cache";
 
 export type insertData = z.infer<typeof EventInsertSchema>;
 export async function createEventAction(formData: insertData) {
-
   const validate = EventInsertSchema.safeParse(formData);
 
   if (!validate.success) {

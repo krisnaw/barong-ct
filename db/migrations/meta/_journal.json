@@ -176,6 +176,20 @@
       "when": 1778657569336,
       "tag": "0024_soft_ultron",
       "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1779351234046,
+      "tag": "0025_spooky_whizzer",
+      "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1779356710247,
+      "tag": "0026_shiny_beast",
+      "breakpoints": true
     }
   ]
 }

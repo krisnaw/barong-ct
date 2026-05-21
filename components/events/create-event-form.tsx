@@ -11,7 +11,6 @@ import {CustomDatePicker} from "@/components/ui/custom-date-picker";
 import {toast} from "sonner";
 import {createEventAction} from "@/app/actions/event/event.action";
 import {ContentEditor} from "@/components/events/content-editor";
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {parse} from "date-fns";
 import {fromZonedTime} from "date-fns-tz";
 import {useRouter} from "next/navigation";
@@ -43,10 +42,6 @@ export function CreateEventForm() {
       locationLink: formData.get("map") as string,
       maxParticipants: Number(formData.get("maxParticipants")),
       isGroupRide : Number(formData.get("isGroupRide")),
-      price: Number(formData.get("price")),
-      currency: formData.get("currency") as string,
-      isPaid: !!Number(formData.get("price")),
-      serviceFee: Number(formData.get("service_fee")),
       registrationClosesAt: new Date(formData.get("closedAt") as string),
     }
 
@@ -128,19 +123,6 @@ export function CreateEventForm() {
           </Field>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-
-            <Field>
-              <FieldLabel htmlFor="maxParticipants">Max Participants</FieldLabel>
-              <Input
-                id="maxParticipants"
-                type="number"
-                name="maxParticipants"
-                placeholder="100"
-                min="1"
-                defaultValue="25"
-              />
-            </Field>
-
             
             <Field>
               <FieldLabel htmlFor="date">Date</FieldLabel>
@@ -162,31 +144,6 @@ export function CreateEventForm() {
 
           </div>
 
-          <Field>
-            <FieldLabel htmlFor="price">Price</FieldLabel>
-            <div className="flex gap-2">
-              <Select defaultValue="IDR" name="currency">
-                <SelectTrigger className="w-45">
-                  <SelectValue placeholder="$" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="IDR">
-                    IDR
-                    <span className="text-muted-foreground">
-                        Rp
-                  </span>
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-
-              <Input name="price" placeholder="1.000.000" pattern="[0-9]*" />
-            </div>
-          </Field>
-
-          <Field>
-            <FieldLabel htmlFor="service_fee">Service Fee</FieldLabel>
-            <Input defaultValue={15000} name="service_fee" placeholder="5.000" pattern="[0-9]*" />
-          </Field>
 
           <Field>
             <FieldLabel htmlFor="name">Registration Closed At</FieldLabel>
