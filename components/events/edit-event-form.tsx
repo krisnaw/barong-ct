@@ -14,7 +14,6 @@ import {UpdateEventAction} from "@/app/actions/event/event.action";
 import {format, parse} from "date-fns";
 import {ContentEditor} from "@/components/events/content-editor";
 import {fromZonedTime, toZonedTime} from "date-fns-tz";
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {UploadButton} from "@/utils/uploadthing";
 
 export function EditEventForm({event} : {event: EventType}) {
@@ -48,10 +47,6 @@ export function EditEventForm({event} : {event: EventType}) {
       locationLink: formData.get("map") as string,
       maxParticipants: Number(formData.get("maxParticipants")),
       isGroupRide : Number(formData.get("isGroupRide")),
-      price: Number(formData.get("price")),
-      currency: formData.get("currency") as string,
-      isPaid: !!Number(formData.get("price")),
-      serviceFee: Number(formData.get("service_fee")),
       registrationClosesAt: new Date(formData.get("registrationClosesAt") as string),
     }
 
@@ -134,33 +129,8 @@ export function EditEventForm({event} : {event: EventType}) {
             />
           </Field>
 
-          <Field>
-            <FieldLabel htmlFor="price">Price</FieldLabel>
-            <div className="flex gap-2">
-              <Select defaultValue={event.currency ?? "idr"} name="currency">
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="$" />
-                </SelectTrigger>
-                <SelectContent>
-                  {CURRENCIES.map((currency) => (
-                    <SelectItem key={currency.value} value={currency.value}>
-                      {currency.value}{" "}
-                      <span className="text-muted-foreground">
-                    {currency.label}
-                  </span>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
 
-              <Input defaultValue={event.price ?? ""} name="price" placeholder="1.000.000" pattern="[0-9]*" />
-            </div>
-          </Field>
 
-          <Field>
-            <FieldLabel htmlFor="service_fee">Service Fee</FieldLabel>
-            <Input defaultValue={event.serviceFee ?? ""} name="service_fee" placeholder="5.000" pattern="[0-9]*" />
-          </Field>
 
           <Field>
             <FieldLabel htmlFor="name">Registration Closed At</FieldLabel>
@@ -185,17 +155,6 @@ export function EditEventForm({event} : {event: EventType}) {
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
 
-            <Field>
-              <FieldLabel htmlFor="maxParticipants">Max Participants</FieldLabel>
-              <Input
-                id="maxParticipants"
-                type="number"
-                name="maxParticipants"
-                placeholder="100"
-                min="1"
-                defaultValue={event.maxParticipants ?? 25}
-              />
-            </Field>
 
             <Field>
               <FieldLabel htmlFor="date">Event Date</FieldLabel>
@@ -252,9 +211,3 @@ export function EditEventForm({event} : {event: EventType}) {
     </div>
   )
 }
-
-const CURRENCIES = [
-  {
-    value: 'IDR', label: 'Rp',
-  }
-]
