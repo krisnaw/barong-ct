@@ -4,6 +4,7 @@ import {revalidatePath} from "next/cache";
 import {db} from "@/db/db";
 import {eventCategory, EventCategoryInsertSchema, EventCategoryUpdateSchema} from "@/db/schema";
 import {z} from "zod";
+import {eq} from "drizzle-orm";
 
 export type EventCategoryType = z.infer<typeof EventCategoryInsertSchema>;
 
@@ -60,7 +61,7 @@ export async function updateCategoryAction(formData: UpdateCategoryData)  {
   }
 
   try {
-    await db.update(eventCategory).set(validate.data).returning()
+    await db.update(eventCategory).set(validate.data).where(eq(eventCategory.id, Number(formData.id)))
   } catch (error) {
     if (error instanceof Error) {
       console.log(error.message)
@@ -78,6 +79,6 @@ export async function updateCategoryAction(formData: UpdateCategoryData)  {
   }
   return {
     success: true,
-    message: "Success, category was created."
+    message: "Success, category was updated."
   }
 }

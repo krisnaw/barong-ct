@@ -1,19 +1,18 @@
-import {Item, ItemActions, ItemContent, ItemMedia, ItemTitle,} from "@/components/ui/item"
-import {CalendarIcon, Pencil} from "lucide-react";
+import {Item, ItemActions, ItemContent, ItemDescription, ItemTitle,} from "@/components/ui/item"
+import {Pencil} from "lucide-react";
 import {EventCategoryType} from "@/db/schema";
 import {Button} from "@/components/ui/button";
+import Link from "next/link";
 
-export async function EventCategories({categories} : {categories: EventCategoryType[]}) {
+export async function ListCategory({categories} : {categories: EventCategoryType[]}) {
   console.log(categories);
   return (
     <div className="grid grid-cols-1 sm:grid-cols-4 gap-2">
       {categories.map(category => (
         <Item variant="outline" key={category.id}>
-          <ItemMedia variant="icon">
-            <CalendarIcon />
-          </ItemMedia>
           <ItemContent>
             <ItemTitle>{category.name}</ItemTitle>
+            <ItemDescription>{category.description}</ItemDescription>
           </ItemContent>
           <ItemActions>
             <Button
@@ -22,7 +21,9 @@ export async function EventCategories({categories} : {categories: EventCategoryT
               className="rounded-full"
               aria-label="Invite"
             >
-              <Pencil />
+              <Link href={`/dashboard/events/${category.eventId}/category/${category.id}/edit`}>
+                <Pencil />
+              </Link>
             </Button>
           </ItemActions>
         </Item>

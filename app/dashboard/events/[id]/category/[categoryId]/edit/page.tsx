@@ -9,15 +9,12 @@ export default async function Page({
 
   const {categoryId} = await params;
 
-  console.log(categoryId);
 
-  const category = await getCategoryById(categoryId)
-
-
+  const [category] = await getCategoryById(categoryId)
 
   return (
     <div>
-      <EditCategoryForm eventId={categoryId} />
+      <EditCategoryForm category={category} />
     </div>
   )
 }

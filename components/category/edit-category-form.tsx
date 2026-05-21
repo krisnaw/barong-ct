@@ -22,6 +22,7 @@ import {toast} from "sonner";
 import {Spinner} from "@/components/ui/spinner";
 import {useRouter} from "next/navigation";
 import {EventCategoryType} from "@/db/schema";
+import Link from "next/link";
 
 export function EditCategoryForm({category}: { category: EventCategoryType }) {
   const router = useRouter();
@@ -29,6 +30,7 @@ export function EditCategoryForm({category}: { category: EventCategoryType }) {
 
     const payload = {
       id: category.id,
+      eventId: category.eventId,
       name: formData.get("name") as string,
       description: formData.get("description") as string,
       price: Number(formData.get("price") as string),
@@ -37,12 +39,7 @@ export function EditCategoryForm({category}: { category: EventCategoryType }) {
     }
 
     const res = await updateCategoryAction(payload)
-    if (res.success) {
-      router.push(`/dashboard/events/${category.eventId}`)
-    }
-
     toast.info(res.message)
-
     return res
 
   }, initialState)
@@ -51,7 +48,7 @@ export function EditCategoryForm({category}: { category: EventCategoryType }) {
     <form action={formAction}>
       <Card>
         <CardHeader>
-          <CardTitle>New Category</CardTitle>
+          <CardTitle>Edit Category</CardTitle>
         </CardHeader>
         <CardContent>
 
@@ -63,7 +60,7 @@ export function EditCategoryForm({category}: { category: EventCategoryType }) {
                 id="name"
                 type="text"
                 name="name"
-                defaultValue="Long"
+                defaultValue={category.name ?? ""}
                 placeholder="Early Bird"
               />
             </Field>
@@ -73,7 +70,7 @@ export function EditCategoryForm({category}: { category: EventCategoryType }) {
               <Textarea
                 id="description"
                 name="description"
-                defaultValue="long"
+                defaultValue={category.description ?? ""}
                 placeholder="Discounted early bird ticket for first 50 registrants"
               />
             </Field>
@@ -153,7 +150,12 @@ export function EditCategoryForm({category}: { category: EventCategoryType }) {
           </FieldGroup>
 
         </CardContent>
-        <CardFooter>
+        <CardFooter className="flex justify-between">
+          <Button type="submit" size="lg" variant={"secondary"}>
+            <Link href={`/dashboard/events/${category.eventId}`}>
+              Cancel
+            </Link>
+          </Button>
           <Button type="submit" disabled={isPending} size="lg">
             {isPending ? <Spinner/> : null}
             Save changes
