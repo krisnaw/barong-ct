@@ -16,3 +16,15 @@ export const PAYMENT_STATUS = {
 export const PARTICIPANT_STATUS = {
   CONFIRMED: "CONFIRMED",
 } as const;
+
+//
+// function getOrderStatusText(status: string) {
+//   switch (status) {
+//     case ORDER_STATUS.DRAFT:
+//       return "Created";
+//     case ORDER_STATUS.PROFILE:
+//       return "Profile Completion"
+//     case ORDER_STATUS.PENDING_PAYMENT:
+//       return "Awaiting for payment"
+//   }
+// }
