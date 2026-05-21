@@ -20,7 +20,6 @@ export async function createEventAction(formData: insertData) {
     }
   }
 
-
   let eventId : number;
   try {
     const [event] = await db.insert(EventSchema).values(validate.data).returning()
