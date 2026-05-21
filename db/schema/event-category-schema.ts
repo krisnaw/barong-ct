@@ -1,5 +1,6 @@
 import {doublePrecision, integer, pgTable, serial, text, timestamp} from "drizzle-orm/pg-core";
 import {EventSchema} from "@/db/schema/event-schema";
+import {createInsertSchema} from "drizzle-zod";
 
 export const eventCategory = pgTable("event_category", {
   id: serial('id').primaryKey(),
@@ -21,3 +22,4 @@ export const eventCategory = pgTable("event_category", {
 });
 
 export type EventCategoryType = typeof eventCategory.$inferSelect
+export const EventCategoryInsertSchema = createInsertSchema(eventCategory);

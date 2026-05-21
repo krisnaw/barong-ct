@@ -4,7 +4,7 @@ import {getEventById} from "@/db/query/event-query";
 import {redirect} from "next/navigation";
 import {Card, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
-import {CalendarIcon, MapPin, Users} from "lucide-react";
+import {CalendarIcon, MapPin} from "lucide-react";
 import {EventDate} from "@/components/events/event-date";
 import Link from "next/link";
 import {format} from "date-fns";
@@ -37,10 +37,6 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
               {event.locationName}
             </div>
             <div className="mt-2 flex items-center text-sm text-gray-400">
-              <Users aria-hidden="true" className="mr-1.5 size-5 shrink-0 text-gray-500" />
-              Max: {event.maxParticipants}
-            </div>
-            <div className="mt-2 flex items-center text-sm text-gray-400">
               <CalendarIcon aria-hidden="true" className="mr-1.5 size-5 shrink-0 text-gray-500" />
               <EventDate eventDate={event.startDate} type="date"/> - <EventDate eventDate={event.startDate} type="time"/>
             </div>
@@ -48,6 +44,12 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
 
         </div>
         <div className="mt-4 flex md:mt-0 md:ml-4 gap-2">
+
+          <Button>
+            <Link href={`/dashboard/events/${id}/category`}>
+              Category
+            </Link>
+          </Button>
 
           <Button variant="outline">
             <Link href={`/dashboard/events/${id}/promo`}>
