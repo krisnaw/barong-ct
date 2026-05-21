@@ -11,6 +11,8 @@ import {format} from "date-fns";
 import {id as idLocale} from "date-fns/locale";
 import {BtnResendConfirm} from "@/components/button/btn-resend-confirm";
 import {ButtonDownloadParticipant} from "@/components/button/button-download-participant";
+import {getCategoryByEvent} from "@/db/query/event-category.query";
+import {EventCategories} from "@/app/dashboard/events/[id]/event-categories";
 
 export default async function Page({params}: { params: Promise<{ id: number }> }) {
   const {id} = await params;
@@ -21,8 +23,14 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
 
   const participants = await getParticipantByEvent(id)
 
+  const categories = await getCategoryByEvent(id)
+
   return (
     <div className="flex flex-col gap-6">
+
+      <div>
+        <EventCategories categories={categories} />
+      </div>
 
 
       <div className="md:flex md:items-center md:justify-between">

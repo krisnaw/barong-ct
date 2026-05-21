@@ -3,7 +3,7 @@ import {db} from "@/db/db";
 import {and, eq, ilike} from "drizzle-orm";
 import {eventGroup} from "@/db/schema";
 
-export async function GET(request: NextRequest, ctx: RouteContext<'/api/event/[id]'>) {
+export async function GET(request: NextRequest, ctx: RouteContext<'/api/event/[categoryId]'>) {
   const {id} = await ctx.params
 
   const searchParams = request.nextUrl.searchParams

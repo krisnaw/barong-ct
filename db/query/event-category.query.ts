@@ -9,3 +9,9 @@ export async function getCategoryByEvent(eventId: number) {
     where: eq(eventCategory.eventId, eventId)
   })
 }
+
+export async function getCategoryById(id: number) {
+  return db.query.eventCategory.findMany({
+    where: eq(eventCategory.id, id)
+  })
+}

@@ -4,6 +4,7 @@ import {EventCategoryType} from "@/db/schema";
 import {Button} from "@/components/ui/button";
 
 export async function EventCategories({categories} : {categories: EventCategoryType[]}) {
+  console.log(categories);
   return (
     <div className="grid grid-cols-1 sm:grid-cols-4 gap-2">
       {categories.map(category => (
