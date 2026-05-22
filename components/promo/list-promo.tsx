@@ -9,11 +9,7 @@ import {CopyIcon, Trash2} from "lucide-react";
 import {toast} from "sonner";
 import {deletePromoAction} from "@/app/actions/profile/promo/promo.action";
 
-interface PromoListTableProps {
-  promos: PromoType[];
-}
-
-export function PromoListTable({ promos }: PromoListTableProps) {
+export function ListPromo({ promos }: { promos: PromoType[] }) {
   const formatDate = (date?: Date) => {
     if (!date) return '-';
     return new Date(date).toLocaleDateString();

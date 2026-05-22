@@ -7,25 +7,15 @@ import {Field, FieldDescription, FieldGroup, FieldLabel} from "@/components/ui/f
 import {Input} from "@/components/ui/input";
 import {Textarea} from "@/components/ui/textarea";
 import {Button} from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue
-} from "@/components/ui/select";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {ActionResponse, initialState} from "@/types/types";
 import {updateCategoryAction} from "@/app/actions/event-category/event-category.action";
 import {toast} from "sonner";
 import {Spinner} from "@/components/ui/spinner";
-import {useRouter} from "next/navigation";
 import {EventCategoryType} from "@/db/schema";
 import Link from "next/link";
 
 export function EditCategoryForm({category}: { category: EventCategoryType }) {
-  const router = useRouter();
   const [state, formAction, isPending] = useActionState(async (_: ActionResponse, formData: FormData) => {
 
     const payload = {
@@ -85,30 +75,19 @@ export function EditCategoryForm({category}: { category: EventCategoryType }) {
                   name="price"
                   step="0.01"
                   min="0"
-                  defaultValue="14500000"
+                  defaultValue={category.price ?? "1450000"}
                   placeholder="0.00"
                 />
               </Field>
 
               <Field>
                 <FieldLabel htmlFor="currency">Currency</FieldLabel>
-                <Select name="currency" defaultValue="IDR">
+                <Select name="currency" defaultValue={category.currency}>
                   <SelectTrigger className="w-full">
                     <SelectValue/>
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Fiat</SelectLabel>
-                      <SelectItem value="IDR">IDR</SelectItem>
-                      <SelectItem value="USD">USD</SelectItem>
-                      <SelectItem value="SGD">SGD</SelectItem>
-                      <SelectItem value="MYR">MYR</SelectItem>
-                    </SelectGroup>
-                    <SelectGroup>
-                      <SelectLabel>Crypto</SelectLabel>
-                      <SelectItem value="USDC">USDC</SelectItem>
-                      <SelectItem value="SOL">SOL</SelectItem>
-                    </SelectGroup>
+                    <SelectItem value="IDR">IDR</SelectItem>
                   </SelectContent>
                 </Select>
               </Field>
@@ -121,7 +100,7 @@ export function EditCategoryForm({category}: { category: EventCategoryType }) {
                   name="serviceFee"
                   step="0.01"
                   min="0"
-                  defaultValue="15000"
+                  defaultValue={category.serviceFee ?? 0}
                   placeholder="0"
                 />
                 <FieldDescription>
@@ -136,7 +115,7 @@ export function EditCategoryForm({category}: { category: EventCategoryType }) {
                   type="number"
                   name="maxParticipants"
                   min="1"
-                  defaultValue="50"
+                  defaultValue={category.maxParticipants ?? 50}
                   placeholder="50"
                 />
                 <FieldDescription>
@@ -145,15 +124,13 @@ export function EditCategoryForm({category}: { category: EventCategoryType }) {
               </Field>
 
             </div>
-
-
           </FieldGroup>
 
         </CardContent>
         <CardFooter className="flex justify-between">
-          <Button type="submit" size="lg" variant={"secondary"}>
+          <Button size="lg" variant={"secondary"}>
             <Link href={`/dashboard/events/${category.eventId}`}>
-              Cancel
+              Back
             </Link>
           </Button>
           <Button type="submit" disabled={isPending} size="lg">

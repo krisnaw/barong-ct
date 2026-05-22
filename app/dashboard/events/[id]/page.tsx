@@ -13,6 +13,8 @@ import {BtnResendConfirm} from "@/components/button/btn-resend-confirm";
 import {ButtonDownloadParticipant} from "@/components/button/button-download-participant";
 import {getCategoryByEvent} from "@/db/query/event-category.query";
 import {ListCategory} from "@/components/category/list-category";
+import {getPromoByEvent} from "@/db/query/event-promo.query";
+import {ListPromo} from "@/components/promo/list-promo";
 
 export default async function Page({params}: { params: Promise<{ id: number }> }) {
   const {id} = await params;
@@ -24,6 +26,8 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
   const participants = await getParticipantByEvent(id)
 
   const categories = await getCategoryByEvent(id)
+
+  const promos = await getPromoByEvent(id)
 
   return (
     <div className="space-y-4">
@@ -89,7 +93,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
             </CardAction>
           </CardHeader>
           <CardContent>
-            <ListCategory categories={categories}/>
+            <ListPromo promos={promos}/>
           </CardContent>
         </Card>
       </div>

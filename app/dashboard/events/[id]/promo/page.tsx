@@ -1,6 +1,6 @@
 import {CreatePromoForm} from "@/components/promo/create-promo-form";
 import {getPromoByEvent} from "@/db/query/event-promo.query";
-import {PromoListTable} from "@/components/promo/promo-list-table";
+import {ListPromo} from "../../../../../components/promo/list-promo";
 import {getEventById} from "@/db/query/event-query";
 import {redirect} from "next/navigation";
 
@@ -20,7 +20,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
 
       <div>
         {promos && (
-          <PromoListTable promos={promos} />
+          <ListPromo promos={promos} />
         )}
       </div>
     </div>

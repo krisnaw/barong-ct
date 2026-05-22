@@ -77,6 +77,9 @@ export async function updateCategoryAction(formData: UpdateCategoryData)  {
       fields: validate.data,
     }
   }
+
+  revalidatePath('/', 'page')
+  
   return {
     success: true,
     message: "Success, category was updated."
