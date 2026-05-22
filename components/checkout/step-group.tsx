@@ -33,7 +33,7 @@ export function StepGroup({event, groups, categories, order}: Props) {
   const selectedGroup = availableGroup.find((item) => item.id === order.groupId)
   const price = categories.find((cat) => cat.id === Number(categoryId))?.price ?? 0;
 
-  const [state, formAction, isPending] = useActionState(async () => {
+  const [_, formAction, isPending] = useActionState(async () => {
 
     const newPayload = {
       ...order,
