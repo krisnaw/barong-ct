@@ -13,8 +13,8 @@ import {BtnResendConfirm} from "@/components/button/btn-resend-confirm";
 import {ButtonDownloadParticipant} from "@/components/button/button-download-participant";
 import {getCategoryByEvent} from "@/db/query/event-category.query";
 import {ListCategory} from "@/components/category/list-category";
-import {getPromoByEvent} from "@/db/query/event-promo.query";
 import {ListPromo} from "@/components/promo/list-promo";
+import {getPromoByEvent} from "@/db/query/event-promo.query";
 
 export default async function Page({params}: { params: Promise<{ id: number }> }) {
   const {id} = await params;
@@ -87,7 +87,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
             <CardAction>
               <Button variant="outline">
                 <Link href={`/dashboard/events/${id}/promo`}>
-                  Promo
+                  Add Promo
                 </Link>
               </Button>
             </CardAction>
@@ -97,8 +97,6 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
           </CardContent>
         </Card>
       </div>
-
-
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <Card>

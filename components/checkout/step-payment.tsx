@@ -122,7 +122,13 @@ export function StepPayment({event, order, category, promos}: Props) {
     );
 
     if (foundPromo) {
-      setDiscount(foundPromo.discountValue);
+      const discountType = foundPromo.discountType;
+      if (discountType === 'percentage') {
+        const calculatedDiscount = price * (foundPromo.discountValue / 100);
+        setDiscount(calculatedDiscount);
+      } else {
+        setDiscount(foundPromo.discountValue);
+      }
       setPromoId(foundPromo.id);
     } else {
       setDiscount(0);

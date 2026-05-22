@@ -28,11 +28,8 @@ export function ListPromo({ promos }: { promos: PromoType[] }) {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Promo Code</TableHead>
-          <TableHead>Discount</TableHead>
-          <TableHead>Discount Type</TableHead>
-          <TableHead>Start Date</TableHead>
-          <TableHead>End Date</TableHead>
+          <TableHead>Promo</TableHead>
+          <TableHead>Value</TableHead>
           <TableHead>Status</TableHead>
           <TableHead>Actions</TableHead>
         </TableRow>
@@ -60,10 +57,7 @@ export function ListPromo({ promos }: { promos: PromoType[] }) {
                   </Button>
                 </div>
               </TableCell>
-              <TableCell>{formatMoney(promo.discountValue)}</TableCell>
-              <TableCell className="capitalize">{promo.discountType}</TableCell>
-              <TableCell>{promo.startsAt ? formatDate(promo.startsAt) : "-"}</TableCell>
-              <TableCell>{promo.endsAt ? formatDate(promo.endsAt) : "-"}</TableCell>
+              <TableCell>{promo.discountType == 'fixed' ? formatMoney(promo.discountValue) : promo.discountValue + "%"}</TableCell>
               <TableCell>
                 <Badge variant={promo.isActive ? "default" : "secondary"}>
                   {promo.isActive ? "Active" : "Inactive"}

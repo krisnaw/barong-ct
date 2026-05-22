@@ -12,15 +12,15 @@ import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/c
 import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
 import {Label} from "@/components/ui/label";
 import {Slider} from "@/components/ui/slider";
-import {createPromoAction} from "@/app/actions/profile/promo/promo.action";
 import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
+import {createPromoAction} from "@/app/actions/profile/promo/promo.action";
 
 interface CreatePromoFormProps {
   eventId: number;
-  price? : number;
+  price?: number;
 }
 
-export function CreatePromoForm({ eventId, price }: CreatePromoFormProps) {
+export function CreatePromoForm({eventId, price}: CreatePromoFormProps) {
   const promoId = useId();
   const discountValueId = useId();
   const startsAtId = useId();
@@ -32,9 +32,7 @@ export function CreatePromoForm({ eventId, price }: CreatePromoFormProps) {
 
   const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(async (prevState: ActionResponse, formData: FormData) => {
     const discountType = formData.get("discount_type") as string;
-    const discountValue = discountType === "percentage" && price
-      ? Math.round(price * (discountPercentage / 100))
-      : Number(formData.get("discountValue"));
+    const discountValue = Number(formData.get("discountValue"))
 
     const payload = {
       eventId: eventId,
@@ -43,10 +41,8 @@ export function CreatePromoForm({ eventId, price }: CreatePromoFormProps) {
       discountValue,
       startsAt: startsAt,
       endsAt: endsAt,
-      isActive: formData.get("isActive") === "true",
+      isActive: formData.get("isActive") as string == 'active' ? true : false,
     }
-    // Here you would create the actual action
-    // For now, simulating response
     return await createPromoAction(payload)
   }, initialState)
 
@@ -75,13 +71,14 @@ export function CreatePromoForm({ eventId, price }: CreatePromoFormProps) {
 
             <Field>
               <FieldLabel htmlFor={promoId}>Discount Type</FieldLabel>
-              <RadioGroup defaultValue="fixed" name="discount_type" value={discountType} onValueChange={(value) => setDiscountType(value)}>
+              <RadioGroup defaultValue="fixed" name="discount_type" value={discountType}
+                          onValueChange={(value) => setDiscountType(value)}>
                 <div className="flex items-center gap-3">
-                  <RadioGroupItem value="fixed" id="fixed" />
+                  <RadioGroupItem value="fixed" id="fixed"/>
                   <Label htmlFor="fixed">Fixed</Label>
                 </div>
                 <div className="flex items-center gap-3">
-                  <RadioGroupItem value="percentage" id="percentage" />
+                  <RadioGroupItem value="percentage" id="percentage"/>
                   <Label htmlFor="percentage">Percentage</Label>
                 </div>
               </RadioGroup>
@@ -91,7 +88,7 @@ export function CreatePromoForm({ eventId, price }: CreatePromoFormProps) {
             {discountType === "fixed" ? (
               <Field>
                 <FieldLabel htmlFor={discountValueId}>
-                  Discount Value (IDR)
+                  Discount Value
                 </FieldLabel>
                 <Input
                   id={discountValueId}
@@ -99,12 +96,9 @@ export function CreatePromoForm({ eventId, price }: CreatePromoFormProps) {
                   name="discountValue"
                   placeholder="10000"
                   min="0"
-                  step="1"
+                  step="10000"
                   required
                 />
-                <FieldDescription>
-                  Enter fixed discount amount in IDR
-                </FieldDescription>
               </Field>
             ) : (
               <Field>
@@ -119,21 +113,18 @@ export function CreatePromoForm({ eventId, price }: CreatePromoFormProps) {
                     const newValue = Array.isArray(val) ? val[0] : val;
                     setDiscountPercentage(newValue);
                   }}
+                  name="discountValue"
                   max={100}
                   step={10}
                   className="w-full"
                 />
-
-                <FieldDescription>
-                  Enter fixed discount amount in IDR
-                </FieldDescription>
               </Field>
             )}
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Field>
                 <FieldLabel htmlFor={startsAtId}>Start Date & Time</FieldLabel>
-                <CustomDatePicker name="startDate" value={startsAt || new Date()} />
+                <CustomDatePicker name="startDate" value={startsAt || new Date()}/>
                 <FieldDescription>
                   When the promo becomes active
                 </FieldDescription>
@@ -141,7 +132,7 @@ export function CreatePromoForm({ eventId, price }: CreatePromoFormProps) {
 
               <Field>
                 <FieldLabel htmlFor={endsAtId}>End Date & Time</FieldLabel>
-                <CustomDatePicker name="endDate" value={endsAt || new Date()} />
+                <CustomDatePicker name="endDate" value={endsAt || new Date()}/>
                 <FieldDescription>
                   When the promo expires (optional)
                 </FieldDescription>
@@ -152,11 +143,11 @@ export function CreatePromoForm({ eventId, price }: CreatePromoFormProps) {
               <FieldLabel htmlFor="isActive">Status</FieldLabel>
               <Select defaultValue="true" name="isActive">
                 <SelectTrigger className="w-45">
-                  <SelectValue placeholder="Select status" />
+                  <SelectValue placeholder="Select status"/>
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="true">Active</SelectItem>
-                  <SelectItem value="false">Inactive</SelectItem>
+                  <SelectItem value="active">Active</SelectItem>
+                  <SelectItem value="inactive">Inactive</SelectItem>
                 </SelectContent>
               </Select>
               <FieldDescription>
@@ -167,7 +158,7 @@ export function CreatePromoForm({ eventId, price }: CreatePromoFormProps) {
         </CardContent>
         <CardFooter>
           <Button type="submit" disabled={isPending} size="lg">
-            {isPending ? <Spinner /> : null }
+            {isPending ? <Spinner/> : null}
             Save
           </Button>
         </CardFooter>
