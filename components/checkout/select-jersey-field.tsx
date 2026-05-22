@@ -16,24 +16,20 @@ export function SelectJerseyField({eventId} : {eventId: number}) {
   }
 
   return (
-    <div>
-      <div>
-        <RadioGroup
-          defaultValue={jersey} onValueChange={(value: string) => onChangeHandler(value)}
-          className="mt-4 grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2">
-          {sizes.map((size) => (
-            <FieldLabel key={size.id} htmlFor={size.id}>
-              <Field orientation="horizontal">
-                <FieldContent>
-                  <FieldTitle>{size.name}</FieldTitle>
-                </FieldContent>
-                <RadioGroupItem value={size.id} id={size.id}/>
-              </Field>
-            </FieldLabel>
-          ))}
-        </RadioGroup>
-      </div>
-    </div>
+    <RadioGroup
+      defaultValue={jersey} onValueChange={(value: string) => onChangeHandler(value)}
+      className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2">
+      {sizes.map((size) => (
+        <FieldLabel key={size.id} htmlFor={size.id}>
+          <Field orientation="horizontal">
+            <FieldContent>
+              <FieldTitle>{size.name}</FieldTitle>
+            </FieldContent>
+            <RadioGroupItem value={size.id} id={size.id}/>
+          </Field>
+        </FieldLabel>
+      ))}
+    </RadioGroup>
   )
 }
 

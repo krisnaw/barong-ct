@@ -2,7 +2,6 @@
 
 import {EventCategoryType, EventOrderType, EventType, GroupWithParticipant} from "@/db/schema";
 import {useRouter, useSearchParams} from "next/navigation";
-import {Label} from "@/components/ui/label";
 import {useActionState, useState} from "react";
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
@@ -73,7 +72,9 @@ export function StepGroup({event, groups, categories, order}: Props) {
         <div className="space-y-4">
           <SelectCategoryField eventId={eventId} categories={categories}/>
           <div>
-            <Label htmlFor="create-group">Group Ride</Label>
+            <h2 className="cn-font-heading text-xs font-medium tracking-wider text-muted-foreground uppercase">
+              Group Ride
+            </h2>
             <div className="mt-2">
               {selectedGroup ?
                 (
@@ -91,10 +92,12 @@ export function StepGroup({event, groups, categories, order}: Props) {
             <div className="mt-6">
               <div>
                 <div className="flex justify-between">
-                  <Label>Jersey</Label>
+                  <h2 className="cn-font-heading text-xs font-medium tracking-wider text-muted-foreground uppercase">
+                    Jersey
+                  </h2>
                   <SizeChart/>
                 </div>
-                <div className="mt-4">
+                <div className="mt-2">
                   <SelectJerseyField eventId={eventId} />
                 </div>
               </div>
