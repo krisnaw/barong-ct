@@ -57,7 +57,7 @@ export async function createPayment(payload: { oderId: number, pm : string[] }):
         },
         {
           "name": "Service Fee",
-          "price" : event.serviceFee,
+          "price" : 15000,
           "quantity": 1
         }
       ]
@@ -71,6 +71,8 @@ export async function createPayment(payload: { oderId: number, pm : string[] }):
       "email": user.email,
     }
   });
+
+  console.error(raw);
 
 
   const requestId = crypto.randomUUID().toString();

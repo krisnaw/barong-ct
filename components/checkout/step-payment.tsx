@@ -47,7 +47,7 @@ export function StepPayment({event, order, category, promos}: Props) {
   const [promoId, setPromoId] = useState<number | undefined>(undefined);
   const [pm, setPM] = useState<string[]>([])
 
-  const price = Number(category.price);
+  const price = Number(order.price);
   const fee = category.serviceFee ?? 0;
 
   const isFreePass = discount >= price;

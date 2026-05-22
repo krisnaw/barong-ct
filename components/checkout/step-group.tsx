@@ -32,6 +32,7 @@ export function StepGroup({event, groups, categories, order}: Props) {
   const groupId = order.groupId ?? searchParams.get('group') ?? "";
   const [availableGroup] = useState<GroupWithParticipant[]>(groups)
   const selectedGroup = availableGroup.find((item) => item.id === order.groupId)
+  const price = categories.find((cat) => cat.id === Number(categoryId))?.price ?? 0;
 
   const [state, formAction, isPending] = useActionState(async () => {
 
@@ -40,6 +41,7 @@ export function StepGroup({event, groups, categories, order}: Props) {
       status: "group",
       categoryId: Number(categoryId),
       jerseySize: jerseySize,
+      price: price,
       groupId: Number(groupId),
     }
 

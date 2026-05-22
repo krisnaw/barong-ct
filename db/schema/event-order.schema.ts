@@ -28,6 +28,7 @@ export const eventOrder = pgTable("event_order", {
     .references(() => eventGroup.id, {onDelete: "set null"}),
 
   price: doublePrecision('price'),
+  serviceFee: doublePrecision('service_fee').default(0),
   currency: text("currency"),
 
   promoId: integer("promo_id")

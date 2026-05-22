@@ -17,7 +17,6 @@ export async function updateOrderAction(formData: updateData): Promise<ActionRes
     if (error instanceof Error) {
       console.error(error);
     }
-
     return {
       success: false,
       message: 'Sorry, something went wrong',
