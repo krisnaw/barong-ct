@@ -5,7 +5,7 @@ import {Button} from "@/components/ui/button";
 import {redirect, useRouter} from "next/navigation";
 import {useActionState, useState} from "react";
 import {initialState} from "@/types/types";
-import {EventOrderType, EventType} from "@/db/schema";
+import {EventCategoryType, EventOrderType, EventType} from "@/db/schema";
 import {PromoType} from "@/db/schema/event-promo.schema";
 import {Spinner} from "@/components/ui/spinner";
 import {updateOrderAction} from "@/app/actions/event-order/event-order.action";
@@ -21,12 +21,13 @@ import {processFreePass} from "@/app/actions/payment/freepass.action";
 interface Props {
   event: EventType & { participantCount: number },
   order: EventOrderType,
+  category: EventCategoryType,
   promos: PromoType[] | null
 }
 
 const methods = [
   {
-    formID : 'pm-bni-va',
+    formID: 'pm-bni-va',
     value: ["VIRTUAL_ACCOUNT_BNI"],
     label: "BNI Virtual Account",
     description: "20% OFF WITH BNI VA",
@@ -39,15 +40,15 @@ const methods = [
   },
 ]
 
-export function StepPayment({event, order, promos}: Props) {
+export function StepPayment({event, order, category, promos}: Props) {
   const router = useRouter();
   const [promoCode, setPromoCode] = useState('');
   const [discount, setDiscount] = useState(0);
   const [promoId, setPromoId] = useState<number | undefined>(undefined);
   const [pm, setPM] = useState<string[]>([])
 
-  const price = Number(event.price);
-  const fee = event.serviceFee ?? 0;
+  const price = Number(category.price);
+  const fee = category.serviceFee ?? 0;
 
   const isFreePass = discount >= price;
 
@@ -139,7 +140,9 @@ export function StepPayment({event, order, promos}: Props) {
         <CardContent>
           <div className="space-y-4">
             <div>
-              <h2 className="cn-font-heading text-xs font-medium tracking-wider text-muted-foreground uppercase">Select Payment Method</h2>
+              <h2 className="cn-font-heading text-xs font-medium tracking-wider text-muted-foreground uppercase">Select
+                Payment Method
+              </h2>
               <div className="mt-2">
                 <RadioGroup
                   defaultValue={pm}
@@ -151,7 +154,7 @@ export function StepPayment({event, order, promos}: Props) {
                   {methods.map((item) => (
                     <FieldLabel htmlFor={item.formID} key={item.formID}>
                       <Field orientation="horizontal" className="pb-2.5">
-                        <RadioGroupItem value={item.value} id={item.formID} />
+                        <RadioGroupItem value={item.value} id={item.formID}/>
                         <FieldContent>
                           <FieldTitle>{item.label}</FieldTitle>
                           <FieldDescription>{item.description}</FieldDescription>
@@ -164,7 +167,8 @@ export function StepPayment({event, order, promos}: Props) {
             </div>
 
             <div>
-              <h2 className="cn-font-heading text-xs font-medium tracking-wider text-muted-foreground uppercase">Discount</h2>
+              <h2
+                className="cn-font-heading text-xs font-medium tracking-wider text-muted-foreground uppercase">Discount</h2>
               <div className="mt-2">
                 {promos && promos.length > 0 && (
                   <div className="flex space-x-2">
@@ -190,13 +194,14 @@ export function StepPayment({event, order, promos}: Props) {
           </div>
 
           <div className="mt-6">
-            <h2 className="cn-font-heading text-xs font-medium tracking-wider text-muted-foreground uppercase">Order Summary</h2>
+            <h2 className="cn-font-heading text-xs font-medium tracking-wider text-muted-foreground uppercase">Order
+              Summary</h2>
             <div className="mt-2 h-40">
               <Item variant="muted" className="flex-col items-stretch">
                 <ItemContent className="gap-3">
                   <div className="flex items-center justify-between">
                   <span className="text-sm text-muted-foreground">
-                    Barong Melali 2026
+                    Barong Melali 2026 - {category.name} ({category.description})
                   </span>
                     <span className="text-sm font-medium tabular-nums">
                     {formatMoney(Number(price))}
@@ -207,7 +212,7 @@ export function StepPayment({event, order, promos}: Props) {
                   <span className="text-sm text-muted-foreground">
                     Processing Fee
                   </span>
-                    <span className="text-sm font-medium tabular-nums">
+                      <span className="text-sm font-medium tabular-nums">
                     {formatMoney(Number(fee))}
                   </span>
                     </div>
@@ -216,8 +221,8 @@ export function StepPayment({event, order, promos}: Props) {
                   {discount > 0 && (
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-green-600">
-                    Discount
-                  </span>
+                        Discount
+                      </span>
                       <span className="text-sm font-semibold tabular-nums text-green-600">
                         {formatMoney(Number(discount))}
                       </span>

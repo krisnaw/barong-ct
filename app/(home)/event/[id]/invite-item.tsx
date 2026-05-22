@@ -9,7 +9,7 @@ import {Field, FieldLabel} from "@/components/ui/field";
 import {InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput} from "@/components/ui/input-group";
 
 export function InviteItem({ eventId, group }: { eventId: number, group: GroupWithParticipant }) {
-  const shareUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/event/${eventId}/order?group=${group.id}`
+  const shareUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/event/${eventId}/register?group=${group.id}`
   const [copied, setCopied] = useState(false)
   const handleCopyLink = async () => {
 

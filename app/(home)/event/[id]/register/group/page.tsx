@@ -5,6 +5,7 @@ import {headers} from "next/headers";
 import {redirect} from "next/navigation";
 import {getEventById} from "@/db/query/event-query";
 import {getGroupByEvent} from "@/db/query/event-group.query";
+import {getCategoryByEvent} from "@/db/query/event-category.query";
 
 export default async function Page({params}: { params: Promise<{ id: number }> }) {
   const {id} = await params;
@@ -26,12 +27,16 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
   const order = await getOngoingOrder(id, userId);
 
   const groups = await getGroupByEvent(id);
+
+  const categories = await getCategoryByEvent(id)
+
   if (!order) {
     redirect("/event")
   }
+
   return (
     <div>
-      <StepGroup key={groups.length} event={event} order={order} groups={groups}  />
+      <StepGroup key={groups.length} event={event} order={order} categories={categories} groups={groups}  />
     </div>
   )
 }

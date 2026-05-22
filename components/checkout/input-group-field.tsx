@@ -5,20 +5,21 @@ import {Button} from '@/components/ui/button';
 import {Input} from '@/components/ui/input';
 import {Plus} from 'lucide-react';
 import {GroupWithParticipant} from "@/db/schema";
+import {toast} from "sonner";
+import {createGroupAction} from "@/app/actions/event-group/event-group.action";
+import {useRouter, useSearchParams} from "next/navigation";
 
-interface CreateGroupSimpleProps {
+interface Props {
+  eventId: number,
+  orderId: number,
   existingGroups: GroupWithParticipant[];
-  onCreate?: (groupName: string) => void;
-  placeholder?: string;
 }
 
-export function SimpleGroupInput({
-                                    existingGroups,
-                                    onCreate,
-                                    placeholder = 'Enter group name...',
-                                  }: CreateGroupSimpleProps) {
+export function InputGroupField({ eventId, orderId,existingGroups }: Props) {
   const [groupName, setGroupName] = useState('');
   const [error, setError] = useState('');
+  const router = useRouter()
+  const searchParams = useSearchParams();
 
   const handleCreate = () => {
     const trimmedName = groupName.trim();
@@ -43,7 +44,7 @@ export function SimpleGroupInput({
     }
 
     // Create group
-    onCreate?.(trimmedName);
+    createGroup?.(trimmedName);
     setGroupName('');
   };
 
@@ -52,6 +53,25 @@ export function SimpleGroupInput({
       handleCreate();
     }
   };
+
+  async function createGroup(value: string) {
+    if (!value) return;
+    const res = await createGroupAction({
+      name: value,
+      eventId,
+      orderId,
+    })
+
+    if (res.success && res.data) {
+      const newParam = new URLSearchParams(searchParams);
+      // @ts-ignore
+      newParam.set('group', String(res.data.id))
+      router.push(`/event/${eventId}/register/group?${newParam}`)
+      toast.success(res.message);
+    } else {
+      toast.error(res.message)
+    }
+  }
 
   return (
     <div className="space-y-2">
@@ -64,7 +84,7 @@ export function SimpleGroupInput({
             setError('');
           }}
           onKeyDown={handleKeyPress}
-          placeholder={placeholder}
+          placeholder="Enter group name"
           className={error ? 'border-destructive focus-visible:ring-destructive' : ''}
         />
         <Button onClick={handleCreate} className="gap-2" disabled={groupName.length === 0}>

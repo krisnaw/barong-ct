@@ -11,6 +11,7 @@ export default async function Home() {
             alt=""
             src="/bg-image-opt.jpg"
             fill={true}
+            loading={"eager"}
             className="absolute inset-0 -z-10 size-full object-cover"
           />
 

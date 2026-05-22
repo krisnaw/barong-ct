@@ -1,6 +1,6 @@
 'use client'
 
-import {EventOrderType, EventType, GroupWithParticipant} from "@/db/schema";
+import {EventCategoryType, EventOrderType, EventType, GroupWithParticipant} from "@/db/schema";
 import {useRouter, useSearchParams} from "next/navigation";
 import {Label} from "@/components/ui/label";
 import {useActionState, useState} from "react";
@@ -9,59 +9,38 @@ import {Button} from "@/components/ui/button";
 import {initialState} from "@/types/types";
 import {updateOrderAction} from "@/app/actions/event-order/event-order.action";
 import {toast} from "sonner";
-import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
-import {Field, FieldContent, FieldLabel, FieldTitle} from "@/components/ui/field";
 import {Spinner} from "@/components/ui/spinner";
 import {SizeChart} from "@/components/checkout/size-chart";
 import {GroupItem} from "@/components/group/group-item";
-import {SimpleGroupInput} from "@/components/checkout/simple-group-input";
-import {createGroupAction} from "@/app/actions/event-group/event-group.action";
+import {InputGroupField} from "./input-group-field";
+import {SelectCategoryField} from "@/components/checkout/select-category-field";
+import {SelectJerseyField} from "@/components/checkout/select-jersey-field";
 
-export function StepGroup({event, groups, order}: {
+type Props = {
   event: EventType & { participantCount: number },
+  categories: EventCategoryType[],
   groups: GroupWithParticipant[],
   order: EventOrderType
-}) {
-  const searchParams = useSearchParams();
-  const eventId = event.id
+}
 
-  const [jerseySize, setJerseySize] = useState<string>(order?.jerseySize ?? "");
-
-  const [availableGroup] = useState<GroupWithParticipant[]>(groups)
-  const [selectedGroup, setSelectedGroup] = useState<GroupWithParticipant | null>(() => {
-    if (!order) return null;
-    return availableGroup.find(group => group.id === order.groupId) || null;
-  });
-
+export function StepGroup({event, groups, categories, order}: Props) {
   const router = useRouter();
-
-  async function handleCreate(value: string) {
-    if (!value) return;
-    const res = await createGroupAction({
-      name: value,
-      eventId: Number(eventId),
-      orderId: order.id
-    })
-
-    if (res.success && res.data) {
-      const newParam = new URLSearchParams(searchParams);
-      // @ts-ignore
-      newParam.set('group', String(res.data.id))
-      router.push(`/event/${eventId}/register/group?${newParam}`)
-      toast.success(res.message);
-    } else {
-      toast.error(res.message)
-    }
-  }
-
+  const eventId = event.id
+  const searchParams = useSearchParams();
+  const categoryId = searchParams.get('category') ?? "";
+  const jerseySize = order.jerseySize ?? searchParams.get('jersey') ?? "";
+  const groupId = order.groupId ?? searchParams.get('group') ?? "";
+  const [availableGroup] = useState<GroupWithParticipant[]>(groups)
+  const selectedGroup = availableGroup.find((item) => item.id === order.groupId)
 
   const [state, formAction, isPending] = useActionState(async () => {
 
     const newPayload = {
       ...order,
       status: "group",
+      categoryId: Number(categoryId),
       jerseySize: jerseySize,
-      groupId: Number(selectedGroup?.id),
+      groupId: Number(groupId),
     }
 
     const res = await updateOrderAction(newPayload)
@@ -72,7 +51,6 @@ export function StepGroup({event, groups, order}: {
         router.push(`/event/${eventId}/register/profile?${newParam}`)
       }
     } else {
-      toast.error("this toas is clicked")
       toast.error(res.message)
     }
     return res;
@@ -83,105 +61,55 @@ export function StepGroup({event, groups, order}: {
     <Card>
       <CardHeader>
         <CardTitle>
-          Step 1: Group Ride and Jersey Size.
+          Step 1: Category, Group & Jersey
         </CardTitle>
         <CardDescription>
-          All riders must be part of a group. Create or join one now, then select your jersey size to finalize your spot.
+          Select your ride category, set up your group details, and pick your jersey size to get started.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-
-          {!selectedGroup && (
-            <div>
-              <Label htmlFor="create-group">Group Ride</Label>
-              <div className="mt-2">
-                <SimpleGroupInput existingGroups={availableGroup} onCreate={(value: string) => handleCreate(value)} />
-              </div>
+          <SelectCategoryField eventId={eventId} categories={categories}/>
+          <div>
+            <Label htmlFor="create-group">Group Ride</Label>
+            <div className="mt-2">
+              {selectedGroup ?
+                (
+                  <GroupItem group={selectedGroup}/>
+                ) :
+                (
+                  <InputGroupField eventId={event.id} orderId={order.id} existingGroups={availableGroup}/>
+                )
+              }
             </div>
-          )}
-
-          {selectedGroup && (
-            <div>
-              <Label>Selected Group Ride</Label>
-              <div className="mt-2">
-                <GroupItem group={selectedGroup} />
-              </div>
-            </div>
-          )}
+          </div>
         </div>
-
-
         {selectedGroup && (
           <>
             <div className="mt-6">
               <div>
                 <div className="flex justify-between">
                   <Label>Jersey</Label>
-                  <SizeChart />
+                  <SizeChart/>
                 </div>
-
                 <div className="mt-4">
-
-                  <RadioGroup onValueChange={(value) => setJerseySize(value)}
-                              defaultValue={jerseySize || ""}
-                              className="mt-4 grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2">
-                    {sizes.map((size) => (
-                      <FieldLabel key={size.id} htmlFor={size.id}>
-                        <Field orientation="horizontal">
-                          <FieldContent>
-                            <FieldTitle>{size.name}</FieldTitle>
-                          </FieldContent>
-                          <RadioGroupItem value={size.id} id={size.id}/>
-                        </Field>
-                      </FieldLabel>
-                    ))}
-                  </RadioGroup>
+                  <SelectJerseyField eventId={eventId} />
                 </div>
-
               </div>
             </div>
-
           </>
         )}
-
 
       </CardContent>
       <CardFooter>
         <form action={formAction} className="w-full">
-          <Button type="submit" className="w-full" disabled={(!selectedGroup || !jerseySize) || isPending}>
+          <Button type="submit" className="w-full" disabled={(!categoryId || !groupId || !jerseySize) || isPending}>
+            {isPending ? <Spinner/> : null}
             Continue
-            {isPending ? <Spinner /> : null}
           </Button>
         </form>
-
       </CardFooter>
     </Card>
   )
 }
 
-const sizes = [
-  // ASIA Sizing
-  { id: 'xxs', name: 'XXS' },
-  { id: 'xs', name: 'XS' },
-  { id: 's', name: 'S' },
-  { id: 'm', name: 'M' },
-  { id: 'l', name: 'L' },
-  { id: 'xl', name: 'XL' },
-  { id: 'xxl', name: 'XXL' },
-  { id: '3xl', name: '3XL' },
-  { id: '4xl', name: '4XL' },
-  { id: '5xl', name: '5XL' },
-  { id: '6xl', name: '6XL' },
-
-  // INTERNATIONAL Sizing
-  { id: 'is', name: 'iS' },
-  { id: 'im', name: 'iM' },
-  { id: 'il', name: 'iL' },
-  { id: 'ixl', name: 'iXL' },
-  { id: 'ixxl', name: 'iXXL' },
-  { id: 'i3xl', name: 'i3XL' },
-  { id: 'i4xl', name: 'i4XL' },
-  { id: 'i5xl', name: 'i5XL' },
-  { id: 'i6xl', name: 'i6XL' }
-];

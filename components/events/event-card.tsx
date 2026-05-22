@@ -1,7 +1,6 @@
 import * as React from "react";
 import {EventType} from "@/db/schema";
 import {EventDate} from "@/components/events/event-date";
-import {formatMoney} from "@/utils/money-helper";
 import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import Image from "next/image";
 import {Item, ItemContent} from "@/components/ui/item";
@@ -13,7 +12,7 @@ type Props = {
   event: EventType,
 }
 
-export function EventCard({event} : Props) {
+export function EventCard({event}: Props) {
   return (
     <Card className="pt-0">
       <div className="relative h-56 w-full overflow-hidden shadow">
@@ -54,35 +53,13 @@ export function EventCard({event} : Props) {
                 {event.locationName}
               </span>
             </div>
-            <Separator/>
-            <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">
-                  Participant
-                </span>
-              <span className="text-sm font-medium tabular-nums">
-                Limited to {event.maxParticipants} riders
-              </span>
-            </div>
           </ItemContent>
-        </Item>
-
-        <Item className="mt-6">
-          <div className="inline-flex gap-3 w-full justify-center items-center">
-            {event.price ? (
-              <p className="cn-card-title cn-font-heading text-2xl tabular-nums tracking-tight">
-                {formatMoney(Number(event.price))}
-              </p>
-            ) : (
-              <p className="cn-card-title cn-font-heading text-2xl tabular-nums">
-                FREE
-              </p>
-            )}
-          </div>
         </Item>
 
       </CardContent>
       <CardFooter>
-        <Link href={`/event/${event.id}`} prefetch={true} className={`${buttonVariants({ variant: "default", size: "lg" })} w-full uppercase`}>
+        <Link href={`/event/${event.id}`} prefetch={true}
+              className={`${buttonVariants({variant: "default", size: "lg"})} w-full uppercase`}>
           See details
         </Link>
       </CardFooter>

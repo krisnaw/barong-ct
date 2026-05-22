@@ -11,7 +11,7 @@ export async function getCategoryByEvent(eventId: number) {
 }
 
 export async function getCategoryById(id: number) {
-  return db.query.eventCategory.findMany({
+  return db.query.eventCategory.findFirst({
     where: eq(eventCategory.id, id)
   })
 }

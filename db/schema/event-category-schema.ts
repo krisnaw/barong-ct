@@ -4,14 +4,14 @@ import {createInsertSchema, createUpdateSchema} from "drizzle-zod";
 
 export const eventCategory = pgTable("event_category", {
   id: serial('id').primaryKey(),
-  name: text('name'),
+  name: text('name').notNull(),
   description: text(),
   eventId: integer("event_id")
     .notNull()
     .references(() => EventSchema.id, { onDelete: "cascade" }),
 
-  price: doublePrecision('price'),
-  currency: text("currency"),
+  price: doublePrecision('price').default(0),
+  currency: text("currency").default('IDR'),
   serviceFee: doublePrecision("service_fee").default(0),
   maxParticipants: integer("max_participants").default(50), // NULL = unlimited
   createdAt: timestamp("created_at").defaultNow().notNull(),

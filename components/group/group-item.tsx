@@ -22,11 +22,13 @@ export function GroupItem({ group }: { group: GroupWithParticipant }) {
           </ul>
         </div>
       </ItemContent>
-      <ItemActions>
-        <ItemDescription>
-          {group.participants.length}/5 members
-        </ItemDescription>
-      </ItemActions>
+      {group.participants.length > 0 && (
+        <ItemActions>
+          <ItemDescription>
+            {group.participants.length}/5 members
+          </ItemDescription>
+        </ItemActions>
+      )}
     </Item>
   )
 }

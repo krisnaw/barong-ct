@@ -13,6 +13,7 @@ import {Card, CardAction, CardContent, CardHeader, CardTitle} from "@/components
 import {Badge} from "@/components/ui/badge";
 import * as React from "react";
 import {buttonVariants} from "@/components/ui/button";
+import {getCategoryById} from "@/db/query/event-category.query";
 
 export default async function Page({params}: { params: Promise<{ id: number }> }) {
   const {id} = await params;
@@ -35,6 +36,10 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
   }
 
   const promos = await getPromoByEvent(id)
+  const category = await getCategoryById(order.categoryId!)
+  if (!category) {
+    redirect("/event")
+  }
 
   // if there is pending payment, check the payment status.
   const payment = await getPaymentByOrder(order.id)
@@ -46,29 +51,27 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
 
   return (
     <div>
-      {payment ? (
-        <>
-          {payment.status == PAYMENT_STATUS.PENDING && payment.paymentURL && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Payment</CardTitle>
-                <CardAction>
-                  <Badge variant="secondary" className="uppercase">{payment.status}</Badge>
-                </CardAction>
-              </CardHeader>
-              <CardContent>
-                <Link href={payment.paymentURL} className={`${buttonVariants({variant: "default", size: "lg"})} w-full uppercase`}>
-                  Complete payment
-                </Link>
-              </CardContent>
-            </Card>
-          )}
-          {payment.status == PAYMENT_STATUS.EXPIRED && (
-            <StepPayment event={event} order={order} promos={promos} />
-          )}
-        </>
+      {payment && payment.status === PAYMENT_STATUS.PENDING && payment.paymentURL ? (
+        <Card>
+          <CardHeader>
+            <CardTitle>Payment</CardTitle>
+            <CardAction>
+              <Badge variant="secondary" className="uppercase">
+                {payment.status}
+              </Badge>
+            </CardAction>
+          </CardHeader>
+          <CardContent>
+            <Link
+              href={payment.paymentURL}
+              className={`${buttonVariants({ variant: "default", size: "lg" })} w-full uppercase`}
+            >
+              Complete payment
+            </Link>
+          </CardContent>
+        </Card>
       ) : (
-        <StepPayment event={event} order={order} promos={promos} />
+        <StepPayment event={event} order={order} category={category} promos={promos} />
       )}
     </div>
   )

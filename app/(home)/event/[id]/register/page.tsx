@@ -28,14 +28,15 @@ export default async function Page({params, searchParams}: {
   const userId = session.user.id;
   const order = await getOngoingOrder(id, userId);
 
+  // TODO: CONTINUE this, use value from the event category
   if (!order) {
     const payload = {
       userId: userId,
       eventId: id,
       jerseyGender: "",
       status: "draft",
-      price: event.price,
-      currency: event.currency,
+      price: 0,
+      currency: 'IDR',
       ...(group && {groupId: Number(group)})
     }
     await createOrderAction(payload)
