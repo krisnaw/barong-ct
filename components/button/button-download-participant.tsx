@@ -37,7 +37,7 @@ export function ButtonDownloadParticipant({eventId, eventName}: ButtonDownloadPa
   };
 
   return (
-    <Button onClick={handleDownload} variant="outline" size="sm">
+    <Button onClick={handleDownload} variant="outline">
       <Download className="h-4 w-4 mr-2" />
       Download
     </Button>
