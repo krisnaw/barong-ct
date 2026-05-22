@@ -1,5 +1,6 @@
-import {EditCategoryForm} from "@/components/category/edit-category-form";
 import {getCategoryById} from "@/db/query/event-category.query";
+import {EditCategoryForm} from "@/components/category/edit-category-form";
+import {redirect} from "next/navigation";
 
 export default async function Page({
                                      params,
@@ -9,8 +10,11 @@ export default async function Page({
 
   const {categoryId} = await params;
 
+  const category = await getCategoryById(categoryId)
 
-  const [category] = await getCategoryById(categoryId)
+  if (!category) {
+    return redirect('/dashboard/events')
+  }
 
   return (
     <div>

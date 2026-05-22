@@ -73,7 +73,7 @@ export default async function EventsPage() {
                 </div>
               </TableCell>
               <TableCell>
-                {event.participantCount} / {event.maxParticipants || '∞'}
+                {event.participantCount}
               </TableCell>
               <TableCell>
                 <Link href={`/dashboard/events/${event.id}`}>
