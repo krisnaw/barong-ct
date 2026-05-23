@@ -2,7 +2,7 @@
 
 import {db} from "@/db/db";
 import {and, asc, desc, eq, getTableColumns, isNull} from "drizzle-orm";
-import {participant, user, userDetail} from "@/db/schema";
+import {eventOrder, participant, user, userDetail} from "@/db/schema";
 
 export async function getParticipantByEventUser(eventId: number, userId: string) {
   return  await db.query.participant.findFirst({
@@ -24,10 +24,12 @@ export async function getParticipantByEvent(eventId: number, sortByName: boolean
       participant,
       user,
       userDetail,
+      eventOrder
     })
     .from(participant)
     .innerJoin(user, eq(user.id, participant.userId))
     .leftJoin(userDetail, eq(userDetail.userId, user.id))
+    .leftJoin(eventOrder, eq(eventOrder.userId, participant.userId))
     .where(eq(participant.eventId, eventId))
     .orderBy(sortByName ? asc(user.name) : desc(participant.createdAt))
     .limit(200);
