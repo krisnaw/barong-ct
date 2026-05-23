@@ -14,10 +14,16 @@ import {Button} from "@/components/ui/button"
 import {Trash} from "lucide-react";
 import {EventCategoryType} from "@/db/schema";
 import {deleteCategoryAction} from "@/app/actions/event-category/event-category.action";
+import {toast} from "sonner";
 
 export function DeleteCategory({category} : {category: EventCategoryType}) {
   const onClickHandler = async () => {
-    await deleteCategoryAction(category.id)
+    const res = await deleteCategoryAction(category.id)
+    if (res.success) {
+      toast.info(res.message)
+    } else {
+      toast.warning(res.message)
+    }
   }
   return (
     <AlertDialog>
