@@ -4,6 +4,7 @@ import {eq} from "drizzle-orm";
 import {revalidatePath} from "next/cache";
 import {z} from "zod";
 import {db} from "@/db/db";
+import {getOrderByPromo} from "@/db/query/event-order.query";
 
 export async function createPromoAction(formData: InsertPromoType) {
   try {
@@ -46,6 +47,17 @@ export async function updatePromo(formData: UpdatePromoType) {
 }
 
 export async function deletePromoAction(id: number) {
+  const order = await getOrderByPromo(id)
+  if (order) {
+    return {
+      success: false,
+      message: "This category has active registrations and cannot be deleted.",
+    }
+  }
   await db.delete(eventPromoSchema).where(eq(eventPromoSchema.id, Number(id)));
   revalidatePath('/', 'page');
+  return {
+    success: true,
+    message: "Success, promo was deleted."
+  }
 }

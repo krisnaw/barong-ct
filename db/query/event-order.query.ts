@@ -27,3 +27,9 @@ export async function getOrderByCategory(categoryId: number) {
     where: eq(eventOrder.categoryId, categoryId)
   });
 }
+
+export async function getOrderByPromo(promoId: number) {
+  return db.query.eventOrder.findFirst({
+    where: eq(eventOrder.promoId, promoId)
+  });
+}

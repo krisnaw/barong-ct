@@ -90,16 +90,16 @@ export async function updateCategoryAction(formData: UpdateCategoryData)  {
 
 export async function deleteCategoryAction(id: number) : Promise<ActionResponse>  {
   const order = await getOrderByCategory(id)
-  if (!order) {
-    await db.delete(eventCategory).where(eq(eventCategory.id, id))
-    revalidatePath('/', 'page')
+  if (order) {
     return {
-      success: true,
-      message: "Success, category was deleted."
+      success: false,
+      message: "This category has active registrations and cannot be deleted.",
     }
   }
+  await db.delete(eventCategory).where(eq(eventCategory.id, id))
+  revalidatePath('/', 'page')
   return {
-    success: false,
-    message: "This category has active registrations and cannot be deleted.",
+    success: true,
+    message: "Success, category was deleted."
   }
 }
