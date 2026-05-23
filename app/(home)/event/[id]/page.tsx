@@ -19,7 +19,7 @@ import {getGroupById} from "@/db/query/event-group.query";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {InviteItem} from "@/app/(home)/event/[id]/invite-item";
 
-export default async function Page({params,}: { params: Promise<{ id: number }> }) {
+export default async function Page({params}: { params: Promise<{ id: number }> }) {
 
   const {id} = await params;
 
@@ -203,7 +203,7 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
             <Card>
               <CardHeader>
                 <CardTitle>
-                  Texas Tech University -Costa Rica
+                  {event.locationName}
                 </CardTitle>
                 <CardDescription>
                   Avenida Escazú, Edificio AE205, San José Province, Escazu, 10201, Costa Rica
@@ -219,39 +219,8 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
               </CardContent>
             </Card>
           )}
-
-          <Card className="p-0">
-            <CardContent className="px-0">
-              <div>
-                <div className="bg-white">
-                  <div className="mx-auto max-w-7xl">
-                    <div className="grid grid-cols-1 gap-px bg-gray-900/10 sm:grid-cols-2">
-                      {stats.map((stat) => (
-                        <div key={stat.name} className="bg-white px-4 py-6 sm:px-6 lg:px-8">
-                          <p className="flex items-baseline gap-x-2">
-                            <span className="text-4xl font-semibold tracking-tight text-gray-900">{stat.value}</span>
-                            {stat.unit ? <span className="text-sm text-gray-500">{stat.unit}</span> : null}
-                          </p>
-                          <p className="mt-2 text-sm/6 font-medium text-gray-500">{stat.name}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-
         </div>
       </div>
     </div>
   )
 }
-
-const stats = [
-  { name: 'Distance', value: '140', unit: 'km' },
-  { name: 'Elevation Gain', value: '2,370', unit: 'm' },
-  { name: 'Pit stops', value: '3' },
-  { name: 'Cutoff time', value: '5', unit: 'hours' },
-]
