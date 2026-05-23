@@ -21,8 +21,10 @@ import {PromoType, UpdatePromoType} from "@/db/schema";
 import {ActionResponse, initialState} from "@/types/types";
 import {updatePromo} from "@/app/actions/profile/promo/promo.action";
 import {Slider} from "@/components/ui/slider";
+import {toast} from "sonner";
 
 export function EditPromo({promo}: { promo: PromoType }) {
+  const [open, setOpen] = useState(false);
   const [discountType, setDiscountType] = useState(promo.discountType)
 
   const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(
@@ -39,11 +41,17 @@ export function EditPromo({promo}: { promo: PromoType }) {
         isActive: true,
       }
 
-      return await updatePromo(payload)
+      const res =  await updatePromo(payload)
+      if (res.success) {
+        toast.info(res.message)
+      }
+
+      setOpen(false)
+      return res
     }, initialState)
 
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger render={<Button variant="ghost"><Pencil/></Button>}/>
       <SheetContent>
         <SheetHeader>
