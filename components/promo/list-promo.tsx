@@ -5,9 +5,10 @@ import {Badge} from "@/components/ui/badge";
 import {Button} from "@/components/ui/button";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table";
 import {PromoType} from "@/db/schema";
-import {CopyIcon, Trash2} from "lucide-react";
+import {CopyIcon} from "lucide-react";
 import {toast} from "sonner";
-import {deletePromoAction} from "@/app/actions/profile/promo/promo.action";
+import {EditPromo} from "@/components/promo/edit-promo";
+import {DeletePromo} from "@/components/promo/delete-promo";
 
 export function ListPromo({ promos }: { promos: PromoType[] }) {
   const formatDate = (date?: Date) => {
@@ -64,12 +65,8 @@ export function ListPromo({ promos }: { promos: PromoType[] }) {
                 </Badge>
               </TableCell>
               <TableCell>
-                <form action={deletePromoAction}>
-                  <input type="hidden" name="promoId" value={promo.id} />
-                  <Button type="submit" variant="ghost" size="sm" className="h-6 w-6 p-0 text-destructive">
-                    <Trash2 className="h-3 w-3" />
-                  </Button>
-                </form>
+                <EditPromo promo={promo} />
+                <DeletePromo promo={promo} />
               </TableCell>
             </TableRow>
           ))

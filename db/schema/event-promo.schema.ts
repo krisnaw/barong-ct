@@ -1,6 +1,6 @@
 import {boolean, doublePrecision, integer, pgTable, serial, text, timestamp} from "drizzle-orm/pg-core";
 import {EventSchema} from "@/db/schema/event-schema";
-import {createInsertSchema} from "drizzle-zod";
+import {createInsertSchema, createUpdateSchema} from "drizzle-zod";
 
 export const eventPromoSchema = pgTable("event_promo", {
   id: serial('id').primaryKey(),
@@ -26,4 +26,8 @@ export const eventPromoSchema = pgTable("event_promo", {
 })
 
 export type PromoType = typeof eventPromoSchema.$inferSelect
+export type InsertPromoType = typeof eventPromoSchema.$inferInsert;
+export type UpdatePromoType = Partial<typeof eventPromoSchema.$inferInsert>;
+
 export const promoInsertSchema = createInsertSchema(eventPromoSchema);
+export const promoUpdateSchema = createUpdateSchema(eventPromoSchema)

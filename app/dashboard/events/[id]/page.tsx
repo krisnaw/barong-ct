@@ -83,11 +83,6 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
             <CardTitle>Promo code</CardTitle>
             <CardAction>
               <AddPromo eventId={event.id} />
-              <Button variant="outline">
-                <Link href={`/dashboard/events/${id}/promo`}>
-                  Add Promo
-                </Link>
-              </Button>
             </CardAction>
           </CardHeader>
           <CardContent>

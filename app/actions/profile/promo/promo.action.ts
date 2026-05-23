@@ -1,14 +1,12 @@
 'use server'
 
 import {db} from "@/db/db";
-import {eventPromoSchema, promoInsertSchema} from "@/db/schema";
+import {eventPromoSchema, InsertPromoType, promoUpdateSchema, UpdatePromoType} from "@/db/schema";
 import {eq} from "drizzle-orm";
-import {z} from "zod";
 import {revalidatePath} from "next/cache";
+import {z} from "zod";
 
-export type insertData = z.infer<typeof promoInsertSchema>;
-
-export async function createPromoAction(formData: insertData) {
+export async function createPromoAction(formData: InsertPromoType) {
   try {
     await db.insert(eventPromoSchema).values(formData).returning()
   } catch (e) {
@@ -29,9 +27,26 @@ export async function createPromoAction(formData: insertData) {
   }
 }
 
-export async function deletePromoAction(formData: FormData) {
-  console.log('asf')
-  const promoId = formData.get("promoId");
-  await db.delete(eventPromoSchema).where(eq(eventPromoSchema.id, Number(promoId)));
+export async function updatePromo(formData: UpdatePromoType) {
+  const validate = promoUpdateSchema.safeParse(formData)
+  if (!validate.success) {
+    return {
+      success: false,
+      message: "Invalid data",
+      error: z.flattenError(validate.error),
+      fields: validate.data,
+    }
+  }
+
+  await db.update(eventPromoSchema).set(validate.data).where(eq(eventPromoSchema.id, Number(formData.id)));
+  revalidatePath('/', 'page');
+  return {
+    success: true,
+    message: "Success, promo has been updated",
+  }
+}
+
+export async function deletePromoAction(id: number) {
+  await db.delete(eventPromoSchema).where(eq(eventPromoSchema.id, Number(id)));
   revalidatePath('/', 'page');
 }
