@@ -10,9 +10,8 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import {Button} from "@/components/ui/button";
-import {useRouter} from "next/navigation";
 import * as React from "react";
-import {useActionState} from "react";
+import {useActionState, useState} from "react";
 import {ActionResponse, initialState} from "@/types/types";
 import {createCategoryAction} from "@/app/actions/event-category/event-category.action";
 import {toast} from "sonner";
@@ -23,9 +22,9 @@ import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/c
 import {Spinner} from "@/components/ui/spinner";
 
 export function AddCategory({eventId}: { eventId: number }) {
-  const router = useRouter();
+  const [open, setOpen] = useState(false)
 
-  const [state, formAction, isPending] = useActionState(async (_: ActionResponse, formData: FormData) => {
+  const [_, formAction, isPending] = useActionState(async (_: ActionResponse, formData: FormData) => {
 
     const payload = {
       eventId: Number(eventId),
@@ -37,18 +36,14 @@ export function AddCategory({eventId}: { eventId: number }) {
     }
 
     const res = await createCategoryAction(payload)
-    if (res.success) {
-      router.push(`/dashboard/events/${eventId}`)
-    }
-
     toast.info(res.message)
-
+    setOpen(!res.success)
     return res
 
   }, initialState)
 
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger render={<Button variant="outline">Add Category</Button>} />
       <SheetContent>
         <SheetHeader>

@@ -22,31 +22,30 @@ import {createPromoAction} from "@/app/actions/profile/promo/promo.action";
 import {InsertPromoType} from "@/db/schema";
 import {Slider} from "@/components/ui/slider";
 import {Spinner} from "@/components/ui/spinner";
+import {toast} from "sonner";
 
 export function AddPromo({eventId}: { eventId: number }) {
   const [open, setOpen] = useState(false)
   const [discountType, setDiscountType] = useState("fixed")
 
-  const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(async (prevState: ActionResponse, formData: FormData) => {
-    for (const [key, value] of formData.entries()) {
-      console.log(key, value)
-    }
+  const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(
+    async (_: ActionResponse, formData: FormData) => {
+      const payload: InsertPromoType = {
+        eventId: eventId,
+        startsAt: new Date(`${formData.get("startsAt") as string}`),
+        endsAt: new Date(`${formData.get("endDate") as string}`),
+        currency: formData.get("currency") as string,
+        promo: formData.get("promo") as string,
+        discountValue: Number(formData.get("discountValue") as string),
+        discountType: formData.get("discountType") as string,
+        isActive: true,
+      }
 
-    const payload: InsertPromoType = {
-      eventId: eventId,
-      startsAt: new Date(`${formData.get("startsAt") as string}`),
-      endsAt: new Date(`${formData.get("endDate") as string}`),
-      currency: formData.get("currency") as string,
-      promo: formData.get("promo") as string,
-      discountValue: Number(formData.get("discountValue") as string),
-      discountType: formData.get("discountType") as string,
-      isActive: true,
-    }
-
-    const res = await createPromoAction(payload)
-    setOpen(res.success)
-    return res
-  }, initialState);
+      const res = await createPromoAction(payload)
+      toast.info(res.message)
+      setOpen(!res.success)
+      return res
+    }, initialState);
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>

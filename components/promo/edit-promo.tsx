@@ -27,8 +27,8 @@ export function EditPromo({promo}: { promo: PromoType }) {
   const [open, setOpen] = useState(false);
   const [discountType, setDiscountType] = useState(promo.discountType)
 
-  const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(
-    async (prevState: ActionResponse, formData: FormData) => {
+  const [_, formAction, isPending] = useActionState<ActionResponse, FormData>(
+    async (_: ActionResponse, formData: FormData) => {
 
       const payload : UpdatePromoType = {
         id: promo.id,
@@ -43,7 +43,7 @@ export function EditPromo({promo}: { promo: PromoType }) {
 
       const res =  await updatePromo(payload)
       toast.info(res.message)
-      setOpen(res.success)
+      setOpen(!res.success)
       return res
     }, initialState)
 

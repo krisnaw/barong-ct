@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/sheet"
 import {EventCategoryType} from "@/db/schema";
 import * as React from "react";
-import {useActionState} from "react";
+import {useActionState, useState} from "react";
 import {ActionResponse, initialState} from "@/types/types";
 import {updateCategoryAction} from "@/app/actions/event-category/event-category.action";
 import {toast} from "sonner";
@@ -25,7 +25,8 @@ import {Pencil} from "lucide-react";
 import {Spinner} from "@/components/ui/spinner";
 
 export function EditCategory({category}: { category: EventCategoryType }) {
-  const [state, formAction, isPending] = useActionState(async (_: ActionResponse, formData: FormData) => {
+  const [open, setOpen] = useState(false)
+  const [_, formAction, isPending] = useActionState(async (_: ActionResponse, formData: FormData) => {
 
     const payload = {
       id: category.id,
@@ -39,11 +40,11 @@ export function EditCategory({category}: { category: EventCategoryType }) {
 
     const res = await updateCategoryAction(payload)
     toast.info(res.message)
+    setOpen(!res.success)
     return res
-
   }, initialState)
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger render={<Button variant="ghost"><Pencil /></Button>}/>
       <SheetContent>
         <SheetHeader>
