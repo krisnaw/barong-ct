@@ -13,7 +13,7 @@ import {
 import {Button} from "@/components/ui/button"
 import {Trash} from "lucide-react";
 import {PromoType} from "@/db/schema";
-import {deletePromoAction} from "@/app/actions/profile/promo/promo.action";
+import {deletePromoAction} from "@/app/actions/event-promo/promo.action";
 
 export function DeletePromo({promo} : {promo: PromoType}) {
   const onClickHandler = async () => {

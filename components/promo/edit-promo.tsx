@@ -19,7 +19,7 @@ import {CustomDatePicker} from "@/components/ui/custom-date-picker";
 import {Pencil} from "lucide-react";
 import {PromoType, UpdatePromoType} from "@/db/schema";
 import {ActionResponse, initialState} from "@/types/types";
-import {updatePromo} from "@/app/actions/profile/promo/promo.action";
+import {updatePromo} from "@/app/actions/event-promo/promo.action";
 import {Slider} from "@/components/ui/slider";
 import {toast} from "sonner";
 

@@ -1,10 +1,9 @@
 'use server'
-
-import {db} from "@/db/db";
 import {eventPromoSchema, InsertPromoType, promoUpdateSchema, UpdatePromoType} from "@/db/schema";
 import {eq} from "drizzle-orm";
 import {revalidatePath} from "next/cache";
 import {z} from "zod";
+import {db} from "@/db/db";
 
 export async function createPromoAction(formData: InsertPromoType) {
   try {

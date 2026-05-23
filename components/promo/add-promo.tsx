@@ -18,11 +18,11 @@ import {Input} from "@/components/ui/input";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {CustomDatePicker} from "@/components/ui/custom-date-picker";
 import {ActionResponse, initialState} from "@/types/types";
-import {createPromoAction} from "@/app/actions/profile/promo/promo.action";
 import {InsertPromoType} from "@/db/schema";
 import {Slider} from "@/components/ui/slider";
 import {Spinner} from "@/components/ui/spinner";
 import {toast} from "sonner";
+import {createPromoAction} from "@/app/actions/event-promo/promo.action";
 
 export function AddPromo({eventId}: { eventId: number }) {
   const [open, setOpen] = useState(false)
