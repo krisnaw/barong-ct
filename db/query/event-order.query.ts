@@ -30,6 +30,8 @@ export async function getOrderByEvent(eventId: number) {
   });
 }
 
+export type OrderType = Awaited<ReturnType<typeof getOrderByEvent>>[number]
+
 export async function getOngoingOrder(eventId: number, userId: string) {
   return db.query.eventOrder.findFirst({
     where: and(eq(eventOrder.eventId, eventId), eq(eventOrder.userId, userId))

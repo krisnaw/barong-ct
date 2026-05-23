@@ -12,8 +12,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {Badge} from "@/components/ui/badge";
+import {OrderType} from "@/db/query/event-order.query";
 
-export function ListOrder({orders} : {orders : any[]}) {
+export function ListOrder({orders} : {orders : OrderType[]}) {
   return (
     <Table>
       <TableHeader>
