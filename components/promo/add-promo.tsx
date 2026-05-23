@@ -1,5 +1,6 @@
 'use client'
 
+import * as React from "react";
 import {useActionState, useState} from "react";
 import {
   Sheet,
@@ -20,8 +21,10 @@ import {ActionResponse, initialState} from "@/types/types";
 import {createPromoAction} from "@/app/actions/profile/promo/promo.action";
 import {InsertPromoType} from "@/db/schema";
 import {Slider} from "@/components/ui/slider";
+import {Spinner} from "@/components/ui/spinner";
 
 export function AddPromo({eventId}: { eventId: number }) {
+  const [open, setOpen] = useState(false)
   const [discountType, setDiscountType] = useState("fixed")
 
   const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(async (prevState: ActionResponse, formData: FormData) => {
@@ -29,7 +32,7 @@ export function AddPromo({eventId}: { eventId: number }) {
       console.log(key, value)
     }
 
-    const payload : InsertPromoType  = {
+    const payload: InsertPromoType = {
       eventId: eventId,
       startsAt: new Date(`${formData.get("startsAt") as string}`),
       endsAt: new Date(`${formData.get("endDate") as string}`),
@@ -40,13 +43,13 @@ export function AddPromo({eventId}: { eventId: number }) {
       isActive: true,
     }
 
-    return await createPromoAction(payload)
-
-
+    const res = await createPromoAction(payload)
+    setOpen(res.success)
+    return res
   }, initialState);
 
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger render={<Button variant="outline">Add Promo</Button>}/>
       <SheetContent>
         <SheetHeader>
@@ -169,6 +172,7 @@ export function AddPromo({eventId}: { eventId: number }) {
 
         <SheetFooter>
           <Button type="submit" form="add-promo-form">
+            {isPending ? <Spinner/> : null}
             Save
           </Button>
           <SheetClose render={<Button variant="outline">Close</Button>}/>

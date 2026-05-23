@@ -42,11 +42,8 @@ export function EditPromo({promo}: { promo: PromoType }) {
       }
 
       const res =  await updatePromo(payload)
-      if (res.success) {
-        toast.info(res.message)
-      }
-
-      setOpen(false)
+      toast.info(res.message)
+      setOpen(res.success)
       return res
     }, initialState)
 
