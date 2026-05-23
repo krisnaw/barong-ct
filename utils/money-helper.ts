@@ -1,3 +1,5 @@
+import {toZonedTime} from "date-fns-tz";
+
 export const formatMoney = (amount: number, currency = 'IDR', locale = 'id-ID') => {
   return new Intl.NumberFormat(locale, {
     style: 'currency',
@@ -9,4 +11,8 @@ export const formatMoney = (amount: number, currency = 'IDR', locale = 'id-ID') 
 
 export function formatBibNumber(bib: number, length = 3): string {
   return bib.toString().padStart(length, "0")
+}
+
+export function formateDate(inputDate: Date) {
+  return toZonedTime(inputDate, 'Asia/Singapore')
 }

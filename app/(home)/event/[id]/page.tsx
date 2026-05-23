@@ -4,7 +4,7 @@ import {auth} from "@/lib/auth";
 import {headers} from "next/headers";
 import * as React from "react";
 import Image from "next/image";
-import {Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
+import {Card, CardAction, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import Link from "next/link";
 import {getOngoingOrder} from "@/db/query/event-order.query";
 import {buttonVariants} from "@/components/ui/button";
@@ -13,6 +13,8 @@ import {Item, ItemContent} from "@/components/ui/item";
 import {Badge} from "@/components/ui/badge";
 import {getPaymentByOrder} from "@/db/query/event-payment.query";
 import {getParticipantByEventUser} from "@/db/query/participant-query";
+import {formatBibNumber} from "@/utils/money-helper";
+import {EventDate} from "@/components/events/event-date";
 
 export default async function Page({params,}: { params: Promise<{ id: number }> }) {
 
@@ -68,7 +70,8 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
                 <>
                   {order.status != ORDER_STATUS.COMPLETED ? (
                     <div>
-                      <Link href={`/event/${id}/register`} className={`${buttonVariants({variant: "default", size: "lg"})} w-full uppercase`}>
+                      <Link href={`/event/${id}/register`}
+                            className={`${buttonVariants({variant: "default", size: "lg"})} w-full uppercase`}>
                         Continue Registrations
                       </Link>
                     </div>
@@ -108,20 +111,20 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
                       <ItemContent>
                         <div className="grid grid-cols-2 gap-4">
                           <div className="flex flex-col gap-0.5">
-                      <span className="text-sm text-muted-foreground">
-                        BIB NUMBER
-                      </span>
+                            <span className="text-sm text-muted-foreground">
+                              BIB NUMBER
+                            </span>
                             <span className="text-lg font-semibold tabular-nums">
-                        001
-                      </span>
+                              {formatBibNumber(participant.bibNumber!)}
+                            </span>
                           </div>
                           <div className="flex flex-col gap-0.5">
-                      <span className="text-sm text-muted-foreground uppercase">
-                        Jersey Size
-                      </span>
-                            <span className="text-lg font-semibold tabular-nums">
-                        L
-                      </span>
+                            <span className="text-sm text-muted-foreground uppercase">
+                              Jersey Size
+                            </span>
+                            <span className="text-lg font-semibold tabular-nums capitalize">
+                              {order.jerseySize}
+                            </span>
                           </div>
                         </div>
                       </ItemContent>
@@ -135,13 +138,29 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
               {payment ? (
                 <Card>
                   <CardHeader>
-                    <CardTitle>Invoice #{payment.invoiceNumber}</CardTitle>
-                    <CardDescription>Paid at {payment.updatedAt.toLocaleDateString()}</CardDescription>
+                    <CardTitle>Payment</CardTitle>
                     <CardAction>
-                      <Badge
-                        className="bg-green-50 text-green-700 uppercase inset-ring inset-ring-green-600/20">{payment.status}</Badge>
+                      <Badge className="bg-green-50 text-green-700 uppercase inset-ring inset-ring-green-600/20">{payment.status}</Badge>
                     </CardAction>
                   </CardHeader>
+                  <CardContent>
+                    <Item variant="muted">
+                      <ItemContent>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="flex flex-col gap-0.5">
+                            <span className="text-sm text-muted-foreground">
+                              Invoice paid on <EventDate eventDate={payment.updatedAt} type="date"/>
+                            </span>
+                            <span className="text-lg font-semibold tabular-nums">
+                              {payment.invoiceNumber}
+                            </span>
+                          </div>
+                        </div>
+
+                      </ItemContent>
+                    </Item>
+
+                  </CardContent>
                 </Card>
               ) : null}
             </>
