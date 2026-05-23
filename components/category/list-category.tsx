@@ -2,6 +2,7 @@ import {EventCategoryType} from "@/db/schema";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table"
 import {formatMoney} from "@/utils/money-helper";
 import {EditCategory} from "@/components/category/edit-category";
+import {DeleteCategory} from "@/components/category/delete-category";
 
 export async function ListCategory({categories} : {categories: EventCategoryType[]}) {
   return (
@@ -25,6 +26,7 @@ export async function ListCategory({categories} : {categories: EventCategoryType
               <TableCell>{category.price ? formatMoney(category.price) : 0}</TableCell>
               <TableCell className="text-right">
                 <EditCategory category={category} />
+                <DeleteCategory category={category} />
               </TableCell>
             </TableRow>
           ))}

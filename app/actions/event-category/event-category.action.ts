@@ -5,6 +5,7 @@ import {db} from "@/db/db";
 import {eventCategory, EventCategoryInsertSchema, EventCategoryUpdateSchema} from "@/db/schema";
 import {z} from "zod";
 import {eq} from "drizzle-orm";
+import {getOrderByCategory} from "@/db/query/event-order.query";
 
 export type EventCategoryType = z.infer<typeof EventCategoryInsertSchema>;
 
@@ -84,4 +85,12 @@ export async function updateCategoryAction(formData: UpdateCategoryData)  {
     success: true,
     message: "Success, category was updated."
   }
+}
+
+export async function deleteCategoryAction(id: number) : Promise<void>  {
+  const order = await getOrderByCategory(id)
+  if (!order) {
+    await db.delete(eventCategory).where(eq(eventCategory.id, id))
+  }
+  revalidatePath('/', 'page')
 }

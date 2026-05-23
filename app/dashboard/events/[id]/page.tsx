@@ -16,6 +16,7 @@ import {ListCategory} from "@/components/category/list-category";
 import {ListPromo} from "@/components/promo/list-promo";
 import {getPromoByEvent} from "@/db/query/event-promo.query";
 import {AddCategory} from "@/components/category/add-category";
+import {AddPromo} from "@/components/promo/add-promo";
 
 export default async function Page({params}: { params: Promise<{ id: number }> }) {
   const {id} = await params;
@@ -64,7 +65,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
         </CardContent>
       </Card>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card>
           <CardHeader>
             <CardTitle>Categories</CardTitle>
@@ -81,6 +82,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
           <CardHeader>
             <CardTitle>Promo code</CardTitle>
             <CardAction>
+              <AddPromo eventId={event.id} />
               <Button variant="outline">
                 <Link href={`/dashboard/events/${id}/promo`}>
                   Add Promo
@@ -94,10 +96,28 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
           <CardHeader>
             <CardDescription>Total participants</CardDescription>
+            <CardTitle className="text-3xl">
+              {participants.length}
+            </CardTitle>
+          </CardHeader>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardDescription>Total Revenue</CardDescription>
+            <CardTitle className="text-3xl">
+              {participants.length}
+            </CardTitle>
+          </CardHeader>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardDescription>Total Revenue</CardDescription>
             <CardTitle className="text-3xl">
               {participants.length}
             </CardTitle>

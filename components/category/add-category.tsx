@@ -19,15 +19,7 @@ import {toast} from "sonner";
 import {Field, FieldDescription, FieldGroup, FieldLabel} from "@/components/ui/field";
 import {Input} from "@/components/ui/input";
 import {Textarea} from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue
-} from "@/components/ui/select";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {Spinner} from "@/components/ui/spinner";
 
 export function AddCategory({eventId}: { eventId: number }) {
@@ -73,8 +65,8 @@ export function AddCategory({eventId}: { eventId: number }) {
                   id="name"
                   type="text"
                   name="name"
-                  defaultValue="Long"
-                  placeholder="Early Bird"
+                  placeholder="Long"
+                  required
                 />
               </Field>
 
@@ -83,8 +75,8 @@ export function AddCategory({eventId}: { eventId: number }) {
                 <Textarea
                   id="description"
                   name="description"
-                  defaultValue="long"
-                  placeholder="Discounted early bird ticket for first 50 registrants"
+                  placeholder="150KM"
+                  required
                 />
               </Field>
 
@@ -96,11 +88,13 @@ export function AddCategory({eventId}: { eventId: number }) {
                     id="price"
                     type="number"
                     name="price"
-                    step="0.01"
+                    step="10000"
                     min="0"
-                    defaultValue="14500000"
-                    placeholder="0.00"
+                    placeholder="1450000"
                   />
+                  <FieldDescription>
+                    Category price (set to 0 for free event).
+                  </FieldDescription>
                 </Field>
 
                 <Field>
@@ -110,18 +104,7 @@ export function AddCategory({eventId}: { eventId: number }) {
                       <SelectValue/>
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>Fiat</SelectLabel>
-                        <SelectItem value="IDR">IDR</SelectItem>
-                        <SelectItem value="USD">USD</SelectItem>
-                        <SelectItem value="SGD">SGD</SelectItem>
-                        <SelectItem value="MYR">MYR</SelectItem>
-                      </SelectGroup>
-                      <SelectGroup>
-                        <SelectLabel>Crypto</SelectLabel>
-                        <SelectItem value="USDC">USDC</SelectItem>
-                        <SelectItem value="SOL">SOL</SelectItem>
-                      </SelectGroup>
+                      <SelectItem value="IDR">IDR</SelectItem>
                     </SelectContent>
                   </Select>
                 </Field>
@@ -132,13 +115,12 @@ export function AddCategory({eventId}: { eventId: number }) {
                     id="serviceFee"
                     type="number"
                     name="serviceFee"
-                    step="0.01"
+                    step="5000"
                     min="0"
-                    defaultValue="15000"
-                    placeholder="0"
+                    placeholder="15000"
                   />
                   <FieldDescription>
-                    Platform service fee (defaults to 0).
+                    Service fee (set to 0 for free event).
                   </FieldDescription>
                 </Field>
 
@@ -152,9 +134,6 @@ export function AddCategory({eventId}: { eventId: number }) {
                     defaultValue="50"
                     placeholder="50"
                   />
-                  <FieldDescription>
-                    Leave empty for unlimited.
-                  </FieldDescription>
                 </Field>
               </div>
             </FieldGroup>
