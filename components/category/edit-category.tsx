@@ -1,21 +1,30 @@
 'use client'
 
+import {Button} from "@/components/ui/button"
+import {Input} from "@/components/ui/input"
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"
+import {EventCategoryType} from "@/db/schema";
 import * as React from "react";
 import {useActionState} from "react";
-import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
-import {Field, FieldDescription, FieldGroup, FieldLabel} from "@/components/ui/field";
-import {Input} from "@/components/ui/input";
-import {Textarea} from "@/components/ui/textarea";
-import {Button} from "@/components/ui/button";
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {ActionResponse, initialState} from "@/types/types";
 import {updateCategoryAction} from "@/app/actions/event-category/event-category.action";
 import {toast} from "sonner";
+import {Field, FieldDescription, FieldGroup, FieldLabel} from "@/components/ui/field";
+import {Textarea} from "@/components/ui/textarea";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
+import {Pencil} from "lucide-react";
 import {Spinner} from "@/components/ui/spinner";
-import {EventCategoryType} from "@/db/schema";
-import Link from "next/link";
 
-export function EditCategoryForm({category}: { category: EventCategoryType }) {
+export function EditCategory({category}: { category: EventCategoryType }) {
   const [state, formAction, isPending] = useActionState(async (_: ActionResponse, formData: FormData) => {
 
     const payload = {
@@ -33,39 +42,41 @@ export function EditCategoryForm({category}: { category: EventCategoryType }) {
     return res
 
   }, initialState)
-
   return (
-    <form action={formAction}>
-      <Card>
-        <CardHeader>
-          <CardTitle>Edit Category</CardTitle>
-        </CardHeader>
-        <CardContent>
+    <Sheet>
+      <SheetTrigger render={<Button variant="ghost"><Pencil /></Button>}/>
+      <SheetContent>
+        <SheetHeader>
+          <SheetTitle>Edit profile</SheetTitle>
+          <SheetDescription>
+            Make changes to your profile here. Click save when you&apos;re done.
+          </SheetDescription>
+        </SheetHeader>
+        <form action={formAction} id="edit-category-form">
+          <div className="grid flex-1 auto-rows-min gap-6 px-4">
+            <FieldGroup>
 
-          <FieldGroup>
+              <Field>
+                <FieldLabel htmlFor="name">Name</FieldLabel>
+                <Input
+                  id="name"
+                  type="text"
+                  name="name"
+                  defaultValue={category.name ?? ""}
+                  placeholder="Early Bird"
+                />
+              </Field>
 
-            <Field>
-              <FieldLabel htmlFor="name">Name</FieldLabel>
-              <Input
-                id="name"
-                type="text"
-                name="name"
-                defaultValue={category.name ?? ""}
-                placeholder="Early Bird"
-              />
-            </Field>
+              <Field>
+                <FieldLabel htmlFor="description">Description</FieldLabel>
+                <Textarea
+                  id="description"
+                  name="description"
+                  defaultValue={category.description ?? ""}
+                  placeholder="Discounted early bird ticket for first 50 registrants"
+                />
+              </Field>
 
-            <Field>
-              <FieldLabel htmlFor="description">Description</FieldLabel>
-              <Textarea
-                id="description"
-                name="description"
-                defaultValue={category.description ?? ""}
-                placeholder="Discounted early bird ticket for first 50 registrants"
-              />
-            </Field>
-
-            <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
 
               <Field>
                 <FieldLabel htmlFor="price">Price</FieldLabel>
@@ -122,23 +133,17 @@ export function EditCategoryForm({category}: { category: EventCategoryType }) {
                   Leave empty for unlimited.
                 </FieldDescription>
               </Field>
-
-            </div>
-          </FieldGroup>
-
-        </CardContent>
-        <CardFooter className="flex justify-between">
-          <Button size="lg" variant={"secondary"}>
-            <Link href={`/dashboard/events/${category.eventId}`}>
-              Back
-            </Link>
-          </Button>
-          <Button type="submit" disabled={isPending} size="lg">
+            </FieldGroup>
+          </div>
+        </form>
+        <SheetFooter>
+          <Button type="submit" form="edit-category-form" disabled={isPending}>
             {isPending ? <Spinner/> : null}
             Save changes
           </Button>
-        </CardFooter>
-      </Card>
-    </form>
+          <SheetClose render={<Button variant="outline">Close</Button>}/>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
   )
 }

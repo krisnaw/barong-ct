@@ -15,6 +15,7 @@ import {getCategoryByEvent} from "@/db/query/event-category.query";
 import {ListCategory} from "@/components/category/list-category";
 import {ListPromo} from "@/components/promo/list-promo";
 import {getPromoByEvent} from "@/db/query/event-promo.query";
+import {AddCategory} from "@/components/category/add-category";
 
 export default async function Page({params}: { params: Promise<{ id: number }> }) {
   const {id} = await params;
@@ -52,7 +53,6 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
 
             </div>
             <div className="mt-4 flex md:mt-0 md:ml-4 gap-2">
-
               <Button variant="outline">
                 <Link href={`/dashboard/events/${id}`}>
                   Edit
@@ -69,11 +69,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
           <CardHeader>
             <CardTitle>Categories</CardTitle>
             <CardAction>
-              <Button variant="outline">
-                <Link href={`/dashboard/events/${id}/category`}>
-                  Add Category
-                </Link>
-              </Button>
+              <AddCategory eventId={id} />
             </CardAction>
           </CardHeader>
           <CardContent>

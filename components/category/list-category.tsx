@@ -1,9 +1,7 @@
-import {Pencil} from "lucide-react";
 import {EventCategoryType} from "@/db/schema";
-import {Button} from "@/components/ui/button";
-import Link from "next/link";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table"
 import {formatMoney} from "@/utils/money-helper";
+import {EditCategory} from "@/components/category/edit-category";
 
 export async function ListCategory({categories} : {categories: EventCategoryType[]}) {
   return (
@@ -26,20 +24,10 @@ export async function ListCategory({categories} : {categories: EventCategoryType
               </TableCell>
               <TableCell>{category.price ? formatMoney(category.price) : 0}</TableCell>
               <TableCell className="text-right">
-                <Button
-                  size="icon-sm"
-                  variant="outline"
-                  className="rounded-full"
-                  aria-label="Invite"
-                >
-                  <Link href={`/dashboard/events/${category.eventId}/category/${category.id}/edit`}>
-                    <Pencil />
-                  </Link>
-                </Button>
+                <EditCategory category={category} />
               </TableCell>
             </TableRow>
           ))}
-
         </TableBody>
       </Table>
     </div>
