@@ -4,7 +4,6 @@ import {EventSchema} from "@/db/schema/event-schema";
 import {relations} from "drizzle-orm";
 import {User} from "@/types/auth-types";
 import {createInsertSchema} from "drizzle-zod";
-import {eventOrder} from "@/db/schema/event-order.schema";
 import {eventCategory} from "@/db/schema/event-category-schema";
 import {eventGroup} from "@/db/schema/event-group-schema";
 import {eventPromoSchema} from "@/db/schema/event-promo.schema";
@@ -55,17 +54,21 @@ export const participant = pgTable("event_participant", {
 }))
 
 export const participantRelations = relations(participant, ({ one }) => ({
-  user: one(user, {
-    fields: [participant.userId],
-    references: [user.id],
-  }),
   event: one(EventSchema, {
     fields: [participant.eventId],
     references: [EventSchema.id],
   }),
-  eventOrder: one(eventOrder, {
-    fields: [participant.userId, participant.eventId],
-    references: [eventOrder.userId, eventOrder.eventId],
+  user: one(user, {
+    fields: [participant.userId],
+    references: [user.id],
+  }),
+  category: one(eventCategory, {
+    fields: [participant.categoryId],
+    references: [eventCategory.id],
+  }),
+  group: one(eventGroup, {
+    fields: [participant.groupId],
+    references: [eventGroup.id],
   }),
 }));
 

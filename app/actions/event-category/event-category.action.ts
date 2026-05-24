@@ -5,8 +5,8 @@ import {db} from "@/db/db";
 import {eventCategory, EventCategoryInsertSchema, EventCategoryUpdateSchema} from "@/db/schema";
 import {z} from "zod";
 import {eq} from "drizzle-orm";
-import {getOrderByCategory} from "@/db/query/event-order.query";
 import {ActionResponse} from "@/types/types";
+import {getParticipantByCategory} from "@/db/query/participant-query";
 
 export type EventCategoryType = z.infer<typeof EventCategoryInsertSchema>;
 
@@ -89,8 +89,8 @@ export async function updateCategoryAction(formData: UpdateCategoryData)  {
 }
 
 export async function deleteCategoryAction(id: number) : Promise<ActionResponse>  {
-  const order = await getOrderByCategory(id)
-  if (order) {
+  const participant = await getParticipantByCategory(id)
+  if (participant) {
     return {
       success: false,
       message: "This category has active registrations and cannot be deleted.",

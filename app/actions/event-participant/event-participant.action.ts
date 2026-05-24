@@ -1,9 +1,6 @@
 'use server'
 
 import {ActionResponse} from "@/types/types";
-import {auth} from "@/lib/auth";
-import {headers} from "next/headers";
-import {redirect} from "next/navigation";
 import {db} from "@/db/db";
 import {InsertParticipantType, participant, participantInsertSchema, UpdateParticipantType} from "@/db/schema";
 import {Resend} from "resend";
@@ -13,7 +10,6 @@ import {formatEventDate, formatEventTime} from "@/types/date-helper";
 import {eq} from "drizzle-orm";
 import EventJoinedEmail from "@/react-email-starter/emails/event-joined-email";
 import {getParticipantByEventUser} from "@/db/query/participant-query";
-import {getOngoingOrder} from "@/db/query/event-order.query";
 import {z} from "zod";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -28,8 +24,7 @@ export async function resendEmailConfirmation(payload: {eventId: string, userId:
     }
   }
 
-  const p = await getParticipantByEventUser(Number(payload.eventId), payload.userId)
-  const order = await getOngoingOrder(Number(payload.eventId), payload.userId)
+  const participant = await getParticipantByEventUser(Number(payload.eventId), payload.userId)
   const param = {
     name: payload.name,
     eventName : event.name ?? "There",
@@ -37,8 +32,8 @@ export async function resendEmailConfirmation(payload: {eventId: string, userId:
     eventTime : formatEventTime(event.startDate),
     meetingPoint : event.locationName ?? "",
     eventURL,
-    bibNumber: p?.bibNumber ?? undefined,
-    jerseySize: order?.jerseySize ?? undefined,
+    bibNumber: participant?.bibNumber ?? undefined,
+    jerseySize: participant?.jerseySize ?? undefined,
   }
 
   await resend.emails.send({
@@ -51,111 +46,6 @@ export async function resendEmailConfirmation(payload: {eventId: string, userId:
   return {
     success: true,
     message: "Success, email has been sent.",
-  }
-}
-
-export async function addParticipant(payload: {eventId: string, userId: string, name: string, email: string}): Promise<ActionResponse> {
-  try {
-    await db.insert(participant).values({
-      userId: payload.userId,
-      eventId: Number(payload.eventId),
-    }).onConflictDoNothing()
-
-    const eventURL = `${process.env.BETTER_AUTH_URL}/event/${payload.eventId}`
-    const event = await getEventById(Number(payload.eventId));
-    if (!event) {
-      return {
-        success: false,
-        message: `No event with id ${payload.eventId} found.`,
-      }
-    }
-
-    const p = await getParticipantByEventUser(Number(payload.eventId), payload.userId)
-    const order = await getOngoingOrder(Number(payload.eventId), payload.userId)
-    const param = {
-      name: payload.name,
-      eventName : event.name ?? "There",
-      eventDate : formatEventDate(event.startDate),
-      eventTime : formatEventTime(event.startDate),
-      meetingPoint : event.locationName ?? "",
-      eventURL,
-      bibNumber: p?.bibNumber ?? undefined,
-      jerseySize: order?.jerseySize ?? undefined,
-    }
-
-    await resend.emails.send({
-      from: 'Barong Cycling Team <info@barongmelali.com>',
-      to: [payload.email],
-      subject: 'Thanks for joining the event',
-      react: EventJoinedEmail(param)
-    })
-
-  } catch (error) {
-    console.log(error);
-  }
-
-  revalidatePath("/", "layout")
-
-  return {
-    success: true,
-    message: "Success, you have joined this event",
-  }
-
-}
-
-export async function joinEventAction(payload: {  eventId: string }) : Promise<ActionResponse> {
-
-  const session = await auth.api.getSession({
-    headers: await headers() // you need to pass the headers object.
-  })
-
-  if (!session) {
-    redirect("/auth/signup")
-  }
-
-  const event = await getEventById(Number(payload.eventId));
-
-  if (!event) {
-    redirect("/auth/signup")
-  }
-
-  try {
-    await db.insert(participant).values({
-      userId: session.user.id,
-      eventId: Number(payload.eventId),
-    }).onConflictDoNothing()
-
-    const eventURL = `${process.env.BETTER_AUTH_URL}/event/${event.id}`
-
-    const p = await getParticipantByEventUser(Number(payload.eventId), session.user.id)
-    const order = await getOngoingOrder(Number(payload.eventId), session.user.id)
-    const param = {
-      name: session.user.name,
-      eventName : event.name ?? "There",
-      eventDate : formatEventDate(event.startDate),
-      eventTime : formatEventTime(event.startDate),
-      meetingPoint : event.locationName ?? "",
-      eventURL,
-      bibNumber: p?.bibNumber ?? undefined,
-      jerseySize: order?.jerseySize ?? undefined,
-    }
-
-    await resend.emails.send({
-      from: 'Barong Cycling Team <info@barongmelali.com>',
-      to: [session.user.email],
-      subject: 'Thanks for joining the event',
-      react: EventJoinedEmail(param)
-    })
-
-  } catch (error) {
-    console.log(error);
-  }
-
-  revalidatePath('/', 'layout')
-
-  return {
-    success: true,
-    message: "Success, you have joined this event",
   }
 }
 

@@ -12,9 +12,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {Badge} from "@/components/ui/badge";
-import {OrderType} from "@/db/query/event-order.query";
+import {ParticipantType} from "@/db/query/participant-query";
 
-export function ListOrder({orders} : {orders : OrderType[]}) {
+export function ListParticipant({participants} : {participants : ParticipantType[]}) {
   return (
     <Table>
       <TableHeader>
@@ -28,24 +28,24 @@ export function ListOrder({orders} : {orders : OrderType[]}) {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {orders.length > 0 ? (
-          orders.map((order) => (
-            <TableRow key={order.id}>
-              <TableCell className="font-medium">{order.participant.bibNumber ? formatBibNumber(order.participant.bibNumber) : "-"}</TableCell>
+        {participants.length > 0 ? (
+          participants.map((participant: ParticipantType) => (
+            <TableRow key={participant.id}>
+              <TableCell className="font-medium">{participant.bibNumber ? formatBibNumber(participant.bibNumber) : "-"}</TableCell>
               <TableCell className="font-medium">
                 <div className="flex flex-col">
-                  <span className="font-medium">{order.user.name}</span>
+                  <span className="font-medium">{participant.user.name}</span>
                   <span className="text-sm text-muted-foreground">
-                    {order.user.email}
+                    {participant.user.email}
                   </span>
                 </div>
               </TableCell>
-              <TableCell className="font-medium">{order.promoCode ?? "-"}</TableCell>
+              <TableCell className="font-medium">{participant.promoCode ?? "-"}</TableCell>
               <TableCell className="font-medium">
-                <Badge>{order.category?.name}</Badge>
+                <Badge>{participant.category?.name}</Badge>
               </TableCell>
               <TableCell className="font-medium">
-                <EventDate eventDate={order.updatedAt} type="date" />
+                <EventDate eventDate={participant.updatedAt} type="date" />
               </TableCell>
               <TableCell>
                 <DropdownMenu>

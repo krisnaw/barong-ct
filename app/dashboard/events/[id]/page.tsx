@@ -12,8 +12,8 @@ import {ListPromo} from "@/components/promo/list-promo";
 import {getPromoByEvent} from "@/db/query/event-promo.query";
 import {AddCategory} from "@/components/category/add-category";
 import {AddPromo} from "@/components/promo/add-promo";
-import {getOrderByEvent} from "@/db/query/event-order.query";
-import {ListOrder} from "@/components/order/list-order";
+import {getParticipantByEvent} from "@/db/query/participant-query";
+import {ListParticipant} from "@/components/participant/list-participant";
 
 export default async function Page({params}: { params: Promise<{ id: number }> }) {
   const {id} = await params;
@@ -26,7 +26,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
 
   const promos = await getPromoByEvent(id)
 
-  const orders = await getOrderByEvent(id)
+  const participants = await getParticipantByEvent(id)
 
   return (
     <div className="space-y-4">
@@ -66,7 +66,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
           <CardHeader>
             <CardDescription>Total participants</CardDescription>
             <CardTitle className="text-3xl">
-              {orders.length}
+              {participants.length}
             </CardTitle>
           </CardHeader>
         </Card>
@@ -75,7 +75,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
           <CardHeader>
             <CardDescription>Total Revenue</CardDescription>
             <CardTitle className="text-3xl">
-              {orders.length}
+              {participants.length}
             </CardTitle>
           </CardHeader>
         </Card>
@@ -84,7 +84,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
           <CardHeader>
             <CardDescription>Total Revenue</CardDescription>
             <CardTitle className="text-3xl">
-              {orders.length}
+              {participants.length}
             </CardTitle>
           </CardHeader>
         </Card>
@@ -93,7 +93,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
           <CardHeader>
             <CardDescription>Total Revenue</CardDescription>
             <CardTitle className="text-3xl">
-              {orders.length}
+              {participants.length}
             </CardTitle>
           </CardHeader>
         </Card>
@@ -106,7 +106,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
           </CardAction>
         </CardHeader>
         <CardContent>
-          <ListOrder orders={orders} />
+          <ListParticipant participants={participants} />
         </CardContent>
       </Card>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

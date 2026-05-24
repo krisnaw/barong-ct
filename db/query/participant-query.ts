@@ -1,8 +1,9 @@
 "use server"
 
 import {db} from "@/db/db";
-import {and, asc, desc, eq, getTableColumns, isNull} from "drizzle-orm";
-import {eventOrder, participant, user, userDetail} from "@/db/schema";
+import {and, eq, getTableColumns, isNull} from "drizzle-orm";
+import {participant, user, userDetail} from "@/db/schema";
+import {ORDER_STATUS} from "@/utils/event.helper";
 
 export async function getOnGoingParticipant(eventId: number, userId: string) {
   return db.query.participant.findFirst({
@@ -31,21 +32,26 @@ export async function checkParticipantByEvent(eventId: number, userId: string): 
 }
 
 export async function getParticipantByEvent(eventId: number, sortByName: boolean = false) {
-  return db
-    .select({
-      participant,
-      user,
-      userDetail,
-      eventOrder
-    })
-    .from(participant)
-    .innerJoin(user, eq(user.id, participant.userId))
-    .leftJoin(userDetail, eq(userDetail.userId, user.id))
-    .leftJoin(eventOrder, eq(eventOrder.userId, participant.userId))
-    .where(eq(participant.eventId, eventId))
-    .orderBy(sortByName ? asc(user.name) : desc(participant.createdAt))
-    .limit(200);
+  return db.query.participant.findMany({
+    where: and(eq(participant.eventId, eventId), eq(participant.status, ORDER_STATUS.COMPLETED)),
+    with: {
+      user: {
+        columns: {
+          name: true,
+          email: true,
+        }
+      },
+      category: {
+        columns: {
+          name: true,
+          price: true
+        }
+      },
+    },
+  })
 }
+
+export type ParticipantType = Awaited<ReturnType<typeof getParticipantByEvent>>[number]
 
 export async function getPendingParticipants(eventId: number) {
   const usersNotJoined = await db
@@ -63,4 +69,16 @@ export async function getPendingParticipants(eventId: number) {
     )
     .where(isNull(participant.id));
   return usersNotJoined;
+}
+
+export async function getParticipantByPromo(promoId: number) {
+  return db.query.participant.findFirst({
+    where: eq(participant.promoId, promoId)
+  });
+}
+
+export async function getParticipantByCategory(categoryId: number) {
+  return db.query.participant.findFirst({
+    where: eq(participant.categoryId, categoryId)
+  });
 }

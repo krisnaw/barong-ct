@@ -4,7 +4,7 @@ import {eq} from "drizzle-orm";
 import {revalidatePath} from "next/cache";
 import {z} from "zod";
 import {db} from "@/db/db";
-import {getOrderByPromo} from "@/db/query/event-order.query";
+import {getParticipantByPromo} from "@/db/query/participant-query";
 
 export async function createPromoAction(formData: InsertPromoType) {
   try {
@@ -47,8 +47,8 @@ export async function updatePromo(formData: UpdatePromoType) {
 }
 
 export async function deletePromoAction(id: number) {
-  const order = await getOrderByPromo(id)
-  if (order) {
+  const participant = await getParticipantByPromo(id)
+  if (participant) {
     return {
       success: false,
       message: "This category has active registrations and cannot be deleted.",
