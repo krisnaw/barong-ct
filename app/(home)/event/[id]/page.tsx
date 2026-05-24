@@ -16,6 +16,7 @@ import {getGroupById} from "@/db/query/event-group.query";
 import {InviteItem} from "@/app/(home)/event/[id]/invite-item";
 import {getPaymentByParticipant} from "@/db/query/event-payment.query";
 import {formatBibNumber} from "@/utils/money-helper";
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 
 export default async function Page({params}: { params: Promise<{ id: number }> }) {
 
@@ -166,27 +167,27 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
 
               {group && (
                 <Card>
-                  {/*<CardHeader>*/}
-                  {/*  <CardTitle>*/}
-                  {/*    Group Name: {group.name}*/}
-                  {/*  </CardTitle>*/}
-                  {/*  <CardAction>*/}
-                  {/*    {group.participants.length}/5 members*/}
-                  {/*  </CardAction>*/}
-                  {/*</CardHeader>*/}
-                  {/*<CardContent>*/}
-                  {/*  <ul className="flex flex-col space-y-4">*/}
-                  {/*    {group.participants.map((name: string, index: number) => (*/}
-                  {/*      <li className="inline-flex items-center gap-2" key={index}>*/}
-                  {/*        <Avatar>*/}
-                  {/*          <AvatarImage src="https://github.com/shadcn.png"/>*/}
-                  {/*          <AvatarFallback>CN</AvatarFallback>*/}
-                  {/*        </Avatar>*/}
-                  {/*        <p className="font-bold">{name}</p>*/}
-                  {/*      </li>*/}
-                  {/*    ))}*/}
-                  {/*  </ul>*/}
-                  {/*</CardContent>*/}
+                  <CardHeader>
+                    <CardTitle>
+                      Group Name: {group.name}
+                    </CardTitle>
+                    <CardAction>
+                      {group.participants.length}/5 members
+                    </CardAction>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="flex flex-col space-y-4">
+                      {group.participants.map((participant) => (
+                        <li className="inline-flex items-center gap-2" key={participant.id}>
+                          <Avatar>
+                            <AvatarImage src="https://github.com/shadcn.png"/>
+                            <AvatarFallback>CN</AvatarFallback>
+                          </Avatar>
+                          <p className="font-bold">{participant.id}</p>
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
                   <CardFooter>
                     <InviteItem eventId={event.id} group={group}/>
                   </CardFooter>

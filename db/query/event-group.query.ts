@@ -6,7 +6,10 @@ import {eventGroup} from "@/db/schema";
 
 export async function getGroupById(groupId: number) {
   return db.query.eventGroup.findFirst({
-    where: eq(eventGroup.id, groupId)
+    where: eq(eventGroup.id, groupId),
+    with: {
+      participants: true
+    }
   });
 }
 
