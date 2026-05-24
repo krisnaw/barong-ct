@@ -13,6 +13,7 @@ import * as React from "react";
 import {buttonVariants} from "@/components/ui/button";
 import {getCategoryById} from "@/db/query/event-category.query";
 import {getOnGoingParticipant} from "@/db/query/participant-query";
+import {StepPayment} from "@/components/checkout/step-payment";
 
 export default async function Page({params}: { params: Promise<{ id: number }> }) {
   const {id} = await params;
@@ -71,7 +72,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
       ) : (
         <div>
           sdf
-          {/*<StepPayment event={event} order={order} category={category} promos={promos} />*/}
+          <StepPayment event={event} participant={participant} category={category} promos={promos} />
         </div>
       )}
     </div>

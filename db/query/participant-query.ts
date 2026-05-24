@@ -10,6 +10,12 @@ export async function getOnGoingParticipant(eventId: number, userId: string) {
   });
 }
 
+export async function getParticipantById(id: number) {
+  return db.query.participant.findFirst({
+    where: and(eq(participant.id, id))
+  });
+}
+
 export async function getParticipantByEventUser(eventId: number, userId: string) {
   return db.query.participant.findFirst({
     where: and(eq(participant.eventId, eventId), eq(participant.userId, userId)),

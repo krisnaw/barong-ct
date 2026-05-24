@@ -1,24 +1,24 @@
 "use server"
 
 import {ActionResponse} from "@/types/types";
-import {getOrderById} from "@/db/query/event-order.query";
 import {redirect} from "next/navigation";
 import {db} from "@/db/db";
 import {eventPayment, EventPaymentInsert} from "@/db/schema";
 import {createParticipant} from "@/service/participant.service";
 import {updateOrderStatus} from "@/service/order.service";
 import {ORDER_STATUS, PAYMENT_STATUS} from "@/utils/event.helper";
+import {getParticipantById} from "@/db/query/participant-query";
 
-export async function processFreePass(payload: { oderId: number }) : Promise<ActionResponse> {
-  const order = await getOrderById(payload.oderId)
+export async function processFreePass(payload: { participantId: number }) : Promise<ActionResponse> {
+  const participant = await getParticipantById(payload.participantId)
   const invoiceNumber = generateInvoiceNumber();
-  if (!order) {
+  if (!participant) {
     redirect('/')
   }
 
   // create empty payment
   const paymentPayload : EventPaymentInsert = {
-    orderId: order.id,
+    participantId: participant.id,
     invoiceNumber: invoiceNumber,
     price: 0,
     currency: 'IDR',
@@ -31,10 +31,10 @@ export async function processFreePass(payload: { oderId: number }) : Promise<Act
     .returning();
 
   // create participant
-  await createParticipant(order.eventId, order.userId)
+  await createParticipant(participant.eventId, participant.userId)
 
-  // set order as complete
-  await updateOrderStatus(order.id, ORDER_STATUS.COMPLETED)
+  // set participant as complete
+  await updateOrderStatus(participant.id, ORDER_STATUS.COMPLETED)
 
   return {
     success: true,

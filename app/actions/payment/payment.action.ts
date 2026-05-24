@@ -9,7 +9,7 @@ import crypto from "crypto";
 import {generateDigest, generateInvoiceNumber, generateSignature} from "@/utils/doku-helper";
 import {eventPayment} from "@/db/schema";
 import {redirect} from "next/navigation";
-import {getOrderById} from "@/db/query/event-order.query";
+import {getParticipantById} from "@/db/query/participant-query";
 
 const dokuBaseURL = process.env.DOKU_API_URL
 const dokuReqPath = '/checkout/v1/payment'
@@ -17,20 +17,20 @@ const clientID = process.env.DOKU_CLIENT_ID!
 const clientSecret = process.env.DOKU_SECRET_KEY!
 const baseURL = process.env.BETTER_AUTH_URL!
 
-export async function createPayment(payload: { oderId: number, pm : string[] }): Promise<ActionResponse> {
+export async function createPayment(payload: { participantId: number, pm : string[] }): Promise<ActionResponse> {
 
   const requestTimestamp = new Date().toISOString().slice(0, 19) + "Z"
 
-  const order = await getOrderById(payload.oderId)
+  const participant = await getParticipantById(payload.participantId)
 
-  if (!order) {
+  if (!participant) {
     redirect('/')
   }
 
   const invoiceNumber = generateInvoiceNumber();
 
-  const user = await getUserWithDetail(order.userId);
-  const event = await getEventById(order.eventId);
+  const user = await getUserWithDetail(participant.userId);
+  const event = await getEventById(participant.eventId);
 
   if (!event) {
     return {
@@ -42,17 +42,17 @@ export async function createPayment(payload: { oderId: number, pm : string[] }):
   // create payment
   const raw = JSON.stringify({
     "order": {
-      "amount": order.finalPrice,
+      "amount": participant.finalPrice,
       "invoice_number": invoiceNumber,
-      "currency": order.currency,
-      "callback_url": `${baseURL}/event/${order.eventId}`,
+      "currency": participant.currency,
+      "callback_url": `${baseURL}/event/${participant.eventId}`,
       "callback_url_cancel": `${baseURL}/payment/cancel`,
-      "callback_url_result": `${baseURL}/event/${order.eventId}`,
+      "callback_url_result": `${baseURL}/event/${participant.eventId}`,
       "auto_redirect":true,
       "line_items": [
         {
           "name": event.name,
-          "price": (order.price! - (order.discountAmount ?? 0)),
+          "price": (participant.price! - (participant.discountAmount ?? 0)),
           "quantity": 1
         },
         {
@@ -71,9 +71,6 @@ export async function createPayment(payload: { oderId: number, pm : string[] }):
       "email": user.email,
     }
   });
-
-  console.error(raw);
-
 
   const requestId = crypto.randomUUID().toString();
 
@@ -117,7 +114,7 @@ export async function createPayment(payload: { oderId: number, pm : string[] }):
 
   // create payment
   const paymentPayload = {
-    orderId: order.id,
+    participantId: participant.id,
     invoiceNumber: invoiceNumber,
     price: body.response.order.amount,
     currency: body.response.order.currency,

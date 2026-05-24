@@ -185,7 +185,7 @@ export async function createParticipant(formData: InsertParticipantType) : Promi
 }
 
 export async function updateParticipant(formData: UpdateParticipantType) : Promise<ActionResponse> {
-  await db.update(participant).set(formData)
+  await db.update(participant).set(formData).where(eq(participant.id, Number(formData.id)))
   return {
     success: true,
     message: "Success, "

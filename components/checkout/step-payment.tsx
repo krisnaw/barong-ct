@@ -5,10 +5,10 @@ import {Button} from "@/components/ui/button";
 import {redirect, useRouter} from "next/navigation";
 import {useActionState, useState} from "react";
 import {initialState} from "@/types/types";
-import {EventCategoryType, EventOrderType, EventType} from "@/db/schema";
+import {EventCategoryType, EventType, ParticipantType} from "@/db/schema";
 import {PromoType} from "@/db/schema/event-promo.schema";
 import {Spinner} from "@/components/ui/spinner";
-import {updateOrderAction} from "@/app/actions/event-order/event-order.action";
+
 import {formatMoney} from "@/utils/money-helper";
 import {Input} from "@/components/ui/input";
 import {createPayment} from "@/app/actions/payment/payment.action";
@@ -17,10 +17,12 @@ import {Separator} from "@/components/ui/separator";
 import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
 import {Field, FieldContent, FieldDescription, FieldLabel, FieldTitle} from "@/components/ui/field";
 import {processFreePass} from "@/app/actions/payment/freepass.action";
+import {PARTICIPANT_STATUS} from "@/utils/event.helper";
+import {updateParticipant} from "@/app/actions/event-participant/event-participant.action";
 
 interface Props {
   event: EventType & { participantCount: number },
-  order: EventOrderType,
+  participant: ParticipantType,
   category: EventCategoryType,
   promos: PromoType[] | null
 }
@@ -40,14 +42,14 @@ const methods = [
   },
 ]
 
-export function StepPayment({event, order, category, promos}: Props) {
+export function StepPayment({event, participant, category, promos}: Props) {
   const router = useRouter();
   const [promoCode, setPromoCode] = useState('');
   const [discount, setDiscount] = useState(0);
   const [promoId, setPromoId] = useState<number | undefined>(undefined);
   const [pm, setPM] = useState<string[]>([])
 
-  const price = Number(order.price);
+  const price = Number(participant.price);
   const fee = category.serviceFee ?? 0;
 
   const isFreePass = discount >= price;
@@ -57,28 +59,28 @@ export function StepPayment({event, order, category, promos}: Props) {
 
   const [state, formAction, isPending] = useActionState(async () => {
 
-    // update order status
-    const orderPayload = {
-      ...order,          // copy
+    // update participant status
+    const participantPayload = {
+      ...participant,
       promoCode,
       promoId: promoId,
       discountAmount: discount,
       finalPrice: totalPrice,
-      status: "payment",
+      status: PARTICIPANT_STATUS.PENDING_PAYMENT,
     };
 
-    await updateOrderAction(orderPayload)
+    await updateParticipant(participantPayload)
 
     // create payment
     let res
     if (totalPrice == 0) {
       // store empty payment and create participant
-      res = await processFreePass({oderId: order.id})
+      res = await processFreePass({participantId: participant.id})
       if (res.success) {
         redirect(`/event/${event.id}`)
       }
     } else {
-      res = await createPayment({oderId: order.id, pm});
+      res = await createPayment({participantId: participant.id, pm});
       if (res.success) {
         router.push(res.data as string);
       }
@@ -200,7 +202,7 @@ export function StepPayment({event, order, category, promos}: Props) {
           </div>
 
           <div className="mt-6">
-            <h2 className="cn-font-heading text-xs font-medium tracking-wider text-muted-foreground uppercase">Order
+            <h2 className="cn-font-heading text-xs font-medium tracking-wider text-muted-foreground uppercase">participant
               Summary</h2>
             <div className="mt-2 h-40">
               <Item variant="muted" className="flex-col items-stretch">
@@ -251,7 +253,7 @@ export function StepPayment({event, order, category, promos}: Props) {
         <CardFooter>
           <Button className="w-full" disabled={isPending || pm.length == 0} type="submit">
             {isPending ? <Spinner/> : null}
-            Complete Order
+            Complete participant
           </Button>
         </CardFooter>
       </Card>
