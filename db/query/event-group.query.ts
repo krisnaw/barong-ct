@@ -8,7 +8,11 @@ export async function getGroupById(groupId: number) {
   return db.query.eventGroup.findFirst({
     where: eq(eventGroup.id, groupId),
     with: {
-      participants: true
+      participants: {
+        with: {
+          user: true, // ← gets user.name and all user fields
+        }
+      }
     }
   });
 }

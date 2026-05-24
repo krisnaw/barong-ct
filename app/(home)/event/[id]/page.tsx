@@ -45,6 +45,8 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
     ]);
   }
 
+  console.log(group)
+
   return (
     <div className="bg-slate-50 min-h-screen">
       <div className="relative isolate overflow-hidden h-[50vh]">
@@ -183,7 +185,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
                             <AvatarImage src="https://github.com/shadcn.png"/>
                             <AvatarFallback>CN</AvatarFallback>
                           </Avatar>
-                          <p className="font-bold">{participant.id}</p>
+                          <p className="font-bold">{participant.user.name}</p>
                         </li>
                       ))}
                     </ul>
