@@ -61,17 +61,13 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
             </CardAction>
           </CardHeader>
           <CardContent>
-            <Link
-              href={payment.paymentURL}
-              className={`${buttonVariants({ variant: "default", size: "lg" })} w-full uppercase`}
-            >
+            <Link href={payment.paymentURL} className={`${buttonVariants({ variant: "default", size: "lg" })} w-full uppercase`}>
               Complete payment
             </Link>
           </CardContent>
         </Card>
       ) : (
         <div>
-          sdf
           <StepPayment event={event} participant={participant} category={category} promos={promos} />
         </div>
       )}

@@ -4,7 +4,6 @@ import {ActionResponse} from "@/types/types";
 import {redirect} from "next/navigation";
 import {db} from "@/db/db";
 import {eventPayment, EventPaymentInsert} from "@/db/schema";
-import {createParticipant} from "@/service/participant.service";
 import {updateOrderStatus} from "@/service/order.service";
 import {ORDER_STATUS, PAYMENT_STATUS} from "@/utils/event.helper";
 import {getParticipantById} from "@/db/query/participant-query";
@@ -31,7 +30,7 @@ export async function processFreePass(payload: { participantId: number }) : Prom
     .returning();
 
   // create participant
-  await createParticipant(participant.eventId, participant.userId)
+  // await createParticipant(participant.eventId, participant.userId)
 
   // set participant as complete
   await updateOrderStatus(participant.id, ORDER_STATUS.COMPLETED)

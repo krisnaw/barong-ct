@@ -11,11 +11,11 @@ import {PARTICIPANT_STATUS} from "@/utils/event.helper";
 import {Item, ItemContent} from "@/components/ui/item";
 import {Badge} from "@/components/ui/badge";
 import {getOnGoingParticipant} from "@/db/query/participant-query";
-import {formatBibNumber} from "@/utils/money-helper";
 import {EventDate} from "@/components/events/event-date";
 import {getGroupById} from "@/db/query/event-group.query";
 import {InviteItem} from "@/app/(home)/event/[id]/invite-item";
 import {getPaymentByParticipant} from "@/db/query/event-payment.query";
+import {formatBibNumber} from "@/utils/money-helper";
 
 export default async function Page({params}: { params: Promise<{ id: number }> }) {
 
@@ -130,7 +130,6 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
                         </div>
                       </ItemContent>
                     </Item>
-
 
                   </CardContent>
                 </Card>

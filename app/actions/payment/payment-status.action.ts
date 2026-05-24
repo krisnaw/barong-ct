@@ -3,10 +3,9 @@
 import crypto from "crypto";
 import {generateSignature} from "@/utils/doku-helper";
 import {db} from "@/db/db";
-import {eventOrder, eventPayment} from "@/db/schema";
+import {eventPayment, participant} from "@/db/schema";
 import {eq} from "drizzle-orm";
-import {createParticipant} from "@/service/participant.service";
-import {ORDER_STATUS, PAYMENT_STATUS} from "@/utils/event.helper";
+import {PARTICIPANT_STATUS, PAYMENT_STATUS} from "@/utils/event.helper";
 
 const dokuBaseURL = process.env.DOKU_API_URL
 const dokuReqPath = '/orders/v1/status/'
@@ -47,14 +46,9 @@ export async function checkPaymentStatus(invoiceId: string) {
         // update payment
         const [payment] = await db.update(eventPayment).set({status: body.transaction.status}).where(eq(eventPayment.invoiceNumber, invoiceId)).returning()
 
-        const [order] = await db.update(eventOrder).set({status: ORDER_STATUS.COMPLETED}).where(eq(eventOrder.id, payment.orderId)).returning({
-          eventId: eventOrder.eventId,
-          userId: eventOrder.userId,
-        })
-
-        if (order) {
-          await createParticipant(order.eventId, order.userId)
-        }
+        console.log('participant update ')
+        const [user] = await db.update(participant).set({ status: PARTICIPANT_STATUS.COMPLETED }).where(eq(participant.id, payment.participantId)).returning()
+        console.log(user)
 
       } else if (body.transaction.status === PAYMENT_STATUS.EXPIRED || body.order.status === PAYMENT_STATUS.ORDER_EXPIRED) {
         // update payment
