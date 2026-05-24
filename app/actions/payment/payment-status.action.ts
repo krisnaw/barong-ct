@@ -3,9 +3,9 @@
 import crypto from "crypto";
 import {generateSignature} from "@/utils/doku-helper";
 import {db} from "@/db/db";
-import {eventPayment, participant} from "@/db/schema";
+import {eventPayment} from "@/db/schema";
 import {eq} from "drizzle-orm";
-import {PARTICIPANT_STATUS, PAYMENT_STATUS} from "@/utils/event.helper";
+import {PAYMENT_STATUS} from "@/utils/event.helper";
 
 const dokuBaseURL = process.env.DOKU_API_URL
 const dokuReqPath = '/orders/v1/status/'
@@ -30,7 +30,7 @@ export async function checkPaymentStatus(invoiceId: string) {
   myHeaders.append("Request-Timestamp", requestTimestamp);
   myHeaders.append("Signature", signature);
   myHeaders.append("Content-Type", "application/json");
-  
+
   const requestOptions: RequestInit = {
     method: "GET",
     headers: myHeaders,
@@ -42,18 +42,14 @@ export async function checkPaymentStatus(invoiceId: string) {
 
     if (res.ok) {
       const body = await res.json();
-      if (body.transaction.status === PAYMENT_STATUS.SUCCESS) {
-        // update payment
-        const [payment] = await db.update(eventPayment).set({status: body.transaction.status}).where(eq(eventPayment.invoiceNumber, invoiceId)).returning()
 
-        console.log('participant update ')
-        const [user] = await db.update(participant).set({ status: PARTICIPANT_STATUS.COMPLETED }).where(eq(participant.id, payment.participantId)).returning()
-        console.log(user)
+      const status = body.transaction.status;
 
-      } else if (body.transaction.status === PAYMENT_STATUS.EXPIRED || body.order.status === PAYMENT_STATUS.ORDER_EXPIRED) {
-        // update payment
-        await db.update(eventPayment).set({status: body.transaction.status}).where(eq(eventPayment.invoiceNumber, invoiceId)).returning();
+      // update payment to expired
+      if (status === PAYMENT_STATUS.EXPIRED || body.order.status === PAYMENT_STATUS.ORDER_EXPIRED) {
+        await db.update(eventPayment).set({status: status}).where(eq(eventPayment.invoiceNumber, invoiceId)).returning();
       }
+
     }
   } catch (error) {
     if (error instanceof Error) {
@@ -62,8 +58,5 @@ export async function checkPaymentStatus(invoiceId: string) {
     }
 
   }
-
-
-
 
 }
