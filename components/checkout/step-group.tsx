@@ -1,60 +1,70 @@
 'use client'
 
-import {EventCategoryType, EventOrderType, EventType, GroupWithParticipant} from "@/db/schema";
+import {EventCategoryType, EventGroupType, EventType, InsertGroupType, InsertParticipantType} from "@/db/schema";
 import {useRouter, useSearchParams} from "next/navigation";
-import {useActionState, useState} from "react";
+import {useActionState} from "react";
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
-import {initialState} from "@/types/types";
-import {updateOrderAction} from "@/app/actions/event-order/event-order.action";
+import {ActionResponse, initialState} from "@/types/types";
 import {toast} from "sonner";
 import {Spinner} from "@/components/ui/spinner";
 import {SizeChart} from "@/components/checkout/size-chart";
-import {GroupItem} from "@/components/group/group-item";
 import {InputGroupField} from "./input-group-field";
 import {SelectCategoryField} from "@/components/checkout/select-category-field";
 import {SelectJerseyField} from "@/components/checkout/select-jersey-field";
+import {createParticipant} from "@/app/actions/event-participant/event-participant.action";
+import {PARTICIPANT_STATUS} from "@/utils/event.helper";
+import {createGroupAction} from "@/app/actions/event-group/event-group.action";
 
 type Props = {
-  event: EventType & { participantCount: number },
+  event: EventType,
+  userId: string
   categories: EventCategoryType[],
-  groups: GroupWithParticipant[],
-  order: EventOrderType
+  groups: EventGroupType[]
 }
 
-export function StepGroup({event, groups, categories, order}: Props) {
+export function StepGroup({event, userId, categories, groups}: Props) {
   const router = useRouter();
   const eventId = event.id
   const searchParams = useSearchParams();
-  const categoryId = searchParams.get('category') ?? "";
-  const jerseySize = order.jerseySize ?? searchParams.get('jersey') ?? "";
-  const groupId = order.groupId ?? searchParams.get('group') ?? "";
-  const [availableGroup] = useState<GroupWithParticipant[]>(groups)
-  const selectedGroup = availableGroup.find((item) => item.id === order.groupId)
-  const price = categories.find((cat) => cat.id === Number(categoryId))?.price ?? 0;
+  const categoryId = searchParams.get('category') ?? null;
+  const jerseySize = searchParams.get('jersey') ?? "";
+  const groupName = searchParams.get('group') ?? null;
 
-  const [_, formAction, isPending] = useActionState(async () => {
+  const [_, formAction, isPending] = useActionState(async (_: ActionResponse, formData: FormData) => {
 
-    const newPayload = {
-      ...order,
-      status: "group",
+    // 1. Create group
+    const groupPayload : InsertGroupType = {
+      eventId: eventId,
+      name: groupName!
+    }
+    const group = await createGroupAction(groupPayload)
+
+    const category : EventCategoryType | null = categories.find((cat) => cat.id === Number(categoryId)) ?? null
+
+    // 2. Create participant
+    const payload : InsertParticipantType = {
+      userId: userId,
+      eventId: eventId,
       categoryId: Number(categoryId),
-      jerseySize: jerseySize,
-      price: price,
-      groupId: Number(groupId),
+      groupId: Number(group.data),
+      jerseySize: jerseySize!,
+      price: category?.price,
+      serviceFee: category?.serviceFee,
+      status: PARTICIPANT_STATUS.DRAFT
     }
 
-    const res = await updateOrderAction(newPayload)
-
+    const res = await createParticipant(payload)
+    // 3. Redirect to next step
     if (res.success) {
-      if (res.data) {
-        const newParam = new URLSearchParams(searchParams);
-        router.push(`/event/${eventId}/register/profile?${newParam}`)
-      }
+      toast.info(res.message)
+      const newParam = new URLSearchParams(searchParams);
+      router.push(`/event/${eventId}/register/profile?${newParam}`)
     } else {
       toast.error(res.message)
     }
-    return res;
+
+    return res
 
   }, initialState)
 
@@ -76,18 +86,11 @@ export function StepGroup({event, groups, categories, order}: Props) {
               Group Ride
             </h2>
             <div className="mt-2">
-              {selectedGroup ?
-                (
-                  <GroupItem group={selectedGroup}/>
-                ) :
-                (
-                  <InputGroupField eventId={event.id} orderId={order.id} existingGroups={availableGroup}/>
-                )
-              }
+              <InputGroupField eventId={event.id} existingGroups={groups}/>
             </div>
           </div>
         </div>
-        {selectedGroup && (
+        {groupName && (
           <>
             <div className="mt-6">
               <div>
@@ -108,7 +111,7 @@ export function StepGroup({event, groups, categories, order}: Props) {
       </CardContent>
       <CardFooter>
         <form action={formAction} className="w-full">
-          <Button type="submit" className="w-full" disabled={(!categoryId || !groupId || !jerseySize) || isPending}>
+          <Button type="submit" className="w-full" disabled={(!categoryId || !groupName || !jerseySize) || isPending}>
             {isPending ? <Spinner/> : null}
             Continue
           </Button>

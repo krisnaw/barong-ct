@@ -5,9 +5,9 @@ import {and, eq} from "drizzle-orm";
 import {eventPayment} from "@/db/schema";
 import {PAYMENT_STATUS} from "@/utils/event.helper";
 
-export async function getPaymentByOrder(orderId: number) {
+export async function getPaymentByParticipant(orderId: number) {
   return db.query.eventPayment.findFirst({
-    where: eq(eventPayment.orderId, orderId),
+    where: eq(eventPayment.participantId, orderId),
     orderBy: (payment, {desc}) => [desc(payment.createdAt)],
   });
 }

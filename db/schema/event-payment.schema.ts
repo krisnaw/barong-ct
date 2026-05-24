@@ -1,14 +1,14 @@
 import {doublePrecision, integer, pgTable, serial, text, timestamp} from "drizzle-orm/pg-core";
-import {eventOrder} from "@/db/schema/event-order.schema";
+import {participant} from "@/db/schema/participant-schema";
 
 export const eventPayment = pgTable("event_payment", {
   id: serial('id').primaryKey(),
 
   status: text("status").default('pending'),
 
-  orderId: integer("order_id")
+  participantId: integer("event_participant")
     .notNull()
-    .references(() => eventOrder.id, {onDelete: "cascade"}),
+    .references(() => participant.id, {onDelete: "cascade"}),
 
   invoiceNumber: text("invoice_number"),
   expiresAt: timestamp("expires_at", {withTimezone: true}),

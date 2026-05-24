@@ -1,10 +1,13 @@
-import {integer, pgTable, serial, text, timestamp, unique, uniqueIndex} from "drizzle-orm/pg-core";
+import {doublePrecision, integer, pgTable, serial, text, timestamp, unique, uniqueIndex} from "drizzle-orm/pg-core";
 import {user} from "@/db/schema/auth-schema";
 import {EventSchema} from "@/db/schema/event-schema";
 import {relations} from "drizzle-orm";
 import {User} from "@/types/auth-types";
 import {createInsertSchema} from "drizzle-zod";
 import {eventOrder} from "@/db/schema/event-order.schema";
+import {eventCategory} from "@/db/schema/event-category-schema";
+import {eventGroup} from "@/db/schema/event-group-schema";
+import {eventPromoSchema} from "@/db/schema/event-promo.schema";
 
 export const participant = pgTable("event_participant", {
   id: serial('id').primaryKey(),
@@ -18,7 +21,24 @@ export const participant = pgTable("event_participant", {
     .references(() => EventSchema.id, { onDelete: "cascade" }),
 
   bibNumber: integer("bib_id"),
-  status: text("status").default('registered'),
+  status: text("status").default('draft'),
+
+  categoryId: integer("event_category_id")
+    .references(() => eventCategory.id, {onDelete: "set null"}),
+  groupId: integer("event_group_id")
+    .references(() => eventGroup.id, {onDelete: "set null"}),
+
+  price: doublePrecision('price').default(0),
+  serviceFee: doublePrecision('service_fee').default(0),
+  currency: text("currency").default("IDR"),
+
+  promoId: integer("promo_id")
+    .references(() => eventPromoSchema.id, {onDelete: "set null"}),
+  promoCode: text('promo_code'),
+  discountAmount: doublePrecision('discount_amount').default(0),
+  finalPrice: doublePrecision('final_price').default(0),
+
+  jerseySize: text("jersey_size"),
 
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
@@ -50,6 +70,8 @@ export const participantRelations = relations(participant, ({ one }) => ({
 }));
 
 export type ParticipantType = typeof participant.$inferSelect
+export type InsertParticipantType = typeof participant.$inferInsert;
+export type UpdateParticipantType = Partial<typeof participant.$inferInsert>;
 
 export const participantInsertSchema = createInsertSchema(participant);
 

@@ -6,18 +6,16 @@ import * as React from "react";
 import Image from "next/image";
 import {Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import Link from "next/link";
-import {getOngoingOrder} from "@/db/query/event-order.query";
 import {buttonVariants} from "@/components/ui/button";
-import {ORDER_STATUS} from "@/utils/event.helper";
+import {PARTICIPANT_STATUS} from "@/utils/event.helper";
 import {Item, ItemContent} from "@/components/ui/item";
 import {Badge} from "@/components/ui/badge";
-import {getPaymentByOrder} from "@/db/query/event-payment.query";
-import {getParticipantByEventUser} from "@/db/query/participant-query";
+import {getOnGoingParticipant} from "@/db/query/participant-query";
 import {formatBibNumber} from "@/utils/money-helper";
 import {EventDate} from "@/components/events/event-date";
 import {getGroupById} from "@/db/query/event-group.query";
-import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {InviteItem} from "@/app/(home)/event/[id]/invite-item";
+import {getPaymentByParticipant} from "@/db/query/event-payment.query";
 
 export default async function Page({params}: { params: Promise<{ id: number }> }) {
 
@@ -37,13 +35,12 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
     redirect('/auth/signup')
   }
 
-  const order = await getOngoingOrder(id, session.user.id);
-  let payment, participant, group = undefined
-  if (order) {
-    [payment, participant, group] = await Promise.all([
-      getPaymentByOrder(order.id),
-      getParticipantByEventUser(id, session.user.id),
-      getGroupById(order.groupId!)
+  const participant = await getOnGoingParticipant(id, session.user.id);
+  let payment, group = undefined
+  if (participant) {
+    [payment, group] = await Promise.all([
+      getPaymentByParticipant(participant.id),
+      getGroupById(participant.groupId!)
     ]);
   }
 
@@ -63,17 +60,17 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
           <Card>
             <CardHeader>
               <CardTitle>Registration</CardTitle>
-              {order ? (
+              {participant ? (
                 <CardAction>
-                  <Badge variant="secondary" className="uppercase">{order.status}</Badge>
+                  <Badge variant="secondary" className="uppercase">{participant.status}</Badge>
                 </CardAction>
               ) : null}
             </CardHeader>
             <CardContent>
 
-              {order ? (
+              {participant ? (
                 <>
-                  {order.status != ORDER_STATUS.COMPLETED ? (
+                  {participant.status != PARTICIPANT_STATUS.COMPLETED ? (
                     <div>
                       <Link href={`/event/${id}/register`}
                             className={`${buttonVariants({variant: "default", size: "lg"})} w-full uppercase`}>
@@ -98,7 +95,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
             </CardContent>
           </Card>
 
-          {order && order.status == ORDER_STATUS.COMPLETED && (
+          {participant && participant.status == PARTICIPANT_STATUS.COMPLETED && (
             <>
               {participant ? (
                 <Card>
@@ -127,7 +124,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
                               Jersey Size
                             </span>
                             <span className="text-lg font-semibold tabular-nums capitalize">
-                              {order.jerseySize}
+                              {participant.jerseySize}
                             </span>
                           </div>
                         </div>
@@ -170,27 +167,27 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
 
               {group && (
                 <Card>
-                  <CardHeader>
-                    <CardTitle>
-                      Group Name: {group.name}
-                    </CardTitle>
-                    <CardAction>
-                      {group.participants.length}/5 members
-                    </CardAction>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className="flex flex-col space-y-4">
-                      {group.participants.map((name: string, index: number) => (
-                        <li className="inline-flex items-center gap-2" key={index}>
-                          <Avatar>
-                            <AvatarImage src="https://github.com/shadcn.png"/>
-                            <AvatarFallback>CN</AvatarFallback>
-                          </Avatar>
-                          <p className="font-bold">{name}</p>
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
+                  {/*<CardHeader>*/}
+                  {/*  <CardTitle>*/}
+                  {/*    Group Name: {group.name}*/}
+                  {/*  </CardTitle>*/}
+                  {/*  <CardAction>*/}
+                  {/*    {group.participants.length}/5 members*/}
+                  {/*  </CardAction>*/}
+                  {/*</CardHeader>*/}
+                  {/*<CardContent>*/}
+                  {/*  <ul className="flex flex-col space-y-4">*/}
+                  {/*    {group.participants.map((name: string, index: number) => (*/}
+                  {/*      <li className="inline-flex items-center gap-2" key={index}>*/}
+                  {/*        <Avatar>*/}
+                  {/*          <AvatarImage src="https://github.com/shadcn.png"/>*/}
+                  {/*          <AvatarFallback>CN</AvatarFallback>*/}
+                  {/*        </Avatar>*/}
+                  {/*        <p className="font-bold">{name}</p>*/}
+                  {/*      </li>*/}
+                  {/*    ))}*/}
+                  {/*  </ul>*/}
+                  {/*</CardContent>*/}
                   <CardFooter>
                     <InviteItem eventId={event.id} group={group}/>
                   </CardFooter>

@@ -5,7 +5,7 @@ import {auth} from "@/lib/auth";
 import {headers} from "next/headers";
 import {redirect} from "next/navigation";
 import {db} from "@/db/db";
-import {participant} from "@/db/schema";
+import {InsertParticipantType, participant, participantInsertSchema, UpdateParticipantType} from "@/db/schema";
 import {Resend} from "resend";
 import {getEventById} from "@/db/query/event-query";
 import {revalidatePath} from "next/cache";
@@ -14,6 +14,7 @@ import {eq} from "drizzle-orm";
 import EventJoinedEmail from "@/react-email-starter/emails/event-joined-email";
 import {getParticipantByEventUser} from "@/db/query/participant-query";
 import {getOngoingOrder} from "@/db/query/event-order.query";
+import {z} from "zod";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -162,4 +163,31 @@ export async function DeleteEventParticipantAction(formData: FormData): Promise<
   const participantId = formData.get("participantId");
   await db.delete(participant).where(eq(participant.id, Number(participantId)))
   revalidatePath('/', 'layout');
+}
+
+export async function createParticipant(formData: InsertParticipantType) : Promise<ActionResponse> {
+  const validate = participantInsertSchema.safeParse(formData)
+  if (!validate.success) {
+    return {
+      success: false,
+      message: "Invalid data",
+      error: z.flattenError(validate.error),
+      fields: validate.data,
+    }
+  }
+
+  await db.insert(participant).values(validate.data).returning()
+
+  return  {
+    success: true,
+    message: "Success, "
+  }
+}
+
+export async function updateParticipant(formData: UpdateParticipantType) : Promise<ActionResponse> {
+  await db.update(participant).set(formData)
+  return {
+    success: true,
+    message: "Success, "
+  }
 }

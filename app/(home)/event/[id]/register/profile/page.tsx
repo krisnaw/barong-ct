@@ -3,7 +3,7 @@ import {auth} from "@/lib/auth";
 import {headers} from "next/headers";
 import {redirect} from "next/navigation";
 import {getUserWithDetail} from "@/db/query/user-query";
-import {getOngoingOrder} from "@/db/query/event-order.query";
+import {getOnGoingParticipant} from "@/db/query/participant-query";
 import {StepProfile} from "@/components/checkout/step-profile";
 
 export default async function Page({params,}: { params: Promise<{ id: number }> }) {
@@ -17,13 +17,13 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
   }
 
   const user = await getUserWithDetail(session.user.id)
-  const order = await getOngoingOrder(id, user.id)
-  if (!order) {
-    redirect("/event")
+  const participant = await getOnGoingParticipant(id, user.id);
+  if (!participant) {
+    redirect('/event')
   }
   return (
     <div>
-      <StepProfile user={user} order={order}  />
+      <StepProfile user={user} participant={participant}  />
     </div>
   )
 }

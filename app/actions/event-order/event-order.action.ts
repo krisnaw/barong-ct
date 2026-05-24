@@ -1,8 +1,7 @@
 'use server'
 
-import {eventOrder, orderInsertSchema, orderUpdateSchema} from "@/db/schema";
+import {eventOrder, orderUpdateSchema} from "@/db/schema";
 import {db} from "@/db/db";
-import {redirect} from "next/navigation";
 import {z} from "zod";
 import {ActionResponse} from "@/types/types";
 import {eq} from "drizzle-orm";
@@ -28,26 +27,4 @@ export async function updateOrderAction(formData: updateData): Promise<ActionRes
     message: 'Successfully created order',
     data: formData.id
   }
-}
-
-export type insertData = z.infer<typeof orderInsertSchema>;
-
-export async function createOrderAction(formData: insertData) {
-  let url = ""
-  try {
-    const [order] = await db.insert(eventOrder).values(formData).returning()
-    url = `/event/${order.eventId}/register`
-  } catch (error) {
-    console.log(error)
-
-    if (error instanceof Error) {
-      console.error(error)
-    }
-
-    return {
-      success: false,
-      message: 'Sorry, something went wrong',
-    }
-  }
-  redirect(url)
 }

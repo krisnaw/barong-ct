@@ -2,10 +2,8 @@ import {auth} from "@/lib/auth";
 import {headers} from "next/headers";
 import {redirect} from "next/navigation";
 import {getEventById} from "@/db/query/event-query";
-import {getOngoingOrder} from "@/db/query/event-order.query";
 import {getPromoByEvent} from "@/db/query/event-promo.query";
-import {StepPayment} from "@/components/checkout/step-payment";
-import {getPaymentByOrder} from "@/db/query/event-payment.query";
+import {getPaymentByParticipant} from "@/db/query/event-payment.query";
 import {PAYMENT_STATUS} from "@/utils/event.helper";
 import {checkPaymentStatus} from "@/app/actions/payment/payment-status.action";
 import Link from "next/link";
@@ -14,6 +12,7 @@ import {Badge} from "@/components/ui/badge";
 import * as React from "react";
 import {buttonVariants} from "@/components/ui/button";
 import {getCategoryById} from "@/db/query/event-category.query";
+import {getOnGoingParticipant} from "@/db/query/participant-query";
 
 export default async function Page({params}: { params: Promise<{ id: number }> }) {
   const {id} = await params;
@@ -30,19 +29,18 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
     redirect(`/event`);
   }
 
-  const order = await getOngoingOrder(id, session.user.id)
-  if (!order) {
+  const promos = await getPromoByEvent(id)
+  const participant = await getOnGoingParticipant(event.id, session.user.id)
+  if (!participant) {
     redirect("/event")
   }
-
-  const promos = await getPromoByEvent(id)
-  const category = await getCategoryById(order.categoryId!)
+  const category = await getCategoryById(participant.categoryId!)
   if (!category) {
     redirect("/event")
   }
 
   // if there is pending payment, check the payment status.
-  const payment = await getPaymentByOrder(order.id)
+  const payment = await getPaymentByParticipant(participant.id)
   if (payment) {
     if (payment.status == PAYMENT_STATUS.PENDING && payment.invoiceNumber) {
       await checkPaymentStatus(payment.invoiceNumber)
@@ -71,7 +69,10 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
           </CardContent>
         </Card>
       ) : (
-        <StepPayment event={event} order={order} category={category} promos={promos} />
+        <div>
+          sdf
+          {/*<StepPayment event={event} order={order} category={category} promos={promos} />*/}
+        </div>
       )}
     </div>
   )

@@ -9,20 +9,19 @@ import {ActionResponse, initialState} from "@/types/types";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {Textarea} from "@/components/ui/textarea";
 import {Button} from "@/components/ui/button";
-import {EventOrderType, UserDetailType} from "@/db/schema";
+import {ParticipantType, UserDetailType} from "@/db/schema";
 import {UpdateProfileAction} from "@/app/actions/profile/profile.action";
 import {toast} from "sonner";
 import {useParams, useRouter} from "next/navigation";
-import {updateOrderAction} from "@/app/actions/event-order/event-order.action";
+import {updateParticipant} from "@/app/actions/event-participant/event-participant.action";
+import {PARTICIPANT_STATUS} from "@/utils/event.helper";
 
-export function StepProfile({user, order}: { user: UserWithDetail, order: EventOrderType }) {
+export function StepProfile({user, participant}: { user: UserWithDetail, participant: ParticipantType }) {
 
   const router = useRouter();
   const params = useParams<{ id: string }>();
   const eventId = params.id;
   const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(async (_: ActionResponse, formData: FormData) => {
-
-
     const payload: UserDetailType & { name: string, image: string | null } = {
       userId: user.id as string,
       name: formData.get("full_name") as string,
@@ -49,14 +48,14 @@ export function StepProfile({user, order}: { user: UserWithDetail, order: EventO
 
     if (res.success) {
       // update order status
-      const orderPayload = {
-        ...order,          // copy
-        status: "profile",  // modify ONE field
+      const participantPayload = {
+        ...participant,          // copy
+        status: PARTICIPANT_STATUS.PROFILE,  // modify ONE field
       };
-      await updateOrderAction(orderPayload)
+      await updateParticipant(participantPayload)
 
       toast.success(res.message)
-      router.push(`/event/${eventId}/register`)
+      router.push(`/event/${eventId}/register/payment`)
     } else {
       toast.error(res.message)
     }

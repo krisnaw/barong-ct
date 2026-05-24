@@ -5,6 +5,13 @@ export const ORDER_STATUS = {
   COMPLETED: "completed",
 } as const;
 
+export const PARTICIPANT_STATUS = {
+  DRAFT: "draft",
+  PROFILE: "profile",
+  PENDING_PAYMENT: "payment",
+  COMPLETED: "completed",
+} as const;
+
 export const PAYMENT_STATUS = {
   PENDING: "PENDING",
   SUCCESS: "SUCCESS",
@@ -13,9 +20,7 @@ export const PAYMENT_STATUS = {
 } as const;
 
 
-export const PARTICIPANT_STATUS = {
-  CONFIRMED: "CONFIRMED",
-} as const;
+
 
 //
 // function getOrderStatusText(status: string) {

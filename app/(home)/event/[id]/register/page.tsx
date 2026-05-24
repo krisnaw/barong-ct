@@ -2,16 +2,14 @@ import {getEventById} from "@/db/query/event-query";
 import {redirect} from "next/navigation";
 import {auth} from "@/lib/auth";
 import {headers} from "next/headers";
-import {getOngoingOrder} from "@/db/query/event-order.query";
-import {createOrderAction} from "@/app/actions/event-order/event-order.action";
-import {ORDER_STATUS} from "@/utils/event.helper";
+import {getOnGoingParticipant} from "@/db/query/participant-query";
+import {PARTICIPANT_STATUS} from "@/utils/event.helper";
 
 export default async function Page({params, searchParams}: {
   params: Promise<{ id: number }>,
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
   const {id} = await params;
-  const group = (await searchParams).group
   const event = await getEventById(id)
   if (!event) {
     redirect(`/event`);
@@ -24,45 +22,31 @@ export default async function Page({params, searchParams}: {
     redirect('/auth/signup')
   }
 
-  // Check to make sure user has an Order
   const userId = session.user.id;
-  const order = await getOngoingOrder(id, userId);
 
-  // TODO: CONTINUE this, use value from the event category
-  if (!order) {
-    const payload = {
-      userId: userId,
-      eventId: id,
-      jerseyGender: "",
-      status: "draft",
-      price: 0,
-      currency: 'IDR',
-      ...(group && {groupId: Number(group)})
-    }
-    await createOrderAction(payload)
+  const participant = await getOnGoingParticipant(id, userId);
+
+  if (!participant) {
+    redirect(`/event/${id}/register/group`)
   }
 
   // Always redirect to order
-  if (order) {
-    const status = order.status;
+  if (participant) {
+    const status = participant.status;
 
-    if (status == ORDER_STATUS.DRAFT) {
-      if (event.isGroupRide && event.isGroupRide > 0) {
-        redirect(`/event/${id}/register/group?orderId=${order.id}`)
-      } else {
-        redirect(`/event/${id}/register/profile?orderId=${order.id}`)
-      }
+    if (status == PARTICIPANT_STATUS.DRAFT) {
+      redirect(`/event/${id}/register/group`)
     }
 
-    if (status == ORDER_STATUS.PROFILE) {
-      redirect(`/event/${id}/register/payment?orderId=${order.id}`)
+    if (status == PARTICIPANT_STATUS.PROFILE) {
+      redirect(`/event/${id}/register/payment?participantId=${participant.id}`)
     }
 
-    if (status == ORDER_STATUS.PENDING_PAYMENT) {
-      redirect(`/event/${id}/register/payment?orderId=${order.id}`)
+    if (status == PARTICIPANT_STATUS.PENDING_PAYMENT) {
+      redirect(`/event/${id}/register/payment?participantId=${participant.id}`)
     }
 
-    if (status == ORDER_STATUS.COMPLETED) {
+    if (status == PARTICIPANT_STATUS.COMPLETED) {
       redirect(`/event/${id}`)
     }
   }

@@ -1,11 +1,10 @@
-import {StepGroup} from "@/components/checkout/step-group";
-import {getOngoingOrder} from "@/db/query/event-order.query";
 import {auth} from "@/lib/auth";
 import {headers} from "next/headers";
 import {redirect} from "next/navigation";
 import {getEventById} from "@/db/query/event-query";
-import {getGroupByEvent} from "@/db/query/event-group.query";
 import {getCategoryByEvent} from "@/db/query/event-category.query";
+import {StepGroup} from "@/components/checkout/step-group";
+import {getGroupsByEvent} from "@/db/query/event-group.query";
 
 export default async function Page({params}: { params: Promise<{ id: number }> }) {
   const {id} = await params;
@@ -24,19 +23,12 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
 
   const userId = session.user.id;
 
-  const order = await getOngoingOrder(id, userId);
-
-  const groups = await getGroupByEvent(id);
-
   const categories = await getCategoryByEvent(id)
-
-  if (!order) {
-    redirect("/event")
-  }
+  const groups = await getGroupsByEvent(id)
 
   return (
     <div>
-      <StepGroup key={groups.length} event={event} order={order} categories={categories} groups={groups}  />
+      <StepGroup event={event} userId={userId} categories={categories} groups={groups} />
     </div>
   )
 }
