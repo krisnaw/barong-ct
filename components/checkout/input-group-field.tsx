@@ -1,44 +1,47 @@
 'use client';
 
-import React, {useState} from 'react';
+import React from 'react';
 import {Input} from '@/components/ui/input';
 import {EventGroupType} from "@/db/schema";
 import {useRouter, useSearchParams} from "next/navigation";
+
+import {Plus} from "lucide-react";
+import {Button} from "@/components/ui/button";
 
 interface Props {
   eventId: number,
   existingGroups: EventGroupType[];
 }
 
+// http://localhost:3000/event/9/register?groupId=84&category=3
+
 export function InputGroupField({ eventId, existingGroups }: Props) {
-  const [groupName, setGroupName] = useState('');
-  const [error, setError] = useState('');
   const router = useRouter()
   const searchParams = useSearchParams();
+  const groupName = searchParams.get('group') ?? "";
+  const groupId = searchParams.get('groupId') ?? null;
 
   const handleCreate = () => {
     const trimmedName = groupName.trim();
 
-    // Reset error
-    setError('');
-
     // Validation
-    if (!trimmedName) {
-      setError('Group name cannot be empty');
-      return;
-    }
+    if (!trimmedName) return;
 
     // Check if group already exists
     if ((existingGroups || []).some((group) => group.name.toLowerCase() === trimmedName.toLowerCase())) {
-      setError(`"${trimmedName}" already exists. Try adding a number, e.g., '${trimmedName} 1'.`);
       return;
     }
 
-    // Create group
     const newParam = new URLSearchParams(searchParams);
     newParam.set('group', groupName)
     router.push(`/event/${eventId}/register/group?${newParam}`)
   };
+
+  const handleChange = (value: string) => {
+    const newParam = new URLSearchParams(searchParams);
+    newParam.set('group', value)
+    router.push(`/event/${eventId}/register/group?${newParam}`)
+  }
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -53,24 +56,20 @@ export function InputGroupField({ eventId, existingGroups }: Props) {
 
   return (
     <div className="space-y-2">
-      <Input
-        name="create-group"
-        value={groupName}
-        onChange={(e) => {
-          setGroupName(e.target.value);
-          setError('');
-        }}
-        onKeyDown={handleKeyPress}
-        onBlur={() => handleOnBlur()}
-        placeholder="Enter group name"
-        className={error ? 'border-destructive focus-visible:ring-destructive' : ''}
-      />
-
-      {error && (
-        <div className="text-sm text-destructive font-medium">
-          {error}
-        </div>
-      )}
+      <div className="flex gap-2">
+        <Input
+          name="create-group"
+          value={groupName}
+          onChange={(e) => handleChange(e.target.value)}
+          onKeyDown={handleKeyPress}
+          onBlur={() => handleOnBlur()}
+          placeholder="Enter group name"
+        />
+        <Button onClick={handleCreate} className="gap-2" disabled={groupName.length === 0}>
+          <Plus className="h-4 w-4" />
+          Create
+        </Button>
+      </div>
     </div>
   );
 }

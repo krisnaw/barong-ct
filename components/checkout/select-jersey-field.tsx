@@ -17,7 +17,7 @@ export function SelectJerseyField({eventId} : {eventId: number}) {
 
   return (
     <RadioGroup
-      defaultValue={jersey} onValueChange={(value: string) => onChangeHandler(value)}
+      value={jersey} onValueChange={(value: string) => onChangeHandler(value)}
       className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2">
       {sizes.map((size) => (
         <FieldLabel key={size.id} htmlFor={size.id}>

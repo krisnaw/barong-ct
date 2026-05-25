@@ -1,7 +1,7 @@
 "use server"
 
 import {db} from "@/db/db";
-import {and, eq, getTableColumns, isNull} from "drizzle-orm";
+import {and, eq, getTableColumns, isNull, sum} from "drizzle-orm";
 import {participant, user, userDetail} from "@/db/schema";
 import {ORDER_STATUS} from "@/utils/event.helper";
 
@@ -81,4 +81,17 @@ export async function getParticipantByCategory(categoryId: number) {
   return db.query.participant.findFirst({
     where: eq(participant.categoryId, categoryId)
   });
+}
+
+export async function getTotalRevenue(eventId: number) {
+  const result = await db
+    .select({ totalRevenue: sum(participant.finalPrice) })
+    .from(participant)
+    .where(
+      and(
+        eq(participant.eventId, eventId),
+        eq(participant.status, ORDER_STATUS.COMPLETED),
+      )
+    );
+  return result[0]?.totalRevenue ?? 0;
 }
