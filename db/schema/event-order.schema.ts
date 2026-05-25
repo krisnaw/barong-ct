@@ -5,6 +5,8 @@ import {eventGroup} from "@/db/schema/event-group-schema";
 import {user} from "@/db/schema/auth-schema";
 import {eventPromoSchema} from "@/db/schema/event-promo.schema";
 
+// TODO: will be deleted
+
 export const eventOrder = pgTable("event_order", {
   id: serial('id').primaryKey(),
 

@@ -26,6 +26,7 @@ import {toast} from "sonner";
 export function EditPromo({promo}: { promo: PromoType }) {
   const [open, setOpen] = useState(false);
   const [discountType, setDiscountType] = useState(promo.discountType)
+  const [discountValue, setDiscountValue] = useState<number>(promo.discountValue);
 
   const [_, formAction, isPending] = useActionState<ActionResponse, FormData>(
     async (_: ActionResponse, formData: FormData) => {
@@ -120,12 +121,13 @@ export function EditPromo({promo}: { promo: PromoType }) {
                 </Field>
               ) : (
                 <Field>
-                  <FieldLabel htmlFor="discountValue">Discount Percentage</FieldLabel>
+                  <FieldLabel htmlFor="discountValue">Discount Percentage { discountValue } </FieldLabel>
                   <Slider
                     name="discountValue"
                     max={100}
-                    step={10}
-                    defaultValue={promo.discountValue}
+                    step={1}
+                    value={[discountValue]}
+                    onValueChange={(value: number | readonly number[]) => setDiscountValue(Array.isArray(value) ? value[0] : value)}
                     className="w-full"
                   />
                   <FieldDescription>
@@ -176,7 +178,7 @@ export function EditPromo({promo}: { promo: PromoType }) {
           <Button type="submit" form="edit-promo-form" disabled={isPending}>
             Save changes
           </Button>
-          <SheetClose render={<Button variant="outline">Close</Button>}/>
+          <SheetClose render={<Button variant="outline">Cancel</Button>}/>
         </SheetFooter>
       </SheetContent>
     </Sheet>

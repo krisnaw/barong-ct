@@ -27,6 +27,7 @@ import {createPromoAction} from "@/app/actions/event-promo/promo.action";
 export function AddPromo({eventId}: { eventId: number }) {
   const [open, setOpen] = useState(false)
   const [discountType, setDiscountType] = useState("fixed")
+  const [discountValue, setDiscountValue] = useState<number>(0);
 
   const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(
     async (_: ActionResponse, formData: FormData) => {
@@ -80,9 +81,6 @@ export function AddPromo({eventId}: { eventId: number }) {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="IDR">IDR</SelectItem>
-                    <SelectItem value="USD">USD</SelectItem>
-                    <SelectItem value="SGD">SGD</SelectItem>
-                    <SelectItem value="MYR">MYR</SelectItem>
                   </SelectContent>
                 </Select>
               </Field>
@@ -118,11 +116,12 @@ export function AddPromo({eventId}: { eventId: number }) {
                 </Field>
               ) : (
                 <Field>
-                  <FieldLabel htmlFor="discountValue">Discount Percentage</FieldLabel>
+                  <FieldLabel htmlFor="discountValue">Discount Percentage {discountValue}</FieldLabel>
                   <Slider
                     name="discountValue"
                     max={100}
-                    step={10}
+                    step={1}
+                    onValueChange={(value: number | readonly number[]) => setDiscountValue(Array.isArray(value) ? value[0] : value)}
                     className="w-full"
                   />
                   <FieldDescription>
@@ -150,14 +149,17 @@ export function AddPromo({eventId}: { eventId: number }) {
               </div>
 
               <Field>
-                <FieldLabel htmlFor="isActive">Status</FieldLabel>
-                <Select name="isActive" defaultValue="active">
+                <FieldLabel htmlFor="status">Status</FieldLabel>
+                <Select name="status" items={items}>
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select status"/>
+                    <SelectValue placeholder="Select status" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="active">Active</SelectItem>
-                    <SelectItem value="inactive">Inactive</SelectItem>
+                    {items.map((item) => (
+                      <SelectItem key={item.value} value={item.value}>
+                        {item.label}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 <FieldDescription>
@@ -180,3 +182,8 @@ export function AddPromo({eventId}: { eventId: number }) {
     </Sheet>
   )
 }
+
+const items = [
+  { label: "Active", value: "true" },
+  { label: "Inactive", value: "false" },
+]
