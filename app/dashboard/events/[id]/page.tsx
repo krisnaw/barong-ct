@@ -1,7 +1,6 @@
 import {getEventById} from "@/db/query/event-query";
 import {redirect} from "next/navigation";
 import {Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
-import {Button} from "@/components/ui/button";
 import {CalendarIcon, MapPin} from "lucide-react";
 import {EventDate} from "@/components/events/event-date";
 import Link from "next/link";
@@ -14,6 +13,7 @@ import {AddCategory} from "@/components/category/add-category";
 import {AddPromo} from "@/components/promo/add-promo";
 import {getParticipantByEvent} from "@/db/query/participant-query";
 import {ListParticipant} from "@/components/participant/list-participant";
+import {buttonVariants} from "@/components/ui/button";
 
 export default async function Page({params}: { params: Promise<{ id: number }> }) {
   const {id} = await params;
@@ -45,17 +45,18 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
                 </div>
                 <div className="mt-2 flex items-center text-sm text-muted-foreground">
                   <CalendarIcon aria-hidden="true" className="mr-1.5 size-5 shrink-0 text-muted-foreground"/>
-                  <EventDate eventDate={event.startDate} type="date"/> - <EventDate eventDate={event.startDate} type="time"/>
+                  <EventDate eventDate={event.startDate} type="date"/> - <EventDate eventDate={event.startDate}
+                                                                                    type="time"/>
                 </div>
               </div>
 
             </div>
             <div className="mt-4 flex md:mt-0 md:ml-4 gap-2">
-              <Button variant="outline">
-                <Link href={`/dashboard/events/${id}`}>
-                  Edit
-                </Link>
-              </Button>
+              <Link
+                className={buttonVariants({variant: "secondary", size: "sm"})}
+                href={`/dashboard/events/${id}/edit`}>
+                Edit
+              </Link>
             </div>
           </div>
 
@@ -106,7 +107,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
           </CardAction>
         </CardHeader>
         <CardContent>
-          <ListParticipant participants={participants} />
+          <ListParticipant participants={participants}/>
         </CardContent>
       </Card>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -114,7 +115,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
           <CardHeader>
             <CardTitle>Categories</CardTitle>
             <CardAction>
-              <AddCategory eventId={id} />
+              <AddCategory eventId={id}/>
             </CardAction>
           </CardHeader>
           <CardContent>
@@ -126,7 +127,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
           <CardHeader>
             <CardTitle>Promo code</CardTitle>
             <CardAction>
-              <AddPromo eventId={event.id} />
+              <AddPromo eventId={event.id}/>
             </CardAction>
           </CardHeader>
           <CardContent>
