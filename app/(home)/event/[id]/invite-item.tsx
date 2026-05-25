@@ -4,15 +4,19 @@ import {CheckIcon, CopyIcon} from "lucide-react";
 import {toast} from "sonner";
 import * as React from "react";
 import {useState} from "react";
-import {GroupWithParticipant} from "@/db/schema";
 import {Field, FieldLabel} from "@/components/ui/field";
 import {InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput} from "@/components/ui/input-group";
 
-export function InviteItem({ eventId, group }: { eventId: number, group: GroupWithParticipant }) {
-  const shareUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/event/${eventId}/register?group=${group.id}`
+export function InviteItem({eventId, categoryId, groupId}: { eventId: number, categoryId: number, groupId: number }) {
+  const baseURL = `${typeof window !== 'undefined' ? window.location.origin : ''}/event/${eventId}/register/group`
+  const url = new URL(baseURL);
+  url.searchParams.append('groupId', String(groupId));
+  url.searchParams.append('category', String(categoryId));
+
+  const shareUrl = url.toString()
+
   const [copied, setCopied] = useState(false)
   const handleCopyLink = async () => {
-
     try {
       await navigator.clipboard.writeText(shareUrl)
       setCopied(true)
@@ -35,7 +39,7 @@ export function InviteItem({ eventId, group }: { eventId: number, group: GroupWi
           />
           <InputGroupAddon align="inline-end">
             <InputGroupButton size="icon-xs" aria-label="Copy link" onClick={handleCopyLink}>
-              {copied ? <CheckIcon /> : <CopyIcon />}
+              {copied ? <CheckIcon/> : <CopyIcon/>}
             </InputGroupButton>
           </InputGroupAddon>
         </InputGroup>

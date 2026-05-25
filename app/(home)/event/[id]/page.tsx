@@ -190,9 +190,11 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
                       ))}
                     </ul>
                   </CardContent>
-                  <CardFooter>
-                    <InviteItem eventId={event.id} group={group}/>
-                  </CardFooter>
+                  {participant.categoryId && participant.groupId && (
+                    <CardFooter>
+                      <InviteItem eventId={event.id} categoryId={participant.categoryId} groupId={participant.groupId} />
+                    </CardFooter>
+                  )}
                 </Card>
               )}
             </>

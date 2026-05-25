@@ -13,13 +13,12 @@ interface Props {
   existingGroups: EventGroupType[];
 }
 
-// http://localhost:3000/event/9/register?groupId=84&category=3
-
 export function InputGroupField({ eventId, existingGroups }: Props) {
   const router = useRouter()
   const searchParams = useSearchParams();
-  const groupName = searchParams.get('group') ?? "";
-  const groupId = searchParams.get('groupId') ?? null;
+  const groupId = searchParams.get('groupId');
+  const selectedGroup = groupId ? existingGroups.find((g) => String(g.id) === groupId) : null;
+  const groupName = selectedGroup?.name ?? searchParams.get('group') ?? "";
 
   const handleCreate = () => {
     const trimmedName = groupName.trim();
@@ -40,6 +39,7 @@ export function InputGroupField({ eventId, existingGroups }: Props) {
   const handleChange = (value: string) => {
     const newParam = new URLSearchParams(searchParams);
     newParam.set('group', value)
+    newParam.delete('groupId')
     router.push(`/event/${eventId}/register/group?${newParam}`)
   }
 
