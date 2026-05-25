@@ -7,11 +7,12 @@ import {useState} from "react";
 import {Field, FieldLabel} from "@/components/ui/field";
 import {InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput} from "@/components/ui/input-group";
 
-export function InviteItem({eventId, categoryId, groupId}: { eventId: number, categoryId: number, groupId: number }) {
+export function InviteItem({eventId, categoryId, groupId, groupName}: { eventId: number, categoryId: number, groupId: number, groupName: string }) {
   const baseURL = `${typeof window !== 'undefined' ? window.location.origin : ''}/event/${eventId}/register/group`
   const url = new URL(baseURL);
   url.searchParams.append('groupId', String(groupId));
   url.searchParams.append('category', String(categoryId));
+  url.searchParams.append('group', groupName);
 
   const shareUrl = url.toString()
 

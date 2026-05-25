@@ -45,8 +45,6 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
     ]);
   }
 
-  console.log(group)
-
   return (
     <div className="bg-slate-50 min-h-screen">
       <div className="relative isolate overflow-hidden h-[50vh]">
@@ -192,7 +190,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
                   </CardContent>
                   {participant.categoryId && participant.groupId && (
                     <CardFooter>
-                      <InviteItem eventId={event.id} categoryId={participant.categoryId} groupId={participant.groupId} />
+                      <InviteItem eventId={event.id} categoryId={participant.categoryId} groupId={group.id} groupName={group.name} />
                     </CardFooter>
                   )}
                 </Card>

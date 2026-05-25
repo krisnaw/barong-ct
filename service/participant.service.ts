@@ -13,12 +13,19 @@ import {PARTICIPANT_STATUS} from "@/utils/event.helper";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+async function getNextBibNumber(eventId: number): Promise<number> {
+  const result = await db
+    .select({ max: sql<number>`coalesce(max(${participant.bibNumber}), 0)` })
+    .from(participant)
+    .where(eq(participant.eventId, eventId));
+  return (result[0]?.max ?? 0) + 1;
+}
+
 export async function markParticipantComplete(eventId: number, userId: string) {
+  const bibNumber = await getNextBibNumber(eventId);
   await db.update(participant).set({
     status: PARTICIPANT_STATUS.COMPLETED,
-    bibNumber: sql`(SELECT COALESCE(MAX(${participant.bibNumber}), 0) + 1
-                    FROM ${participant}
-                    WHERE ${participant.eventId} = 1)`,
+    bibNumber: bibNumber,
   }).where(and(eq(participant.userId, userId), eq(participant.eventId, eventId)))
 
   // Mark Participant As Complete

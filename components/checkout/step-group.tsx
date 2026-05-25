@@ -30,15 +30,23 @@ export function StepGroup({event, userId, categories, groups}: Props) {
   const categoryId = searchParams.get('category') ?? null;
   const jerseySize = searchParams.get('jersey') ?? "";
   const groupName = searchParams.get('group') ?? null;
+  const groupId = searchParams.get('groupId') ?? null;
 
   const [_, formAction, isPending] = useActionState(async (_: ActionResponse, formData: FormData) => {
 
-    // 1. Create group
-    const groupPayload : InsertGroupType = {
-      eventId: eventId,
-      name: groupName!
+    let newGroupId
+    if (!groupId) {
+      // 1. Create group
+      const groupPayload : InsertGroupType = {
+        eventId: eventId,
+        name: groupName!
+      }
+      const group = await createGroupAction(groupPayload)
+      newGroupId = group.data
+    } else {
+      newGroupId = groupId
     }
-    const group = await createGroupAction(groupPayload)
+
 
     const category : EventCategoryType | null = categories.find((cat) => cat.id === Number(categoryId)) ?? null
 
@@ -47,7 +55,7 @@ export function StepGroup({event, userId, categories, groups}: Props) {
       userId: userId,
       eventId: eventId,
       categoryId: Number(categoryId),
-      groupId: Number(group.data),
+      groupId: Number(newGroupId),
       jerseySize: jerseySize!,
       price: category?.price,
       serviceFee: category?.serviceFee,
