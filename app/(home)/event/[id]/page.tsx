@@ -4,7 +4,7 @@ import {auth} from "@/lib/auth";
 import {headers} from "next/headers";
 import * as React from "react";
 import Image from "next/image";
-import {Card, CardAction, CardContent, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
+import {Card, CardAction, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import Link from "next/link";
 import {buttonVariants} from "@/components/ui/button";
 import {PARTICIPANT_STATUS} from "@/utils/event.helper";
@@ -17,7 +17,6 @@ import {getPaymentByParticipant} from "@/db/query/event-payment.query";
 import {formatBibNumber} from "@/utils/money-helper";
 import {CheckCircleIcon, RouteIcon, Shirt, Tickets} from "lucide-react";
 import {getCategoryById} from "@/db/query/event-category.query";
-import {InviteItem} from "@/app/(home)/event/[id]/invite-item";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {EventCardDetail} from "@/components/events/event-card-detail";
 
@@ -210,11 +209,6 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
                   ))}
                 </ul>
               </CardContent>
-              {group.participants.length > 0 && group.participants.length < 5 && (
-                <CardFooter>
-                  <InviteItem eventId={event.id} categoryId={category?.id} groupId={group.id} groupName={group.name}/>
-                </CardFooter>
-              )}
             </Card>
           )}
         </div>
