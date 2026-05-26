@@ -9,7 +9,7 @@ import {InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput} from "@/
 
 export function InviteItem({eventId, categoryId, groupId, groupName}: { eventId: number, categoryId?: number, groupId: number, groupName: string }) {
   const originURL = `${process.env.NEXT_PUBLIC_BASE_URL}`
-  const baseURL =  originURL + "/event/${eventId}/register/group"
+  const baseURL =  originURL + `/event/${eventId}/register/group`
 
   const url = new URL(baseURL);
   url.searchParams.append('groupId', String(groupId));
