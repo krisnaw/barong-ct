@@ -7,7 +7,7 @@ import {useState} from "react";
 import {Field, FieldLabel} from "@/components/ui/field";
 import {InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput} from "@/components/ui/input-group";
 
-export function InviteItem({eventId, categoryId, groupId, groupName}: { eventId: number, categoryId?: number, groupId: number, groupName: string }) {
+export function InviteItem({eventId, categoryId, groupId, groupName}: { eventId: number, categoryId: number, groupId: number, groupName: string }) {
   const originURL = `${process.env.NEXT_PUBLIC_BASE_URL}`
   const baseURL =  originURL + `/event/${eventId}/register/group`
 
