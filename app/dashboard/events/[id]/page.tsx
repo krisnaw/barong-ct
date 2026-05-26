@@ -45,8 +45,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
                 </div>
                 <div className="mt-2 flex items-center text-sm text-muted-foreground">
                   <CalendarIcon aria-hidden="true" className="mr-1.5 size-5 shrink-0 text-muted-foreground"/>
-                  <EventDate eventDate={event.startDate} type="date"/> - <EventDate eventDate={event.startDate}
-                                                                                    type="time"/>
+                  <EventDate eventDate={event.startDate} type="date"/> - <EventDate eventDate={event.startDate} type="time"/>
                 </div>
               </div>
 
