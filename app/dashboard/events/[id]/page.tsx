@@ -1,6 +1,6 @@
 import {getEventById} from "@/db/query/event-query";
 import {redirect} from "next/navigation";
-import {Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
+import {Card, CardAction, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {CalendarIcon, MapPin} from "lucide-react";
 import {EventDate} from "@/components/events/event-date";
 import Link from "next/link";
@@ -61,43 +61,43 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
 
         </CardContent>
       </Card>
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
-          <CardHeader>
-            <CardDescription>Total participants</CardDescription>
-            <CardTitle className="text-3xl">
-              {participants.length}
-            </CardTitle>
-          </CardHeader>
-        </Card>
+      {/*<div className="grid grid-cols-1 md:grid-cols-4 gap-4">*/}
+      {/*  <Card>*/}
+      {/*    <CardHeader>*/}
+      {/*      <CardDescription>Total participants</CardDescription>*/}
+      {/*      <CardTitle className="text-3xl">*/}
+      {/*        {participants.length}*/}
+      {/*      </CardTitle>*/}
+      {/*    </CardHeader>*/}
+      {/*  </Card>*/}
 
-        <Card>
-          <CardHeader>
-            <CardDescription>Total Revenue</CardDescription>
-            <CardTitle className="text-3xl">
-              {participants.length}
-            </CardTitle>
-          </CardHeader>
-        </Card>
+      {/*  <Card>*/}
+      {/*    <CardHeader>*/}
+      {/*      <CardDescription>Total Revenue</CardDescription>*/}
+      {/*      <CardTitle className="text-3xl">*/}
+      {/*        {participants.length}*/}
+      {/*      </CardTitle>*/}
+      {/*    </CardHeader>*/}
+      {/*  </Card>*/}
 
-        <Card>
-          <CardHeader>
-            <CardDescription>Total Revenue</CardDescription>
-            <CardTitle className="text-3xl">
-              {participants.length}
-            </CardTitle>
-          </CardHeader>
-        </Card>
+      {/*  <Card>*/}
+      {/*    <CardHeader>*/}
+      {/*      <CardDescription>Total Revenue</CardDescription>*/}
+      {/*      <CardTitle className="text-3xl">*/}
+      {/*        {participants.length}*/}
+      {/*      </CardTitle>*/}
+      {/*    </CardHeader>*/}
+      {/*  </Card>*/}
 
-        <Card>
-          <CardHeader>
-            <CardDescription>Total Revenue</CardDescription>
-            <CardTitle className="text-3xl">
-              {participants.length}
-            </CardTitle>
-          </CardHeader>
-        </Card>
-      </div>
+      {/*  <Card>*/}
+      {/*    <CardHeader>*/}
+      {/*      <CardDescription>Total Revenue</CardDescription>*/}
+      {/*      <CardTitle className="text-3xl">*/}
+      {/*        {participants.length}*/}
+      {/*      </CardTitle>*/}
+      {/*    </CardHeader>*/}
+      {/*  </Card>*/}
+      {/*</div>*/}
       <Card>
         <CardHeader>
           <CardTitle>Participants</CardTitle>
