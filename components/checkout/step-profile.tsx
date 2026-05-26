@@ -4,7 +4,8 @@ import {UserWithDetail} from "@/types/auth-types";
 import {Field, FieldGroup, FieldLabel, FieldLegend, FieldSeparator, FieldSet} from "@/components/ui/field";
 import {Input} from "@/components/ui/input";
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
-import {useActionState} from "react";
+import * as React from "react";
+import {useActionState, useEffect, useRef, useState} from "react";
 import {ActionResponse, initialState} from "@/types/types";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {Textarea} from "@/components/ui/textarea";
@@ -21,6 +22,18 @@ export function StepProfile({user, participant}: { user: UserWithDetail, partici
   const router = useRouter();
   const params = useParams<{ id: string }>();
   const eventId = params.id;
+  const formRef = useRef<HTMLFormElement>(null);
+  const [isFormValid, setIsFormValid] = useState(false);
+
+  useEffect(() => {
+    const form = formRef.current;
+    if (!form) return;
+    setIsFormValid(form.checkValidity());
+    const handleInput = () => setIsFormValid(form.checkValidity());
+    form.addEventListener('input', handleInput);
+    return () => form.removeEventListener('input', handleInput);
+  }, []);
+
   const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(async (_: ActionResponse, formData: FormData) => {
     const payload: UserDetailType & { name: string, image: string | null } = {
       userId: user.id as string,
@@ -67,7 +80,7 @@ export function StepProfile({user, participant}: { user: UserWithDetail, partici
   }>, formAction: (formData: FormData) => void, isPending: boolean]
 
   return (
-    <form action={formAction}>
+    <form ref={formRef} action={formAction}>
       <Card>
         <CardHeader>
           <CardTitle>
@@ -113,13 +126,16 @@ export function StepProfile({user, participant}: { user: UserWithDetail, partici
 
                 <Field>
                   <FieldLabel htmlFor="gender">Gender</FieldLabel>
-                  <Select defaultValue={user.detail?.gender ?? ""} name="gender" required>
+                  <Select items={items} defaultValue={user.detail?.gender ?? ""} name="gender" required>
                     <SelectTrigger>
                       <SelectValue placeholder="Select gender"/>
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="male">Male</SelectItem>
-                      <SelectItem value="female">Female</SelectItem>
+                      {items.map((item) => (
+                        <SelectItem key={item.value} value={item.value}>
+                          {item.label}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </Field>
@@ -284,9 +300,14 @@ export function StepProfile({user, participant}: { user: UserWithDetail, partici
           </FieldGroup>
         </CardContent>
         <CardFooter>
-          <Button className="w-full" type="submit" disabled={isPending}>Continue</Button>
+          <Button className="w-full" type="submit" disabled={!isFormValid || isPending}>Continue</Button>
         </CardFooter>
       </Card>
     </form>
   )
 }
+
+const items = [
+  { label: "Male", value: "male" },
+  { label: "Female", value: "female" },
+]

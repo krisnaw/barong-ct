@@ -253,7 +253,7 @@ export function StepPayment({event, participant, category, promos}: Props) {
         <CardFooter>
           <Button className="w-full" disabled={isPending || pm.length == 0} type="submit">
             {isPending ? <Spinner/> : null}
-            Complete participant
+            Complete Registration
           </Button>
         </CardFooter>
       </Card>
