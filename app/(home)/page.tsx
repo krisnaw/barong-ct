@@ -4,7 +4,7 @@ import {getLastActiveEvent} from "@/db/query/event-query";
 export default async function Home() {
   const event = await getLastActiveEvent()
   return (
-    <div className="h-full">
+    <div className="h-full min-h-screen">
       <div className="relative isolate overflow-hidden h-full">
         {/* Background Image */}
 

@@ -55,21 +55,24 @@ export function EventCard({event, hasFooter = false, joined = false}: Props) {
           ))}
         </div>
       </CardContent>
-      <CardFooter>
-        {hasFooter ?? (
+
+      {hasFooter && (
+        <CardFooter>
           <Link href={`/event/${event.id}/register`}
                 className={`${buttonVariants({variant: "default", size: "lg"})} w-full uppercase`}>
             Register now
           </Link>
-        )}
+        </CardFooter>
+      )}
 
-        {joined ?? (
+      {joined && (
+        <CardFooter>
           <Link href={`/event/${event.id}/`}
                 className={`${buttonVariants({variant: "default", size: "lg"})} w-full uppercase`}>
             See Detail
           </Link>
-        )}
-      </CardFooter>
+        </CardFooter>
+      )}
     </Card>
   )
 }
