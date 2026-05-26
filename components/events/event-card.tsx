@@ -55,15 +55,10 @@ export function EventCard({event, hasFooter = false}: Props) {
         </div>
       </CardContent>
       <CardFooter>
-        {hasFooter ? (
+        {hasFooter ?? (
           <Link href={`/event/${event.id}/register`}
                 className={`${buttonVariants({variant: "default", size: "lg"})} w-full uppercase`}>
             Register now
-          </Link>
-        ) : (
-          <Link href={`/event/${event.id}`}
-                className={`${buttonVariants({variant: "default", size: "lg"})} w-full uppercase`}>
-            See Detail
           </Link>
         )}
       </CardFooter>
