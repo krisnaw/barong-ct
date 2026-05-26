@@ -16,3 +16,11 @@ export function formatBibNumber(bib: number, length = 3): string {
 export function formateDate(inputDate: Date) {
   return toZonedTime(inputDate, 'Asia/Singapore')
 }
+
+export function getInitials(name: string): string {
+  return name
+    .split(' ')
+    .filter(Boolean)
+    .map((word) => word[0]?.toUpperCase() || '')
+    .join('')
+}
