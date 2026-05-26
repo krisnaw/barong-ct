@@ -88,15 +88,16 @@ export function StepGroup({event, userId, categories, groups}: Props) {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          <SelectCategoryField eventId={eventId} categories={categories}/>
+
+          <SelectCategoryField eventId={eventId} categories={categories} groupId={groupId}/>
 
           {categoryId && (
             <div>
               <h2 className="cn-font-heading text-xs font-medium tracking-wider text-muted-foreground uppercase">
-                Group Ride
+                Group Ride Name
               </h2>
               <div className="mt-2">
-                <InputGroupField eventId={event.id} existingGroups={groups}/>
+                <InputGroupField eventId={event.id} existingGroups={groups} groupId={groupId}/>
               </div>
             </div>
           )}

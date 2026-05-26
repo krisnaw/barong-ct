@@ -7,8 +7,7 @@ import {useRouter, useSearchParams} from "next/navigation";
 import {Field, FieldContent, FieldDescription, FieldLabel, FieldTitle} from "@/components/ui/field";
 import {formatMoney} from "@/utils/money-helper";
 
-
-export function SelectCategoryField({eventId, categories}: { eventId: number, categories: EventCategoryType[] }) {
+export function SelectCategoryField({eventId, categories, groupId}: { eventId: number, categories: EventCategoryType[], groupId?: string | null }) {
   const searchParams = useSearchParams();
   const selectedCategory = searchParams.get('category') ?? "";
   const router = useRouter();
@@ -25,9 +24,10 @@ export function SelectCategoryField({eventId, categories}: { eventId: number, ca
         Select category
       </h2>
       <div className="mt-2">
-        <RadioGroup
-          className="grid grid-cols-1 items-start gap-3 md:grid-cols-2 style-sera:grid-cols-1"
-          value={selectedCategory} onValueChange={(value: string) => handleChange(value)}>
+          <RadioGroup
+            disabled={!!groupId}
+            className="grid grid-cols-1 items-start gap-3 md:grid-cols-2 style-sera:grid-cols-1"
+            value={selectedCategory} onValueChange={(value: string) => handleChange(value)}>
           {categories.map((category: EventCategoryType) => (
             <FieldLabel key={category.id} htmlFor={`option-${category.id}`}>
               <Field orientation="horizontal" className="pb-2.5">

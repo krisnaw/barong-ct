@@ -11,12 +11,12 @@ import {Button} from "@/components/ui/button";
 interface Props {
   eventId: number,
   existingGroups: EventGroupType[];
+  groupId?: string | null;
 }
 
-export function InputGroupField({ eventId, existingGroups }: Props) {
+export function InputGroupField({ eventId, existingGroups, groupId }: Props) {
   const router = useRouter()
   const searchParams = useSearchParams();
-  const groupId = searchParams.get('groupId');
   const selectedGroup = groupId ? existingGroups.find((g) => String(g.id) === groupId) : null;
   const groupName = selectedGroup?.name ?? searchParams.get('group') ?? "";
 
@@ -64,10 +64,11 @@ export function InputGroupField({ eventId, existingGroups }: Props) {
           onKeyDown={handleKeyPress}
           onBlur={() => handleOnBlur()}
           placeholder="Enter group name"
+          disabled={!!groupId}
         />
-        <Button onClick={handleCreate} className="gap-2" disabled={groupName.length === 0}>
+        <Button onClick={handleCreate} className="gap-2" disabled={!!groupId || groupName.length === 0}>
           <Plus className="h-4 w-4" />
-          Create
+          Add Group
         </Button>
       </div>
     </div>
