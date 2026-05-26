@@ -6,7 +6,7 @@ export function ListEvent({events}: { events: EventWithDetail[] }) {
   return (
     <div className="flex w-full max-w-lg flex-col gap-6">
       {events.map((event : EventWithDetail) => (
-        <EventCard key={event.id} event={event} />
+        <EventCard key={event.id} event={event} joined={true} />
       ))}
     </div>
   )

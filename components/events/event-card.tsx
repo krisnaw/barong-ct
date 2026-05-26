@@ -13,9 +13,10 @@ import {formatMoney} from "@/utils/money-helper";
 type Props = {
   event: EventWithDetail,
   hasFooter?: boolean
+  joined?: boolean
 }
 
-export function EventCard({event, hasFooter = false}: Props) {
+export function EventCard({event, hasFooter = false, joined = false}: Props) {
   if (!event) return;
   return (
     <Card className="pt-0">
@@ -59,6 +60,13 @@ export function EventCard({event, hasFooter = false}: Props) {
           <Link href={`/event/${event.id}/register`}
                 className={`${buttonVariants({variant: "default", size: "lg"})} w-full uppercase`}>
             Register now
+          </Link>
+        )}
+
+        {joined ?? (
+          <Link href={`/event/${event.id}/`}
+                className={`${buttonVariants({variant: "default", size: "lg"})} w-full uppercase`}>
+            See Detail
           </Link>
         )}
       </CardFooter>
