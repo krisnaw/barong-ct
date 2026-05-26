@@ -37,29 +37,25 @@ export const EventJoinedEmail = ({name, eventName, eventDate, eventTime, meeting
             Great news! You&#39;ve successfully joined <strong>{eventName}</strong>. We&#39;re excited to have you ride with us!
           </Text>
 
-          {(bibNumber || jerseySize) && (
-            <Section className="mb-2">
-              <Row>
-                <Column className="rounded-md bg-gray-100 px-10 py-4">
-                  {bibNumber && (
-                    <Text className="text-[14px] text-gray-700 mb-0">
-                      <strong>Bib Number:</strong> {"#"+String(bibNumber).padStart(3, "0")}
-                    </Text>
-                  )}
-                  {jerseySize && (
-                    <Text className="text-[14px] text-gray-700 mb-0">
-                      <strong>Jersey Size:</strong> {jerseySize}
-                    </Text>
-                  )}
-                </Column>
-              </Row>
-            </Section>
-          )}
-
           <Section>
             <Row className="mb-2">
               <Column className="min-h-28 rounded-md bg-gray-100 px-10 py-6">
 
+                {(bibNumber || jerseySize) && (
+                  <>
+                    {bibNumber && (
+                      <Text className="text-[14px] text-gray-700 mb-0">
+                        <strong>Bib Number:</strong> {"#"+String(bibNumber).padStart(3, "0")}
+                      </Text>
+                    )}
+
+                    {jerseySize && (
+                      <Text className="text-[14px] text-gray-700 mb-0">
+                        <strong>Jersey Size:</strong> {jerseySize}
+                      </Text>
+                    )}
+                  </>
+                )}
                 <Text className="text-[14px] text-gray-700 mb-2">
                   <strong>📅 Date:</strong> {eventDate}
                 </Text>
