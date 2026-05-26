@@ -5,6 +5,12 @@ import {participant} from "@/db/schema/participant-schema";
 import {db} from "@/db/db";
 import {count, desc, eq, getTableColumns} from "drizzle-orm";
 
+export async function getLastActiveEvent() {
+  return db.query.EventSchema.findFirst({
+    orderBy: (desc(EventSchema.createdAt))
+  })
+}
+
 export async function getEvents(): Promise<(EventType & { participantCount: number })[] | []> {
 
   const events = await db
