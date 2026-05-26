@@ -4,7 +4,7 @@ import {getLastActiveEvent} from "@/db/query/event-query";
 export default async function Home() {
   const event = await getLastActiveEvent()
   return (
-    <div className="flex-1 h-[95vh]">
+    <div className="flex-1">
       <div className="relative isolate overflow-hidden h-full">
         {/* Background Image */}
 

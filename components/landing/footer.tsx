@@ -24,9 +24,9 @@ const navigation = [
 
 export default function Footer() {
   return (
-    <footer className="bg-white border-t border-gray-200 fixed w-full z-50 bottom-0">
+    <footer className="border-t border-gray-200 fixed w-full z-50 bottom-0">
       <div className="mx-auto max-w-3xl px-4 md:px-6 lg:px-8 py-4 md:flex md:items-center md:justify-between ">
-        <div className="flex justify-center gap-x-6 md:order-2">
+        <div className="flex justify-center items-center gap-x-6 md:order-2">
           {navigation.map((item) => (
             <a key={item.name} href={item.href} target="_blank">
               <span className="sr-only">{item.name}</span>
@@ -37,7 +37,7 @@ export default function Footer() {
                   alt={item.name}
                   width={139}
                   height={27}
-                  className="h-6 w-auto"
+                  className="h-4 w-auto"
                 />
               ) : (
                 <item.icon aria-hidden="true" className="size-6" />
