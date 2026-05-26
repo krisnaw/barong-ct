@@ -8,7 +8,9 @@ import {Field, FieldLabel} from "@/components/ui/field";
 import {InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput} from "@/components/ui/input-group";
 
 export function InviteItem({eventId, categoryId, groupId, groupName}: { eventId: number, categoryId?: number, groupId: number, groupName: string }) {
-  const baseURL = `${process.env.NEXT_PUBLIC_BASE_URL}/event/${eventId}/register/group`
+  const originURL = `${process.env.NEXT_PUBLIC_BASE_URL}`
+  const baseURL =  originURL + "/event/${eventId}/register/group"
+
   const url = new URL(baseURL);
   url.searchParams.append('groupId', String(groupId));
   url.searchParams.append('category', String(categoryId));

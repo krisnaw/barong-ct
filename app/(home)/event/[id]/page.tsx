@@ -122,94 +122,98 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Participant</CardTitle>
-            </CardHeader>
+          {participant && participant.status === PARTICIPANT_STATUS.COMPLETED && (
+            <>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Participant</CardTitle>
+                </CardHeader>
 
-            <CardContent>
-              <div className="grid w-full grid-cols-1 gap-3 md:grid-cols-3">
-                <Item variant="muted" className="flex-col items-stretch">
-                  <ItemContent className="gap-1">
-                    <ItemDescription
-                      className="text-xs font-medium tracking-wider text-muted-foreground uppercase flex items-center gap-2.5">
-                      <Tickets className="h-4 w-4 text-muted-foreground"/>
-                      BIB NUMBER
-                    </ItemDescription>
-                    <span className="cn-font-heading text-lg font-semibold">
+                <CardContent>
+                  <div className="grid w-full grid-cols-1 gap-3 md:grid-cols-3">
+                    <Item variant="muted" className="flex-col items-stretch">
+                      <ItemContent className="gap-1">
+                        <ItemDescription
+                          className="text-xs font-medium tracking-wider text-muted-foreground uppercase flex items-center gap-2.5">
+                          <Tickets className="h-4 w-4 text-muted-foreground"/>
+                          BIB NUMBER
+                        </ItemDescription>
+                        <span className="cn-font-heading text-lg font-semibold">
                       {participant?.bibNumber ? formatBibNumber(participant?.bibNumber) : "-"}
                     </span>
-                  </ItemContent>
-                </Item>
-                <Item variant="muted" className="flex-col items-stretch">
-                  <ItemContent className="gap-1">
-                    <ItemDescription
-                      className="text-xs font-medium tracking-wider text-muted-foreground uppercase flex items-center gap-2.5">
-                      <Shirt className="h-4 w-4 text-muted-foreground"/>
-                      Jersey Size
-                    </ItemDescription>
-                    <span className="cn-font-heading text-lg font-semibold uppercase">
+                      </ItemContent>
+                    </Item>
+                    <Item variant="muted" className="flex-col items-stretch">
+                      <ItemContent className="gap-1">
+                        <ItemDescription
+                          className="text-xs font-medium tracking-wider text-muted-foreground uppercase flex items-center gap-2.5">
+                          <Shirt className="h-4 w-4 text-muted-foreground"/>
+                          Jersey Size
+                        </ItemDescription>
+                        <span className="cn-font-heading text-lg font-semibold uppercase">
                       {participant?.jerseySize}
                     </span>
-                  </ItemContent>
-                </Item>
-                <Item variant="muted" className="flex-col items-stretch">
-                  <ItemContent className="gap-1">
-                    <ItemDescription
-                      className="text-xs font-medium tracking-wider text-muted-foreground uppercase flex items-center gap-2.5">
-                      <RouteIcon className="h-4 w-4 text-muted-foreground"/>
-                      Category
-                    </ItemDescription>
-                    <span className="cn-font-heading text-lg font-semibold uppercase">
+                      </ItemContent>
+                    </Item>
+                    <Item variant="muted" className="flex-col items-stretch">
+                      <ItemContent className="gap-1">
+                        <ItemDescription
+                          className="text-xs font-medium tracking-wider text-muted-foreground uppercase flex items-center gap-2.5">
+                          <RouteIcon className="h-4 w-4 text-muted-foreground"/>
+                          Category
+                        </ItemDescription>
+                        <span className="cn-font-heading text-lg font-semibold uppercase">
                       {category?.name}
                     </span>
-                  </ItemContent>
-                </Item>
-              </div>
-              {payment && (
-                <Item variant="muted" className="mt-3">
-                  <ItemContent>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="flex flex-col gap-0.5">
+                      </ItemContent>
+                    </Item>
+                  </div>
+                  {payment && (
+                    <Item variant="muted" className="mt-3">
+                      <ItemContent>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="flex flex-col gap-0.5">
                             <span className="text-sm text-muted-foreground">
                               Invoice paid on <EventDate eventDate={payment.updatedAt} type="date"/>
                             </span>
-                        <span className="text-lg font-semibold tabular-nums">
+                            <span className="text-lg font-semibold tabular-nums">
                               {payment.invoiceNumber}
                             </span>
-                      </div>
-                    </div>
+                          </div>
+                        </div>
 
-                  </ItemContent>
-                </Item>
+                      </ItemContent>
+                    </Item>
+                  )}
+                </CardContent>
+              </Card>
+
+              {group && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>
+                      Group Name: {group.name}
+                    </CardTitle>
+                    <CardAction>
+                      {group.participants.length}/5 members
+                    </CardAction>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="flex flex-col space-y-4">
+                      {group.participants.map((participant) => (
+                        <li className="inline-flex items-center gap-2" key={participant.id}>
+                          <Avatar>
+                            <AvatarImage src="https://github.com/shadcn.png"/>
+                            <AvatarFallback>CN</AvatarFallback>
+                          </Avatar>
+                          <p className="font-bold">{participant.user.name}</p>
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
               )}
-            </CardContent>
-          </Card>
-
-          {group && (
-            <Card>
-              <CardHeader>
-                <CardTitle>
-                  Group Name: {group.name}
-                </CardTitle>
-                <CardAction>
-                  {group.participants.length}/5 members
-                </CardAction>
-              </CardHeader>
-              <CardContent>
-                <ul className="flex flex-col space-y-4">
-                  {group.participants.map((participant) => (
-                    <li className="inline-flex items-center gap-2" key={participant.id}>
-                      <Avatar>
-                        <AvatarImage src="https://github.com/shadcn.png"/>
-                        <AvatarFallback>CN</AvatarFallback>
-                      </Avatar>
-                      <p className="font-bold">{participant.user.name}</p>
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
-            </Card>
+            </>
           )}
         </div>
       </div>
