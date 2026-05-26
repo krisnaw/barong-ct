@@ -19,7 +19,7 @@ export function EventCard({event, hasFooter = false}: Props) {
   if (!event) return;
   return (
     <Card className="pt-0">
-      <div className="relative h-56 w-full overflow-hidden shadow">
+      <div className="relative h-56 w-full overflow-hidden">
         <Image
           src={event.feature_image ?? "/empty-banner.png"}
           alt={event.name}
@@ -54,13 +54,19 @@ export function EventCard({event, hasFooter = false}: Props) {
           ))}
         </div>
       </CardContent>
-      {hasFooter && (
-        <CardFooter>
-          <Link href={`/event/${event.id}/register`} className={`${buttonVariants({variant: "default", size: "lg"})} w-full uppercase`}>
+      <CardFooter>
+        {hasFooter ? (
+          <Link href={`/event/${event.id}/register`}
+                className={`${buttonVariants({variant: "default", size: "lg"})} w-full uppercase`}>
             Register now
           </Link>
-        </CardFooter>
-      )}
+        ) : (
+          <Link href={`/event/${event.id}`}
+                className={`${buttonVariants({variant: "default", size: "lg"})} w-full uppercase`}>
+            See Detail
+          </Link>
+        )}
+      </CardFooter>
     </Card>
   )
 }
