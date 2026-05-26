@@ -13,7 +13,7 @@ import {PARTICIPANT_STATUS} from "@/utils/event.helper";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-async function getNextBibNumber(eventId: number): Promise<number> {
+export async function getNextBibNumber(eventId: number): Promise<number> {
   const result = await db
     .select({ max: sql<number>`coalesce(max(${participant.bibNumber}), 0)` })
     .from(participant)

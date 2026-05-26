@@ -73,9 +73,9 @@ export function StepPayment({event, participant, category, promos}: Props) {
 
     // create payment
     let res
-    if (totalPrice == 0) {
+    if (totalPrice == 0 && promoId) {
       // store empty payment and create participant
-      res = await processFreePass({participantId: participant.id})
+      res = await processFreePass({participantId: participant.id, promoId: promoId, discountAmount: discount})
       if (res.success) {
         redirect(`/event/${event.id}`)
       }

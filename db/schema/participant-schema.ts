@@ -74,7 +74,9 @@ export const participantRelations = relations(participant, ({ one }) => ({
 
 export type ParticipantType = typeof participant.$inferSelect
 export type InsertParticipantType = typeof participant.$inferInsert;
-export type UpdateParticipantType = Partial<typeof participant.$inferInsert>;
+export type UpdateParticipantType = Partial<typeof participant.$inferInsert> & {
+  id: typeof participant.$inferInsert.id;
+}
 
 export const participantInsertSchema = createInsertSchema(participant);
 

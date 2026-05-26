@@ -1,44 +1,66 @@
 "use server"
 
 import {ActionResponse} from "@/types/types";
-import {redirect} from "next/navigation";
 import {db} from "@/db/db";
-import {eventPayment, EventPaymentInsert} from "@/db/schema";
-import {updateOrderStatus} from "@/service/order.service";
+import {eventPayment, EventPaymentInsert, UpdateParticipantType} from "@/db/schema";
 import {PARTICIPANT_STATUS, PAYMENT_STATUS} from "@/utils/event.helper";
 import {getParticipantById} from "@/db/query/participant-query";
+import {updateParticipant} from "@/app/actions/event-participant/event-participant.action";
+import {getPromoById} from "@/db/query/event-promo.query";
+import {getNextBibNumber} from "@/service/participant.service";
 
-export async function processFreePass(payload: { participantId: number }) : Promise<ActionResponse> {
+export async function processFreePass(payload: { participantId: number, promoId: number, discountAmount: number }) : Promise<ActionResponse> {
   const participant = await getParticipantById(payload.participantId)
+  const promo = await getPromoById(payload.promoId)
   const invoiceNumber = generateInvoiceNumber();
-  if (!participant) {
-    redirect('/')
+  if (!participant || !promo) {
+    return {
+      success: false,
+      message: "Sorry, something wrong please try again later"
+    }
   }
 
-  // create empty payment
-  const paymentPayload : EventPaymentInsert = {
-    participantId: participant.id,
-    invoiceNumber: invoiceNumber,
-    price: 0,
-    currency: 'IDR',
-    paymentURL: "",
-    expiresAt: new Date(),
-    status: PAYMENT_STATUS.SUCCESS
+  const bibNumber = await getNextBibNumber(promo.eventId)
+  if (bibNumber) {
+    // create empty payment
+    const paymentPayload : EventPaymentInsert = {
+      participantId: participant.id,
+      invoiceNumber: invoiceNumber,
+      price: 0,
+      currency: 'IDR',
+      paymentURL: "",
+      expiresAt: new Date(),
+      status: PAYMENT_STATUS.SUCCESS
+    }
+    await db.insert(eventPayment)
+      .values(paymentPayload)
+      .returning();
+
+    const updateParticipantPayload : UpdateParticipantType = {
+      id: participant.id,
+      status: PARTICIPANT_STATUS.COMPLETED,
+      price: 0,
+      serviceFee: 0,
+      finalPrice: 0,
+      promoId: promo.id,
+      discountAmount: payload.discountAmount,
+      promoCode: promo.promo,
+      bibNumber: bibNumber
+    }
+
+    await updateParticipant(updateParticipantPayload)
+
+    return {
+      success: true,
+      message: "Success, you have been registered."
+    }
   }
-  await db.insert(eventPayment)
-    .values(paymentPayload)
-    .returning();
-
-  // create participant
-  // await createParticipant(participant.eventId, participant.userId)
-
-  // set participant as complete
-  await updateOrderStatus(participant.id, PARTICIPANT_STATUS.COMPLETED)
 
   return {
-    success: true,
-    message: "Success, you have been registered."
+    success: false,
+    message: "Sorry, something wrong please try again later"
   }
+
 }
 
 

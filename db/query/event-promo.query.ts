@@ -9,3 +9,9 @@ export async function getPromoByEvent(eventId: number) {
     where: eq(eventPromoSchema.eventId, eventId),
   });
 }
+
+export async function getPromoById(id: number) {
+  return db.query.eventPromoSchema.findFirst({
+    where: eq(eventPromoSchema.id, id),
+  });
+}
