@@ -18,7 +18,7 @@ export function InputGroupField({ eventId, existingGroups, groupId }: Props) {
   const router = useRouter()
   const searchParams = useSearchParams();
   const selectedGroup = groupId ? existingGroups.find((g) => String(g.id) === groupId) : null;
-  const [groupName, setGroupName] = useState<string>("")
+  const [groupName, setGroupName] = useState<string>(searchParams.get("group") ?? "")
   const [error, setError] = useState('');
 
   const handleChange = (value: string) => {

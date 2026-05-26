@@ -1,9 +1,10 @@
 import {EventType} from "@/db/schema";
 import * as React from "react";
-import {EventCard} from "@/components/events/event-card";
 
-export function ListItemEvent({event}: { event: EventType & { participantCount?: number } }) {
+export function ListItemEvent({event}: { event: EventType[]}) {
   return (
-    <EventCard event={event} />
+    <div>
+      Fix this
+    </div>
   )
 }

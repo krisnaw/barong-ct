@@ -11,14 +11,14 @@ import {Spinner} from "@/components/ui/spinner";
 import {toast} from "sonner";
 
 export function SignupForm({
-  className,
+  className, refURL,
   ...props
-}: React.ComponentProps<"div">) {
+}: React.ComponentProps<"div"> & {refURL?: string}) {
 
   const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(async (prevState: ActionResponse, formData: FormData) => {
 
     const email = formData.get("email") as string;
-    const res = await SignUpAction(email);
+    const res = await SignUpAction(email, refURL ?? undefined);
     toast.info(res.message)
 
     return res;
@@ -53,6 +53,7 @@ export function SignupForm({
               id="email"
               type="email"
               name="email"
+              autoComplete="email"
               placeholder="m@example.com"
               required
             />

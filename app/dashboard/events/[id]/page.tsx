@@ -5,7 +5,6 @@ import {CalendarIcon, MapPin} from "lucide-react";
 import {EventDate} from "@/components/events/event-date";
 import Link from "next/link";
 import {ButtonDownloadParticipant} from "@/components/button/button-download-participant";
-import {getCategoryByEvent} from "@/db/query/event-category.query";
 import {ListCategory} from "@/components/category/list-category";
 import {ListPromo} from "@/components/promo/list-promo";
 import {getPromoByEvent} from "@/db/query/event-promo.query";
@@ -21,8 +20,6 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
   if (!event) {
     redirect('/dashboard/events');
   }
-
-  const categories = await getCategoryByEvent(id)
 
   const promos = await getPromoByEvent(id)
 
@@ -118,7 +115,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
             </CardAction>
           </CardHeader>
           <CardContent>
-            <ListCategory categories={categories}/>
+            <ListCategory categories={event.categories}/>
           </CardContent>
         </Card>
 

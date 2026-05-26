@@ -20,6 +20,7 @@ import {getCategoryById} from "@/db/query/event-category.query";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {EventCardDetail} from "@/components/events/event-card-detail";
 import {InviteItem} from "@/app/(home)/event/[id]/invite-item";
+import {EventCard} from "@/components/events/event-card";
 
 export default async function Page({params}: { params: Promise<{ id: number }> }) {
 
@@ -36,7 +37,13 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
   })
 
   if (!session) {
-    redirect('/auth/signup')
+    return (
+      <div className="bg-slate-50 pt-18 min-h-screen">
+        <div className="mx-auto max-w-3xl px-4 md:px-6 lg:px-8 pt-10 pb-24">
+          <EventCard event={event} hasFooter={true} />
+        </div>
+      </div>
+    )
   }
 
   const participant = await getOnGoingParticipant(id, session.user.id);
@@ -72,7 +79,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <EventCardDetail event={event}  />
+              <EventCardDetail event={event}/>
             </CardContent>
           </Card>
 
@@ -214,7 +221,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
                   </CardContent>
                   {category && (
                     <CardFooter>
-                      <InviteItem eventId={id} categoryId={category.id} groupId={group.id} groupName={group.name} />
+                      <InviteItem eventId={id} categoryId={category.id} groupId={group.id} groupName={group.name}/>
                     </CardFooter>
                   )}
                 </Card>
