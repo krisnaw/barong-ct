@@ -85,9 +85,9 @@ export function EditCategory({category}: { category: EventCategoryType }) {
                   id="price"
                   type="number"
                   name="price"
-                  step="0.01"
+                  step="1"
                   min="0"
-                  defaultValue={category.price ?? "1450000"}
+                  defaultValue={category.price ?? "129000"}
                   placeholder="0.00"
                 />
               </Field>
@@ -142,7 +142,7 @@ export function EditCategory({category}: { category: EventCategoryType }) {
             {isPending ? <Spinner/> : null}
             Save changes
           </Button>
-          <SheetClose render={<Button variant="outline">Close</Button>}/>
+          <SheetClose render={<Button variant="outline">Cancel</Button>}/>
         </SheetFooter>
       </SheetContent>
     </Sheet>

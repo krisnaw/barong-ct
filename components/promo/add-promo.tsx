@@ -116,7 +116,7 @@ export function AddPromo({eventId}: { eventId: number }) {
                 </Field>
               ) : (
                 <Field>
-                  <FieldLabel htmlFor="discountValue">Discount Percentage {discountValue}</FieldLabel>
+                  <FieldLabel htmlFor="discountValue">Discount Percentage { discountValue }%</FieldLabel>
                   <Slider
                     name="discountValue"
                     max={100}

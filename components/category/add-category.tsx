@@ -83,7 +83,7 @@ export function AddCategory({eventId}: { eventId: number }) {
                     id="price"
                     type="number"
                     name="price"
-                    step="10000"
+                    step="1"
                     min="0"
                     placeholder="1450000"
                   />
@@ -140,7 +140,7 @@ export function AddCategory({eventId}: { eventId: number }) {
             {isPending ? <Spinner/> : null}
             Save
           </Button>
-          <SheetClose render={<Button variant="outline">Close</Button>}/>
+          <SheetClose render={<Button variant="outline">Cancel</Button>}/>
         </SheetFooter>
       </SheetContent>
     </Sheet>

@@ -1,5 +1,6 @@
 'use client'
 
+import * as React from "react";
 import {useActionState, useState} from "react";
 import {
   Sheet,
@@ -31,6 +32,7 @@ export function EditPromo({promo}: { promo: PromoType }) {
   const [_, formAction, isPending] = useActionState<ActionResponse, FormData>(
     async (_: ActionResponse, formData: FormData) => {
 
+      const status = formData.get("status") as string == "true";
       const payload : UpdatePromoType = {
         id: promo.id,
         startsAt: new Date(`${formData.get("startsAt") as string}`),
@@ -39,7 +41,7 @@ export function EditPromo({promo}: { promo: PromoType }) {
         promo: formData.get("promo") as string,
         discountValue: Number(formData.get("discountValue") as string),
         discountType: formData.get("discountType") as string,
-        isActive: true,
+        isActive: status,
       }
 
       const res =  await updatePromo(payload)
@@ -121,7 +123,7 @@ export function EditPromo({promo}: { promo: PromoType }) {
                 </Field>
               ) : (
                 <Field>
-                  <FieldLabel htmlFor="discountValue">Discount Percentage { discountValue } </FieldLabel>
+                  <FieldLabel htmlFor="discountValue">Discount Percentage { discountValue }% </FieldLabel>
                   <Slider
                     name="discountValue"
                     max={100}
@@ -156,13 +158,16 @@ export function EditPromo({promo}: { promo: PromoType }) {
 
               <Field>
                 <FieldLabel htmlFor="isActive">Status</FieldLabel>
-                <Select name="isActive" defaultValue={promo.isActive ? "active" : "inactive"}>
+                <Select name="status" items={items} defaultValue={`${String(promo.isActive)}`}>
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select status"/>
+                    <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="active">Active</SelectItem>
-                    <SelectItem value="inactive">Inactive</SelectItem>
+                    {items.map((item) => (
+                      <SelectItem key={item.value} value={item.value}>
+                        {item.label}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 <FieldDescription>
@@ -184,3 +189,8 @@ export function EditPromo({promo}: { promo: PromoType }) {
     </Sheet>
   )
 }
+
+const items = [
+  { label: "Active", value: "true" },
+  { label: "Inactive", value: "false" },
+]
