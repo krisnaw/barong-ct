@@ -36,7 +36,7 @@ export default async function ProfilePage() {
           <TabsContent value="account" className="pt-6">
             <ProfileForm user={userDetail} />
           </TabsContent>
-          <TabsContent value="joined-events" className="">
+          <TabsContent value="joined-events" className="pt-6">
             {joinedEvents.length > 0 ? (
               <ListEvent events={joinedEvents} />
             ) : (
