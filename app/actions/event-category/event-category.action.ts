@@ -2,15 +2,13 @@
 
 import {revalidatePath} from "next/cache";
 import {db} from "@/db/db";
-import {eventCategory, EventCategoryInsertSchema, EventCategoryUpdateSchema} from "@/db/schema";
+import {eventCategory, EventCategoryInsertSchema, EventCategoryUpdateSchema, InsertCategoryType} from "@/db/schema";
 import {z} from "zod";
 import {eq} from "drizzle-orm";
 import {ActionResponse} from "@/types/types";
 import {getParticipantByCategory} from "@/db/query/participant-query";
 
-export type EventCategoryType = z.infer<typeof EventCategoryInsertSchema>;
-
-export async function createCategoryAction(formData: EventCategoryType)  {
+export async function createCategoryAction(formData: InsertCategoryType)  {
   const validate = EventCategoryInsertSchema.safeParse(formData);
 
   if (!validate.success) {
@@ -21,6 +19,8 @@ export async function createCategoryAction(formData: EventCategoryType)  {
       fields: validate.data,
     }
   }
+
+  console.log(validate.data)
 
   try {
     await db.insert(eventCategory).values(validate.data).returning()

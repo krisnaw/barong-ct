@@ -13,6 +13,7 @@ export async function ListCategory({categories} : {categories: EventCategoryType
             <TableHead className="w-[100px]">Name</TableHead>
             <TableHead>Desc</TableHead>
             <TableHead>Price</TableHead>
+            <TableHead>Fee</TableHead>
             <TableHead className="text-right">Action</TableHead>
           </TableRow>
         </TableHeader>
@@ -24,6 +25,7 @@ export async function ListCategory({categories} : {categories: EventCategoryType
                 {category.description}
               </TableCell>
               <TableCell>{category.price ? formatMoney(category.price) : 0}</TableCell>
+              <TableCell>{category.serviceFee ? formatMoney(category.serviceFee) : 0}</TableCell>
               <TableCell className="text-right">
                 <EditCategory category={category} />
                 <DeleteCategory category={category} />

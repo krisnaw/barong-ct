@@ -22,6 +22,10 @@ export const eventCategory = pgTable("event_category", {
 });
 
 export type EventCategoryType = typeof eventCategory.$inferSelect
+export type InsertCategoryType = typeof eventCategory.$inferInsert
+export type UpdateCategoryType = Partial<typeof eventCategory.$inferInsert>;
+
+
 export const EventCategoryInsertSchema = createInsertSchema(eventCategory);
 export const EventCategoryUpdateSchema = createUpdateSchema(eventCategory).omit({
   eventId: true

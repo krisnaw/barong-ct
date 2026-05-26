@@ -20,19 +20,20 @@ import {Input} from "@/components/ui/input";
 import {Textarea} from "@/components/ui/textarea";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {Spinner} from "@/components/ui/spinner";
+import {InsertCategoryType} from "@/db/schema";
 
 export function AddCategory({eventId}: { eventId: number }) {
   const [open, setOpen] = useState(false)
 
   const [_, formAction, isPending] = useActionState(async (_: ActionResponse, formData: FormData) => {
 
-    const payload = {
+    const payload : InsertCategoryType = {
       eventId: Number(eventId),
       name: formData.get("name") as string,
       description: formData.get("description") as string,
       price: Number(formData.get("price") as string),
       currency: formData.get("currency") as string,
-      service_fee: formData.get("service_fee") as string,
+      serviceFee: Number(formData.get("serviceFee") as string) ,
     }
 
     const res = await createCategoryAction(payload)
@@ -110,7 +111,7 @@ export function AddCategory({eventId}: { eventId: number }) {
                     id="serviceFee"
                     type="number"
                     name="serviceFee"
-                    step="5000"
+                    step="1"
                     min="0"
                     placeholder="15000"
                   />

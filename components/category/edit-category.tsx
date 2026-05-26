@@ -12,7 +12,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
-import {EventCategoryType} from "@/db/schema";
+import {EventCategoryType, UpdateCategoryType} from "@/db/schema";
 import * as React from "react";
 import {useActionState, useState} from "react";
 import {ActionResponse, initialState} from "@/types/types";
@@ -28,14 +28,14 @@ export function EditCategory({category}: { category: EventCategoryType }) {
   const [open, setOpen] = useState(false)
   const [_, formAction, isPending] = useActionState(async (_: ActionResponse, formData: FormData) => {
 
-    const payload = {
+    const payload : UpdateCategoryType = {
       id: category.id,
       eventId: category.eventId,
       name: formData.get("name") as string,
       description: formData.get("description") as string,
       price: Number(formData.get("price") as string),
       currency: formData.get("currency") as string,
-      service_fee: formData.get("service_fee") as string,
+      serviceFee: Number(formData.get("serviceFee") as string),
     }
 
     const res = await updateCategoryAction(payload)
