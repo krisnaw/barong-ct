@@ -27,6 +27,7 @@ export async function getEventById(id: number) {
 }
 
 export type EventWithDetail = Awaited<ReturnType<typeof getEventById>>
+
 export type EventList = Awaited<ReturnType<typeof getEvents>>
 export type EventLastActive = Awaited<ReturnType<typeof getLastActiveEvent>>
 export type EventByUser = Awaited<ReturnType<typeof getEventsByUserId>>

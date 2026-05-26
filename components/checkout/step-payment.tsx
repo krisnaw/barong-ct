@@ -21,7 +21,7 @@ import {PARTICIPANT_STATUS} from "@/utils/event.helper";
 import {updateParticipant} from "@/app/actions/event-participant/event-participant.action";
 
 interface Props {
-  event: EventType & { participantCount: number },
+  event: EventType
   participant: ParticipantType,
   category: EventCategoryType,
   promos: PromoType[] | null

@@ -13,7 +13,6 @@ export default async function EventsPage() {
   if (events.length === 0) {
     return (
       <>
-
         <Empty>
           <EmptyHeader>
             <EmptyMedia variant="icon">
@@ -54,7 +53,6 @@ export default async function EventsPage() {
           <TableRow>
             <TableHead>Name</TableHead>
             <TableHead>Date time</TableHead>
-            <TableHead>Participants</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -73,15 +71,11 @@ export default async function EventsPage() {
                 </div>
               </TableCell>
               <TableCell>
-                {event.participantCount}
-              </TableCell>
-              <TableCell>
                 <Link href={`/dashboard/events/${event.id}`}>
                   <Button variant="outline" size="sm" className="mr-2">
                     View
                   </Button>
                 </Link>
-
                 <Link href={`/dashboard/events/${event.id}/edit`}>
                   <Button variant="outline" size="sm">
                     Edit
