@@ -3,7 +3,6 @@ import {redirect} from "next/navigation";
 import {auth} from "@/lib/auth";
 import {headers} from "next/headers";
 import * as React from "react";
-import Image from "next/image";
 import {Card, CardAction, CardContent, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import Link from "next/link";
 import {buttonVariants} from "@/components/ui/button";
@@ -18,7 +17,6 @@ import {formatBibNumber} from "@/utils/money-helper";
 import {CheckCircleIcon, RouteIcon, Shirt, Tickets} from "lucide-react";
 import {getCategoryById} from "@/db/query/event-category.query";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
-import {EventCardDetail} from "@/components/events/event-card-detail";
 import {InviteItem} from "@/app/(home)/event/[id]/invite-item";
 import {EventCard} from "@/components/events/event-card";
 
@@ -61,27 +59,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
       <div className="mx-auto max-w-3xl px-4 md:px-6 lg:px-8 pt-10 pb-24">
         <div className="space-y-4">
 
-          <Card className="pt-0">
-            <div className="relative h-56 w-full overflow-hidden shadow">
-              <Image
-                src={event.feature_image ?? "/empty-banner.png"}
-                alt={event.name}
-                fill
-                className="object-cover"
-              />
-            </div>
-
-            <CardHeader className="mt-2">
-              <CardTitle>
-                <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight text-balance">
-                  {event.name}
-                </h1>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <EventCardDetail event={event}/>
-            </CardContent>
-          </Card>
+          <EventCard event={event} hasFooter={false} />
 
           <Card>
             <CardHeader>
