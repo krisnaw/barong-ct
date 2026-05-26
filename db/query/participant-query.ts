@@ -3,7 +3,7 @@
 import {db} from "@/db/db";
 import {and, eq, getTableColumns, isNull, sum} from "drizzle-orm";
 import {participant, user, userDetail} from "@/db/schema";
-import {ORDER_STATUS} from "@/utils/event.helper";
+import {PARTICIPANT_STATUS} from "@/utils/event.helper";
 
 export async function getOnGoingParticipant(eventId: number, userId: string) {
   return db.query.participant.findFirst({
@@ -33,7 +33,7 @@ export async function checkParticipantByEvent(eventId: number, userId: string): 
 
 export async function getParticipantByEvent(eventId: number, sortByName: boolean = false) {
   return db.query.participant.findMany({
-    where: and(eq(participant.eventId, eventId), eq(participant.status, ORDER_STATUS.COMPLETED)),
+    where: and(eq(participant.eventId, eventId), eq(participant.status, PARTICIPANT_STATUS.COMPLETED)),
     with: {
       user: {
         columns: {
@@ -90,7 +90,7 @@ export async function getTotalRevenue(eventId: number) {
     .where(
       and(
         eq(participant.eventId, eventId),
-        eq(participant.status, ORDER_STATUS.COMPLETED),
+        eq(participant.status, PARTICIPANT_STATUS.COMPLETED),
       )
     );
   return result[0]?.totalRevenue ?? 0;

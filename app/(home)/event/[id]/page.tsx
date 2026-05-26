@@ -4,19 +4,22 @@ import {auth} from "@/lib/auth";
 import {headers} from "next/headers";
 import * as React from "react";
 import Image from "next/image";
-import {Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
+import {Card, CardAction, CardContent, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import Link from "next/link";
 import {buttonVariants} from "@/components/ui/button";
 import {PARTICIPANT_STATUS} from "@/utils/event.helper";
-import {Item, ItemContent} from "@/components/ui/item";
+import {Item, ItemContent, ItemDescription} from "@/components/ui/item";
 import {Badge} from "@/components/ui/badge";
 import {getOnGoingParticipant} from "@/db/query/participant-query";
 import {EventDate} from "@/components/events/event-date";
 import {getGroupById} from "@/db/query/event-group.query";
-import {InviteItem} from "@/app/(home)/event/[id]/invite-item";
 import {getPaymentByParticipant} from "@/db/query/event-payment.query";
 import {formatBibNumber} from "@/utils/money-helper";
+import {CheckCircleIcon, RouteIcon, Shirt, Tickets} from "lucide-react";
+import {getCategoryById} from "@/db/query/event-category.query";
+import {InviteItem} from "@/app/(home)/event/[id]/invite-item";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
+import {EventCardDetail} from "@/components/events/event-card-detail";
 
 export default async function Page({params}: { params: Promise<{ id: number }> }) {
 
@@ -37,26 +40,41 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
   }
 
   const participant = await getOnGoingParticipant(id, session.user.id);
-  let payment, group = undefined
+  let payment, group, category = undefined
   if (participant) {
-    [payment, group] = await Promise.all([
+    [payment, group, category] = await Promise.all([
       getPaymentByParticipant(participant.id),
-      getGroupById(participant.groupId!)
+      getGroupById(participant.groupId!),
+      getCategoryById(participant.categoryId!),
     ]);
   }
 
   return (
-    <div className="bg-slate-50 min-h-screen">
-      <div className="relative isolate overflow-hidden h-[50vh]">
-        <Image
-          src={event.feature_image ?? "/empty-banner.png"}
-          alt={event.name}
-          fill
-          className="object-cover"
-        />
-      </div>
+    <div className="bg-slate-50 pt-18">
       <div className="mx-auto max-w-3xl px-4 md:px-6 lg:px-8 pt-10 pb-24">
         <div className="space-y-4">
+
+          <Card className="pt-0">
+            <div className="relative h-56 w-full overflow-hidden shadow">
+              <Image
+                src={event.feature_image ?? "/empty-banner.png"}
+                alt={event.name}
+                fill
+                className="object-cover"
+              />
+            </div>
+
+            <CardHeader className="mt-2">
+              <CardTitle>
+                <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight text-balance">
+                  {event.name}
+                </h1>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <EventCardDetail event={event}  />
+            </CardContent>
+          </Card>
 
           <Card>
             <CardHeader>
@@ -80,7 +98,16 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
                     </div>
                   ) : (
                     <div>
-                      Regis Complete
+                      <div className="rounded-md bg-green-50 p-4">
+                        <div className="flex">
+                          <div className="shrink-0">
+                            <CheckCircleIcon aria-hidden="true" className="size-5 text-green-400"/>
+                          </div>
+                          <div className="ml-3">
+                            <p className="text-sm font-medium text-green-800">Registration confirmed.</p>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   )}
                 </>
@@ -96,126 +123,98 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
             </CardContent>
           </Card>
 
-          {participant && participant.status == PARTICIPANT_STATUS.COMPLETED && (
-            <>
-              {participant ? (
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Participant</CardTitle>
-                    <CardAction>
-                      <Badge
-                        className="bg-green-50 text-green-700 uppercase inset-ring inset-ring-green-600/20">{participant.status}</Badge>
-                    </CardAction>
-                  </CardHeader>
-                  <CardContent>
+          <Card>
+            <CardHeader>
+              <CardTitle>Participant</CardTitle>
+            </CardHeader>
 
-                    <Item variant="muted">
-                      <ItemContent>
-                        <div className="grid grid-cols-2 gap-4">
-                          <div className="flex flex-col gap-0.5">
-                            <span className="text-sm text-muted-foreground">
-                              BIB NUMBER
-                            </span>
-                            <span className="text-lg font-semibold tabular-nums">
-                              {formatBibNumber(participant.bibNumber!)}
-                            </span>
-                          </div>
-                          <div className="flex flex-col gap-0.5">
-                            <span className="text-sm text-muted-foreground uppercase">
-                              Jersey Size
-                            </span>
-                            <span className="text-lg font-semibold tabular-nums capitalize">
-                              {participant.jerseySize}
-                            </span>
-                          </div>
-                        </div>
-                      </ItemContent>
-                    </Item>
-
-                  </CardContent>
-                </Card>
-              ) : null}
-
-              {payment ? (
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Payment</CardTitle>
-                    <CardAction>
-                      <Badge className="bg-green-50 text-green-700 uppercase inset-ring inset-ring-green-600/20">{payment.status}</Badge>
-                    </CardAction>
-                  </CardHeader>
-                  <CardContent>
-                    <Item variant="muted">
-                      <ItemContent>
-                        <div className="grid grid-cols-2 gap-4">
-                          <div className="flex flex-col gap-0.5">
+            <CardContent>
+              <div className="grid w-full grid-cols-1 gap-3 md:grid-cols-3">
+                <Item variant="muted" className="flex-col items-stretch">
+                  <ItemContent className="gap-1">
+                    <ItemDescription
+                      className="text-xs font-medium tracking-wider text-muted-foreground uppercase flex items-center gap-2.5">
+                      <Tickets className="h-4 w-4 text-muted-foreground"/>
+                      BIB NUMBER
+                    </ItemDescription>
+                    <span className="cn-font-heading text-lg font-semibold">
+                      {participant?.bibNumber ? formatBibNumber(participant?.bibNumber) : "-"}
+                    </span>
+                  </ItemContent>
+                </Item>
+                <Item variant="muted" className="flex-col items-stretch">
+                  <ItemContent className="gap-1">
+                    <ItemDescription
+                      className="text-xs font-medium tracking-wider text-muted-foreground uppercase flex items-center gap-2.5">
+                      <Shirt className="h-4 w-4 text-muted-foreground"/>
+                      Jersey Size
+                    </ItemDescription>
+                    <span className="cn-font-heading text-lg font-semibold uppercase">
+                      {participant?.jerseySize}
+                    </span>
+                  </ItemContent>
+                </Item>
+                <Item variant="muted" className="flex-col items-stretch">
+                  <ItemContent className="gap-1">
+                    <ItemDescription
+                      className="text-xs font-medium tracking-wider text-muted-foreground uppercase flex items-center gap-2.5">
+                      <RouteIcon className="h-4 w-4 text-muted-foreground"/>
+                      Category
+                    </ItemDescription>
+                    <span className="cn-font-heading text-lg font-semibold uppercase">
+                      {category?.name}
+                    </span>
+                  </ItemContent>
+                </Item>
+              </div>
+              {payment && (
+                <Item variant="muted" className="mt-3">
+                  <ItemContent>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="flex flex-col gap-0.5">
                             <span className="text-sm text-muted-foreground">
                               Invoice paid on <EventDate eventDate={payment.updatedAt} type="date"/>
                             </span>
-                            <span className="text-lg font-semibold tabular-nums">
+                        <span className="text-lg font-semibold tabular-nums">
                               {payment.invoiceNumber}
                             </span>
-                          </div>
-                        </div>
+                      </div>
+                    </div>
 
-                      </ItemContent>
-                    </Item>
-
-                  </CardContent>
-                </Card>
-              ) : null}
-
-              {group && (
-                <Card>
-                  <CardHeader>
-                    <CardTitle>
-                      Group Name: {group.name}
-                    </CardTitle>
-                    <CardAction>
-                      {group.participants.length}/5 members
-                    </CardAction>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className="flex flex-col space-y-4">
-                      {group.participants.map((participant) => (
-                        <li className="inline-flex items-center gap-2" key={participant.id}>
-                          <Avatar>
-                            <AvatarImage src="https://github.com/shadcn.png"/>
-                            <AvatarFallback>CN</AvatarFallback>
-                          </Avatar>
-                          <p className="font-bold">{participant.user.name}</p>
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                  {participant.categoryId && participant.groupId && (
-                    <CardFooter>
-                      <InviteItem eventId={event.id} categoryId={participant.categoryId} groupId={group.id} groupName={group.name} />
-                    </CardFooter>
-                  )}
-                </Card>
+                  </ItemContent>
+                </Item>
               )}
-            </>
-          )}
+            </CardContent>
+          </Card>
 
-          {event.locationLink && (
+          {group && (
             <Card>
               <CardHeader>
                 <CardTitle>
-                  {event.locationName}
+                  Group Name: {group.name}
                 </CardTitle>
-                <CardDescription>
-                  Avenida Escazú, Edificio AE205, San José Province, Escazu, 10201, Costa Rica
-                </CardDescription>
+                <CardAction>
+                  {group.participants.length}/5 members
+                </CardAction>
               </CardHeader>
               <CardContent>
-                <div className="w-full overflow-hidden">
-                  <iframe
-                    src={event.locationLink}
-                    width="470" height="450" style={{border: 0}} allowFullScreen={false} loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"></iframe>
-                </div>
+                <ul className="flex flex-col space-y-4">
+                  {group.participants.map((participant) => (
+                    <li className="inline-flex items-center gap-2" key={participant.id}>
+                      <Avatar>
+                        <AvatarImage src="https://github.com/shadcn.png"/>
+                        <AvatarFallback>CN</AvatarFallback>
+                      </Avatar>
+                      <p className="font-bold">{participant.user.name}</p>
+                    </li>
+                  ))}
+                </ul>
               </CardContent>
+              {group.participants.length > 0 && group.participants.length < 5 && (
+                <CardFooter>
+                  <InviteItem eventId={event.id} categoryId={category?.id} groupId={group.id} groupName={group.name}/>
+                </CardFooter>
+              )}
             </Card>
           )}
         </div>

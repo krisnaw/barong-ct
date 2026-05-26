@@ -1,10 +1,3 @@
-export const ORDER_STATUS = {
-  DRAFT: "draft",
-  PROFILE: "profile",
-  PENDING_PAYMENT: "payment",
-  COMPLETED: "completed",
-} as const;
-
 export const PARTICIPANT_STATUS = {
   DRAFT: "draft",
   PROFILE: "profile",

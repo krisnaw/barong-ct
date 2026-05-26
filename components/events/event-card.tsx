@@ -1,12 +1,10 @@
 import * as React from "react";
 import {EventType} from "@/db/schema";
-import {EventDate} from "@/components/events/event-date";
 import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import Image from "next/image";
-import {Item, ItemContent} from "@/components/ui/item";
-import {Separator} from "@/components/ui/separator";
 import {buttonVariants} from "@/components/ui/button";
 import Link from "next/link";
+import {EventCardDetail} from "@/components/events/event-card-detail";
 
 type Props = {
   event: EventType,
@@ -33,29 +31,7 @@ export function EventCard({event}: Props) {
       </CardHeader>
 
       <CardContent>
-
-        <Item variant="muted" className="flex-col items-stretch">
-          <ItemContent className="gap-3">
-            <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">
-                  Dates
-                </span>
-              <span className="text-sm font-medium">
-                 <EventDate eventDate={event.startDate} type="date"/>
-              </span>
-            </div>
-            <Separator/>
-            <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">
-                  Venue
-                </span>
-              <span className="text-sm font-medium tabular-nums">
-                {event.locationName}
-              </span>
-            </div>
-          </ItemContent>
-        </Item>
-
+        <EventCardDetail event={event} />
       </CardContent>
       <CardFooter>
         <Link href={`/event/${event.id}`} prefetch={true}
