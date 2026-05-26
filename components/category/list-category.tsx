@@ -10,7 +10,7 @@ export async function ListCategory({categories} : {categories: EventCategoryType
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px]">Name</TableHead>
+            <TableHead className="w-25">Name</TableHead>
             <TableHead>Desc</TableHead>
             <TableHead>Price</TableHead>
             <TableHead>Fee</TableHead>
