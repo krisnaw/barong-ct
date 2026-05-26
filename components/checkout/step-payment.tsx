@@ -32,13 +32,13 @@ const methods = [
     formID: 'pm-bni-va',
     value: ["VIRTUAL_ACCOUNT_BNI"],
     label: "BNI Virtual Account",
-    description: "20% OFF WITH BNI VA",
+    description: "Pay with BNI VA",
   },
   {
     formID: 'pm-qris-cc',
     value: ["QRIS", "CREDIT_CARD"],
     label: "QRIS / CREDIT CARD",
-    description: "Pay using QRIS or Credit Card",
+    description: "Pay with QRIS or Credit Card",
   },
 ]
 
@@ -159,17 +159,27 @@ export function StepPayment({event, participant, category, promos}: Props) {
                   className="grid grid-cols-1 items-start gap-3 md:grid-cols-2 style-sera:grid-cols-1"
                 >
 
-                  {methods.map((item) => (
-                    <FieldLabel htmlFor={item.formID} key={item.formID}>
-                      <Field orientation="horizontal" className="pb-2.5">
-                        <RadioGroupItem value={item.value} id={item.formID}/>
-                        <FieldContent>
-                          <FieldTitle>{item.label}</FieldTitle>
-                          <FieldDescription>{item.description}</FieldDescription>
-                        </FieldContent>
-                      </Field>
-                    </FieldLabel>
-                  ))}
+                  {methods.map((item) => {
+                    const matchedPromo = promos?.find(p =>
+                      p.promo.toLowerCase() === item.value[0].toLowerCase()
+                    );
+                    const hasBniPromo = item.value.includes('VIRTUAL_ACCOUNT_BNI') && matchedPromo?.discountType === 'percentage';
+                    const description = hasBniPromo
+                      ? `${matchedPromo!.discountValue}% OFF WITH BNI VA`
+                      : item.description;
+
+                    return (
+                      <FieldLabel htmlFor={item.formID} key={item.formID}>
+                        <Field orientation="horizontal" className="pb-2.5">
+                          <RadioGroupItem value={item.value} id={item.formID}/>
+                          <FieldContent>
+                            <FieldTitle>{item.label}</FieldTitle>
+                            <FieldDescription>{description}</FieldDescription>
+                          </FieldContent>
+                        </Field>
+                      </FieldLabel>
+                    );
+                  })}
                 </RadioGroup>
               </div>
             </div>
