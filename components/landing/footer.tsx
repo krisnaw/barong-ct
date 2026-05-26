@@ -24,7 +24,7 @@ const navigation = [
 
 export default function Footer() {
   return (
-    <footer className="border-t border-gray-200 fixed w-full z-50 bottom-0">
+    <footer className="border-t border-gray-200">
       <div className="mx-auto max-w-3xl px-4 md:px-6 lg:px-8 py-4 md:flex md:items-center md:justify-between ">
         <div className="flex justify-center items-center gap-x-6 md:order-2">
           {navigation.map((item) => (
@@ -46,7 +46,7 @@ export default function Footer() {
             </a>
           ))}
         </div>
-        <p className="mt-8 text-center text-sm/6  md:order-1 md:mt-0">
+        <p className="mt-2 md:mt-8 text-center text-sm/6  md:order-1 md:mt-0">
           &copy; {new Date().getFullYear()} Barong Cycling Team. All rights reserved.
         </p>
       </div>

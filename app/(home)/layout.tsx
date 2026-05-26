@@ -10,7 +10,7 @@ export default async function HomeLayout({children,}: Readonly<{ children: React
   })
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col min-h-screen">
       <Header user={session?.user ? session.user : undefined}/>
       <div className="grow">
         {children}

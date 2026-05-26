@@ -279,71 +279,61 @@ export function ProfileForm({user}: { user: UserWithDetail }) {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid md:gap-x-6 gap-y-4 md:grid-cols-2">
-              <div className="grid gap-4 md:grid-cols-2">
-                <Field>
-                  <FieldLabel htmlFor="country_of_residence">Country of Residence</FieldLabel>
-                  <Input
-                    id="country_of_residence"
-                    type="text"
-                    name="country_of_residence"
-                    placeholder="Indonesia"
-                    defaultValue={state.fields?.countryOfResidence ?? user.detail?.countryOfResidence ?? ""}
-                    required
-                  />
-                </Field>
-
-                <Field>
-                  <FieldLabel htmlFor="province">Province</FieldLabel>
-                  <Input
-                    id="province"
-                    type="text"
-                    name="province"
-                    placeholder="Bali"
-                    defaultValue={state.fields?.province ?? user.detail?.province ?? ""}
-                    required
-                  />
-                </Field>
-              </div>
-
-              <div className="grid gap-4 md:grid-cols-2">
-                <Field>
-                  <FieldLabel htmlFor="city">City</FieldLabel>
-                  <Input
-                    id="city"
-                    type="text"
-                    name="city"
-                    placeholder="Denpasar"
-                    defaultValue={state.fields?.city ?? user.detail?.city ?? ""}
-                    required
-                  />
-                </Field>
-
-                <Field>
-                  <FieldLabel htmlFor="postal_code">Postal Code</FieldLabel>
-                  <Input
-                    id="postal_code"
-                    type="text"
-                    name="postal_code"
-                    placeholder="12345"
-                    defaultValue={state.fields?.postalCode ?? user.detail?.postalCode ?? ""}
-                    required
-                  />
-                </Field>
-              </div>
-
-              <div className="col-span-2">
-                <Field>
-                  <FieldLabel htmlFor="address">Street Address</FieldLabel>
-                  <Textarea
-                    id="address"
-                    name="address"
-                    placeholder="Jln. Toko Sepeda No. 123"
-                    defaultValue={state.fields?.address ?? (user.detail?.address ?? "")}
-                    required
-                  />
-                </Field>
-              </div>
+            <div className="grid gap-4 md:grid-cols-2">
+              <Field>
+                <FieldLabel htmlFor="country_of_residence">Country of Residence</FieldLabel>
+                <Input
+                  id="country_of_residence"
+                  type="text"
+                  name="country_of_residence"
+                  placeholder="Indonesia"
+                  defaultValue={state.fields?.countryOfResidence ?? user.detail?.countryOfResidence ?? ""}
+                  required
+                />
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="province">Province</FieldLabel>
+                <Input
+                  id="province"
+                  type="text"
+                  name="province"
+                  placeholder="Bali"
+                  defaultValue={state.fields?.province ?? user.detail?.province ?? ""}
+                  required
+                />
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="city">City</FieldLabel>
+                <Input
+                  id="city"
+                  type="text"
+                  name="city"
+                  placeholder="Denpasar"
+                  defaultValue={state.fields?.city ?? user.detail?.city ?? ""}
+                  required
+                />
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="postal_code">Postal Code</FieldLabel>
+                <Input
+                  id="postal_code"
+                  type="text"
+                  name="postal_code"
+                  placeholder="12345"
+                  defaultValue={state.fields?.postalCode ?? user.detail?.postalCode ?? ""}
+                  required
+                />
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="address">Street Address</FieldLabel>
+                <Textarea
+                  id="address"
+                  name="address"
+                  placeholder="Jln. Toko Sepeda No. 123"
+                  defaultValue={state.fields?.address ?? (user.detail?.address ?? "")}
+                  required
+                />
+              </Field>
             </div>
           </CardContent>
         </Card>
