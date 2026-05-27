@@ -1,7 +1,6 @@
 import {auth} from "@/lib/auth";
 import {headers} from "next/headers";
 import Header from "@/components/landing/header";
-import Footer from "@/components/landing/footer";
 
 export default async function HomeLayout({children,}: Readonly<{ children: React.ReactNode; }>) {
 
@@ -15,7 +14,7 @@ export default async function HomeLayout({children,}: Readonly<{ children: React
       <div className="grow">
         {children}
       </div>
-      <Footer />
+      {/*<Footer />*/}
     </div>
   )
 }
