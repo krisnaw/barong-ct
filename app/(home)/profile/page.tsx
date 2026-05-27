@@ -8,8 +8,6 @@ import {getUserWithDetail} from "@/db/query/user-query";
 import {getEventsByUserId} from "@/db/query/event-query";
 import {Empty, EmptyContent, EmptyHeader, EmptyMedia, EmptyTitle} from "@/components/ui/empty";
 import {Bike} from "lucide-react";
-import {Button} from "@/components/ui/button";
-import Link from "next/link";
 
 export default async function ProfilePage() {
 
@@ -49,11 +47,11 @@ export default async function ProfilePage() {
                     <EmptyTitle>You haven’t joined any events yet.</EmptyTitle>
                   </EmptyHeader>
                   <EmptyContent>
-                    <Button>
-                      <Link href="/event">
-                        Explore Events
-                      </Link>
-                    </Button>
+                    {/*<Button>*/}
+                    {/*  <Link href="/event">*/}
+                    {/*    Explore Events*/}
+                    {/*  </Link>*/}
+                    {/*</Button>*/}
                   </EmptyContent>
                 </Empty>
               </div>
