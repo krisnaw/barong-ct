@@ -1,5 +1,7 @@
 import Image from "next/image";
 import {getLastActiveEvent} from "@/db/query/event-query";
+import Link from "next/link";
+import {buttonVariants} from "@/components/ui/button";
 
 export default async function Home() {
   const event = await getLastActiveEvent()
@@ -27,12 +29,9 @@ export default async function Home() {
             Barong Melali 2026
           </h2>
           {event ? (
-            <button
-              type="button"
-              className=" mt-4 bg-orange-600 px-3.5 py-2.5 text-sm lg:px-8.5 lg:py-4.5 lg:text-2xl font-semibold text-white shadow-xs hover:bg-orange-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
-            >
-              <a href={`/event/${event.id}`}>Register Now</a>
-            </button>
+            <Link href={`/event/${event.id}`} className={buttonVariants({ variant: "default", size: "lg" })} prefetch={true}>
+              Register Now
+            </Link>
           ) : (
             <button
               type="button"
@@ -41,7 +40,6 @@ export default async function Home() {
               Coming Soon
             </button>
           )}
-
         </div>
       </div>
     </div>
