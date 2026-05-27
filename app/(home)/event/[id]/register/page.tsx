@@ -35,7 +35,11 @@ export default async function Page({params, searchParams}: {
     const status = participant.status;
 
     if (status == PARTICIPANT_STATUS.DRAFT) {
-      redirect(`/event/${id}/register/group`)
+      if (!participant.groupId || !participant.jerseySize) {
+        redirect(`/event/${id}/register/group`)
+      } else {
+        redirect(`/event/${id}/register/profile`)
+      }
     }
 
     if (status == PARTICIPANT_STATUS.PROFILE) {
