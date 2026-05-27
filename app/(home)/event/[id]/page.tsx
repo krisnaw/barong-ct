@@ -3,22 +3,23 @@ import {redirect} from "next/navigation";
 import {auth} from "@/lib/auth";
 import {headers} from "next/headers";
 import * as React from "react";
-import {Card, CardAction, CardContent, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
+import {Card, CardAction, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import Link from "next/link";
 import {buttonVariants} from "@/components/ui/button";
 import {PARTICIPANT_STATUS} from "@/utils/event.helper";
-import {Item, ItemContent, ItemDescription} from "@/components/ui/item";
+import {Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle} from "@/components/ui/item";
 import {Badge} from "@/components/ui/badge";
 import {getOnGoingParticipant} from "@/db/query/participant-query";
 import {EventDate} from "@/components/events/event-date";
 import {getGroupById} from "@/db/query/event-group.query";
 import {getPaymentByParticipant} from "@/db/query/event-payment.query";
 import {formatBibNumber} from "@/utils/money-helper";
-import {CheckCircleIcon, RouteIcon, Shirt, Tickets} from "lucide-react";
+import {CheckCircle2Icon, CheckCircleIcon, CircleUser, Link2, RouteIcon, Shirt, Ticket, Users} from "lucide-react";
 import {getCategoryById} from "@/db/query/event-category.query";
-import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {InviteItem} from "@/app/(home)/event/[id]/invite-item";
 import {EventCard} from "@/components/events/event-card";
+import {Alert, AlertAction, AlertDescription, AlertTitle} from "@/components/ui/alert";
+import {Separator} from "@/components/ui/separator";
 
 export default async function Page({params}: { params: Promise<{ id: number }> }) {
 
@@ -38,12 +39,13 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
     return (
       <div className="bg-slate-50 pt-18 min-h-screen">
         <div className="mx-auto max-w-3xl px-4 md:px-6 lg:px-8 pt-10 pb-24">
-          <EventCard event={event} noSession={true}  />
+          <EventCard event={event} noSession={true}/>
         </div>
       </div>
     )
   }
 
+  //TODO: refactor to include with relation
   const participant = await getOnGoingParticipant(id, session.user.id);
   let payment, group, category = undefined
   if (participant) {
@@ -53,16 +55,11 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
       getCategoryById(participant.categoryId!),
     ]);
   }
-
-  console.log(participant);
-
   return (
     <div className="bg-slate-50 pt-18">
       <div className="mx-auto max-w-3xl px-4 md:px-6 lg:px-8 pt-10 pb-24">
         <div className="space-y-4">
-
-          <EventCard event={event} />
-
+          <EventCard event={event}/>
           <Card>
             <CardHeader>
               <CardTitle>Registration</CardTitle>
@@ -106,24 +103,33 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
                   </Link>
                 </div>
               )}
-
             </CardContent>
           </Card>
 
           {participant && participant.status === PARTICIPANT_STATUS.COMPLETED && (
-            <>
-              <Card>
-                <CardHeader>
-                  <CardTitle>Participant</CardTitle>
-                </CardHeader>
+            <Card>
+              <CardContent>
 
-                <CardContent>
+                <div className="space-y-3">
+                  {payment && (
+                    <Alert className="bg-green-50 text-green-600 border border-green-600/20">
+                      <CheckCircle2Icon/>
+                      <AlertTitle>Payment successful</AlertTitle>
+                      <AlertDescription>
+                        Invoice paid on <EventDate eventDate={payment.updatedAt} type="date"/>
+                      </AlertDescription>
+                      <AlertAction className="font-semibold leading-snug">
+                        {payment.invoiceNumber}
+                      </AlertAction>
+                    </Alert>
+                  )}
+
                   <div className="grid w-full grid-cols-1 gap-3 md:grid-cols-3">
-                    <Item variant="muted" className="flex-col items-stretch">
+                    <Item className="flex-col items-stretch bg-blue-50 text-blue-700 border border-blue-700/10">
                       <ItemContent className="gap-1">
                         <ItemDescription
                           className="text-xs font-medium tracking-wider text-muted-foreground uppercase flex items-center gap-2.5">
-                          <Tickets className="h-4 w-4 text-muted-foreground"/>
+                          <Ticket className="h-4 w-4 text-muted-foreground"/>
                           BIB NUMBER
                         </ItemDescription>
                         <span className="cn-font-heading text-lg font-semibold">
@@ -131,7 +137,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
                     </span>
                       </ItemContent>
                     </Item>
-                    <Item variant="muted" className="flex-col items-stretch">
+                    <Item className="flex-col items-stretch bg-blue-50 text-blue-700 border border-blue-700/10">
                       <ItemContent className="gap-1">
                         <ItemDescription
                           className="text-xs font-medium tracking-wider text-muted-foreground uppercase flex items-center gap-2.5">
@@ -143,7 +149,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
                     </span>
                       </ItemContent>
                     </Item>
-                    <Item variant="muted" className="flex-col items-stretch">
+                    <Item className="flex-col items-stretch bg-blue-50 text-blue-700 border border-blue-700/10">
                       <ItemContent className="gap-1">
                         <ItemDescription
                           className="text-xs font-medium tracking-wider text-muted-foreground uppercase flex items-center gap-2.5">
@@ -156,57 +162,62 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
                       </ItemContent>
                     </Item>
                   </div>
-                  {payment && (
-                    <Item variant="muted" className="mt-3">
+                  {group && (
+                    <Item>
                       <ItemContent>
-                        <div className="grid grid-cols-2 gap-4">
-                          <div className="flex flex-col gap-0.5">
-                            <span className="text-sm text-muted-foreground">
-                              Invoice paid on <EventDate eventDate={payment.updatedAt} type="date"/>
-                            </span>
-                            <span className="text-lg font-semibold tabular-nums">
-                              {payment.invoiceNumber}
-                            </span>
-                          </div>
+
+                        <ItemDescription
+                          className="text-xs font-medium tracking-wider text-muted-foreground uppercase flex items-center gap-2.5">
+                          <Users className="h-4 w-4 text-muted-foreground"/>
+                          Group Ride: {group.name}
+                        </ItemDescription>
+
+                        <Separator className="my-2"/>
+
+                        <div className="min-h-24 space-y-2">
+                          {group.participants.map((participant) => (
+                            <Item size="sm" variant="outline" key={participant.id}>
+                              <ItemMedia variant="icon">
+                                <CircleUser className="h-4 w-4 text-muted-foreground"/>
+                              </ItemMedia>
+                              <ItemContent className="flex-row items-center gap-3">
+                                <ItemTitle className="shrink-0">{participant.user.name}</ItemTitle>
+                              </ItemContent>
+                              <ItemActions>
+                                <div className="uppercase">
+                                  {participant.jerseySize}
+                                </div>
+                                <Badge variant="outline">
+                                  {participant.bibNumber ? formatBibNumber(participant.bibNumber) : "-"}
+                                </Badge>
+                              </ItemActions>
+                            </Item>
+                          ))}
                         </div>
+
+                        {category && (
+                          <div>
+                            <ItemDescription
+                              className="text-xs font-medium tracking-wider text-muted-foreground uppercase flex items-center gap-2.5">
+                              <Link2 className="h-4 w-4 text-muted-foreground"/>
+                              Invite Link
+                            </ItemDescription>
+
+                            <div className="mt-1">
+                              {category && (
+                                <InviteItem eventId={id} categoryId={category.id} groupId={group.id}
+                                            groupName={group.name}/>
+                              )}
+                            </div>
+                          </div>
+                        )}
 
                       </ItemContent>
                     </Item>
                   )}
-                </CardContent>
-              </Card>
-
-              {group && (
-                <Card>
-                  <CardHeader>
-                    <CardTitle>
-                      Group Name: {group.name}
-                    </CardTitle>
-                    <CardAction>
-                      {group.participants.length}/5 members
-                    </CardAction>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className="flex flex-col space-y-4">
-                      {group.participants.map((participant) => (
-                        <li className="inline-flex items-center gap-2" key={participant.id}>
-                          <Avatar>
-                            <AvatarImage src="https://github.com/shadcn.png"/>
-                            <AvatarFallback>CN</AvatarFallback>
-                          </Avatar>
-                          <p className="font-bold">{participant.user.name}</p>
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                  {category && (
-                    <CardFooter>
-                      <InviteItem eventId={id} categoryId={category.id} groupId={group.id} groupName={group.name}/>
-                    </CardFooter>
-                  )}
-                </Card>
-              )}
-            </>
+                </div>
+              </CardContent>
+            </Card>
           )}
         </div>
       </div>
