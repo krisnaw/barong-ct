@@ -5,12 +5,12 @@ import {headers} from "next/headers";
 import {ActionResponse} from "@/types/types";
 import {redirect} from "next/navigation";
 
-export async function SignUpAction(email: string, refURL? : string) : Promise<ActionResponse> {
+export async function SignUpAction(email: string) : Promise<ActionResponse> {
   await auth.api.signInMagicLink({
     body: {
       email: email.trim(), // required
-      callbackURL: refURL ?? "/",
-      newUserCallbackURL: refURL ?? "/",
+      callbackURL: "/",
+      newUserCallbackURL: "/",
       errorCallbackURL: "/auth/error",
     },
     // This endpoint requires session cookies.
