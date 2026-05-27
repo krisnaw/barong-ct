@@ -42,19 +42,19 @@ const sizes = [
   {id: 'l', name: 'L'},
   {id: 'xl', name: 'XL'},
   {id: 'xxl', name: 'XXL'},
-  {id: '3xl', name: '3XL'},
-  {id: '4xl', name: '4XL'},
-  {id: '5xl', name: '5XL'},
-  {id: '6xl', name: '6XL'},
+  // {id: '3xl', name: '3XL'},
+  // {id: '4xl', name: '4XL'},
+  // {id: '5xl', name: '5XL'},
+  // {id: '6xl', name: '6XL'},
 
-  // INTERNATIONAL Sizing
-  {id: 'is', name: 'iS'},
-  {id: 'im', name: 'iM'},
-  {id: 'il', name: 'iL'},
-  {id: 'ixl', name: 'iXL'},
-  {id: 'ixxl', name: 'iXXL'},
-  {id: 'i3xl', name: 'i3XL'},
-  {id: 'i4xl', name: 'i4XL'},
-  {id: 'i5xl', name: 'i5XL'},
-  {id: 'i6xl', name: 'i6XL'}
+  // // INTERNATIONAL Sizing
+  // {id: 'is', name: 'iS'},
+  // {id: 'im', name: 'iM'},
+  // {id: 'il', name: 'iL'},
+  // {id: 'ixl', name: 'iXL'},
+  // {id: 'ixxl', name: 'iXXL'},
+  // {id: 'i3xl', name: 'i3XL'},
+  // {id: 'i4xl', name: 'i4XL'},
+  // {id: 'i5xl', name: 'i5XL'},
+  // {id: 'i6xl', name: 'i6XL'}
 ];

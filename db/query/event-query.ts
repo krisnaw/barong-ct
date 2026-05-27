@@ -2,7 +2,8 @@
 
 import {EventSchema, participant} from "@/db/schema";
 import {db} from "@/db/db";
-import {desc, eq} from "drizzle-orm";
+import {and, desc, eq} from "drizzle-orm";
+import {PARTICIPANT_STATUS} from "@/utils/event.helper";
 
 export async function getLastActiveEvent() {
   return db.query.EventSchema.findFirst({
@@ -33,7 +34,7 @@ export type EventByUser = Awaited<ReturnType<typeof getEventsByUserId>>
 
 export async function getEventsByUserId(userId: string) {
   const userEvents = await db.query.participant.findMany({
-    where: eq(participant.userId, userId),
+    where: and(eq(participant.userId, userId), eq(participant.status, PARTICIPANT_STATUS.COMPLETED)),
     with: {
       event: {
         with: {
