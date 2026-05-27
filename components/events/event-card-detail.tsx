@@ -11,8 +11,17 @@ export function EventCardDetail({event} : {event: EventType}) {
           <span className="text-sm text-muted-foreground">
             Date
           </span>
-          <span className="text-sm font-medium">
-            <EventDate eventDate={event.startDate} type="date"/> , <EventDate eventDate={event.startDate} type="time"/>
+          <span className="text-sm font-medium text-right">
+            <EventDate eventDate={event.startDate} type="date"/>
+          </span>
+        </div>
+        <Separator/>
+        <div className="flex items-center justify-between">
+          <span className="text-sm text-muted-foreground">
+            Time
+          </span>
+          <span className="text-sm font-medium text-right">
+            <EventDate eventDate={event.startDate} type="time"/>
           </span>
         </div>
         <Separator/>

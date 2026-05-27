@@ -38,7 +38,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
     return (
       <div className="bg-slate-50 pt-18 min-h-screen">
         <div className="mx-auto max-w-3xl px-4 md:px-6 lg:px-8 pt-10 pb-24">
-          <EventCard event={event} hasFooter={true} />
+          <EventCard event={event} noSession={true}  />
         </div>
       </div>
     )
@@ -54,12 +54,14 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
     ]);
   }
 
+  console.log(participant);
+
   return (
     <div className="bg-slate-50 pt-18">
       <div className="mx-auto max-w-3xl px-4 md:px-6 lg:px-8 pt-10 pb-24">
         <div className="space-y-4">
 
-          <EventCard event={event} hasFooter={false} />
+          <EventCard event={event} />
 
           <Card>
             <CardHeader>

@@ -1,22 +1,20 @@
 import * as React from "react";
 import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import Image from "next/image";
-import {buttonVariants} from "@/components/ui/button";
-import Link from "next/link";
 import {EventCardDetail} from "@/components/events/event-card-detail";
 import {Item, ItemContent} from "@/components/ui/item";
 import {EventWithDetail} from "@/db/query/event-query";
 import {EventCategoryType} from "@/db/schema";
 import {FieldContent, FieldDescription, FieldTitle} from "@/components/ui/field";
 import {formatMoney} from "@/utils/money-helper";
+import {SignupForm} from "@/components/signup-form";
 
 type Props = {
   event: EventWithDetail,
-  hasFooter?: boolean
-  joined?: boolean
+  noSession?: boolean,
 }
 
-export function EventCard({event, hasFooter = false, joined = false}: Props) {
+export function EventCard({event, noSession = false}: Props) {
   if (!event) return;
   return (
     <Card className="pt-0">
@@ -56,21 +54,12 @@ export function EventCard({event, hasFooter = false, joined = false}: Props) {
         </div>
       </CardContent>
 
-      {hasFooter && (
-        <CardFooter>
-          <Link href={`/event/${event.id}/register`}
-                className={`${buttonVariants({variant: "default", size: "lg"})} w-full uppercase`}>
-            Register now
-          </Link>
-        </CardFooter>
-      )}
-
-      {joined && (
-        <CardFooter>
-          <Link href={`/event/${event.id}/`}
-                className={`${buttonVariants({variant: "default", size: "lg"})} w-full uppercase`}>
-            See Detail
-          </Link>
+      {noSession && (
+        <CardFooter className="flex flex-col text-left">
+          <div className="text-left font-semibold w-full mb-2 text-muted-foreground">
+            Create an account to register for this event
+          </div>
+          <SignupForm />
         </CardFooter>
       )}
     </Card>
