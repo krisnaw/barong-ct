@@ -9,36 +9,43 @@ import {revalidatePath} from "next/cache";
 import {formatEventDate, formatEventTime} from "@/types/date-helper";
 import {eq} from "drizzle-orm";
 import EventJoinedEmail from "@/react-email-starter/emails/event-joined-email";
-import {getParticipantByEventUser} from "@/db/query/participant-query";
+import {getParticipantById} from "@/db/query/participant-query";
 import {z} from "zod";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export async function resendEmailConfirmation(payload: {eventId: string, userId: string, name: string, email: string}): Promise<ActionResponse> {
-  const event = await getEventById(Number(payload.eventId));
-  const eventURL = `${process.env.BETTER_AUTH_URL}/event/${payload.eventId}`
+export async function resendEmailConfirmation(participantId: number): Promise<ActionResponse> {
+
+  const participant = await getParticipantById(participantId)
+  if (!participant) {
+    return {
+      success: false,
+      message: `Sorry no participant`,
+    }
+  }
+  const event = await getEventById(participant.eventId);
   if (!event) {
     return {
       success: false,
-      message: `No event with id ${payload.eventId} found.`,
+      message: `No event with id ${participant.eventId} found.`,
     }
   }
-
-  const participant = await getParticipantByEventUser(Number(payload.eventId), payload.userId)
+  const eventURL = `${process.env.BETTER_AUTH_URL}/event/${participant.eventId}`
   const param = {
-    name: payload.name,
-    eventName : event.name ?? "There",
-    eventDate : formatEventDate(event.startDate),
-    eventTime : formatEventTime(event.startDate),
+    name: participant.user.name,
+    eventName : event?.name ?? "Barong Melali",
+    eventDate : formatEventDate(event?.startDate),
+    eventTime : formatEventTime(event?.startDate),
     meetingPoint : event.locationName ?? "",
     eventURL,
     bibNumber: participant?.bibNumber ?? undefined,
     jerseySize: participant?.jerseySize ?? undefined,
+    category: participant?.category?.name ?? undefined,
   }
 
   await resend.emails.send({
     from: 'Barong Cycling Team <info@barongmelali.com>',
-    to: [payload.email],
+    to: [participant.user.email,],
     subject: 'Thanks for joining the event',
     react: EventJoinedEmail(param)
   })

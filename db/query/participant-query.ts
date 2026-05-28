@@ -1,7 +1,7 @@
 "use server"
 
 import {db} from "@/db/db";
-import {and, eq, getTableColumns, isNull, sum} from "drizzle-orm";
+import {and, eq, getTableColumns, isNull, sql, sum} from "drizzle-orm";
 import {participant, user, userDetail} from "@/db/schema";
 import {PARTICIPANT_STATUS} from "@/utils/event.helper";
 
@@ -13,7 +13,20 @@ export async function getOnGoingParticipant(eventId: number, userId: string) {
 
 export async function getParticipantById(id: number) {
   return db.query.participant.findFirst({
-    where: and(eq(participant.id, id))
+    where: and(eq(participant.id, id)),
+    with: {
+      category: {
+        columns: {
+          name: true
+        }
+      },
+      user: {
+        columns: {
+          name: true,
+          email: true
+        }
+      }
+    }
   });
 }
 
@@ -55,6 +68,7 @@ export async function getParticipantByEvent(eventId: number, sortByName: boolean
         }
       },
     },
+    orderBy: (t) => sql`${t.bibNumber} desc`,
   })
 }
 

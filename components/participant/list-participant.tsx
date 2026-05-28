@@ -1,18 +1,9 @@
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {EventDate} from "@/components/events/event-date";
-import {formatBibNumber} from "@/utils/money-helper";
-import {Button} from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import {formatBibNumber, formatMoney} from "@/utils/money-helper";
 import {Badge} from "@/components/ui/badge";
 import {ParticipantType} from "@/db/query/participant-query";
+import {BtnResendConfirm} from "@/components/button/btn-resend-confirm";
 
 export function ListParticipant({participants} : {participants : ParticipantType[]}) {
   return (
@@ -21,6 +12,7 @@ export function ListParticipant({participants} : {participants : ParticipantType
         <TableRow>
           <TableHead>Bib</TableHead>
           <TableHead>Name</TableHead>
+          <TableHead>Total</TableHead>
           <TableHead>Promo</TableHead>
           <TableHead>Cat</TableHead>
           <TableHead>Registered At</TableHead>
@@ -40,6 +32,7 @@ export function ListParticipant({participants} : {participants : ParticipantType
                   </span>
                 </div>
               </TableCell>
+              <TableCell className="font-medium">{participant.finalPrice ? formatMoney(participant.finalPrice) : "-"}</TableCell>
               <TableCell className="font-medium">{participant.promoCode ?? "-"}</TableCell>
               <TableCell className="font-medium">
                 <Badge>{participant.category?.name}</Badge>
@@ -48,23 +41,7 @@ export function ListParticipant({participants} : {participants : ParticipantType
                 <EventDate eventDate={participant.updatedAt} type="date" />
               </TableCell>
               <TableCell>
-                <DropdownMenu>
-                  <DropdownMenuTrigger render={<Button variant="outline" />}>
-                    Open
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuGroup>
-                      <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                      <DropdownMenuItem>Profile</DropdownMenuItem>
-                      <DropdownMenuItem>Billing</DropdownMenuItem>
-                    </DropdownMenuGroup>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuGroup>
-                      <DropdownMenuItem>Team</DropdownMenuItem>
-                      <DropdownMenuItem>Subscription</DropdownMenuItem>
-                    </DropdownMenuGroup>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                <BtnResendConfirm participantId={participant.id} />
               </TableCell>
             </TableRow>
           ))
