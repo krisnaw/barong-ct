@@ -48,6 +48,7 @@ async function sendEmailConfirmation(event : EventType, user: UserType) {
     eventURL,
     bibNumber: participant?.bibNumber ?? undefined,
     jerseySize: participant?.jerseySize ?? undefined,
+    category: participant?.category?.name ?? undefined,
   }
 
   await resend.emails.send({

@@ -133,8 +133,8 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
                           BIB NUMBER
                         </ItemDescription>
                         <span className="cn-font-heading text-lg font-semibold">
-                      {participant?.bibNumber ? formatBibNumber(participant?.bibNumber) : "-"}
-                    </span>
+                          {participant?.bibNumber ? formatBibNumber(participant?.bibNumber) : "-"}
+                        </span>
                       </ItemContent>
                     </Item>
                     <Item className="flex-col items-stretch bg-blue-50 text-blue-700 border border-blue-700/10">

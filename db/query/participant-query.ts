@@ -20,6 +20,13 @@ export async function getParticipantById(id: number) {
 export async function getParticipantByEventUser(eventId: number, userId: string) {
   return db.query.participant.findFirst({
     where: and(eq(participant.eventId, eventId), eq(participant.userId, userId)),
+    with: {
+      category: {
+        columns: {
+          name: true
+        }
+      }
+    }
   })
 }
 
