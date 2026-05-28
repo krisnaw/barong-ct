@@ -8,11 +8,11 @@ import {SignUpAction} from "@/app/actions/auth/signup.action";
 import {Spinner} from "@/components/ui/spinner";
 import {toast} from "sonner";
 
-export function SignupForm({buttonText = "Sign up" } : { buttonText? : string} ) {
+export function SignupForm({buttonText = "Sign up", returnURL } : { buttonText? : string, returnURL? : string} ) {
 
   const [_, formAction, isPending] = useActionState<ActionResponse, FormData>(async (prevState: ActionResponse, formData: FormData) => {
     const email = formData.get("email") as string;
-    const res = await SignUpAction(email);
+    const res = await SignUpAction(email, returnURL);
     toast.info(res.message)
     return res;
   }, initialState)

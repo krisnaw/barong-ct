@@ -1,7 +1,12 @@
 import {SignupForm} from "@/components/signup-form"
 import {FieldDescription} from "@/components/ui/field";
 
-export default async function SignupPage() {
+export default async function SignupPage({
+                                           searchParams,
+                                         }: {
+  searchParams: Promise<{ returnUrl?: string }>
+}) {
+  const { returnUrl } = await searchParams
   return (
     <div className="bg-background flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
       <div className="w-full max-w-sm">
@@ -20,7 +25,7 @@ export default async function SignupPage() {
           </FieldDescription>
         </div>
         <div className="mt-6">
-          <SignupForm />
+          <SignupForm returnURL={returnUrl} />
         </div>
       </div>
     </div>
