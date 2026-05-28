@@ -15,7 +15,7 @@ type Props = {
 }
 
 export function EventCard({event, noSession = false}: Props) {
-  if (!event) return;
+
   return (
     <Card className="pt-0">
       <div className="relative h-56 w-full overflow-hidden">
@@ -59,7 +59,7 @@ export function EventCard({event, noSession = false}: Props) {
           <div className="text-left font-semibold w-full mb-2 text-muted-foreground">
             Create an account to register for this event
           </div>
-          <SignupForm />
+          <SignupForm returnURL={`/event/${event.id}`} />
         </CardFooter>
       )}
     </Card>
