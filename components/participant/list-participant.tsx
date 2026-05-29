@@ -1,6 +1,6 @@
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {EventDate} from "@/components/events/event-date";
-import {formatBibNumber, formatMoney} from "@/utils/money-helper";
+import {formatMoney} from "@/utils/money-helper";
 import {Badge} from "@/components/ui/badge";
 import {ParticipantType} from "@/db/query/participant-query";
 import {BtnResendConfirm} from "@/components/button/btn-resend-confirm";
@@ -23,7 +23,7 @@ export function ListParticipant({participants} : {participants : ParticipantType
         {participants.length > 0 ? (
           participants.map((participant: ParticipantType) => (
             <TableRow key={participant.id}>
-              <TableCell className="font-medium">{participant.bibNumber ? formatBibNumber(participant.bibNumber) : "-"}</TableCell>
+              <TableCell className="font-medium">{participant.bibNumber ?? "-"}</TableCell>
               <TableCell className="font-medium">
                 <div className="flex flex-col">
                   <span className="font-medium">{participant.user.name}</span>

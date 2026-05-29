@@ -104,7 +104,7 @@ export const EventJoinedEmail = ({
                     Bib Number
                   </Text>
                   <div className="cn-font-heading text-lg font-semibold">
-                    {"#" + String(bibNumber).padStart(3, "0")}
+                    {bibNumber}
                   </div>
                 </Column>
               )}
