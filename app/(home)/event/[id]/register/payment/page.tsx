@@ -30,7 +30,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
     redirect(`/event`);
   }
 
-  const promos = await getPromoByEvent(id)
+  const promos = await getPromoByEvent(id, true)
   const participant = await getOnGoingParticipant(event.id, session.user.id)
   if (!participant) {
     redirect("/event")
