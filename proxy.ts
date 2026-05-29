@@ -14,6 +14,12 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL("/auth/signup", request.url));
   }
 
+  const allowedEmails = ["krisna.w2010@gmail.com"]
+
+  if (request.nextUrl.pathname.startsWith("/dashboard") && !allowedEmails.includes(session.user.email)) {
+    return NextResponse.redirect(new URL("/auth/signup", request.url));
+  }
+
   return NextResponse.next();
 }
 

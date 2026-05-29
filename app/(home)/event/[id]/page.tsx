@@ -19,6 +19,7 @@ import {InviteItem} from "@/app/(home)/event/[id]/invite-item";
 import {EventCard} from "@/components/events/event-card";
 import {Alert, AlertAction, AlertDescription, AlertTitle} from "@/components/ui/alert";
 import {Separator} from "@/components/ui/separator";
+import {EventQr} from "@/components/events/event-qr";
 
 export default async function Page({params}: { params: Promise<{ id: number }> }) {
 
@@ -104,68 +105,69 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
               )}
             </CardContent>
           </Card>
-
+          
           {participant && participant.status === PARTICIPANT_STATUS.COMPLETED && (
-            <Card>
-              <CardContent>
+            <div className="space-y-6">
+              <Card>
+                <CardContent>
 
-                <div className="space-y-3">
-                  {payment && (
-                    <Alert className="bg-green-50 text-green-600 border border-green-600/20">
-                      <CheckCircle2Icon/>
-                      <AlertTitle>Payment successful</AlertTitle>
-                      <AlertDescription>
-                        Invoice paid on <EventDate eventDate={payment.updatedAt} type="date"/>
-                      </AlertDescription>
-                      <AlertAction className="font-semibold leading-snug">
-                        {payment.invoiceNumber}
-                      </AlertAction>
-                    </Alert>
-                  )}
+                  <div className="space-y-3">
+                    {payment && (
+                      <Alert className="bg-green-50 text-green-600 border border-green-600/20">
+                        <CheckCircle2Icon/>
+                        <AlertTitle>Payment successful</AlertTitle>
+                        <AlertDescription>
+                          Invoice paid on <EventDate eventDate={payment.updatedAt} type="date"/>
+                        </AlertDescription>
+                        <AlertAction className="font-semibold leading-snug">
+                          {payment.invoiceNumber}
+                        </AlertAction>
+                      </Alert>
+                    )}
 
-                  <div className="grid w-full grid-cols-1 gap-3 md:grid-cols-3">
-                    <Item className="flex-col items-stretch bg-blue-50 text-blue-700 border border-blue-700/10">
-                      <ItemContent className="gap-1">
-                        <ItemDescription
-                          className="text-xs font-medium tracking-wider text-muted-foreground uppercase flex items-center gap-2.5">
-                          <Ticket className="h-4 w-4 text-muted-foreground"/>
-                          BIB NUMBER
-                        </ItemDescription>
-                        <span className="cn-font-heading text-lg font-semibold">
+                    <div className="grid w-full grid-cols-1 gap-3 md:grid-cols-3">
+                      <Item className="flex-col items-stretch bg-blue-50 text-blue-700 border border-blue-700/10">
+                        <ItemContent className="gap-1">
+                          <ItemDescription
+                            className="text-xs font-medium tracking-wider text-muted-foreground uppercase flex items-center gap-2.5">
+                            <Ticket className="h-4 w-4 text-muted-foreground"/>
+                            BIB NUMBER
+                          </ItemDescription>
+                          <span className="cn-font-heading text-lg font-semibold">
                           {participant?.bibNumber ? participant?.bibNumber : "-"}
                         </span>
-                      </ItemContent>
-                    </Item>
-                    <Item className="flex-col items-stretch bg-blue-50 text-blue-700 border border-blue-700/10">
-                      <ItemContent className="gap-1">
-                        <ItemDescription
-                          className="text-xs font-medium tracking-wider text-muted-foreground uppercase flex items-center gap-2.5">
-                          <Shirt className="h-4 w-4 text-muted-foreground"/>
-                          Jersey Size
-                        </ItemDescription>
-                        <span className="cn-font-heading text-lg font-semibold uppercase">
+                        </ItemContent>
+                      </Item>
+                      <Item className="flex-col items-stretch bg-blue-50 text-blue-700 border border-blue-700/10">
+                        <ItemContent className="gap-1">
+                          <ItemDescription
+                            className="text-xs font-medium tracking-wider text-muted-foreground uppercase flex items-center gap-2.5">
+                            <Shirt className="h-4 w-4 text-muted-foreground"/>
+                            Jersey Size
+                          </ItemDescription>
+                          <span className="cn-font-heading text-lg font-semibold uppercase">
                       {participant?.jerseySize}
                     </span>
-                      </ItemContent>
-                    </Item>
-                    <Item className="flex-col items-stretch bg-blue-50 text-blue-700 border border-blue-700/10">
-                      <ItemContent className="gap-1">
-                        <ItemDescription
-                          className="text-xs font-medium tracking-wider text-muted-foreground uppercase flex items-center gap-2.5">
-                          <RouteIcon className="h-4 w-4 text-muted-foreground"/>
-                          Category
-                        </ItemDescription>
-                        <span className="cn-font-heading text-lg font-semibold uppercase">
+                        </ItemContent>
+                      </Item>
+                      <Item className="flex-col items-stretch bg-blue-50 text-blue-700 border border-blue-700/10">
+                        <ItemContent className="gap-1">
+                          <ItemDescription
+                            className="text-xs font-medium tracking-wider text-muted-foreground uppercase flex items-center gap-2.5">
+                            <RouteIcon className="h-4 w-4 text-muted-foreground"/>
+                            Category
+                          </ItemDescription>
+                          <span className="cn-font-heading text-lg font-semibold uppercase">
                       {category?.name}
                     </span>
-                      </ItemContent>
-                    </Item>
-                  </div>
-                  {group && (
-                    <Item>
-                      <ItemContent>
+                        </ItemContent>
+                      </Item>
+                    </div>
+                    {group && (
+                      <Item>
+                        <ItemContent>
 
-                        <ItemDescription className="text-xs font-medium tracking-wider text-muted-foreground uppercase ">
+                          <ItemDescription className="text-xs font-medium tracking-wider text-muted-foreground uppercase ">
                           <span className="flex items-center justify-between">
                             <span className="flex items-center gap-2.5">
                               <Users className="h-4 w-4 text-muted-foreground"/>
@@ -175,62 +177,64 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
                               {group.participants.length}/{event.isGroupRide} Members
                             </span>
                           </span>
-                        </ItemDescription>
+                          </ItemDescription>
 
-                        <Separator className="my-2"/>
+                          <Separator className="my-2"/>
 
-                        <div className="min-h-24 space-y-2">
-                          {group.participants.map((participant) => (
-                            <Item size="sm" variant="outline" key={participant.id}>
-                              <ItemMedia variant="icon">
-                                <CircleUser className="h-4 w-4 text-muted-foreground"/>
-                              </ItemMedia>
-                              <ItemContent className="flex-row items-center gap-3">
-                                <ItemTitle className="shrink-0">{participant.user.name}</ItemTitle>
-                              </ItemContent>
-                              <ItemActions>
-                                <div className="uppercase">
-                                  {participant.jerseySize}
-                                </div>
-                                <Badge variant="outline">
-                                  {participant.bibNumber ? participant.bibNumber : "-"}
-                                </Badge>
-                              </ItemActions>
-                            </Item>
-                          ))}
-                        </div>
-
-                        {event.isGroupRide && (
-                          <>
-                            {group.participants.length < event.isGroupRide ? (
-                              <>
-                                {category && (
-                                  <div>
-                                    <ItemDescription
-                                      className="text-xs font-medium tracking-wider text-muted-foreground uppercase flex items-center gap-2.5">
-                                      <Link2 className="h-4 w-4 text-muted-foreground"/>
-                                      Invite Link
-                                    </ItemDescription>
-
-                                    <div className="mt-1">
-                                      {category && (
-                                        <InviteItem eventId={id} categoryId={category.id} groupId={group.id}
-                                                    groupName={group.name}/>
-                                      )}
-                                    </div>
+                          <div className="min-h-24 space-y-2">
+                            {group.participants.map((participant) => (
+                              <Item size="sm" variant="outline" key={participant.id}>
+                                <ItemMedia variant="icon">
+                                  <CircleUser className="h-4 w-4 text-muted-foreground"/>
+                                </ItemMedia>
+                                <ItemContent className="flex-row items-center gap-3">
+                                  <ItemTitle className="shrink-0">{participant.user.name}</ItemTitle>
+                                </ItemContent>
+                                <ItemActions>
+                                  <div className="uppercase">
+                                    {participant.jerseySize}
                                   </div>
-                                )}
-                              </>
-                            ) : null}
-                          </>
-                        )}
+                                  <Badge variant="outline">
+                                    {participant.bibNumber ? participant.bibNumber : "-"}
+                                  </Badge>
+                                </ItemActions>
+                              </Item>
+                            ))}
+                          </div>
 
-                      </ItemContent>
-                    </Item>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
+                          {event.isGroupRide && (
+                            <>
+                              {group.participants.length < event.isGroupRide ? (
+                                <>
+                                  {category && (
+                                    <div>
+                                      <ItemDescription
+                                        className="text-xs font-medium tracking-wider text-muted-foreground uppercase flex items-center gap-2.5">
+                                        <Link2 className="h-4 w-4 text-muted-foreground"/>
+                                        Invite Link
+                                      </ItemDescription>
+
+                                      <div className="mt-1">
+                                        {category && (
+                                          <InviteItem eventId={id} categoryId={category.id} groupId={group.id}
+                                                      groupName={group.name}/>
+                                        )}
+                                      </div>
+                                    </div>
+                                  )}
+                                </>
+                              ) : null}
+                            </>
+                          )}
+
+                        </ItemContent>
+                      </Item>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+              <EventQr participant={participant} />
+            </div>
           )}
         </div>
       </div>
