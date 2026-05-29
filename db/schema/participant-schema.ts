@@ -19,7 +19,7 @@ export const participant = pgTable("event_participant", {
     .notNull()
     .references(() => EventSchema.id, { onDelete: "cascade" }),
 
-  bibNumber: integer("bib_id"),
+  bibNumber: text("bib_id"),
   status: text("status").default('draft'),
 
   categoryId: integer("event_category_id")

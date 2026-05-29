@@ -166,10 +166,16 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
                     <Item>
                       <ItemContent>
 
-                        <ItemDescription
-                          className="text-xs font-medium tracking-wider text-muted-foreground uppercase flex items-center gap-2.5">
-                          <Users className="h-4 w-4 text-muted-foreground"/>
-                          Group Ride: {group.name}
+                        <ItemDescription className="text-xs font-medium tracking-wider text-muted-foreground uppercase ">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2.5">
+                              <Users className="h-4 w-4 text-muted-foreground"/>
+                              Group Ride: {group.name}
+                            </div>
+                            <div>
+                              {group.participants.length}/{event.isGroupRide} Members
+                            </div>
+                          </div>
                         </ItemDescription>
 
                         <Separator className="my-2"/>
@@ -195,21 +201,29 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
                           ))}
                         </div>
 
-                        {category && (
-                          <div>
-                            <ItemDescription
-                              className="text-xs font-medium tracking-wider text-muted-foreground uppercase flex items-center gap-2.5">
-                              <Link2 className="h-4 w-4 text-muted-foreground"/>
-                              Invite Link
-                            </ItemDescription>
+                        {event.isGroupRide && (
+                          <>
+                            {group.participants.length < event.isGroupRide ? (
+                              <>
+                                {category && (
+                                  <div>
+                                    <ItemDescription
+                                      className="text-xs font-medium tracking-wider text-muted-foreground uppercase flex items-center gap-2.5">
+                                      <Link2 className="h-4 w-4 text-muted-foreground"/>
+                                      Invite Link
+                                    </ItemDescription>
 
-                            <div className="mt-1">
-                              {category && (
-                                <InviteItem eventId={id} categoryId={category.id} groupId={group.id}
-                                            groupName={group.name}/>
-                              )}
-                            </div>
-                          </div>
+                                    <div className="mt-1">
+                                      {category && (
+                                        <InviteItem eventId={id} categoryId={category.id} groupId={group.id}
+                                                    groupName={group.name}/>
+                                      )}
+                                    </div>
+                                  </div>
+                                )}
+                              </>
+                            ) : null}
+                          </>
                         )}
 
                       </ItemContent>

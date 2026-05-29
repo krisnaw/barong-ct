@@ -1,0 +1,1 @@
+ALTER TABLE "event_participant" ALTER COLUMN "bib_id" SET DATA TYPE text;

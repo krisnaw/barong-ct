@@ -1,42 +1,44 @@
 'use server'
 
 import {db} from "@/db/db";
-import {and, eq, sql} from "drizzle-orm";
+import {and, eq} from "drizzle-orm";
 import {EventType, participant, UserType} from "@/db/schema";
 import {formatEventDate, formatEventTime} from "@/types/date-helper";
 import EventJoinedEmail from "@/react-email-starter/emails/event-joined-email";
 import {Resend} from "resend";
-import {getUserById} from "@/db/query/user-query";
+import {getUserWithDetail} from "@/db/query/user-query";
 import {getEventById} from "@/db/query/event-query";
 import {getParticipantByEventUser} from "@/db/query/participant-query";
 import {PARTICIPANT_STATUS} from "@/utils/event.helper";
+import {generateBibNumber} from "@/utils/bib.helper";
+import {UserWithDetail} from "@/types/auth-types";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export async function getNextBibNumber(eventId: number): Promise<number> {
-  const result = await db
-    .select({ max: sql<number>`coalesce(max(${participant.bibNumber}), 0)` })
-    .from(participant)
-    .where(eq(participant.eventId, eventId));
-  return (result[0]?.max ?? 0) + 1;
-}
+// export async function getNextBibNumber(eventId: number): Promise<number> {
+//   const result = await db
+//     .select({ max: sql<number>`coalesce(max(${participant.bibNumber}), 0)` })
+//     .from(participant)
+//     .where(eq(participant.eventId, eventId));
+//   return (result[0]?.max ?? 0) + 1;
+// }
 
 export async function markParticipantComplete(eventId: number, userId: string) {
-  const bibNumber = await getNextBibNumber(eventId);
+  const user = await getUserWithDetail(userId)
+  const bibNumber = await generateBibNumber(user.detail.gender as "male" | "female", eventId,);
   await db.update(participant).set({
     status: PARTICIPANT_STATUS.COMPLETED,
     bibNumber: bibNumber,
   }).where(and(eq(participant.userId, userId), eq(participant.eventId, eventId)))
 
   // Mark Participant As Complete
-  const user = await getUserById(userId)
   const event = await getEventById(eventId)
   if (user && event) {
     await sendEmailConfirmation(event, user)
   }
 }
 
-async function sendEmailConfirmation(event : EventType, user: UserType) {
+async function sendEmailConfirmation(event : EventType, user: UserType | UserWithDetail) {
   const eventURL = `${process.env.BETTER_AUTH_URL}/event/${event.id}`
   const participant = await getParticipantByEventUser(event.id, user.id)
   const param = {

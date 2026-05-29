@@ -22,7 +22,7 @@ interface EmailProps {
   eventTime: string,
   meetingPoint: string,
   eventURL: string,
-  bibNumber?: number,
+  bibNumber?: string,
   jerseySize?: string,
   category?: string
 }

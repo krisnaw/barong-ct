@@ -17,7 +17,6 @@ interface Props {
 export function InputGroupField({ eventId, existingGroups, groupId }: Props) {
   const router = useRouter()
   const searchParams = useSearchParams();
-  const selectedGroup = groupId ? existingGroups.find((g) => String(g.id) === groupId) : null;
   const [groupName, setGroupName] = useState<string>(searchParams.get("group") ?? "")
   const [error, setError] = useState('');
 
@@ -34,6 +33,9 @@ export function InputGroupField({ eventId, existingGroups, groupId }: Props) {
 
     // Check if group already exists
     if ((existingGroups || []).some((group) => group.name.toLowerCase() === trimmedName.toLowerCase())) {
+      const newParam = new URLSearchParams(searchParams);
+      newParam.delete('group', groupName)
+      router.push(`/event/${eventId}/register/group?${newParam}`)
       setError(`"${trimmedName}" already exists. Try adding a number, e.g., '${trimmedName} 1'.`);
       return;
     } else {
