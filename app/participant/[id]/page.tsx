@@ -16,7 +16,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
           </div>
           <div className="flex flex-col items-center gap-1">
             <span className="text-xs uppercase tracking-widest sm:text-sm">Jersey</span>
-            <span className="text-4xl font-bold text-foreground sm:text-5xl capitalize">{participant.jerseySize}</span>
+            <span className="text-4xl font-bold text-foreground sm:text-5xl uppercase">{participant.jerseySize}</span>
           </div>
           <div className="flex flex-col items-center gap-1">
             <span className="text-xs uppercase tracking-widest sm:text-sm">Category</span>
