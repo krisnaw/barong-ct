@@ -39,7 +39,8 @@ export function StepGroup({event, userId, categories, groups}: Props) {
       // 1. Create group
       const groupPayload : InsertGroupType = {
         eventId: eventId,
-        name: groupName!
+        name: groupName!,
+        eventCategoryId: Number(categoryId)
       }
       const group = await createGroupAction(groupPayload)
       newGroupId = group.data
