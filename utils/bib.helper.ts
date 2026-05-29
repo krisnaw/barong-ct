@@ -15,7 +15,7 @@ export async function generateBibNumber(gender: "male" | "female", eventId: numb
   const maxBib = minBib + 999
 
   const result = await db
-    .select({ max: sql<number>`coalesce(max(${participant.bibNumber}), ${minBib - 1})` })
+    .select({ max: sql<number>`coalesce(max(${participant.bibNumber}), ${minBib})` })
     .from(participant)
     .where(
       and(
@@ -24,5 +24,6 @@ export async function generateBibNumber(gender: "male" | "female", eventId: numb
       ),
     )
 
-  return String(result[0]?.max ?? minBib - 1 + 1)
+  const currentMax = Number(result[0]?.max ?? minBib)
+  return String(currentMax + 1)
 }

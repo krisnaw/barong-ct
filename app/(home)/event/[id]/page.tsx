@@ -13,7 +13,6 @@ import {getOnGoingParticipant} from "@/db/query/participant-query";
 import {EventDate} from "@/components/events/event-date";
 import {getGroupById} from "@/db/query/event-group.query";
 import {getPaymentByParticipant} from "@/db/query/event-payment.query";
-import {formatBibNumber} from "@/utils/money-helper";
 import {CheckCircle2Icon, CheckCircleIcon, CircleUser, Link2, RouteIcon, Shirt, Ticket, Users} from "lucide-react";
 import {getCategoryById} from "@/db/query/event-category.query";
 import {InviteItem} from "@/app/(home)/event/[id]/invite-item";
@@ -133,7 +132,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
                           BIB NUMBER
                         </ItemDescription>
                         <span className="cn-font-heading text-lg font-semibold">
-                          {participant?.bibNumber ? formatBibNumber(participant?.bibNumber) : "-"}
+                          {participant?.bibNumber ? participant?.bibNumber : "-"}
                         </span>
                       </ItemContent>
                     </Item>
@@ -167,15 +166,15 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
                       <ItemContent>
 
                         <ItemDescription className="text-xs font-medium tracking-wider text-muted-foreground uppercase ">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2.5">
+                          <span className="flex items-center justify-between">
+                            <span className="flex items-center gap-2.5">
                               <Users className="h-4 w-4 text-muted-foreground"/>
                               Group Ride: {group.name}
-                            </div>
-                            <div>
+                            </span>
+                            <span>
                               {group.participants.length}/{event.isGroupRide} Members
-                            </div>
-                          </div>
+                            </span>
+                          </span>
                         </ItemDescription>
 
                         <Separator className="my-2"/>
@@ -194,7 +193,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
                                   {participant.jerseySize}
                                 </div>
                                 <Badge variant="outline">
-                                  {participant.bibNumber ? formatBibNumber(participant.bibNumber) : "-"}
+                                  {participant.bibNumber ? participant.bibNumber : "-"}
                                 </Badge>
                               </ItemActions>
                             </Item>

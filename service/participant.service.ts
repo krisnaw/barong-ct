@@ -15,14 +15,6 @@ import {UserWithDetail} from "@/types/auth-types";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// export async function getNextBibNumber(eventId: number): Promise<number> {
-//   const result = await db
-//     .select({ max: sql<number>`coalesce(max(${participant.bibNumber}), 0)` })
-//     .from(participant)
-//     .where(eq(participant.eventId, eventId));
-//   return (result[0]?.max ?? 0) + 1;
-// }
-
 export async function markParticipantComplete(eventId: number, userId: string) {
   const user = await getUserWithDetail(userId)
   const bibNumber = await generateBibNumber(user.detail.gender as "male" | "female", eventId,);

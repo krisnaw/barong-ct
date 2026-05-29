@@ -7,7 +7,8 @@ import {PARTICIPANT_STATUS, PAYMENT_STATUS} from "@/utils/event.helper";
 import {getParticipantById} from "@/db/query/participant-query";
 import {updateParticipant} from "@/app/actions/event-participant/event-participant.action";
 import {getPromoById} from "@/db/query/event-promo.query";
-import {getNextBibNumber} from "@/service/participant.service";
+import {generateBibNumber} from "@/utils/bib.helper";
+import {getUserWithDetail} from "@/db/query/user-query";
 
 export async function processFreePass(payload: { participantId: number, promoId: number, discountAmount: number }) : Promise<ActionResponse> {
   const participant = await getParticipantById(payload.participantId)
@@ -20,7 +21,8 @@ export async function processFreePass(payload: { participantId: number, promoId:
     }
   }
 
-  const bibNumber = await getNextBibNumber(promo.eventId)
+  const user = await getUserWithDetail(participant.userId)
+  const bibNumber = await generateBibNumber(user.detail.gender as "male" | "female", promo.eventId)
   if (bibNumber) {
     // create empty payment
     const paymentPayload : EventPaymentInsert = {
