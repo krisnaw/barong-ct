@@ -73,7 +73,14 @@ export async function createParticipant(formData: InsertParticipantType) : Promi
     }
   }
 
-  await db.insert(participant).values(validate.data).returning()
+  try {
+    await db.insert(participant).values(validate.data).returning()
+  } catch {
+    return {
+      success: false,
+      message: "You are already registered for this event.",
+    }
+  }
 
   return  {
     success: true,

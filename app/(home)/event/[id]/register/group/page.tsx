@@ -30,7 +30,6 @@ export default async function Page({params, searchParams}: {
     redirect(`/auth/signup?returnUrl=${encodeURIComponent(returnURL)}`)
   }
 
-
   const userId = session.user.id;
 
   // Check if user has been registered before or not

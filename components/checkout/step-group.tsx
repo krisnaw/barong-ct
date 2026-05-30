@@ -71,6 +71,7 @@ export function StepGroup({event, userId, categories, groups}: Props) {
       router.push(`/event/${eventId}/register/profile?${newParam}`)
     } else {
       toast.error(res.message)
+      router.push(`/event/${eventId}`)
     }
 
     return res
