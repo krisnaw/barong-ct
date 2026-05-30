@@ -4,6 +4,8 @@ import {redirect} from "next/navigation";
 import {getEventById} from "@/db/query/event-query";
 import {StepGroup} from "@/components/checkout/step-group";
 import {getGroupsByEvent} from "@/db/query/event-group.query";
+import {getOnGoingParticipant} from "@/db/query/participant-query";
+import {PARTICIPANT_STATUS} from "@/utils/event.helper";
 
 export default async function Page({params, searchParams}: {
   params: Promise<{ id: number }>,
@@ -28,7 +30,17 @@ export default async function Page({params, searchParams}: {
     redirect(`/auth/signup?returnUrl=${encodeURIComponent(returnURL)}`)
   }
 
+
   const userId = session.user.id;
+
+  // Check if user has been registered before or not
+  const participant = await getOnGoingParticipant(id, userId);
+  if (participant) {
+    if (participant.status == PARTICIPANT_STATUS.COMPLETED) {
+      // redirect to an event detail because the user has been registered.
+      redirect(`/event/${id}`)
+    }
+  }
 
   const groups = await getGroupsByEvent(id)
 

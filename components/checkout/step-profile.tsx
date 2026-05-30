@@ -106,7 +106,6 @@ export function StepProfile({user, participant}: { user: UserWithDetail, partici
                     id="full_name"
                     type="text"
                     name="full_name"
-                    placeholder="Tadej Pogačar"
                     defaultValue={state.fields?.name ?? user.name}
                     required
                   />
@@ -118,7 +117,6 @@ export function StepProfile({user, participant}: { user: UserWithDetail, partici
                     id="phone_number"
                     type="text"
                     name="phone_number"
-                    placeholder="08212345678"
                     defaultValue={state.fields?.phoneNumber ?? user.detail?.phoneNumber ?? ""}
                     required
                   />
@@ -146,7 +144,6 @@ export function StepProfile({user, participant}: { user: UserWithDetail, partici
                     id="identity_number"
                     type="text"
                     name="identity_number"
-                    placeholder="123023"
                     defaultValue={state.fields?.identityNumber ?? user.detail?.identityNumber ?? ""}
                     required
                   />
@@ -158,7 +155,6 @@ export function StepProfile({user, participant}: { user: UserWithDetail, partici
                     id="nationality"
                     type="text"
                     name="nationality"
-                    placeholder="Indonesian"
                     defaultValue={state.fields?.nationality ?? user.detail?.nationality ?? "Indonesia"}
                     required
                   />
@@ -210,7 +206,6 @@ export function StepProfile({user, participant}: { user: UserWithDetail, partici
                     id="emergency_contact_name"
                     type="text"
                     name="emergency_contact_name"
-                    placeholder="Mira Tanaka"
                     defaultValue={state.fields?.emergencyContactName ?? user.detail?.emergencyContactName ?? ""}
                     required
                   />
@@ -222,7 +217,6 @@ export function StepProfile({user, participant}: { user: UserWithDetail, partici
                     id="emergency_contact_number"
                     type="text"
                     name="emergency_contact_number"
-                    placeholder="08212345678"
                     defaultValue={state.fields?.emergencyContactNumber ?? user.detail?.emergencyContactNumber ?? ""}
                     required
                   />
@@ -242,7 +236,6 @@ export function StepProfile({user, participant}: { user: UserWithDetail, partici
                     id="country_of_residence"
                     type="text"
                     name="country_of_residence"
-                    placeholder="Indonesia"
                     defaultValue={state.fields?.countryOfResidence ?? user.detail?.countryOfResidence ?? ""}
                     required
                   />
@@ -254,7 +247,6 @@ export function StepProfile({user, participant}: { user: UserWithDetail, partici
                     id="province"
                     type="text"
                     name="province"
-                    placeholder="Bali"
                     defaultValue={state.fields?.province ?? user.detail?.province ?? ""}
                     required
                   />
@@ -266,7 +258,6 @@ export function StepProfile({user, participant}: { user: UserWithDetail, partici
                     id="city"
                     type="text"
                     name="city"
-                    placeholder="Denpasar"
                     defaultValue={state.fields?.city ?? user.detail?.city ?? ""}
                     required
                   />
@@ -278,7 +269,6 @@ export function StepProfile({user, participant}: { user: UserWithDetail, partici
                     id="postal_code"
                     type="text"
                     name="postal_code"
-                    placeholder="12345"
                     defaultValue={state.fields?.postalCode ?? user.detail?.postalCode ?? ""}
                     required
                   />
@@ -289,7 +279,6 @@ export function StepProfile({user, participant}: { user: UserWithDetail, partici
                   <Textarea
                     id="address"
                     name="address"
-                    placeholder="Jln. Toko Sepeda No. 123"
                     defaultValue={state.fields?.address ?? (user.detail?.address ?? "")}
                     required
                   />

@@ -105,7 +105,7 @@ export function StepPayment({event, participant, category, promos}: Props) {
       promo.promo.toLowerCase() === value[0].toLowerCase()
     );
     if (foundPromo) {
-      applyPromoCode(foundPromo.promo)
+      applyPromoCode(foundPromo.promo, value)
       setPromoCode(foundPromo.promo)
     } else {
       setDiscount(0)
@@ -113,7 +113,7 @@ export function StepPayment({event, participant, category, promos}: Props) {
     }
   }
 
-  const applyPromoCode = (value: string) => {
+  const applyPromoCode = (value: string, currentPM?: string[]) => {
     if (!promos || promos.length === 0) {
       setDiscount(0);
       return;
@@ -124,6 +124,12 @@ export function StepPayment({event, participant, category, promos}: Props) {
     );
 
     if (foundPromo) {
+      const activePM = currentPM ?? pm;
+      if (foundPromo.promo.toLowerCase() === 'virtual_account_bni' && !activePM.includes('VIRTUAL_ACCOUNT_BNI')) {
+        setDiscount(0);
+        setPromoId(undefined);
+        return;
+      }
       const discountType = foundPromo.discountType;
       if (discountType === 'percentage') {
         const calculatedDiscount = price * (foundPromo.discountValue / 100);
