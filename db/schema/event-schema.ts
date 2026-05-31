@@ -14,6 +14,7 @@ export const EventSchema = pgTable("event", {
   eventTime: time({ withTimezone: true }),
   isGroupRide: integer("is_group_ride"),
   registrationClosesAt: timestamp('registration_closes_at'),
+  status: text("status").default("draft"),
   locationName: text("location_name"),
   locationLink: text("location_link"), // Link to google maps
   createdAt: timestamp("created_at").defaultNow().notNull(),

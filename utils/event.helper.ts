@@ -12,17 +12,7 @@ export const PAYMENT_STATUS = {
   ORDER_EXPIRED: "ORDER_EXPIRED",
 } as const;
 
-
-
-
-//
-// function getOrderStatusText(status: string) {
-//   switch (status) {
-//     case ORDER_STATUS.DRAFT:
-//       return "Created";
-//     case ORDER_STATUS.PROFILE:
-//       return "Profile Completion"
-//     case ORDER_STATUS.PENDING_PAYMENT:
-//       return "Awaiting for payment"
-//   }
-// }
+export const EVENT_STATUS = {
+  DRAFT: "draft",
+  OPEN: "open",
+} as const;
