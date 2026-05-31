@@ -3,33 +3,61 @@ import {redirect} from "next/navigation";
 import {auth} from "@/lib/auth";
 import {headers} from "next/headers";
 import * as React from "react";
-import {Card, CardAction, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import Link from "next/link";
 import {buttonVariants} from "@/components/ui/button";
 import {PARTICIPANT_STATUS} from "@/utils/event.helper";
-import {Badge} from "@/components/ui/badge";
 import {getOnGoingParticipant} from "@/db/query/participant-query";
 import {getGroupById} from "@/db/query/event-group.query";
 import {getPaymentByParticipant} from "@/db/query/event-payment.query";
-import {CheckCircleIcon} from "lucide-react";
 import {EventDetailAlt} from "@/components/events/event-detail-alt";
 import {SignupForm} from "@/components/signup-form";
 import {RegistrationCompleteAlt} from "@/components/events/registration-complete-alt";
+import {BanknoteIcon, CircleDashedIcon, UserIcon} from "lucide-react";
+
+const STATUS_CTA: Record<string, string> = {
+  [PARTICIPANT_STATUS.DRAFT]:           "Continue Registration",
+  [PARTICIPANT_STATUS.PROFILE]:         "Complete Your Profile",
+  [PARTICIPANT_STATUS.PENDING_PAYMENT]: "Complete Payment",
+}
+
+type StatusBannerConfig = {
+  icon: React.ReactNode
+  title: string
+  description: string
+  colors: string
+}
+
+const STATUS_BANNER: Record<string, StatusBannerConfig> = {
+  [PARTICIPANT_STATUS.DRAFT]: {
+    icon: <CircleDashedIcon className="size-4" />,
+    title: "Registration in progress",
+    description: "You've started your registration. Complete the remaining steps to secure your spot.",
+    colors: "bg-blue-50 text-blue-700 border-blue-200 ring-blue-100",
+  },
+  [PARTICIPANT_STATUS.PROFILE]: {
+    icon: <UserIcon className="size-4" />,
+    title: "Profile pending",
+    description: "Your payment is done. Please complete your rider profile to finish registration.",
+    colors: "bg-amber-50 text-amber-700 border-amber-200 ring-amber-100",
+  },
+  [PARTICIPANT_STATUS.PENDING_PAYMENT]: {
+    icon: <BanknoteIcon className="size-4" />,
+    title: "Awaiting payment",
+    description: "Almost there — complete your payment to confirm your registration.",
+    colors: "bg-orange-50 text-orange-700 border-orange-200 ring-orange-100",
+  },
+}
 
 export default async function Page({params}: { params: Promise<{ id: number }> }) {
 
   const {id} = await params;
-
   const event = await getEventById(id);
 
-  if (!event) {
-    redirect('/');
-  }
+  if (!event) redirect('/');
 
-  const session = await auth.api.getSession({
-    headers: await headers() // you need to pass the headers object.
-  })
+  const session = await auth.api.getSession({ headers: await headers() })
 
+  // No session — show event + signup prompt
   if (!session) {
     return (
       <div className="bg-slate-50 pt-18 min-h-screen">
@@ -39,7 +67,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
               <div className="text-left font-semibold w-full mb-2 text-muted-foreground">
                 Create an account to register for this event
               </div>
-              <SignupForm returnURL={`/event/${event.id}`}/>
+              <SignupForm returnURL={`/event/${event.id}`} />
             </div>
           </EventDetailAlt>
         </div>
@@ -57,59 +85,65 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
     ]);
   }
 
+  const isCompleted = participant?.status === PARTICIPANT_STATUS.COMPLETED
+
   return (
     <div className="bg-slate-50 pt-18">
       <div className="mx-auto max-w-xl px-4 md:px-6 lg:px-8 pt-10 pb-24">
         <div className="space-y-4">
-          <EventDetailAlt event={event} />
-          {participant && participant.status === PARTICIPANT_STATUS.COMPLETED && (
-            <RegistrationCompleteAlt eventId={id} isGroupRide={event.isGroupRide} group={group} participant={participant} payment={payment} />
-          )}
-          <Card>
-            <CardHeader>
-              <CardTitle>Registration</CardTitle>
-              {participant ? (
-                <CardAction>
-                  <Badge variant="secondary" className="uppercase">{participant.status}</Badge>
-                </CardAction>
-              ) : null}
-            </CardHeader>
-            <CardContent>
 
-              {participant ? (
-                <>
-                  {participant.status != PARTICIPANT_STATUS.COMPLETED ? (
-                    <div>
-                      <Link href={`/event/${id}/register`}
-                            className={`${buttonVariants({variant: "default", size: "lg"})} w-full uppercase`}>
-                        Continue Registrations
-                      </Link>
-                    </div>
-                  ) : (
-                    <div>
-                      <div className="rounded-md bg-green-50 p-4">
-                        <div className="flex">
-                          <div className="shrink-0">
-                            <CheckCircleIcon aria-hidden="true" className="size-5 text-green-400"/>
-                          </div>
-                          <div className="ml-3">
-                            <p className="text-sm font-medium text-green-800">Registration confirmed.</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </>
-              ) : (
-                <div>
-                  <Link href={`/event/${id}/register`}
-                        className={`${buttonVariants({variant: "default", size: "lg"})} w-full uppercase`}>
-                    Register now
-                  </Link>
+          {/* Status banner for in-progress registrations */}
+          {participant && !isCompleted && (() => {
+            const banner = STATUS_BANNER[participant.status ?? ""]
+            if (!banner) return null
+            return (
+              <div className={`flex items-start gap-3 rounded-2xl border px-4 py-3.5 ring-1 ${banner.colors}`}>
+                <div className="mt-0.5 shrink-0">{banner.icon}</div>
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold">{banner.title}</p>
+                  <p className="text-xs mt-0.5 opacity-80">{banner.description}</p>
                 </div>
+              </div>
+            )
+          })()}
+
+          {/* Event detail — CTA slot used for non-completed & no-participant states */}
+          {!isCompleted ? (
+            <EventDetailAlt event={event}>
+              {participant ? (
+                // In-progress registration — per-status CTA
+                <Link
+                  href={`/event/${id}/register`}
+                  className={`${buttonVariants({ variant: "default", size: "lg" })} w-full uppercase`}
+                >
+                  {STATUS_CTA[participant.status ?? ""] ?? "Continue Registration"}
+                </Link>
+              ) : (
+                // Not registered yet
+                <Link
+                  href={`/event/${id}/register`}
+                  className={`${buttonVariants({ variant: "default", size: "lg" })} w-full uppercase`}
+                >
+                  Register Now
+                </Link>
               )}
-            </CardContent>
-          </Card>
+            </EventDetailAlt>
+          ) : (
+            <EventDetailAlt event={event} />
+          )}
+
+
+          {/* Completed — full registration details */}
+          {isCompleted && participant && (
+            <RegistrationCompleteAlt
+              eventId={id}
+              isGroupRide={event.isGroupRide}
+              group={group}
+              participant={participant}
+              payment={payment}
+            />
+          )}
+
         </div>
       </div>
     </div>
