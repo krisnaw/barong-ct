@@ -1,77 +1,78 @@
-import { Skeleton } from "@/components/ui/skeleton"
+import {Skeleton} from "@/components/ui/skeleton"
 
 export default function Loading() {
   return (
-    <div className="mx-auto max-w-4xl">
-      <div className="sm:flex gap-8">
-        <div className="mr-0 md:mr-4 shrink-0 w-full md:w-64 lg:w-80">
-          <Skeleton className="aspect-square w-full rounded-2xl" />
-        </div>
+    <div className="bg-slate-50 pt-18">
+      <div className="mx-auto max-w-3xl px-4 md:px-6 lg:px-8 pt-10 pb-24 space-y-4">
 
-        <div className="w-full mt-8 md:mt-0">
-          <div>
-            <Skeleton className="h-8 w-3/4 mb-4" />
+        {/* EventDetailAlt skeleton */}
+        <div className="overflow-hidden rounded-3xl bg-card ring-1 ring-foreground/10">
 
-            <ul className="mt-4 grid grid-cols-1 gap-8">
-              <li>
-                <div className="flex">
-                  <div className="mr-4 shrink-0">
-                    <Skeleton className="w-16 h-16 rounded-xl" />
-                  </div>
-                  <div className="flex-1">
-                    <Skeleton className="h-6 w-32 mb-2" />
-                    <Skeleton className="h-4 w-24" />
-                  </div>
-                </div>
-              </li>
+          {/* Hero image */}
+          <Skeleton className="h-52 w-full rounded-none" />
 
-              <li>
-                <div className="flex items-center">
-                  <div className="mr-4 shrink-0">
-                    <Skeleton className="w-16 h-16 rounded-xl" />
-                  </div>
-                  <div className="flex-1">
-                    <Skeleton className="h-6 w-40" />
-                  </div>
-                </div>
-              </li>
-            </ul>
-
-            <div className="mt-8">
-              <div className="border rounded-lg p-4 text-center">
-                <Skeleton className="h-5 w-32 mx-auto mb-2" />
-                <Skeleton className="h-6 w-24 mx-auto mb-2" />
-                <Skeleton className="h-10 w-32 mx-auto" />
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-10">
-            <div className="space-y-6 flex flex-col">
-              <div className="order-first md:order-last">
-                <div className="border-b border-gray-200 pb-2 mb-4">
-                  <Skeleton className="h-5 w-20" />
-                </div>
-                <div className="w-full aspect-[16/9] rounded-lg overflow-hidden">
-                  <Skeleton className="w-full h-full" />
+          {/* Info rows */}
+          <div className="p-5 space-y-4">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+              {/* Date — full width on mobile */}
+              <div className="col-span-2 sm:col-span-1 flex items-start gap-3">
+                <Skeleton className="size-8 shrink-0 rounded-lg" />
+                <div className="flex-1 space-y-1.5">
+                  <Skeleton className="h-3 w-10" />
+                  <Skeleton className="h-4 w-36" />
                 </div>
               </div>
-
-              <div className="order-last md:order-first">
-                <div className="border-b border-gray-200 pb-2 mb-4">
-                  <Skeleton className="h-5 w-24" />
+              {/* Time */}
+              <div className="flex items-start gap-3">
+                <Skeleton className="size-8 shrink-0 rounded-lg" />
+                <div className="flex-1 space-y-1.5">
+                  <Skeleton className="h-3 w-10" />
+                  <Skeleton className="h-4 w-20" />
                 </div>
-                <div className="space-y-3">
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-5/6" />
-                  <Skeleton className="h-4 w-4/5" />
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-3/4" />
+              </div>
+              {/* Location */}
+              <div className="col-span-2 sm:col-span-1 flex items-start gap-3">
+                <Skeleton className="size-8 shrink-0 rounded-lg" />
+                <div className="flex-1 space-y-1.5">
+                  <Skeleton className="h-3 w-14" />
+                  <Skeleton className="h-4 w-32" />
                 </div>
               </div>
             </div>
+
+            <Skeleton className="h-px w-full" />
+
+            {/* Categories */}
+            <div className="space-y-2">
+              <Skeleton className="h-3 w-20 mb-3" />
+              <div className="flex items-center justify-between rounded-xl border px-4 py-3">
+                <div className="space-y-1.5">
+                  <Skeleton className="h-4 w-24" />
+                  <Skeleton className="h-3 w-16" />
+                </div>
+                <div className="space-y-1.5 items-end flex flex-col">
+                  <Skeleton className="h-4 w-20" />
+                  <Skeleton className="h-3 w-16" />
+                </div>
+              </div>
+              <div className="flex items-center justify-between rounded-xl border px-4 py-3">
+                <div className="space-y-1.5">
+                  <Skeleton className="h-4 w-20" />
+                  <Skeleton className="h-3 w-12" />
+                </div>
+                <div className="space-y-1.5 items-end flex flex-col">
+                  <Skeleton className="h-4 w-20" />
+                  <Skeleton className="h-3 w-16" />
+                </div>
+              </div>
+            </div>
+
+            {/* Footer (children) */}
+            <Skeleton className="h-px w-full" />
+            <Skeleton className="h-10 w-full rounded-xl" />
           </div>
         </div>
+
       </div>
     </div>
   )
