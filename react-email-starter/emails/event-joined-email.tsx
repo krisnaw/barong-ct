@@ -24,7 +24,8 @@ interface EmailProps {
   eventURL: string,
   bibNumber?: string,
   jerseySize?: string,
-  category?: string
+  category?: string,
+  inviteURL?: string,
 }
 
 const imgURL = "https://fi7tj80kxj.ufs.sh/f/jjB2MlHJbriWIPo3tMP916KnsQXzrbZ8jdfDLy0eJwl3qaVC"
@@ -38,7 +39,8 @@ export const EventJoinedEmail = ({
                                    eventURL,
                                    bibNumber,
                                    jerseySize,
-                                   category
+                                   category,
+                                   inviteURL
                                  }: EmailProps) => (
   <Html>
     <Head>

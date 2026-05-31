@@ -31,6 +31,7 @@ export async function getParticipantById(id: number) {
           name: true,
           locationName: true,
           startDate: true,
+          feature_image: true,
         }
       }
     }
@@ -42,6 +43,11 @@ export async function getParticipantByEventUser(eventId: number, userId: string)
     where: and(eq(participant.eventId, eventId), eq(participant.userId, userId)),
     with: {
       category: {
+        columns: {
+          name: true
+        }
+      },
+      group: {
         columns: {
           name: true
         }
