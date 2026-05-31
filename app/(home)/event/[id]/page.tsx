@@ -62,12 +62,9 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
       <div className="mx-auto max-w-xl px-4 md:px-6 lg:px-8 pt-10 pb-24">
         <div className="space-y-4">
           <EventDetailAlt event={event} />
-
           {participant && participant.status === PARTICIPANT_STATUS.COMPLETED && (
             <RegistrationCompleteAlt eventId={id} isGroupRide={event.isGroupRide} group={group} participant={participant} payment={payment} />
           )}
-
-
           <Card>
             <CardHeader>
               <CardTitle>Registration</CardTitle>
