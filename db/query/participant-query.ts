@@ -7,9 +7,23 @@ import {PARTICIPANT_STATUS} from "@/utils/event.helper";
 
 export async function getOnGoingParticipant(eventId: number, userId: string) {
   return db.query.participant.findFirst({
-    where: and(eq(participant.eventId, eventId), eq(participant.userId, userId))
+    where: and(eq(participant.eventId, eventId), eq(participant.userId, userId)),
+    with: {
+      category: {
+        columns: {
+          name: true
+        }
+      },
+      group: {
+        columns: {
+          name: true
+        }
+      }
+    }
   });
 }
+
+export type getOnGoingParticipantType = Awaited<ReturnType<typeof getOnGoingParticipant>>
 
 export async function getParticipantById(id: number) {
   return db.query.participant.findFirst({
