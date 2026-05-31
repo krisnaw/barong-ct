@@ -34,12 +34,11 @@ export function RegistrationCompleteAlt({ eventId, isGroupRide, participant, pay
       <div className="flex items-center gap-3 bg-green-50 px-5 py-4 border-b border-green-200">
         <CheckCircle2Icon className="size-5 shrink-0 text-green-500" />
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold text-green-800">Registration confirmed</p>
+          <p className="text-sm font-semibold text-green-800 uppercase">Registration confirmed</p>
           {payment && (
             <>
-              <p className="text-xs text-green-600 uppercase tracking-wide">{payment.invoiceNumber}</p>
-              <p className="text-xs text-green-600 capitalize">
-                Paid on <EventDate eventDate={payment.updatedAt} type="date" />
+              <p className="text-xs text-green-600 capitalize tracking-wide">
+                {payment.invoiceNumber} - Paid on <EventDate eventDate={payment.updatedAt} type="date" />
               </p>
             </>
           )}
