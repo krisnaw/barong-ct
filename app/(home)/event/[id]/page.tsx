@@ -20,6 +20,8 @@ import {EventCard} from "@/components/events/event-card";
 import {Alert, AlertAction, AlertDescription, AlertTitle} from "@/components/ui/alert";
 import {Separator} from "@/components/ui/separator";
 import {EventQr} from "@/components/events/event-qr";
+import {EventDetailAlt} from "@/components/events/event-detail-alt";
+import {SignupForm} from "@/components/signup-form";
 
 export default async function Page({params}: { params: Promise<{ id: number }> }) {
 
@@ -55,11 +57,20 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
       getCategoryById(participant.categoryId!),
     ]);
   }
+
   return (
     <div className="bg-slate-50 pt-18">
-      <div className="mx-auto max-w-3xl px-4 md:px-6 lg:px-8 pt-10 pb-24">
+      <div className="mx-auto max-w-xl px-4 md:px-6 lg:px-8 pt-10 pb-24">
         <div className="space-y-4">
-          <EventCard event={event}/>
+          <EventDetailAlt event={event} >
+            <div className="flex flex-col text-left">
+              <div className="text-left font-semibold w-full mb-2 text-muted-foreground">
+                Create an account to register for this event
+              </div>
+              <SignupForm returnURL={`/event/${event.id}`} />
+            </div>
+          </EventDetailAlt>
+
           <Card>
             <CardHeader>
               <CardTitle>Registration</CardTitle>
