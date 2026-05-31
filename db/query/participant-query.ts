@@ -25,6 +25,13 @@ export async function getParticipantById(id: number) {
           name: true,
           email: true
         }
+      },
+      event: {
+        columns: {
+          name: true,
+          locationName: true,
+          startDate: true,
+        }
       }
     }
   });
