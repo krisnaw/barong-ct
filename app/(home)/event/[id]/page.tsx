@@ -12,7 +12,6 @@ import {getOnGoingParticipant} from "@/db/query/participant-query";
 import {getGroupById} from "@/db/query/event-group.query";
 import {getPaymentByParticipant} from "@/db/query/event-payment.query";
 import {CheckCircleIcon} from "lucide-react";
-import {EventCard} from "@/components/events/event-card";
 import {EventDetailAlt} from "@/components/events/event-detail-alt";
 import {SignupForm} from "@/components/signup-form";
 import {RegistrationCompleteAlt} from "@/components/events/registration-complete-alt";
@@ -35,7 +34,14 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
     return (
       <div className="bg-slate-50 pt-18 min-h-screen">
         <div className="mx-auto max-w-3xl px-4 md:px-6 lg:px-8 pt-10 pb-24">
-          <EventCard event={event} noSession={true}/>
+          <EventDetailAlt event={event}>
+            <div className="flex flex-col text-left">
+              <div className="text-left font-semibold w-full mb-2 text-muted-foreground">
+                Create an account to register for this event
+              </div>
+              <SignupForm returnURL={`/event/${event.id}`}/>
+            </div>
+          </EventDetailAlt>
         </div>
       </div>
     )
@@ -55,14 +61,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
     <div className="bg-slate-50 pt-18">
       <div className="mx-auto max-w-xl px-4 md:px-6 lg:px-8 pt-10 pb-24">
         <div className="space-y-4">
-          <EventDetailAlt event={event}>
-            <div className="flex flex-col text-left">
-              <div className="text-left font-semibold w-full mb-2 text-muted-foreground">
-                Create an account to register for this event
-              </div>
-              <SignupForm returnURL={`/event/${event.id}`}/>
-            </div>
-          </EventDetailAlt>
+          <EventDetailAlt event={event} />
 
           {participant && participant.status === PARTICIPANT_STATUS.COMPLETED && (
             <RegistrationCompleteAlt eventId={id} isGroupRide={event.isGroupRide} group={group} participant={participant} payment={payment} />
