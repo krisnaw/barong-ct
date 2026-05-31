@@ -3,16 +3,13 @@
 import {ActionResponse} from "@/types/types";
 import {db} from "@/db/db";
 import {InsertParticipantType, participant, participantInsertSchema, UpdateParticipantType} from "@/db/schema";
-import {Resend} from "resend";
 import {getEventById} from "@/db/query/event-query";
 import {revalidatePath} from "next/cache";
-import {formatEventDate, formatEventTime} from "@/types/date-helper";
 import {eq} from "drizzle-orm";
-import EventJoinedEmail from "@/react-email-starter/emails/event-joined-email";
 import {getParticipantById} from "@/db/query/participant-query";
 import {z} from "zod";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
+import {sendEmailConfirmation} from "@/service/participant.service";
+import {getUserWithDetail} from "@/db/query/user-query";
 
 export async function resendEmailConfirmation(participantId: number): Promise<ActionResponse> {
 
@@ -23,32 +20,12 @@ export async function resendEmailConfirmation(participantId: number): Promise<Ac
       message: `Sorry no participant`,
     }
   }
-  const event = await getEventById(participant.eventId);
-  if (!event) {
-    return {
-      success: false,
-      message: `No event with id ${participant.eventId} found.`,
-    }
-  }
-  const eventURL = `${process.env.BETTER_AUTH_URL}/event/${participant.eventId}`
-  const param = {
-    name: participant.user.name,
-    eventName : event?.name ?? "Barong Melali",
-    eventDate : formatEventDate(event?.startDate),
-    eventTime : formatEventTime(event?.startDate),
-    meetingPoint : event.locationName ?? "",
-    eventURL,
-    bibNumber: participant?.bibNumber ?? undefined,
-    jerseySize: participant?.jerseySize ?? undefined,
-    category: participant?.category?.name ?? undefined,
-  }
 
-  await resend.emails.send({
-    from: 'Barong Cycling Team <info@barongmelali.com>',
-    to: [participant.user.email,],
-    subject: 'Thanks for joining the event',
-    react: EventJoinedEmail(param)
-  })
+  const user = await getUserWithDetail(participant.userId)
+  const event = await getEventById(participant.eventId);
+  if (user && event) {
+    await sendEmailConfirmation(event, user)
+  }
 
   return {
     success: true,

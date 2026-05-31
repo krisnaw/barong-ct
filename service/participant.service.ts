@@ -30,11 +30,11 @@ export async function markParticipantComplete(eventId: number, userId: string) {
   }
 }
 
-async function sendEmailConfirmation(event : EventType, user: UserType | UserWithDetail) {
+export async function sendEmailConfirmation(event : EventType, user: UserType | UserWithDetail) {
   const eventURL = `${process.env.BETTER_AUTH_URL}/event/${event.id}`
   const participant = await getParticipantByEventUser(event.id, user.id)
 
-  const url = new URL(eventURL);
+  const url = new URL(eventURL + "/register/group");
   url.searchParams.append('groupId', String(participant?.groupId));
   url.searchParams.append('category', String(participant?.categoryId));
   url.searchParams.append('group', participant?.group?.name ?? "");
