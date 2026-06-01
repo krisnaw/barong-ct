@@ -119,13 +119,6 @@ export async function getPendingParticipants(eventId: number) {
   return usersNotJoined;
 }
 
-export async function getCompletedParticipants() {
-  return db.query.participant.findMany({
-    where: eq(participant.status, PARTICIPANT_STATUS.COMPLETED),
-    columns: { id: true },
-  })
-}
-
 export async function getParticipantByPromo(promoId: number) {
   return db.query.participant.findFirst({
     where: eq(participant.promoId, promoId)

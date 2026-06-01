@@ -2,12 +2,9 @@
 
 import {signOut} from "@/app/actions/auth/signup.action";
 import Link from "next/link";
-import {authClient} from "@/lib/auth-client";
+import {User} from "better-auth";
 
-export default function Header() {
-  const { data: session } = authClient.useSession()
-  const user = session?.user
-
+export default function Header({user} : {user : User | undefined }) {
   return (
     <>
       <header className="bg-white text-gray-600 px-6 py-4 shrink-0 border-b border-gray-200 fixed w-full z-50">
