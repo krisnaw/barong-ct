@@ -185,6 +185,7 @@ export function StepProfile({user, participant}: { user: UserWithDetail, partici
                   <FieldLabel htmlFor="date_of_birth">Date of Birth</FieldLabel>
                   <Input type="date" id="date" name="date"
                          defaultValue={state.fields?.dateOfBirth ? state.fields?.dateOfBirth : (user.detail?.dateOfBirth ?? "")}
+                         required
                   />
                 </Field>
 
