@@ -45,6 +45,8 @@ export async function checkPaymentStatus(invoiceId: string) {
 
       const status = body.transaction.status;
 
+      console.log(body);
+
       // update payment to expired
       if (status === PAYMENT_STATUS.EXPIRED || body.order.status === PAYMENT_STATUS.ORDER_EXPIRED) {
         await db.update(eventPayment).set({status: status}).where(eq(eventPayment.invoiceNumber, invoiceId)).returning();
