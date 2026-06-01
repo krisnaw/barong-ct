@@ -6,6 +6,7 @@ import {db} from "@/db/db";
 import {eventPayment} from "@/db/schema";
 import {eq} from "drizzle-orm";
 import {PAYMENT_STATUS} from "@/utils/event.helper";
+import {revalidatePath} from "next/cache";
 
 const dokuBaseURL = process.env.DOKU_API_URL
 const dokuReqPath = '/orders/v1/status/'
@@ -50,6 +51,7 @@ export async function checkPaymentStatus(invoiceId: string) {
       // update payment to expired
       if (status === PAYMENT_STATUS.EXPIRED || status === PAYMENT_STATUS.ORDER_EXPIRED) {
         await db.update(eventPayment).set({status: status}).where(eq(eventPayment.invoiceNumber, invoiceId)).returning();
+        revalidatePath("/")
       }
 
     }

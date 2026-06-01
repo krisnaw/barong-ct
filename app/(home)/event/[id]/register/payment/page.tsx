@@ -42,12 +42,10 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
     redirect("/event")
   }
 
-  // if there is pending payment, check the payment status.
+  // Check payment status only when the invoice is pending AND past its expiry time.
   const payment = await getPaymentByParticipant(participant.id)
-  if (payment) {
-    if (payment.status == PAYMENT_STATUS.PENDING && payment.invoiceNumber) {
-      await checkPaymentStatus(payment.invoiceNumber)
-    }
+  if (payment?.status === PAYMENT_STATUS.PENDING && payment.invoiceNumber) {
+    await checkPaymentStatus(payment.invoiceNumber)
   }
 
   return (
