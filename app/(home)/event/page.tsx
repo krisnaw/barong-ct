@@ -1,15 +1,4 @@
-import {getEvents} from "@/db/query/event-query";
-import {EventType} from "@/db/schema";
-
 export default async function EventsPage() {
-  const events: EventType[] = await getEvents()
-  if (events.length === 0) {
-    return (
-      <div>
-        Sorry no event
-      </div>
-    )
-  }
   return (
     <div className="bg-slate-50 min-h-screen">
       <div className="mx-auto max-w-3xl px-4 md:px-6 lg:px-8 pt-24 pb-24">
