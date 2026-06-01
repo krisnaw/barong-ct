@@ -10,6 +10,7 @@ import {generateDigest, generateInvoiceNumber, generateSignature} from "@/utils/
 import {eventPayment} from "@/db/schema";
 import {redirect} from "next/navigation";
 import {getParticipantById} from "@/db/query/participant-query";
+import {getCategoryById} from "@/db/query/event-category.query";
 
 const dokuBaseURL = process.env.DOKU_API_URL
 const dokuReqPath = '/checkout/v1/payment'
@@ -23,8 +24,16 @@ export async function createPayment(payload: { participantId: number, pm : strin
 
   const participant = await getParticipantById(payload.participantId)
 
+
+
   if (!participant) {
     redirect('/')
+  }
+
+  let serviceFee = 0
+  if (participant.categoryId) {
+    const category = await getCategoryById(participant.categoryId)
+    serviceFee = Number(category?.serviceFee) ?? 0
   }
 
   const invoiceNumber = generateInvoiceNumber();
@@ -57,7 +66,7 @@ export async function createPayment(payload: { participantId: number, pm : strin
         },
         {
           "name": "Service Fee",
-          "price" : 15000,
+          "price" : serviceFee,
           "quantity": 1
         }
       ]
