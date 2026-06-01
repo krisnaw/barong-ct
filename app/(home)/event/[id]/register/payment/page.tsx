@@ -14,6 +14,8 @@ import {buttonVariants} from "@/components/ui/button";
 import {getCategoryById} from "@/db/query/event-category.query";
 import {getOnGoingParticipant} from "@/db/query/participant-query";
 import {StepPayment} from "@/components/checkout/step-payment";
+import {StepWizard} from "@/components/ui/step-wizard";
+import {getRegistrationSteps} from "@/app/(home)/event/[id]/register/steps";
 
 export default async function Page({params}: { params: Promise<{ id: number }> }) {
   const {id} = await params;
@@ -49,7 +51,8 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
   }
 
   return (
-    <div>
+    <div className="space-y-6">
+      <StepWizard steps={getRegistrationSteps("payment")} />
       {payment && payment.status === PAYMENT_STATUS.PENDING && payment.paymentURL ? (
         <Card>
           <CardHeader>
@@ -67,9 +70,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
           </CardContent>
         </Card>
       ) : (
-        <div>
-          <StepPayment event={event} participant={participant} category={category} promos={promos} />
-        </div>
+        <StepPayment event={event} participant={participant} category={category} promos={promos} />
       )}
     </div>
   )

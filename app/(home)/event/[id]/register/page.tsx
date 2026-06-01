@@ -30,34 +30,23 @@ export default async function Page({params, searchParams}: {
     redirect(`/event/${id}/register/group`)
   }
 
-  // Always redirect to order
-  if (participant) {
-    const status = participant.status;
+  const { status, groupId, jerseySize } = participant
 
-    if (status == PARTICIPANT_STATUS.DRAFT) {
-      if (!participant.groupId || !participant.jerseySize) {
-        redirect(`/event/${id}/register/group`)
-      } else {
-        redirect(`/event/${id}/register/profile`)
-      }
-    }
-
-    if (status == PARTICIPANT_STATUS.PROFILE) {
-      redirect(`/event/${id}/register/payment?participantId=${participant.id}`)
-    }
-
-    if (status == PARTICIPANT_STATUS.PENDING_PAYMENT) {
-      redirect(`/event/${id}/register/payment?participantId=${participant.id}`)
-    }
-
-    if (status == PARTICIPANT_STATUS.COMPLETED) {
-      redirect(`/event/${id}`)
-    }
+  if (status === PARTICIPANT_STATUS.DRAFT) {
+    redirect(
+      groupId && jerseySize
+        ? `/event/${id}/register/profile`
+        : `/event/${id}/register/group`
+    )
   }
 
-  return (
-    <div>
-      Register
-    </div>
-  )
+  if (status === PARTICIPANT_STATUS.PROFILE || status === PARTICIPANT_STATUS.PENDING_PAYMENT) {
+    redirect(`/event/${id}/register/payment?participantId=${participant.id}`)
+  }
+
+  if (status === PARTICIPANT_STATUS.COMPLETED) {
+    redirect(`/event/${id}`)
+  }
+
+  redirect(`/event/${id}`)
 }

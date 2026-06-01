@@ -5,6 +5,13 @@ import {Badge} from "@/components/ui/badge"
 import {EventDate} from "@/components/events/event-date"
 import {ButtonChangeEventStatus} from "@/components/events/button-change-event-status"
 import {EventList} from "@/db/query/event-query"
+import {EVENT_STATUS} from "@/utils/event.helper"
+import {EventType} from "@/db/schema";
+
+const statusStyle: Record<string, string> = {
+  [EVENT_STATUS.DRAFT]:   "border-border text-muted-foreground",
+  [EVENT_STATUS.OPEN]:    "border-green-500/30 bg-green-500/10 text-green-600 dark:text-green-400",
+}
 
 export function EventTable({events}: { events: EventList }) {
   return (
@@ -18,7 +25,7 @@ export function EventTable({events}: { events: EventList }) {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {events.map((event) => (
+        {events.map((event: EventType) => (
           <TableRow key={event.id}>
             <TableCell className="font-medium">
               {event.name}
@@ -32,7 +39,7 @@ export function EventTable({events}: { events: EventList }) {
               </div>
             </TableCell>
             <TableCell>
-              <Badge variant="outline" className="capitalize">
+              <Badge variant="outline" className={`capitalize ${statusStyle[event.status ?? EVENT_STATUS.DRAFT]}`}>
                 {event.status ?? "draft"}
               </Badge>
             </TableCell>
@@ -44,7 +51,7 @@ export function EventTable({events}: { events: EventList }) {
                 <Link href={`/dashboard/events/${event.id}/edit`}>
                   <Button variant="outline" size="sm">Edit</Button>
                 </Link>
-                <ButtonChangeEventStatus currentStatus={event.status ?? "draft"}/>
+                <ButtonChangeEventStatus currentStatus={event.status ?? "draft"} eventId={event.id}/>
               </div>
             </TableCell>
           </TableRow>

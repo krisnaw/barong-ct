@@ -6,6 +6,8 @@ import {StepGroup} from "@/components/checkout/step-group";
 import {getGroupsByEvent} from "@/db/query/event-group.query";
 import {getOnGoingParticipant} from "@/db/query/participant-query";
 import {PARTICIPANT_STATUS} from "@/utils/event.helper";
+import {StepWizard} from "@/components/ui/step-wizard";
+import {getRegistrationSteps} from "@/app/(home)/event/[id]/register/steps";
 
 export default async function Page({params, searchParams}: {
   params: Promise<{ id: number }>,
@@ -44,7 +46,8 @@ export default async function Page({params, searchParams}: {
   const groups = await getGroupsByEvent(id)
 
   return (
-    <div>
+    <div className="space-y-6">
+      <StepWizard steps={getRegistrationSteps("group")} />
       <StepGroup event={event} userId={userId} categories={event.categories} groups={groups}/>
     </div>
   )

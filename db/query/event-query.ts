@@ -3,10 +3,11 @@
 import {EventSchema, participant} from "@/db/schema";
 import {db} from "@/db/db";
 import {and, desc, eq} from "drizzle-orm";
-import {PARTICIPANT_STATUS} from "@/utils/event.helper";
+import {EVENT_STATUS, PARTICIPANT_STATUS} from "@/utils/event.helper";
 
 export async function getLastActiveEvent() {
   return db.query.EventSchema.findFirst({
+    where: eq(EventSchema.status, EVENT_STATUS.OPEN),
     orderBy: (desc(EventSchema.createdAt))
   })
 }

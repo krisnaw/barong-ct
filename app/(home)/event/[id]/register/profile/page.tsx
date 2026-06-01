@@ -5,6 +5,8 @@ import {redirect} from "next/navigation";
 import {getUserWithDetail} from "@/db/query/user-query";
 import {getOnGoingParticipant} from "@/db/query/participant-query";
 import {StepProfile} from "@/components/checkout/step-profile";
+import {StepWizard} from "@/components/ui/step-wizard";
+import {getRegistrationSteps} from "@/app/(home)/event/[id]/register/steps";
 
 export default async function Page({params,}: { params: Promise<{ id: number }> }) {
   const {id} = await params;
@@ -22,8 +24,9 @@ export default async function Page({params,}: { params: Promise<{ id: number }> 
     redirect('/event')
   }
   return (
-    <div>
-      <StepProfile user={user} participant={participant}  />
+    <div className="space-y-6">
+      <StepWizard steps={getRegistrationSteps("profile")} />
+      <StepProfile user={user} participant={participant} />
     </div>
   )
 }
