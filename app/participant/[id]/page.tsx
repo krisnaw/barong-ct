@@ -13,7 +13,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({params}: { params: Promise<{ id: number }> }): Promise<Metadata> {
   const {id} = await params
   const participant = await getParticipantById(Number(id))
-  if (!participant) return {}
+  if (!participant) return { title: "Ticket not found" }
 
   const title = `${participant.user.name} — ${participant.event?.name ?? "Event Ticket"}`
   const description = `${participant.user.name} is registered for ${participant.event?.name}. Bib #${participant.bibNumber ?? "—"} · ${participant.category?.name ?? ""}`
