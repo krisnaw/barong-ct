@@ -3,6 +3,8 @@ import {getLastActiveEvent} from "@/db/query/event-query";
 import Link from "next/link";
 import {buttonVariants} from "@/components/ui/button";
 
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
   const event = await getLastActiveEvent()
   return (
