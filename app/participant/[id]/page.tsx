@@ -1,6 +1,41 @@
-import {getParticipantById} from "@/db/query/participant-query";
+import {getCompletedParticipants, getParticipantById} from "@/db/query/participant-query";
 import {EventDate} from "@/components/events/event-date";
 import Image from "next/image";
+import type {Metadata} from "next";
+
+export const revalidate = 60
+
+export async function generateStaticParams() {
+  const participants = await getCompletedParticipants()
+  return participants.map((p) => ({ id: String(p.id) }))
+}
+
+export async function generateMetadata({params}: { params: Promise<{ id: number }> }): Promise<Metadata> {
+  const {id} = await params
+  const participant = await getParticipantById(Number(id))
+  if (!participant) return {}
+
+  const title = `${participant.user.name} — ${participant.event?.name ?? "Event Ticket"}`
+  const description = `${participant.user.name} is registered for ${participant.event?.name}. Bib #${participant.bibNumber ?? "—"} · ${participant.category?.name ?? ""}`
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: participant.event?.feature_image
+        ? [{ url: participant.event.feature_image, width: 1200, height: 630 }]
+        : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: participant.event?.feature_image ? [participant.event.feature_image] : [],
+    },
+  }
+}
 
 function StatBlock({ label, value }: { label: string; value: string | null | undefined }) {
   return (

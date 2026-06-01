@@ -1,11 +1,12 @@
 'use client'
 
-import {User} from "@/types/auth-types";
 import {signOut} from "@/app/actions/auth/signup.action";
 import Link from "next/link";
+import {authClient} from "@/lib/auth-client";
 
-export default function Header({user} : {user : User | undefined}) {
-
+export default function Header() {
+  const { data: session } = authClient.useSession()
+  const user = session?.user
 
   return (
     <>
@@ -39,12 +40,10 @@ export default function Header({user} : {user : User | undefined}) {
                   </Link>
                 </>
               )}
-
             </div>
           </div>
         </nav>
       </header>
-
     </>
   )
 }
