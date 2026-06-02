@@ -1,49 +1,85 @@
+import {Playfair_Display} from 'next/font/google'
 import Image from "next/image";
-import {getLastActiveEvent} from "@/db/query/event-query";
 import Link from "next/link";
-import {buttonVariants} from "@/components/ui/button";
+import {getLastActiveEvent} from "@/db/query/event-query";
 
-export const dynamic = 'force-dynamic';
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+})
 
-export default async function Home() {
+export default async function Page() {
   const event = await getLastActiveEvent()
+
   return (
-    <div className="h-dvh">
-      <div className="relative isolate overflow-hidden h-full">
-        {/* Background Image */}
+    <div className="relative isolate overflow-hidden min-h-dvh flex flex-col justify-between">
+      {/* Background */}
+      <div className="absolute inset-0 -z-10">
+        <Image
+          src="/bg-image-opt.jpg"
+          alt="Cyclists riding through Bali at golden hour with Mount Agung in the distance"
+          fill
+          priority
+          className="size-full object-cover"
+        />
+        <div className="absolute inset-0 top-0 right-0 w-1/2 h-full hidden sm:block">
+          <Image src="/meru-m.svg" alt="" fill className="object-contain object-top-right opacity-50" />
+        </div>
+        <div className="absolute inset-0 bg-black/50" />
+        <div className="absolute inset-0 bg-linear-to-b from-black/60 via-transparent to-black/70" />
+      </div>
 
-        <div>
-          <Image
-            alt=""
-            src="/bg-image-opt.jpg"
-            fill={true}
-            loading={"eager"}
-            className="absolute inset-0 -z-10 size-full object-cover"
-          />
 
-          <div className="absolute inset-0 bg-black/40"></div>
+      <div className="mx-auto max-w-2xl pt-32">
+        <div className="text-center">
+          <h1 className={`${playfair.className} text-amber-50 text-6xl leading-[0.95] tracking-tight md:text-7xl lg:text-8xl`}>
+            Barong
+            <span className="italic text-amber-200">Melali</span>
+            <span className="block text-4xl sm:text-6xl md:text-7xl lg:text-8xl">2026</span>
+          </h1>
+
+          <p className="mt-6 sm:mt-8 max-w-xl text-center italic leading-relaxed text-amber-50/90 text-base sm:text-xl md:text-2xl">
+            &#34;This is not a race, this is a journey of feeling in the island of Gods.&#34;
+          </p>
         </div>
 
-        {/* Text Container */}
-        {/* Added 'relative' and flex properties to center the text */}
-        <div className="relative z-10 flex flex-col h-full items-center justify-center text-center">
-          <h2 className={`text-white font-bold text-5xl md:text-7xl leading-relaxed`}>
-            Barong Melali 2026
-          </h2>
+        <div className="mt-8 sm:mt-10 flex justify-center items-center">
           {event ? (
-            <Link href={`/event/${event.id}`} className={buttonVariants({ variant: "default", size: "lg" })} prefetch={true}>
+
+            <Link prefetch={true}
+                  href={`/event/${event.id}`}
+                  className="group inline-flex items-center gap-3 rounded-full bg-orange-700 px-6 py-3 sm:px-8 sm:py-4 text-sm font-semibold uppercase tracking-widest text-white transition-transform hover:bg-orange-500 hover:scale-[1.02]"
+            >
               Register Now
+              <span className="transition-transform group-hover:translate-x-1">→</span>
             </Link>
-          ) : (
-            <button
-              type="button"
-              className="mt-4 bg-orange-600 px-3.5 py-2.5 text-sm lg:px-8.5 lg:py-4.5 lg:text-2xl font-semibold text-white shadow-xs hover:bg-orange-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+
+          ): (
+
+            <Link
+              href="/"
+              className="group inline-flex items-center gap-3 rounded-full bg-orange-700 px-6 py-3 sm:px-8 sm:py-4 text-sm font-semibold uppercase tracking-widest text-white transition-transform hover:bg-orange-500 hover:scale-[1.02]"
             >
               Coming Soon
-            </button>
-          )}
+              <span className="transition-transform group-hover:translate-x-1">→</span>
+            </Link>
+          ) }
+
+        </div>
+      </div>
+
+      {/* Sponsors */}
+      <div className="mx-auto max-w-3xl">
+        <div className="mb-4 flex items-center gap-4">
+          <span className="h-px flex-1 bg-white/15" />
+          <span className="text-[10px] uppercase tracking-[0.4em] text-white/70">Presented With</span>
+          <span className="h-px flex-1 bg-white/15" />
+        </div>
+        <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 sm:gap-x-12 sm:gap-y-6 rounded-2xl border border-white/15 bg-black/20 px-6 py-4 sm:px-8 sm:py-6 backdrop-blur-md">
+          <Image src="/barong-bni.png" alt="BarongBNI" width={500} height={400} className="h-16 sm:h-24 lg:h-32 w-auto object-contain" />
+          <Image src="/wondr.png" alt="Wondr" width={400} height={400} className="h-16 sm:h-24 lg:h-32 w-auto object-contain" />
+          <Image src="/bni-80.png" alt="BNI" width={400} height={400} className="h-16 sm:h-24 lg:h-32 w-auto object-contain" />
         </div>
       </div>
     </div>
-  );
+  )
 }
