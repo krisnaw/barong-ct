@@ -12,7 +12,7 @@ export default async function Page() {
   const event = await getLastActiveEvent()
 
   return (
-    <div className="relative isolate overflow-hidden min-h-dvh flex flex-col justify-between">
+    <div className="relative isolate overflow-hidden min-h-svh flex flex-col justify-between">
       {/* Background */}
       <div className="absolute inset-0 -z-10">
         <Image
