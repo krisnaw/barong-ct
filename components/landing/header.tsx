@@ -7,7 +7,7 @@ import {User} from "better-auth";
 export default function Header({user} : {user : User | undefined }) {
   return (
     <>
-      <header className="bg-transparent text-gray-600 px-6 py-4 shrink-0  fixed w-full z-50">
+      <header className="bg-transparent backdrop-blur-xs text-gray-600 px-6 py-4 shrink-0  fixed w-full z-50">
         <nav className="mx-auto max-w-3xl px-4 md:px-6 lg:px-8">
           <div className="flex justify-between items-center">
             <Link href="/" className="-m-1.5">

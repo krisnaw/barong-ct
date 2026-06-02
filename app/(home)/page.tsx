@@ -33,19 +33,19 @@ export default async function Page() {
       <div className="mx-auto max-w-2xl pt-32">
         <div className="text-center">
           <h1
-            className={`${playfair.className} text-amber-50 text-6xl leading-[0.95] tracking-tight md:text-7xl lg:text-8xl`}>
+            className={`${playfair.className} text-amber-50 text-6xl leading-[0.95] tracking-tight md:text-7xl lg:text-8xl animate-fade-up`}>
             Barong
             <span className="italic text-amber-200">Melali</span>
             <span className="block text-4xl sm:text-6xl md:text-7xl lg:text-8xl">2026</span>
           </h1>
 
           <p
-            className="mt-6 sm:mt-8 max-w-xl text-center italic leading-relaxed text-amber-50/90 text-base sm:text-xl md:text-4xl">
+            className="mt-6 sm:mt-8 max-w-xl text-center italic leading-relaxed text-amber-50/90 text-base sm:text-xl md:text-4xl animate-fade-up [animation-delay:220ms]">
             &#34;This is not a race, this is a journey of feeling in the island of Gods.&#34;
           </p>
         </div>
 
-        <div className="mt-8 sm:mt-10 flex justify-center items-center">
+        <div className="mt-8 sm:mt-10 flex justify-center items-center animate-fade-up [animation-delay:420ms]">
           {event ? (
 
             <Link prefetch={true}
@@ -82,11 +82,11 @@ export default async function Page() {
         <div
           className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 sm:gap-x-12 sm:gap-y-6 rounded-2xl border border-white/15 bg-black/20 px-6 py-4 sm:px-8 sm:py-6 backdrop-blur-md">
           <Image src="/barong-bni.png" alt="BarongBNI" width={500} height={400}
-                 className="h-16 sm:h-24 lg:h-32 w-auto object-contain"/>
+                 className="h-16 sm:h-24 lg:h-32 w-auto object-contain animate-fade-left [animation-delay:600ms]"/>
           <Image src="/wondr.png" alt="Wondr" width={400} height={400}
-                 className="h-16 sm:h-24 lg:h-32 w-auto object-contain"/>
+                 className="h-16 sm:h-24 lg:h-32 w-auto object-contain animate-fade-left [animation-delay:780ms]"/>
           <Image src="/bni-80.png" alt="BNI" width={400} height={400}
-                 className="h-16 sm:h-24 lg:h-32 w-auto object-contain"/>
+                 className="h-16 sm:h-24 lg:h-32 w-auto object-contain animate-fade-left [animation-delay:960ms]"/>
         </div>
       </div>
     </div>
