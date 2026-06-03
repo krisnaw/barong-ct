@@ -5,7 +5,6 @@ import {getEventById} from "@/db/query/event-query";
 import {getPromoByEvent} from "@/db/query/event-promo.query";
 import {getPaymentByParticipant} from "@/db/query/event-payment.query";
 import {PAYMENT_STATUS} from "@/utils/event.helper";
-import {checkPaymentStatus} from "@/app/actions/payment/payment-status.action";
 import Link from "next/link";
 import {Card, CardAction, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {Badge} from "@/components/ui/badge";
@@ -16,6 +15,8 @@ import {getOnGoingParticipant} from "@/db/query/participant-query";
 import {StepPayment} from "@/components/checkout/step-payment";
 import {StepWizard} from "@/components/ui/step-wizard";
 import {getRegistrationSteps} from "@/app/(home)/event/[id]/register/steps";
+import {CheckPaymentButton} from "@/components/checkout/check-payment-button";
+import {Separator} from "@/components/ui/separator";
 
 export default async function Page({params}: { params: Promise<{ id: number }> }) {
   const {id} = await params;
@@ -44,14 +45,14 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
 
   // Check payment status only when the invoice is pending AND past its expiry time.
   const payment = await getPaymentByParticipant(participant.id)
-  if (payment?.status === PAYMENT_STATUS.PENDING && payment.invoiceNumber) {
-    await checkPaymentStatus(payment.invoiceNumber)
-  }
+  // if (payment?.status === PAYMENT_STATUS.PENDING && payment.invoiceNumber) {
+  //   await checkPaymentStatus(payment.invoiceNumber)
+  // }
 
   return (
     <div className="space-y-6">
-      <StepWizard steps={getRegistrationSteps("payment")} />
-      {payment && payment.status === PAYMENT_STATUS.PENDING && payment.paymentURL ? (
+      <StepWizard steps={getRegistrationSteps("payment")}/>
+      {payment && payment.status === PAYMENT_STATUS.PENDING && payment.paymentURL && payment.invoiceNumber ? (
         <Card>
           <CardHeader>
             <CardTitle>Payment</CardTitle>
@@ -62,13 +63,25 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
             </CardAction>
           </CardHeader>
           <CardContent>
-            <Link href={payment.paymentURL} className={`${buttonVariants({ variant: "default", size: "lg" })} w-full uppercase`}>
-              Complete payment
-            </Link>
+
+            <div className="mt-3 text-center space-y-2">
+              <p className="text-sm text-muted-foreground">
+                Complete your payment to secure your spot.
+              </p>
+              <Link href={payment.paymentURL}
+                    className={`${buttonVariants({variant: "default", size: "lg"})} w-full uppercase`}>
+                Complete payment
+              </Link>
+            </div>
+
+            <Separator className="my-4"/>
+
+            <CheckPaymentButton invoiceNumber={payment.invoiceNumber}/>
+
           </CardContent>
         </Card>
       ) : (
-        <StepPayment event={event} participant={participant} category={category} promos={promos} />
+        <StepPayment event={event} participant={participant} category={category} promos={promos}/>
       )}
     </div>
   )

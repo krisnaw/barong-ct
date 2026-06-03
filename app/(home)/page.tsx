@@ -16,10 +16,11 @@ export default async function Page() {
       {/* Background */}
       <div className="absolute inset-0 -z-10">
         <Image
-          src="/bg-image-opt.jpg"
+          src="/1FTP2637.png"
           alt="Cyclists riding through Bali at golden hour with Mount Agung in the distance"
           fill
           priority
+          loading={"eager"}
           className="size-full object-cover"
         />
         <div className="absolute top-0 right-0 w-full h-full hidden sm:block">
@@ -30,7 +31,7 @@ export default async function Page() {
       </div>
 
 
-      <div className="mx-auto max-w-2xl pt-32">
+      <div className="mx-auto max-w-2xl px-4 md:px-6 lg:px-8 pt-32">
         <div className="text-center">
           <h1
             className={`${playfair.className} text-amber-50 text-6xl leading-[0.95] tracking-tight md:text-7xl lg:text-8xl animate-fade-up`}>
@@ -74,19 +75,19 @@ export default async function Page() {
 
       {/* Sponsors */}
       <div className="mx-auto max-w-3xl pb-4">
-        <div className="mb-4 flex items-center gap-4">
+        <div className="mb-2 flex items-center gap-4">
           <span className="h-px flex-1 bg-white/15"/>
           <span className="text-[10px] uppercase tracking-[0.4em] text-white/70">Presented With</span>
           <span className="h-px flex-1 bg-white/15"/>
         </div>
         <div
-          className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 sm:gap-x-12 sm:gap-y-6 rounded-2xl border border-white/15 bg-black/20 px-6 py-4 sm:px-8 sm:py-6 backdrop-blur-md">
+          className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 sm:gap-x-12 sm:gap-y-6 rounded-2xl border border-white/15 bg-white px-6 py-4 sm:px-8 sm:py-6 backdrop-blur-md">
           <Image src="/barong-bni.png" alt="BarongBNI" width={500} height={400}
-                 className="h-16 sm:h-24 lg:h-32 w-auto object-contain animate-fade-left [animation-delay:600ms]"/>
+                 className="h-16 sm:h-24 lg:h-36 w-auto object-contain animate-fade-left [animation-delay:600ms]"/>
           <Image src="/wondr.png" alt="Wondr" width={400} height={400}
-                 className="h-16 sm:h-24 lg:h-32 w-auto object-contain animate-fade-left [animation-delay:780ms]"/>
+                 className="h-16 sm:h-24 lg:h-36 w-auto object-contain animate-fade-left [animation-delay:780ms]"/>
           <Image src="/bni-80.png" alt="BNI" width={400} height={400}
-                 className="h-16 sm:h-24 lg:h-32 w-auto object-contain animate-fade-left [animation-delay:960ms]"/>
+                 className="h-16 sm:h-24 lg:h-36 w-auto object-contain animate-fade-left [animation-delay:960ms]"/>
         </div>
       </div>
     </div>

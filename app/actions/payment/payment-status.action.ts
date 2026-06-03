@@ -46,6 +46,7 @@ export async function checkPaymentStatus(invoiceId: string) {
 
       const status = body.transaction.status;
 
+      console.log("request success");
       console.log(body);
 
       // update payment to expired
@@ -57,6 +58,7 @@ export async function checkPaymentStatus(invoiceId: string) {
     }
   } catch (error) {
     if (error instanceof Error) {
+      console.log("Sorry something wrong")
       console.log(error.message);
       throw error;
     }

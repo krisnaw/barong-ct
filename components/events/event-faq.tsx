@@ -34,12 +34,12 @@ const FAQS: Record<"en" | "id", {id: string; question: string; answer: ReactNode
         </>
       ),
     },
-    {
-      id: "refund",
-      question: "Can I get a refund if I cancel?",
-      answer:
-        "Registration fees are non-refundable. However, you may transfer your spot to another rider up to 7 days before the event. Please contact us at support@barong.id to arrange a transfer.",
-    },
+    // {
+    //   id: "refund",
+    //   question: "Can I get a refund if I cancel?",
+    //   answer:
+    //     "Registration fees are non-refundable. However, you may transfer your spot to another rider up to 7 days before the event. Please contact us at support@barong.id to arrange a transfer.",
+    // },
     {
       id: "jersey",
       question: "When and where do I pick up my race pack?",
@@ -92,12 +92,12 @@ const FAQS: Record<"en" | "id", {id: string; question: string; answer: ReactNode
         </>
       ),
     },
-    {
-      id: "refund",
-      question: "Apakah saya bisa mendapat refund jika membatalkan?",
-      answer:
-        "Biaya pendaftaran tidak dapat dikembalikan. Namun, kamu dapat mengalihkan tempatmu kepada rider lain hingga 7 hari sebelum event berlangsung. ",
-    },
+    // {
+    //   id: "refund",
+    //   question: "Apakah saya bisa mendapat refund jika membatalkan?",
+    //   answer:
+    //     "Biaya pendaftaran tidak dapat dikembalikan. Namun, kamu dapat mengalihkan tempatmu kepada rider lain hingga 7 hari sebelum event berlangsung. ",
+    // },
     {
       id: "jersey",
       question: "Kapan dan di mana saya mengambil race pack?",
