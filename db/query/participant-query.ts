@@ -2,7 +2,7 @@
 
 import {db} from "@/db/db";
 import {and, eq, getTableColumns, isNull, sum} from "drizzle-orm";
-import {participant, user, userDetail} from "@/db/schema";
+import {eventCategory, eventGroup, participant, user, userDetail} from "@/db/schema";
 import {PARTICIPANT_STATUS} from "@/utils/event.helper";
 
 export async function getOnGoingParticipant(eventId: number, userId: string) {
@@ -129,6 +129,26 @@ export async function getParticipantByCategory(categoryId: number) {
   return db.query.participant.findFirst({
     where: eq(participant.categoryId, categoryId)
   });
+}
+
+export async function getParticipantsForDownload(eventId: number) {
+  return db
+    .select({
+      bibNumber: participant.bibNumber,
+      jerseySize: participant.jerseySize,
+      userName: user.name,
+      userEmail: user.email,
+      phone: userDetail.phoneNumber,
+      categoryName: eventCategory.name,
+      groupName: eventGroup.name,
+    })
+    .from(participant)
+    .leftJoin(user, eq(participant.userId, user.id))
+    .leftJoin(userDetail, eq(userDetail.userId, user.id))
+    .leftJoin(eventCategory, eq(participant.categoryId, eventCategory.id))
+    .leftJoin(eventGroup, eq(participant.groupId, eventGroup.id))
+    .where(and(eq(participant.eventId, eventId), eq(participant.status, PARTICIPANT_STATUS.COMPLETED)))
+    .orderBy(participant.bibNumber)
 }
 
 export async function getTotalRevenue(eventId: number) {

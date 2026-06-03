@@ -1,7 +1,5 @@
+import {redirect} from "next/navigation";
+
 export default function Page() {
-  return (
-    <div>
-      Dash
-    </div>
-  )
+  return redirect('/dashboard/events');
 }
