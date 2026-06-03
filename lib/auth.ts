@@ -19,7 +19,7 @@ export const auth = betterAuth({
   plugins: [
     admin(),
     magicLink({
-      expiresIn: 900,
+      expiresIn: 3600,
       sendMagicLink: async ({ email, token, url }, ctx) => {
         try {
           await resend.emails.send({
