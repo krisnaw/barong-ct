@@ -72,7 +72,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
               <span className="text-sm font-semibold"><EventDate eventDate={participant.event!.startDate} type="date" /></span>
             </div>
             <div className="flex flex-col gap-0.5">
-              <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Time</span>
+              <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Open Gate Time</span>
               <span className="text-sm font-semibold"><EventDate eventDate={participant.event!.startDate} type="time" /></span>
             </div>
             <div className="col-span-2 flex flex-col gap-0.5">
