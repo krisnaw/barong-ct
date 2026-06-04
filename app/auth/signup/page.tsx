@@ -21,7 +21,7 @@ export default async function SignupPage({
           </div>
           <h1 className="text-xl font-bold">Welcome to Barong Cycling</h1>
           <FieldDescription>
-            Please fill with your email address to sign up or sign to you account
+            Please fill with your email address to sign up or sign to you account. After that check your email.
           </FieldDescription>
         </div>
         <div className="mt-6">

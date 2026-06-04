@@ -10,9 +10,9 @@ import {getOnGoingParticipant} from "@/db/query/participant-query";
 import {getGroupById} from "@/db/query/event-group.query";
 import {getPaymentByParticipant} from "@/db/query/event-payment.query";
 import {EventDetailAlt} from "@/components/events/event-detail-alt";
-import {SignupForm} from "@/components/signup-form";
 import {RegistrationCompleteAlt} from "@/components/events/registration-complete-alt";
 import {BanknoteIcon, CircleDashedIcon, UserIcon} from "lucide-react";
+import {EventDetailWithSignup} from "@/components/events/event-detail-with-signup";
 
 const STATUS_CTA: Record<string, string> = {
   [PARTICIPANT_STATUS.DRAFT]:           "Continue Registration",
@@ -62,13 +62,9 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
     return (
       <div className="bg-slate-50 pt-18 min-h-screen">
         <div className="mx-auto max-w-3xl px-4 md:px-6 lg:px-8 pt-10 pb-24">
+
           <EventDetailAlt event={event}>
-            <div className="flex flex-col text-left">
-              <div className="text-left font-semibold w-full mb-2 text-muted-foreground">
-                Create an account to register for this event
-              </div>
-              <SignupForm returnURL={`/event/${event.id}`} />
-            </div>
+            <EventDetailWithSignup returnURL={`/event/${event.id}`} />
           </EventDetailAlt>
         </div>
       </div>
