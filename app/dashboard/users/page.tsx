@@ -6,7 +6,6 @@ import {getUsers} from "@/db/query/user-query";
 import {format} from "date-fns";
 import {id} from "date-fns/locale";
 import {Badge} from "@/components/ui/badge";
-import {ButtonSendReminder} from "@/app/dashboard/users/button-send-reminder";
 import {PencilIcon} from "lucide-react";
 
 export default async function UsersPage({searchParams}: {
@@ -62,11 +61,6 @@ export default async function UsersPage({searchParams}: {
                       View
                     </Link>
                   </Button>
-                  {!user.phone && (
-                    <>
-                      <ButtonSendReminder email={user.email}/>
-                    </>
-                  )}
                 </TableCell>
               </TableRow>
             ))}
