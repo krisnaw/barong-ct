@@ -54,7 +54,7 @@ export function EventDetailAlt({event, children} : {event: EventWithDetail, chil
           </div>
           <InfoRow
             icon={<ClockIcon className="size-4" />}
-            label="Time"
+            label="Open Gate Time"
             value={timeLabel}
           />
           <div>

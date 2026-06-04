@@ -109,7 +109,7 @@ export const EventJoinedEmailAlt = ({
               </Column>
               <Column className="w-1/2">
                 <Text className="m-0 text-[10px] font-semibold uppercase tracking-widest text-[#71717a]">
-                  Time
+                  Open Gate Time
                 </Text>
                 <Text className="m-0 text-[13px] font-semibold text-white">
                   {eventTime}

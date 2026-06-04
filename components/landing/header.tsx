@@ -18,14 +18,14 @@ export default function Header({user} : {user : User | undefined }) {
                 className="h-14"
               />
             </Link>
-            <div className="space-x-4 text-sm font-medium">
+            <div className="space-x-4 text-md font-medium">
               {user ? (
                 <div className="inline-flex gap-4">
-                  <Link href="/profile">
+                  <Link href="/profile" className="hover:underline">
                     Profile
                   </Link>
                   <form action={signOut}>
-                    <button className="opacity-80 hover:opacity-100">
+                    <button className="opacity-80 hover:opacity-100 hover:underline">
                       Logout
                     </button>
                   </form>
