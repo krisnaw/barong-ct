@@ -77,15 +77,15 @@ export default async function Page() {
       <div className="mx-auto max-w-3xl pb-4">
         <div className="mb-2 flex items-center gap-4">
           <span className="h-px flex-1 bg-white/15"/>
-          <span className="text-[10px] uppercase tracking-[0.4em] text-white/70">Presented With</span>
+          <span className="text-[10px] uppercase tracking-[0.4em] text-white/70">In Partnership With</span>
           <span className="h-px flex-1 bg-white/15"/>
         </div>
         <div
           className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 sm:gap-x-12 sm:gap-y-6 rounded-2xl border border-white/15 bg-white px-6 py-4 sm:px-8 sm:py-6 backdrop-blur-md">
-          <Image src="/barong-bni.png" alt="BarongBNI" width={500} height={400}
-                 className="h-16 sm:h-24 lg:h-36 w-auto object-contain animate-fade-left [animation-delay:600ms]"/>
+          <Image src="/BNI46.png" alt="BarongBNI" width={250} height={250}
+                 className="h-10 w-auto object-contain animate-fade-left [animation-delay:600ms]"/>
           <Image src="/wondr.png" alt="Wondr" width={400} height={400}
-                 className="h-16 sm:h-24 lg:h-36 w-auto object-contain animate-fade-left [animation-delay:780ms]"/>
+                 className="h-18 sm:h-24 lg:h-36 w-auto object-contain animate-fade-left [animation-delay:780ms]"/>
           <Image src="/bni-80.png" alt="BNI" width={400} height={400}
                  className="h-16 sm:h-24 lg:h-36 w-auto object-contain animate-fade-left [animation-delay:960ms]"/>
         </div>

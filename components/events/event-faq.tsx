@@ -45,8 +45,8 @@ const FAQS: Record<"en" | "id", {id: string; question: string; answer: ReactNode
       question: "When and where do I pick up my race pack?",
       answer: (
         <>
-          Race pack collection (RPC) will be held <strong>2 days before the event</strong>. Please bring your
-          confirmation email or QR code from your ticket to collect your jersey and other race materials.
+          Melali Pack Collection will be available during the <strong>two days </strong> leading up to the event.
+          Please bring your confirmation email or registration QR code to collect your jersey and event materials.
         </>
       ),
     },
@@ -103,8 +103,8 @@ const FAQS: Record<"en" | "id", {id: string; question: string; answer: ReactNode
       question: "Kapan dan di mana saya mengambil race pack?",
       answer: (
         <>
-          Pengambilan race pack (RPC) akan dilakukan <strong>2 hari sebelum acara</strong>. Harap bawa email
-          konfirmasi atau QR code dari tiket kamu untuk mengambil jersey dan perlengkapan lomba lainnya.
+          Pengambilan Melali Pack tersedia selama <strong>dua hari</strong> menjelang acara.
+          Mohon tunjukkan email konfirmasi atau kode QR pendaftaran untuk mengambil jersey dan perlengkapan acara lainnya.
         </>
       ),
     },
