@@ -1,4 +1,5 @@
 import {doublePrecision, integer, pgTable, serial, text, timestamp} from "drizzle-orm/pg-core";
+import {relations} from "drizzle-orm";
 import {participant} from "@/db/schema/participant-schema";
 
 export const eventPayment = pgTable("event_payment", {
@@ -24,6 +25,13 @@ export const eventPayment = pgTable("event_payment", {
     .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
 });
+
+export const eventPaymentRelations = relations(eventPayment, ({ one }) => ({
+  participant: one(participant, {
+    fields: [eventPayment.participantId],
+    references: [participant.id],
+  }),
+}));
 
 export type EventPaymentType = typeof eventPayment.$inferSelect
 export type EventPaymentInsert = Omit<EventPaymentType, 'id' | 'createdAt' | 'updatedAt'>

@@ -10,12 +10,24 @@ import {ListPromo} from "@/components/promo/list-promo";
 import {getPromoByEvent} from "@/db/query/event-promo.query";
 import {AddCategory} from "@/components/category/add-category";
 import {AddPromo} from "@/components/promo/add-promo";
-import {getParticipantByEvent} from "@/db/query/participant-query";
+import {getParticipantByEvent, getParticipantByEventCount} from "@/db/query/participant-query";
 import {ListParticipant} from "@/components/participant/list-participant";
 import {buttonVariants} from "@/components/ui/button";
+import {Pagination} from "@/components/ui/pagination";
 
-export default async function Page({params}: { params: Promise<{ id: number }> }) {
+const PAGE_SIZE = 20
+
+export default async function Page({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: number }>
+  searchParams: Promise<{ page?: string }>
+}) {
   const {id} = await params;
+  const { page: pageParam } = await searchParams
+  const page = Math.max(1, parseInt(pageParam ?? "1"))
+
   const event = await getEventById(id)
   if (!event) {
     redirect('/dashboard/events');
@@ -23,7 +35,10 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
 
   const promos = await getPromoByEvent(id)
 
-  const participants = await getParticipantByEvent(id)
+  const [participants, total] = await Promise.all([
+    getParticipantByEvent(id, { page, pageSize: PAGE_SIZE }),
+    getParticipantByEventCount(id),
+  ])
 
   return (
     <div className="space-y-4">
@@ -58,54 +73,6 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
 
         </CardContent>
       </Card>
-      {/*<div className="grid grid-cols-1 md:grid-cols-4 gap-4">*/}
-      {/*  <Card>*/}
-      {/*    <CardHeader>*/}
-      {/*      <CardDescription>Total participants</CardDescription>*/}
-      {/*      <CardTitle className="text-3xl">*/}
-      {/*        {participants.length}*/}
-      {/*      </CardTitle>*/}
-      {/*    </CardHeader>*/}
-      {/*  </Card>*/}
-
-      {/*  <Card>*/}
-      {/*    <CardHeader>*/}
-      {/*      <CardDescription>Total Revenue</CardDescription>*/}
-      {/*      <CardTitle className="text-3xl">*/}
-      {/*        {participants.length}*/}
-      {/*      </CardTitle>*/}
-      {/*    </CardHeader>*/}
-      {/*  </Card>*/}
-
-      {/*  <Card>*/}
-      {/*    <CardHeader>*/}
-      {/*      <CardDescription>Total Revenue</CardDescription>*/}
-      {/*      <CardTitle className="text-3xl">*/}
-      {/*        {participants.length}*/}
-      {/*      </CardTitle>*/}
-      {/*    </CardHeader>*/}
-      {/*  </Card>*/}
-
-      {/*  <Card>*/}
-      {/*    <CardHeader>*/}
-      {/*      <CardDescription>Total Revenue</CardDescription>*/}
-      {/*      <CardTitle className="text-3xl">*/}
-      {/*        {participants.length}*/}
-      {/*      </CardTitle>*/}
-      {/*    </CardHeader>*/}
-      {/*  </Card>*/}
-      {/*</div>*/}
-      <Card>
-        <CardHeader>
-          <CardTitle>Participants</CardTitle>
-          <CardAction>
-            <ButtonDownloadParticipant eventId={event.id} eventName={event.name}/>
-          </CardAction>
-        </CardHeader>
-        <CardContent>
-          <ListParticipant participants={participants}/>
-        </CardContent>
-      </Card>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card>
           <CardHeader>
@@ -131,6 +98,23 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
           </CardContent>
         </Card>
       </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Participants</CardTitle>
+          <CardAction>
+            <ButtonDownloadParticipant eventId={event.id} eventName={event.name}/>
+          </CardAction>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <ListParticipant participants={participants}/>
+          <Pagination
+            page={page}
+            pageSize={PAGE_SIZE}
+            total={total}
+            buildHref={(p) => `/dashboard/events/${id}?page=${p}`}
+          />
+        </CardContent>
+      </Card>
     </div>
   )
 }

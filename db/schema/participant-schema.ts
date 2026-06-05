@@ -7,6 +7,7 @@ import {createInsertSchema} from "drizzle-zod";
 import {eventCategory} from "@/db/schema/event-category-schema";
 import {eventGroup} from "@/db/schema/event-group-schema";
 import {eventPromoSchema} from "@/db/schema/event-promo.schema";
+import {eventPayment} from "@/db/schema/event-payment.schema";
 
 export const participant = pgTable("event_participant", {
   id: serial('id').primaryKey(),
@@ -53,7 +54,7 @@ export const participant = pgTable("event_participant", {
   ),
 }))
 
-export const participantRelations = relations(participant, ({ one }) => ({
+export const participantRelations = relations(participant, ({ one, many }) => ({
   event: one(EventSchema, {
     fields: [participant.eventId],
     references: [EventSchema.id],
@@ -70,6 +71,7 @@ export const participantRelations = relations(participant, ({ one }) => ({
     fields: [participant.groupId],
     references: [eventGroup.id],
   }),
+  payments: many(eventPayment),
 }));
 
 export type ParticipantType = typeof participant.$inferSelect

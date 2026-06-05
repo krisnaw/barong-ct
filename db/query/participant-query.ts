@@ -1,7 +1,7 @@
 "use server"
 
 import {db} from "@/db/db";
-import {and, eq, getTableColumns, isNull, sum} from "drizzle-orm";
+import {and, count, eq, getTableColumns, isNull, sum} from "drizzle-orm";
 import {eventCategory, eventGroup, participant, user, userDetail} from "@/db/schema";
 import {PARTICIPANT_STATUS} from "@/utils/event.helper";
 
@@ -92,14 +92,22 @@ export async function getParticipantsByEventId(eventId: number) {
   });
 }
 
-export async function getParticipantByEvent(eventId: number, sortByName: boolean = false) {
+export async function getParticipantByEvent(
+  eventId: number,
+  { page = 1, pageSize = 20, sortByName = false, status = PARTICIPANT_STATUS.COMPLETED }: { page?: number; pageSize?: number; sortByName?: boolean, status? : string } = {}
+) {
   return db.query.participant.findMany({
-    where: and(eq(participant.eventId, eventId), eq(participant.status, PARTICIPANT_STATUS.COMPLETED)),
+    where: and(eq(participant.eventId, eventId), eq(participant.status, status)),
     with: {
       user: {
         columns: {
           name: true,
           email: true,
+        }
+      },
+      group: {
+        columns: {
+          name: true,
         }
       },
       category: {
@@ -108,15 +116,38 @@ export async function getParticipantByEvent(eventId: number, sortByName: boolean
           price: true
         }
       },
+      payments: {
+        columns: {
+          status: true,
+          invoiceNumber: true,
+        },
+        limit: 1,
+        orderBy: (payment, { desc }) => [desc(payment.createdAt)],
+      },
     },
-    orderBy: (participant, { desc }) => [desc(participant.createdAt)],
+    orderBy: (participant, { desc, asc }) => [
+      sortByName ? asc(participant.id) : desc(participant.createdAt)
+    ],
+    limit: pageSize,
+    offset: (page - 1) * pageSize,
   })
 }
 
 export type ParticipantType = Awaited<ReturnType<typeof getParticipantByEvent>>[number]
 
+export async function getParticipantByEventCount(
+  eventId: number,
+  status: string = PARTICIPANT_STATUS.COMPLETED
+) {
+  const result = await db
+    .select({ total: count() })
+    .from(participant)
+    .where(and(eq(participant.eventId, eventId), eq(participant.status, status)))
+  return result[0]?.total ?? 0
+}
+
 export async function getPendingParticipants(eventId: number) {
-  const usersNotJoined = await db
+  return await db
     .select({
       ...getTableColumns(user), phone: userDetail.phoneNumber
     })
@@ -130,7 +161,6 @@ export async function getPendingParticipants(eventId: number) {
       )
     )
     .where(isNull(participant.id));
-  return usersNotJoined;
 }
 
 export async function getParticipantByPromo(promoId: number) {

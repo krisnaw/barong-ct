@@ -12,7 +12,8 @@ export function ListParticipant({participants} : {participants : ParticipantType
         <TableRow>
           <TableHead>Bib</TableHead>
           <TableHead>Name</TableHead>
-          <TableHead>Total</TableHead>
+          <TableHead>Group</TableHead>
+          <TableHead>Payment</TableHead>
           <TableHead>Promo</TableHead>
           <TableHead>Cat</TableHead>
           <TableHead>Registered At</TableHead>
@@ -32,8 +33,24 @@ export function ListParticipant({participants} : {participants : ParticipantType
                   </span>
                 </div>
               </TableCell>
-              <TableCell className="font-medium">{participant.finalPrice ? formatMoney(participant.finalPrice) : "-"}</TableCell>
-              <TableCell className="font-medium">{participant.promoCode ?? "-"}</TableCell>
+              <TableCell className="font-medium">
+                <Badge variant="secondary">
+                  {participant.group?.name}
+                </Badge>
+              </TableCell>
+              <TableCell className="font-medium">
+                <div className="flex flex-col">
+                  <span className="font-medium">
+                    {participant.finalPrice ? formatMoney(participant.finalPrice) : "-"}
+                  </span>
+                  <span className="text-sm text-muted-foreground">
+                    {participant.payments[0].invoiceNumber}
+                  </span>
+                </div>
+              </TableCell>
+              <TableCell className="font-medium">
+                {participant.promoCode ?? "-"}
+              </TableCell>
               <TableCell className="font-medium">
                 <Badge>{participant.category?.name}</Badge>
               </TableCell>
