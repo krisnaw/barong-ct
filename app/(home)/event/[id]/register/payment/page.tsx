@@ -76,7 +76,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
 
             <Separator className="my-4"/>
 
-            <CheckPaymentButton invoiceNumber={payment.invoiceNumber}/>
+            <CheckPaymentButton expiredAt={payment.expiresAt} invoiceNumber={payment.invoiceNumber}/>
 
           </CardContent>
         </Card>

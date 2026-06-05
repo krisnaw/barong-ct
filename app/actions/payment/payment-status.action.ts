@@ -12,10 +12,10 @@ const dokuBaseURL = process.env.DOKU_API_URL
 const dokuReqPath = '/orders/v1/status/'
 const clientID = process.env.DOKU_CLIENT_ID!
 const clientSecret = process.env.DOKU_SECRET_KEY!
-const requestTimestamp = new Date().toISOString().slice(0, 19) + "Z"
 
 export async function checkPaymentStatus(invoiceId: string) {
   console.log("Checking Payment Status...")
+  const requestTimestamp = new Date().toISOString().slice(0, 19) + "Z"
   const requestId = crypto.randomUUID().toString();
   const requestTarget = `${dokuReqPath}${invoiceId}`;
   const signature = generateSignature(
@@ -55,14 +55,27 @@ export async function checkPaymentStatus(invoiceId: string) {
         revalidatePath("/")
       }
 
+      return { success: true, status };
     }
+
+    return { success: false, status: null };
   } catch (error) {
+    console.log(error);
     if (error instanceof Error) {
       console.log("Sorry something wrong")
       console.log(error.message);
-      throw error;
     }
-
+    return { success: false, status: null };
   }
 
+}
+
+export async function updatePaymentStatusToExpired(invoiceId: string) {
+  try {
+    await db.update(eventPayment).set({status: PAYMENT_STATUS.EXPIRED}).where(eq(eventPayment.invoiceNumber, invoiceId)).returning();
+    return { success: true };
+  } catch (error) {
+    console.log(error);
+    return { success: false };
+  }
 }
