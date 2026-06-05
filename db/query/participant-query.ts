@@ -78,6 +78,20 @@ export async function checkParticipantByEvent(eventId: number, userId: string): 
   return !!user;
 }
 
+export async function getParticipantsByEventId(eventId: number) {
+  return db.query.participant.findMany({
+    where: and(eq(participant.eventId, eventId)),
+    with: {
+      user: {
+        columns: {
+          name: true,
+          email: true,
+        }
+      },
+    }
+  });
+}
+
 export async function getParticipantByEvent(eventId: number, sortByName: boolean = false) {
   return db.query.participant.findMany({
     where: and(eq(participant.eventId, eventId), eq(participant.status, PARTICIPANT_STATUS.COMPLETED)),
