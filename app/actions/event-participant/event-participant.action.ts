@@ -72,3 +72,12 @@ export async function updateParticipant(formData: UpdateParticipantType) : Promi
     message: "Success, "
   }
 }
+
+export async function updateParticipantStatus(formData: UpdateParticipantType) : Promise<ActionResponse> {
+  await db.update(participant).set(formData).where(eq(participant.id, Number(formData.id)))
+  revalidatePath('/', 'layout');
+  return {
+    success: true,
+    message: "Success, "
+  }
+}
