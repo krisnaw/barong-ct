@@ -29,7 +29,7 @@ export async function updateGroupCategoryAction(groupId: number, categoryId: num
   }
 }
 
-export async function updateGroupAction(formData: Pick<InsertGroupType, "name" | "eventId"> & { id: number }) : Promise<ActionResponse> {
+export async function updateGroupAction(formData: Pick<InsertGroupType, "name" | "eventId" | "eventCategoryId"> & { id: number }) : Promise<ActionResponse> {
   const name = formData.name?.trim()
 
   if (!name) {
@@ -41,7 +41,7 @@ export async function updateGroupAction(formData: Pick<InsertGroupType, "name" |
 
   await db
     .update(eventGroup)
-    .set({name})
+    .set({ name, eventCategoryId: formData.eventCategoryId })
     .where(eq(eventGroup.id, formData.id))
 
   revalidatePath(`/`, 'page')

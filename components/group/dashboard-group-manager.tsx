@@ -105,6 +105,7 @@ export function DashboardGroupManager({eventId, categories, groups}: Props) {
           id: selectedGroup.id,
           eventId: selectedGroup.eventId,
           name: values.name,
+          eventCategoryId: values.eventCategoryId,
         })
         toast.info(res.message)
 
@@ -115,7 +116,7 @@ export function DashboardGroupManager({eventId, categories, groups}: Props) {
         setItems((current) =>
           current.map((group) =>
             group.id === selectedGroup.id
-              ? {...group, name: values.name}
+              ? {...group, name: values.name, eventCategoryId: values.eventCategoryId}
               : group
           )
         )
@@ -355,7 +356,6 @@ function GroupSheet({
                 <Select
                   value={categoryValue}
                   onValueChange={(value) => value && setCategoryValue(value)}
-                  disabled={mode === "edit"}
                 >
                   <SelectTrigger id={`${formId}-category`} className="w-full">
                     <SelectValue />
@@ -370,9 +370,7 @@ function GroupSheet({
                   </SelectContent>
                 </Select>
                 <FieldDescription>
-                  {mode === "edit"
-                    ? "Only group name editing is wired for now."
-                    : "The category shown when participants choose this group."}
+                  The category shown when participants choose this group.
                 </FieldDescription>
               </Field>
             </FieldGroup>

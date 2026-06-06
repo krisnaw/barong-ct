@@ -1,6 +1,6 @@
 'use client'
 
-import {useState} from "react";
+import {useActionState, useState} from "react";
 import {EventCategoryType, EventGroupType} from "@/db/schema";
 import {PromoType} from "@/db/schema/event-promo.schema";
 import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
@@ -13,6 +13,8 @@ import {Separator} from "@/components/ui/separator";
 import {formatMoney} from "@/utils/money-helper";
 
 const JERSEY_SIZES = ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL']
+const GENDERS = ['Male', 'Female', 'Other']
+const BLOOD_TYPES = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
 
 type Props = {
   categories: EventCategoryType[]
@@ -27,6 +29,11 @@ export function AdminRegisterForm({categories, groups, promos}: Props) {
   const [groupId, setGroupId] = useState<string>('')
   const [jerseySize, setJerseySize] = useState<string>('')
   const [promoId, setPromoId] = useState<string>('')
+  const [gender, setGender] = useState<string>('')
+  const [bloodType, setBloodType] = useState<string>('')
+  const [emergencyContactName, setEmergencyContactName] = useState('')
+  const [emergencyPhone, setEmergencyPhone] = useState('')
+  const [city, setCity] = useState('')
 
   const selectedCategory = categories.find(c => String(c.id) === categoryId)
   const selectedGroup = groups.find(g => String(g.id) === groupId)
@@ -44,124 +51,218 @@ export function AdminRegisterForm({categories, groups, promos}: Props) {
   const isFreePass = discount >= price
   const total = isFreePass ? 0 : price + fee - discount
 
+  const [, dispatch, isPending] = useActionState(
+    async (_prev: unknown, formData: FormData) => {
+      console.log(Object.fromEntries(formData.entries()))
+      return null
+    },
+    null
+  )
+
   const canSubmit = name.trim() !== '' && email.trim() !== '' && categoryId !== ''
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
 
       {/* LEFT: Form */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Participant Details</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
+      <form action={dispatch}>
+        <Card>
+          <CardHeader>
+            <CardTitle>Participant Details</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
 
-          <div className="space-y-1.5">
-            <Label htmlFor="name">Full Name</Label>
-            <Input
-              id="name"
-              placeholder="e.g. John Doe"
-              value={name}
-              onChange={e => setName(e.target.value)}
-            />
-          </div>
-
-          <div className="space-y-1.5">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="e.g. john@example.com"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-            />
-          </div>
-
-          <div className="space-y-1.5">
-            <Label>Category</Label>
-            <Select value={categoryId} onValueChange={v => { setCategoryId(v ?? ''); setPromoId('') }}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select category"/>
-              </SelectTrigger>
-              <SelectContent>
-                {categories.map(cat => (
-                  <SelectItem key={cat.id} value={String(cat.id)}>
-                    {cat.name} — {formatMoney(Number(cat.price))}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-1.5">
-            <Label>
-              Group{" "}
-              <span className="text-muted-foreground text-xs">(optional)</span>
-            </Label>
-            <Select value={groupId} onValueChange={v => setGroupId(v ?? '')}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select group"/>
-              </SelectTrigger>
-              <SelectContent>
-                {groups.map(g => (
-                  <SelectItem key={g.id} value={String(g.id)}>
-                    {g.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-1.5">
-            <Label>
-              Jersey Size{" "}
-              <span className="text-muted-foreground text-xs">(optional)</span>
-            </Label>
-            <Select value={jerseySize} onValueChange={v => setJerseySize(v ?? '')}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select size"/>
-              </SelectTrigger>
-              <SelectContent>
-                {JERSEY_SIZES.map(size => (
-                  <SelectItem key={size} value={size.toLowerCase()}>
-                    {size}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {promos.length > 0 && (
             <div className="space-y-1.5">
-              <Label>
-                Promo{" "}
-                <span className="text-muted-foreground text-xs">(optional)</span>
-              </Label>
-              <Select value={promoId} onValueChange={v => setPromoId(v ?? '')}>
+              <Label htmlFor="name">Full Name</Label>
+              <Input
+                id="name"
+                name="name"
+                placeholder="e.g. John Doe"
+                value={name}
+                onChange={e => setName(e.target.value)}
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="e.g. john@example.com"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <Label>Category</Label>
+              <Select name="categoryId" value={categoryId} onValueChange={v => {
+                setCategoryId(v ?? '');
+                setPromoId('')
+              }}>
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select promo"/>
+                  <SelectValue placeholder="Select category"/>
                 </SelectTrigger>
                 <SelectContent>
-                  {promos.map(p => (
-                    <SelectItem key={p.id} value={String(p.id)}>
-                      {p.promo} —{" "}
-                      {p.discountType === 'percentage'
-                        ? `${p.discountValue}% off`
-                        : formatMoney(p.discountValue)}
+                  {categories.map(cat => (
+                    <SelectItem key={cat.id} value={String(cat.id)}>
+                      {cat.name} — {formatMoney(Number(cat.price))}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
-          )}
 
-        </CardContent>
-        <CardFooter>
-          <Button className="w-full" disabled={!canSubmit}>
-            Register & Get Payment Link
-          </Button>
-        </CardFooter>
-      </Card>
+            <div className="space-y-1.5">
+              <Label>
+                Group{" "}
+                <span className="text-muted-foreground text-xs">(optional)</span>
+              </Label>
+              <Select name="groupId" value={groupId} onValueChange={v => setGroupId(v ?? '')}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select group"/>
+                </SelectTrigger>
+                <SelectContent>
+                  {groups.map(g => (
+                    <SelectItem key={g.id} value={String(g.id)}>
+                      {g.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-1.5">
+              <Label>
+                Jersey Size{" "}
+                <span className="text-muted-foreground text-xs">(optional)</span>
+              </Label>
+              <Select name="jerseySize" value={jerseySize} onValueChange={v => setJerseySize(v ?? '')}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select size"/>
+                </SelectTrigger>
+                <SelectContent>
+                  {JERSEY_SIZES.map(size => (
+                    <SelectItem key={size} value={size.toLowerCase()}>
+                      {size}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <Label>
+                  Gender{" "}
+                  <span className="text-muted-foreground text-xs">(optional)</span>
+                </Label>
+                <Select name="gender" value={gender} onValueChange={v => setGender(v ?? '')}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select gender"/>
+                  </SelectTrigger>
+                  <SelectContent>
+                    {GENDERS.map(g => (
+                      <SelectItem key={g} value={g.toLowerCase()}>{g}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-1.5">
+                <Label>
+                  Blood Type{" "}
+                  <span className="text-muted-foreground text-xs">(optional)</span>
+                </Label>
+                <Select name="bloodType" value={bloodType} onValueChange={v => setBloodType(v ?? '')}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select blood type"/>
+                  </SelectTrigger>
+                  <SelectContent>
+                    {BLOOD_TYPES.map(bt => (
+                      <SelectItem key={bt} value={bt}>{bt}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="city">
+                City{" "}
+                <span className="text-muted-foreground text-xs">(optional)</span>
+              </Label>
+              <Input
+                id="city"
+                name="city"
+                placeholder="e.g. Denpasar"
+                value={city}
+                onChange={e => setCity(e.target.value)}
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="emergency-name">
+                Emergency Contact Name{" "}
+                <span className="text-muted-foreground text-xs">(optional)</span>
+              </Label>
+              <Input
+                id="emergency-name"
+                name="emergencyContactName"
+                placeholder="e.g. Jane Doe"
+                value={emergencyContactName}
+                onChange={e => setEmergencyContactName(e.target.value)}
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="emergency-phone">
+                Emergency Phone{" "}
+                <span className="text-muted-foreground text-xs">(optional)</span>
+              </Label>
+              <Input
+                id="emergency-phone"
+                name="emergencyPhone"
+                type="tel"
+                placeholder="e.g. +62812345678"
+                value={emergencyPhone}
+                onChange={e => setEmergencyPhone(e.target.value)}
+              />
+            </div>
+
+            {promos.length > 0 && (
+              <div className="space-y-1.5">
+                <Label>
+                  Promo{" "}
+                  <span className="text-muted-foreground text-xs">(optional)</span>
+                </Label>
+                <Select name="promoId" value={promoId} onValueChange={v => setPromoId(v ?? '')}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select promo"/>
+                  </SelectTrigger>
+                  <SelectContent>
+                    {promos.map(p => (
+                      <SelectItem key={p.id} value={String(p.id)}>
+                        {p.promo} —{" "}
+                        {p.discountType === 'percentage'
+                          ? `${p.discountValue}% off`
+                          : formatMoney(p.discountValue)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+
+          </CardContent>
+          <CardFooter>
+            <Button type="submit" className="w-full" disabled={!canSubmit || isPending}>
+              {isPending ? 'Submitting…' : 'Register & Get Payment Link'}
+            </Button>
+          </CardFooter>
+        </Card>
+      </form>
 
       {/* RIGHT: Live preview */}
       <Card>
@@ -223,7 +324,7 @@ export function AdminRegisterForm({categories, groups, promos}: Props) {
             </ItemContent>
           </Item>
 
-          {(selectedGroup || jerseySize) && (
+          {(selectedGroup || jerseySize || gender || bloodType || city || emergencyContactName || emergencyPhone) && (
             <div className="flex flex-wrap gap-2">
               {selectedGroup && (
                 <span className="rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground">
@@ -233,6 +334,26 @@ export function AdminRegisterForm({categories, groups, promos}: Props) {
               {jerseySize && (
                 <span className="rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground uppercase">
                   {jerseySize}
+                </span>
+              )}
+              {gender && (
+                <span className="rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground capitalize">
+                  {gender}
+                </span>
+              )}
+              {bloodType && (
+                <span className="rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground">
+                  {bloodType}
+                </span>
+              )}
+              {city && (
+                <span className="rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground">
+                  {city}
+                </span>
+              )}
+              {emergencyContactName && (
+                <span className="rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground">
+                  Emergency: {emergencyContactName}{emergencyPhone ? ` · ${emergencyPhone}` : ''}
                 </span>
               )}
             </div>
