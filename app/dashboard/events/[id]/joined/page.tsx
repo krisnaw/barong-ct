@@ -32,7 +32,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
                 <TableCell className="font-medium">{participant.user.name}</TableCell>
                 <TableCell>{participant.user.email}</TableCell>
                 <TableCell>{participant.status}</TableCell>
-                <TableCell>{participant.payments[0].status}</TableCell>
+                <TableCell>{participant.payments[0]?.status?? "-"}</TableCell>
                 <TableCell>  <EventDate eventDate={participant.createdAt} type="date" /></TableCell>
                 <TableCell className="text-right">
                   {participant.bibNumber && participant.status !== PARTICIPANT_STATUS.COMPLETED ? (
