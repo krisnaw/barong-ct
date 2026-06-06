@@ -2,6 +2,7 @@ import {doublePrecision, integer, pgTable, serial, text, timestamp} from "drizzl
 import {EventSchema} from "@/db/schema/event-schema";
 import {createInsertSchema, createUpdateSchema} from "drizzle-zod";
 import {relations} from "drizzle-orm";
+import {participant} from "@/db/schema/participant-schema";
 
 export const eventCategory = pgTable("event_category", {
   id: serial('id').primaryKey(),
@@ -31,9 +32,10 @@ export const EventCategoryUpdateSchema = createUpdateSchema(eventCategory).omit(
 })
 
 
-export const categoriesRelations = relations(eventCategory, ({ one }) => ({
+export const categoriesRelations = relations(eventCategory, ({ one, many }) => ({
   event: one(EventSchema, {
     fields: [eventCategory.eventId],
     references: [EventSchema.id],
   }),
+  participants: many(participant),
 }));

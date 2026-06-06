@@ -15,6 +15,20 @@ export async function createGroupAction(formData: InsertGroupType) : Promise<Act
   }
 }
 
+export async function updateGroupCategoryAction(groupId: number, categoryId: number | null): Promise<ActionResponse> {
+  await db
+    .update(eventGroup)
+    .set({ eventCategoryId: categoryId })
+    .where(eq(eventGroup.id, groupId))
+
+  revalidatePath(`/`, 'page')
+
+  return {
+    success: true,
+    message: "Success, group category was updated.",
+  }
+}
+
 export async function updateGroupAction(formData: Pick<InsertGroupType, "name" | "eventId"> & { id: number }) : Promise<ActionResponse> {
   const name = formData.name?.trim()
 

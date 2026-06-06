@@ -1,20 +1,21 @@
 'use client'
 
 import * as React from "react"
-import {Pencil, Plus, Search, UsersRound} from "lucide-react"
 import {useRouter} from "next/navigation"
 import {toast} from "sonner"
 
 import {createGroupAction, updateGroupAction} from "@/app/actions/event-group/event-group.action"
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import {Badge} from "@/components/ui/badge"
 import {Button} from "@/components/ui/button"
-import {
-  Empty,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-} from "@/components/ui/empty"
+import {Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle,} from "@/components/ui/empty"
 import {Field, FieldDescription, FieldGroup, FieldLabel} from "@/components/ui/field"
 import {Input} from "@/components/ui/input"
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select"
@@ -29,13 +30,18 @@ import {
 } from "@/components/ui/sheet"
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table"
 import {EventCategoryType, EventGroupType, InsertGroupType} from "@/db/schema"
+import {Pencil, Plus, Search, Users, UsersRound} from "lucide-react";
 
-type DraftGroup = Pick<EventGroupType, "id" | "name" | "eventId" | "eventCategoryId">
+type GroupParticipant = { id: number; user: { name: string } }
+
+type DraftGroup = Pick<EventGroupType, "id" | "name" | "eventId" | "eventCategoryId"> & {
+  participants: GroupParticipant[]
+}
 
 type Props = {
   eventId: number
   categories: EventCategoryType[]
-  groups: EventGroupType[]
+  groups: (EventGroupType & { participants: GroupParticipant[] })[]
 }
 
 type SheetMode = "create" | "edit"
@@ -48,6 +54,7 @@ export function DashboardGroupManager({eventId, categories, groups}: Props) {
       name: group.name,
       eventId: group.eventId,
       eventCategoryId: group.eventCategoryId,
+      participants: group.participants,
     }))
   )
   const [query, setQuery] = React.useState("")
@@ -55,6 +62,7 @@ export function DashboardGroupManager({eventId, categories, groups}: Props) {
   const [isSaving, setIsSaving] = React.useState(false)
   const [mode, setMode] = React.useState<SheetMode>("create")
   const [selectedGroup, setSelectedGroup] = React.useState<DraftGroup | null>(null)
+  const [participantsGroup, setParticipantsGroup] = React.useState<DraftGroup | null>(null)
 
   const categoryById = React.useMemo(() => {
     return new Map(categories.map((category) => [category.id, category]))
@@ -135,6 +143,7 @@ export function DashboardGroupManager({eventId, categories, groups}: Props) {
             name: values.name,
             eventId,
             eventCategoryId: values.eventCategoryId,
+            participants: [],
           },
         ])
 
@@ -171,15 +180,17 @@ export function DashboardGroupManager({eventId, categories, groups}: Props) {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead className="w-16">ID</TableHead>
               <TableHead>Group</TableHead>
               <TableHead>Category</TableHead>
-              <TableHead className="w-24 text-right">Action</TableHead>
+              <TableHead className="w-20 text-right">Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {filteredGroups.length > 0 ? (
               filteredGroups.map((group) => (
                 <TableRow key={group.id}>
+                  <TableCell className="tabular-nums text-muted-foreground">{group.id}</TableCell>
                   <TableCell className="font-medium">{group.name}</TableCell>
                   <TableCell>
                     {group.eventCategoryId ? (
@@ -195,6 +206,15 @@ export function DashboardGroupManager({eventId, categories, groups}: Props) {
                       type="button"
                       variant="ghost"
                       size="icon-sm"
+                      aria-label={`View participants in ${group.name}`}
+                      onClick={() => setParticipantsGroup(group)}
+                    >
+                      <Users />
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon-sm"
                       aria-label={`Edit ${group.name}`}
                       onClick={() => openEditSheet(group)}
                     >
@@ -205,7 +225,7 @@ export function DashboardGroupManager({eventId, categories, groups}: Props) {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={3}>
+                <TableCell colSpan={4}>
                   <Empty className="border-0 py-10">
                     <EmptyHeader>
                       <EmptyMedia variant="icon">
@@ -236,6 +256,35 @@ export function DashboardGroupManager({eventId, categories, groups}: Props) {
           onSave={handleSave}
         />
       ) : null}
+
+      <AlertDialog
+        open={participantsGroup !== null}
+        onOpenChange={(isOpen) => { if (!isOpen) setParticipantsGroup(null) }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {participantsGroup?.name} — Participants
+            </AlertDialogTitle>
+          </AlertDialogHeader>
+          {participantsGroup && participantsGroup.participants.length > 0 ? (
+            <ul className="max-h-72 space-y-1 overflow-y-auto py-1 text-sm">
+              {participantsGroup.participants.map((p) => (
+                <li key={p.id} className="rounded px-2 py-1.5 hover:bg-muted">
+                  {p.user.name}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="py-4 text-center text-sm text-muted-foreground">
+              No participants in this group yet.
+            </p>
+          )}
+          <AlertDialogFooter>
+            <AlertDialogCancel>Close</AlertDialogCancel>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

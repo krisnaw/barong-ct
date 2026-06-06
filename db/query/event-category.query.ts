@@ -6,7 +6,16 @@ import {eventCategory} from "@/db/schema";
 
 export async function getCategoryByEvent(eventId: number) {
   return db.query.eventCategory.findMany({
-    where: eq(eventCategory.eventId, eventId)
+    where: eq(eventCategory.eventId, eventId),
+    with: {
+      participants: {
+        with: {
+          user: {
+            columns: { name: true }
+          }
+        }
+      }
+    }
   })
 }
 

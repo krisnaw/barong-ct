@@ -119,7 +119,7 @@ export default async function Page({
           </CardAction>
         </CardHeader>
         <CardContent className="space-y-4">
-          <ListParticipant participants={participants} groups={groups}/>
+          <ListParticipant participants={participants} groups={groups} categories={event.categories}/>
           <Pagination
             page={page}
             pageSize={PAGE_SIZE}

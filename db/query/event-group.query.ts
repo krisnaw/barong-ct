@@ -19,6 +19,15 @@ export async function getGroupById(groupId: number) {
 
 export async function getGroupsByEvent(eventId: number) {
   return db.query.eventGroup.findMany({
-    where: eq(eventGroup.eventId, eventId)
+    where: eq(eventGroup.eventId, eventId),
+    with: {
+      participants: {
+        with: {
+          user: {
+            columns: { name: true },
+          },
+        },
+      },
+    },
   });
 }
