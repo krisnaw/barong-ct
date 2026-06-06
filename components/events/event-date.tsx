@@ -1,4 +1,3 @@
-'use client'
 import {toZonedTime} from "date-fns-tz";
 import {formatEventDate, formatEventTime} from "@/types/date-helper";
 

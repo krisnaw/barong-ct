@@ -1,4 +1,4 @@
-import {getParticipantsByEventId} from "@/db/query/participant-query";
+import {getPendingParticipantByEvent} from "@/db/query/participant-query";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table"
 import {EventDate} from "@/components/events/event-date";
@@ -7,7 +7,7 @@ import {PARTICIPANT_STATUS} from "@/utils/event.helper";
 
 export default async function Page({params}: { params: Promise<{ id: number }> }) {
   const {id} = await params;
-  const participants = await getParticipantsByEventId(id)
+  const participants = await getPendingParticipantByEvent(id)
 
   return (
     <Card>
@@ -21,6 +21,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
               <TableHead className="w-25">Name</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Status</TableHead>
+              <TableHead>Payment</TableHead>
               <TableHead>CreatedAt</TableHead>
               <TableHead className="text-right">CreatedAt</TableHead>
             </TableRow>
@@ -31,6 +32,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
                 <TableCell className="font-medium">{participant.user.name}</TableCell>
                 <TableCell>{participant.user.email}</TableCell>
                 <TableCell>{participant.status}</TableCell>
+                <TableCell>{participant.payments[0].status}</TableCell>
                 <TableCell>  <EventDate eventDate={participant.createdAt} type="date" /></TableCell>
                 <TableCell className="text-right">
                   {participant.bibNumber && participant.status !== PARTICIPANT_STATUS.COMPLETED ? (

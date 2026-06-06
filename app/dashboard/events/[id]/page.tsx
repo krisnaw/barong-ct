@@ -14,6 +14,7 @@ import {getParticipantByEvent, getParticipantByEventCount} from "@/db/query/part
 import {ListParticipant} from "@/components/participant/list-participant";
 import {buttonVariants} from "@/components/ui/button";
 import {Pagination} from "@/components/ui/pagination";
+import {getGroupsByEvent} from "@/db/query/event-group.query";
 
 const PAGE_SIZE = 20
 
@@ -35,9 +36,10 @@ export default async function Page({
 
   const promos = await getPromoByEvent(id)
 
-  const [participants, total] = await Promise.all([
+  const [participants, total, groups] = await Promise.all([
     getParticipantByEvent(id, { page, pageSize: PAGE_SIZE }),
     getParticipantByEventCount(id),
+    getGroupsByEvent(id)
   ])
 
   return (
@@ -63,6 +65,11 @@ export default async function Page({
 
             </div>
             <div className="mt-4 flex md:mt-0 md:ml-4 gap-2">
+              <Link
+                className={buttonVariants({variant: "outline", size: "sm"})}
+                href={`/dashboard/events/${id}/groups`}>
+                Manage Groups
+              </Link>
               <Link
                 className={buttonVariants({variant: "secondary", size: "sm"})}
                 href={`/dashboard/events/${id}/edit`}>
@@ -101,12 +108,18 @@ export default async function Page({
       <Card>
         <CardHeader>
           <CardTitle>Participants</CardTitle>
-          <CardAction>
+          <CardAction className="flex gap-2">
+            <Link
+              className={buttonVariants({variant: "outline", size: "sm"})}
+              href={`/dashboard/events/${id}/register`}
+            >
+              Register User
+            </Link>
             <ButtonDownloadParticipant eventId={event.id} eventName={event.name}/>
           </CardAction>
         </CardHeader>
         <CardContent className="space-y-4">
-          <ListParticipant participants={participants}/>
+          <ListParticipant participants={participants} groups={groups}/>
           <Pagination
             page={page}
             pageSize={PAGE_SIZE}

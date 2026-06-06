@@ -1,7 +1,7 @@
 "use server"
 
 import {db} from "@/db/db";
-import {and, count, eq, getTableColumns, isNull, sum} from "drizzle-orm";
+import {and, count, eq, getTableColumns, isNull, ne, sum} from "drizzle-orm";
 import {eventCategory, eventGroup, participant, user, userDetail} from "@/db/schema";
 import {PARTICIPANT_STATUS} from "@/utils/event.helper";
 
@@ -78,15 +78,23 @@ export async function checkParticipantByEvent(eventId: number, userId: string): 
   return !!user;
 }
 
-export async function getParticipantsByEventId(eventId: number) {
+export async function getPendingParticipantByEvent(eventId: number) {
   return db.query.participant.findMany({
-    where: and(eq(participant.eventId, eventId)),
+    where: and(eq(participant.eventId, eventId), ne(participant.status, PARTICIPANT_STATUS.COMPLETED)),
     with: {
       user: {
         columns: {
           name: true,
           email: true,
         }
+      },
+      payments: {
+        columns: {
+          status: true,
+          invoiceNumber: true,
+        },
+        limit: 1,
+        orderBy: (payment, { desc }) => [desc(payment.createdAt)],
       },
     }
   });

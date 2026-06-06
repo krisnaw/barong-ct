@@ -16,8 +16,8 @@ export function BtnResendConfirm({participantId}: { participantId: number }) {
   }, initialState)
 
   return (
-    <form action={formAction} className="inline-flex w-full">
-      <Button size="icon-sm" variant="outline" type="submit" disabled={isPending}>
+    <form action={formAction}>
+      <Button size="icon-xs" variant="outline" type="submit" disabled={isPending}>
         {isPending ? <Spinner/> : <Send/> }
       </Button>
     </form>

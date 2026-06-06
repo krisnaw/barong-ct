@@ -4,8 +4,10 @@ import {formatMoney} from "@/utils/money-helper";
 import {Badge} from "@/components/ui/badge";
 import {ParticipantType} from "@/db/query/participant-query";
 import {BtnResendConfirm} from "@/components/button/btn-resend-confirm";
+import {EventGroupType} from "@/db/schema";
+import {ButtonChangeParticipantGroup} from "@/components/participant/button-change-participant-group";
 
-export function ListParticipant({participants} : {participants : ParticipantType[]}) {
+export function ListParticipant({participants, groups} : {participants : ParticipantType[], groups: EventGroupType[]}) {
   return (
     <Table>
       <TableHeader>
@@ -57,8 +59,9 @@ export function ListParticipant({participants} : {participants : ParticipantType
               <TableCell className="font-medium">
                 <EventDate eventDate={participant.updatedAt} type="date" />
               </TableCell>
-              <TableCell>
+              <TableCell className="inline-flex gap-2">
                 <BtnResendConfirm participantId={participant.id} />
+                <ButtonChangeParticipantGroup participantId={participant.id} groups={groups} />
               </TableCell>
             </TableRow>
           ))
