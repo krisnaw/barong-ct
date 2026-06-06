@@ -36,7 +36,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
         <p className="text-sm text-muted-foreground">{event.name}</p>
       </div>
 
-      <AdminRegisterForm categories={categories} groups={groups} promos={promos}/>
+      <AdminRegisterForm eventId={id} categories={categories} groups={groups} promos={promos}/>
     </div>
   )
 }

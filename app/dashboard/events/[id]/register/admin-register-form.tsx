@@ -10,19 +10,39 @@ import {Label} from "@/components/ui/label";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {Item, ItemContent} from "@/components/ui/item";
 import {Separator} from "@/components/ui/separator";
+import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
+import {Field, FieldContent, FieldDescription, FieldLabel, FieldTitle} from "@/components/ui/field";
 import {formatMoney} from "@/utils/money-helper";
+import {adminRegisterParticipant, AdminRegisterState} from "@/app/actions/event-participant/event-participant.action";
+import {toast} from "sonner";
 
 const JERSEY_SIZES = ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL']
 const GENDERS = ['Male', 'Female', 'Other']
 const BLOOD_TYPES = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
 
+const PAYMENT_METHODS = [
+  {
+    id: 'pm-bni-va',
+    value: ['VIRTUAL_ACCOUNT_BNI'],
+    label: 'BNI Virtual Account',
+    description: 'Pay with BNI VA',
+  },
+  {
+    id: 'pm-qris-cc',
+    value: ['QRIS', 'CREDIT_CARD'],
+    label: 'QRIS / Credit Card',
+    description: 'Pay with QRIS or Credit Card',
+  },
+]
+
 type Props = {
+  eventId: number
   categories: EventCategoryType[]
   groups: EventGroupType[]
   promos: PromoType[]
 }
 
-export function AdminRegisterForm({categories, groups, promos}: Props) {
+export function AdminRegisterForm({eventId, categories, groups, promos}: Props) {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [categoryId, setCategoryId] = useState<string>('')
@@ -34,6 +54,8 @@ export function AdminRegisterForm({categories, groups, promos}: Props) {
   const [emergencyContactName, setEmergencyContactName] = useState('')
   const [emergencyPhone, setEmergencyPhone] = useState('')
   const [city, setCity] = useState('')
+  const [phone, setPhone] = useState('')
+  const [pm, setPm] = useState<string[]>([])
 
   const selectedCategory = categories.find(c => String(c.id) === categoryId)
   const selectedGroup = groups.find(g => String(g.id) === groupId)
@@ -51,21 +73,26 @@ export function AdminRegisterForm({categories, groups, promos}: Props) {
   const isFreePass = discount >= price
   const total = isFreePass ? 0 : price + fee - discount
 
-  const [, dispatch, isPending] = useActionState(
-    async (_prev: unknown, formData: FormData) => {
-      console.log(Object.fromEntries(formData.entries()))
-      return null
+  const [state, dispatch, isPending] = useActionState<AdminRegisterState, FormData>(
+    async (prev, formData) => {
+      const result = await adminRegisterParticipant(prev, formData)
+      if (result?.success === false) {
+        toast.error(result.message)
+      }
+      return result
     },
     null
   )
 
-  const canSubmit = name.trim() !== '' && email.trim() !== '' && categoryId !== ''
+  const canSubmit = name.trim() !== '' && email.trim() !== '' && categoryId !== '' && pm.length > 0
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
 
       {/* LEFT: Form */}
       <form action={dispatch}>
+        <input type="hidden" name="eventId" value={eventId} />
+        <input type="hidden" name="pm" value={JSON.stringify(pm)} />
         <Card>
           <CardHeader>
             <CardTitle>Participant Details</CardTitle>
@@ -92,6 +119,21 @@ export function AdminRegisterForm({categories, groups, promos}: Props) {
                 placeholder="e.g. john@example.com"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="phone">
+                Phone Number{" "}
+                <span className="text-muted-foreground text-xs">(optional)</span>
+              </Label>
+              <Input
+                id="phone"
+                name="phone"
+                type="tel"
+                placeholder="e.g. +62812345678"
+                value={phone}
+                onChange={e => setPhone(e.target.value)}
               />
             </div>
 
@@ -231,7 +273,28 @@ export function AdminRegisterForm({categories, groups, promos}: Props) {
               />
             </div>
 
-            {promos.length > 0 && (
+            <div className="space-y-2">
+            <Label>Payment Method</Label>
+            <RadioGroup
+              value={pm}
+              onValueChange={(value: string[]) => setPm(value)}
+              className="grid grid-cols-1 gap-2"
+            >
+              {PAYMENT_METHODS.map(method => (
+                <FieldLabel htmlFor={method.id} key={method.id}>
+                  <Field orientation="horizontal" className="pb-2.5">
+                    <RadioGroupItem value={method.value} id={method.id} />
+                    <FieldContent>
+                      <FieldTitle>{method.label}</FieldTitle>
+                      <FieldDescription>{method.description}</FieldDescription>
+                    </FieldContent>
+                  </Field>
+                </FieldLabel>
+              ))}
+            </RadioGroup>
+          </div>
+
+          {promos.length > 0 && (
               <div className="space-y-1.5">
                 <Label>
                   Promo{" "}
@@ -256,10 +319,31 @@ export function AdminRegisterForm({categories, groups, promos}: Props) {
             )}
 
           </CardContent>
-          <CardFooter>
-            <Button type="submit" className="w-full" disabled={!canSubmit || isPending}>
-              {isPending ? 'Submitting…' : 'Register & Get Payment Link'}
-            </Button>
+          <CardFooter className="flex-col gap-3">
+            {state?.success && state.paymentUrl ? (
+              <div className="w-full space-y-2">
+                <div className="flex gap-2">
+                  <Input readOnly value={state.paymentUrl} className="font-mono text-xs" />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      navigator.clipboard.writeText(state.paymentUrl!)
+                      toast.success('Payment link copied!')
+                    }}
+                  >
+                    Copy
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground text-center">
+                  Share this link with the participant to complete payment.
+                </p>
+              </div>
+            ) : (
+              <Button type="submit" className="w-full" disabled={!canSubmit || isPending}>
+                {isPending ? 'Submitting…' : 'Register & Get Payment Link'}
+              </Button>
+            )}
           </CardFooter>
         </Card>
       </form>
