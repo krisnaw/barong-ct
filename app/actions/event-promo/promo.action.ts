@@ -1,6 +1,6 @@
 'use server'
 import {eventPromoSchema, InsertPromoType, promoUpdateSchema, UpdatePromoType} from "@/db/schema";
-import {eq} from "drizzle-orm";
+import {eq, sql} from "drizzle-orm";
 import {revalidatePath} from "next/cache";
 import {z} from "zod";
 import {db} from "@/db/db";
@@ -44,6 +44,12 @@ export async function updatePromo(formData: UpdatePromoType) {
     success: true,
     message: "Success, promo has been updated",
   }
+}
+
+export async function incrementPromoUsage(promoId: number) {
+  await db.update(eventPromoSchema)
+    .set({ usedCount: sql`${eventPromoSchema.usedCount} + 1` })
+    .where(eq(eventPromoSchema.id, promoId));
 }
 
 export async function deletePromoAction(id: number) {

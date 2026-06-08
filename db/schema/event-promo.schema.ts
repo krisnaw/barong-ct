@@ -14,6 +14,9 @@ export const eventPromoSchema = pgTable("event_promo", {
   discountType: text("discount_type").notNull().default('fixed'),
   currency: text("currency").default("IDR"),
 
+  usageLimit: integer('usage_limit'),
+  usedCount: integer('used_count').default(0).notNull(),
+
   startsAt: timestamp('starts_at'),
   endsAt: timestamp('ends_at'),
   isActive: boolean('is_active').default(true),

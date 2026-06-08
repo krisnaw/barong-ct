@@ -31,6 +31,7 @@ export function ListPromo({ promos }: { promos: PromoType[] }) {
         <TableRow>
           <TableHead>Promo</TableHead>
           <TableHead>Value</TableHead>
+          <TableHead>Usage</TableHead>
           <TableHead>Status</TableHead>
           <TableHead>Actions</TableHead>
         </TableRow>
@@ -59,6 +60,12 @@ export function ListPromo({ promos }: { promos: PromoType[] }) {
                 </div>
               </TableCell>
               <TableCell>{promo.discountType == 'fixed' ? formatMoney(promo.discountValue) : promo.discountValue + "%"}</TableCell>
+              <TableCell className="tabular-nums text-muted-foreground">
+                {promo.usageLimit !== null
+                  ? `${promo.usedCount}/${promo.usageLimit}`
+                  : `${promo.usedCount}/∞`
+                }
+              </TableCell>
               <TableCell>
                 <Badge variant={promo.isActive ? "default" : "secondary"}>
                   {promo.isActive ? "Active" : "Inactive"}

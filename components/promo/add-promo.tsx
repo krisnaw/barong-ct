@@ -31,6 +31,7 @@ export function AddPromo({eventId}: { eventId: number }) {
 
   const [state, formAction, isPending] = useActionState<ActionResponse, FormData>(
     async (_: ActionResponse, formData: FormData) => {
+      const rawLimit = formData.get("usageLimit") as string
       const payload: InsertPromoType = {
         eventId: eventId,
         startsAt: new Date(`${formData.get("startsAt") as string}`),
@@ -40,6 +41,7 @@ export function AddPromo({eventId}: { eventId: number }) {
         discountValue: Number(formData.get("discountValue") as string),
         discountType: formData.get("discountType") as string,
         isActive: true,
+        usageLimit: rawLimit ? Number(rawLimit) : null,
       }
 
       const res = await createPromoAction(payload)
@@ -129,6 +131,20 @@ export function AddPromo({eventId}: { eventId: number }) {
                   </FieldDescription>
                 </Field>
               )}
+
+              <Field>
+                <FieldLabel htmlFor="usageLimit">Usage Limit</FieldLabel>
+                <Input
+                  id="usageLimit"
+                  type="number"
+                  name="usageLimit"
+                  placeholder="Unlimited"
+                  min="1"
+                />
+                <FieldDescription>
+                  Max number of times this promo can be used. Leave blank for unlimited.
+                </FieldDescription>
+              </Field>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <Field>

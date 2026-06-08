@@ -33,6 +33,7 @@ export function EditPromo({promo}: { promo: PromoType }) {
     async (_: ActionResponse, formData: FormData) => {
 
       const status = formData.get("status") as string == "true";
+      const rawLimit = formData.get("usageLimit") as string
       const payload : UpdatePromoType = {
         id: promo.id,
         startsAt: new Date(`${formData.get("startsAt") as string}`),
@@ -42,6 +43,7 @@ export function EditPromo({promo}: { promo: PromoType }) {
         discountValue: Number(formData.get("discountValue") as string),
         discountType: formData.get("discountType") as string,
         isActive: status,
+        usageLimit: rawLimit ? Number(rawLimit) : null,
       }
 
       const res =  await updatePromo(payload)
@@ -137,6 +139,24 @@ export function EditPromo({promo}: { promo: PromoType }) {
                   </FieldDescription>
                 </Field>
               )}
+
+              <Field>
+                <FieldLabel htmlFor="usageLimit">Usage Limit</FieldLabel>
+                <Input
+                  id="usageLimit"
+                  type="number"
+                  name="usageLimit"
+                  defaultValue={promo.usageLimit ?? ""}
+                  placeholder="Unlimited"
+                  min="1"
+                />
+                <FieldDescription>
+                  {promo.usageLimit
+                    ? `Used ${promo.usedCount} of ${promo.usageLimit}`
+                    : `Used ${promo.usedCount} time(s) · no limit set`
+                  }
+                </FieldDescription>
+              </Field>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <Field>
