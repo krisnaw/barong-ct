@@ -48,7 +48,7 @@ export function ListParticipant({participants, groups, categories} : {participan
                     {participant.finalPrice ? formatMoney(participant.finalPrice) : "-"}
                   </span>
                   <span className="text-sm text-muted-foreground">
-                    {participant.payments[0].invoiceNumber}
+                    {participant.payments[0]?.invoiceNumber ?? "-"}
                   </span>
                 </div>
               </TableCell>

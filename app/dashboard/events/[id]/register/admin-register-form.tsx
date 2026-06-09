@@ -14,6 +14,7 @@ import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
 import {Field, FieldContent, FieldDescription, FieldLabel, FieldTitle} from "@/components/ui/field";
 import {formatMoney} from "@/utils/money-helper";
 import {adminRegisterParticipant, AdminRegisterState} from "@/app/actions/event-participant/event-participant.action";
+import {adminRegisterFreePass} from "@/app/actions/event-participant/admin-participant.action";
 import {toast} from "sonner";
 
 const JERSEY_SIZES = ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL']
@@ -75,16 +76,32 @@ export function AdminRegisterForm({eventId, categories, groups, promos}: Props) 
 
   const [state, dispatch, isPending] = useActionState<AdminRegisterState, FormData>(
     async (prev, formData) => {
-      const result = await adminRegisterParticipant(prev, formData)
-      if (result?.success === false) {
-        toast.error(result.message)
+      let result: AdminRegisterState
+
+      if (isFreePass && promoId) {
+        result = await adminRegisterFreePass({
+          name, email, categoryId: Number(categoryId), eventId,
+          promoId: Number(promoId),
+          groupId: groupId ? Number(groupId) : null,
+          jerseySize: jerseySize || null,
+          gender: gender || null,
+          bloodType: bloodType || null,
+          city: city || null,
+          emergencyContactName: emergencyContactName || null,
+          emergencyPhone: emergencyPhone || null,
+          phone: phone || null,
+        })
+      } else {
+        result = await adminRegisterParticipant(prev, formData)
       }
+
+      if (result?.success === false) toast.error(result.message)
       return result
     },
     null
   )
 
-  const canSubmit = name.trim() !== '' && email.trim() !== '' && categoryId !== '' && pm.length > 0
+  const canSubmit = name.trim() !== '' && email.trim() !== '' && categoryId !== '' && (isFreePass || pm.length > 0)
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
@@ -273,26 +290,28 @@ export function AdminRegisterForm({eventId, categories, groups, promos}: Props) 
               />
             </div>
 
-            <div className="space-y-2">
-            <Label>Payment Method</Label>
-            <RadioGroup
-              value={pm}
-              onValueChange={(value: string[]) => setPm(value)}
-              className="grid grid-cols-1 gap-2"
-            >
-              {PAYMENT_METHODS.map(method => (
-                <FieldLabel htmlFor={method.id} key={method.id}>
-                  <Field orientation="horizontal" className="pb-2.5">
-                    <RadioGroupItem value={method.value} id={method.id} />
-                    <FieldContent>
-                      <FieldTitle>{method.label}</FieldTitle>
-                      <FieldDescription>{method.description}</FieldDescription>
-                    </FieldContent>
-                  </Field>
-                </FieldLabel>
-              ))}
-            </RadioGroup>
-          </div>
+            {!isFreePass && (
+              <div className="space-y-2">
+                <Label>Payment Method</Label>
+                <RadioGroup
+                  value={pm}
+                  onValueChange={(value: string[]) => setPm(value)}
+                  className="grid grid-cols-1 gap-2"
+                >
+                  {PAYMENT_METHODS.map(method => (
+                    <FieldLabel htmlFor={method.id} key={method.id}>
+                      <Field orientation="horizontal" className="pb-2.5">
+                        <RadioGroupItem value={method.value} id={method.id} />
+                        <FieldContent>
+                          <FieldTitle>{method.label}</FieldTitle>
+                          <FieldDescription>{method.description}</FieldDescription>
+                        </FieldContent>
+                      </Field>
+                    </FieldLabel>
+                  ))}
+                </RadioGroup>
+              </div>
+            )}
 
           {promos.length > 0 && (
               <div className="space-y-1.5">
@@ -339,9 +358,13 @@ export function AdminRegisterForm({eventId, categories, groups, promos}: Props) 
                   Share this link with the participant to complete payment.
                 </p>
               </div>
+            ) : state?.success && !state.paymentUrl ? (
+              <p className="text-sm text-center text-muted-foreground">
+                Participant registered successfully.
+              </p>
             ) : (
               <Button type="submit" className="w-full" disabled={!canSubmit || isPending}>
-                {isPending ? 'Submitting…' : 'Register & Get Payment Link'}
+                {isPending ? 'Submitting…' : isFreePass ? 'Register (Free)' : 'Register & Get Payment Link'}
               </Button>
             )}
           </CardFooter>
