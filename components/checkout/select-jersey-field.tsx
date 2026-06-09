@@ -33,7 +33,7 @@ export function SelectJerseyField({eventId} : {eventId: number}) {
   )
 }
 
-const sizes = [
+export const sizes = [
   // ASIA Sizing
   {id: 'xxs', name: 'XXS'},
   {id: 'xs', name: 'XS'},

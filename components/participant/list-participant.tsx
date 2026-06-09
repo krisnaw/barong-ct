@@ -3,11 +3,8 @@ import {EventDate} from "@/components/events/event-date";
 import {formatMoney} from "@/utils/money-helper";
 import {Badge} from "@/components/ui/badge";
 import {ParticipantType} from "@/db/query/participant-query";
-import {BtnResendConfirm} from "@/components/button/btn-resend-confirm";
 import {EventCategoryType, EventGroupType} from "@/db/schema";
-import {ButtonChangeParticipantGroup} from "@/components/participant/button-change-participant-group";
-import {ButtonChangeParticipantCategory} from "@/components/participant/button-change-participant-category";
-import {ButtonFixBibNumber} from "@/components/participant/button-fix-bib-number";
+import Link from "next/link";
 
 export function ListParticipant({participants, groups, categories} : {participants : ParticipantType[], groups: EventGroupType[], categories: EventCategoryType[]}) {
   return (
@@ -62,10 +59,9 @@ export function ListParticipant({participants, groups, categories} : {participan
                 <EventDate eventDate={participant.updatedAt} type="date" />
               </TableCell>
               <TableCell className="inline-flex gap-2">
-                <BtnResendConfirm participantId={participant.id} />
-                <ButtonChangeParticipantGroup participantId={participant.id} groups={groups} />
-                <ButtonChangeParticipantCategory participantId={participant.id} currentCategoryId={participant.categoryId} categories={categories} />
-                <ButtonFixBibNumber participantId={participant.id} currentBib={participant.bibNumber} />
+                <Link href={`/dashboard/events/${participant.eventId}/participant/${participant.id}`}>
+                  View
+                </Link>
               </TableCell>
             </TableRow>
           ))

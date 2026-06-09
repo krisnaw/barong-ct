@@ -52,6 +52,25 @@ export async function getParticipantById(id: number) {
   });
 }
 
+export async function getParticipantDetail(id: number) {
+  return db.query.participant.findFirst({
+    where: eq(participant.id, id),
+    with: {
+      user: true,
+      event: {
+        columns: { id: true, name: true, locationName: true, startDate: true }
+      },
+      category: true,
+      group: true,
+      payments: {
+        orderBy: (p, { desc }) => [desc(p.createdAt)],
+      },
+    },
+  })
+}
+
+export type ParticipantDetailType = Awaited<ReturnType<typeof getParticipantDetail>>
+
 export async function getParticipantByEventUser(eventId: number, userId: string) {
   return db.query.participant.findFirst({
     where: and(eq(participant.eventId, eventId), eq(participant.userId, userId)),
