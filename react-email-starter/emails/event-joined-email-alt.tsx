@@ -70,7 +70,7 @@ export const EventJoinedEmailAlt = ({
       <Body className="bg-[#f4f4f5] font-sans m-0 p-0">
         <Preview>You&#39;re in! Your spot for {eventName} is confirmed.</Preview>
 
-        <Container className="mx-auto max-w-[560px] py-8">
+        <Container className="mx-auto max-w-140 py-8">
 
           {/* Dark header */}
           <Section style={{ backgroundColor: '#18181b', borderRadius: '16px 16px 0 0' }} className="px-8 pt-6 pb-2">
@@ -143,33 +143,37 @@ export const EventJoinedEmailAlt = ({
           {/* Stat blocks */}
           {(bibNumber || jerseySize || category) && (
             <Section style={{ backgroundColor: '#ffffff' }} className="px-8 pb-6 pt-2">
-              <Row>
-                {bibNumber && (
-                  <Column className="w-1/3 pr-2">
-                    <Section style={{ backgroundColor: '#f4f4f5', borderRadius: '12px' }} className="px-4 py-4 text-center">
-                      <Text className="m-0 text-[10px] font-semibold uppercase tracking-widest text-[#71717a]">
-                        Bib
-                      </Text>
-                      <Text className="m-0 mt-1 text-[22px] font-bold text-[#18181b]">
-                        {bibNumber}
-                      </Text>
-                    </Section>
-                  </Column>
-                )}
-                {jerseySize && (
-                  <Column className="w-1/3 px-1">
-                    <Section style={{ backgroundColor: '#f4f4f5', borderRadius: '12px' }} className="px-4 py-4 text-center">
-                      <Text className="m-0 text-[10px] font-semibold uppercase tracking-widest text-[#71717a]">
-                        Jersey
-                      </Text>
-                      <Text className="m-0 mt-1 text-[22px] font-bold uppercase text-[#18181b]">
-                        {jerseySize}
-                      </Text>
-                    </Section>
-                  </Column>
-                )}
-                {category && (
-                  <Column className="w-1/3 pl-2">
+              {(bibNumber || jerseySize) && (
+                <Row>
+                  {bibNumber && (
+                    <Column style={{ paddingRight: '4px', paddingBottom: category ? '8px' : '0' }}>
+                      <Section style={{ backgroundColor: '#f4f4f5', borderRadius: '12px' }} className="px-4 py-4 text-center">
+                        <Text className="m-0 text-[10px] font-semibold uppercase tracking-widest text-[#71717a]">
+                          Bib
+                        </Text>
+                        <Text className="m-0 mt-1 text-[22px] font-bold text-[#18181b]">
+                          {bibNumber}
+                        </Text>
+                      </Section>
+                    </Column>
+                  )}
+                  {jerseySize && (
+                    <Column style={{ paddingLeft: '4px', paddingBottom: category ? '8px' : '0' }}>
+                      <Section style={{ backgroundColor: '#f4f4f5', borderRadius: '12px' }} className="px-4 py-4 text-center">
+                        <Text className="m-0 text-[10px] font-semibold uppercase tracking-widest text-[#71717a]">
+                          Jersey
+                        </Text>
+                        <Text className="m-0 mt-1 text-[22px] font-bold uppercase text-[#18181b]">
+                          {jerseySize}
+                        </Text>
+                      </Section>
+                    </Column>
+                  )}
+                </Row>
+              )}
+              {category && (
+                <Row>
+                  <Column>
                     <Section style={{ backgroundColor: '#f4f4f5', borderRadius: '12px' }} className="px-4 py-4 text-center">
                       <Text className="m-0 text-[10px] font-semibold uppercase tracking-widest text-[#71717a]">
                         Category
@@ -179,8 +183,8 @@ export const EventJoinedEmailAlt = ({
                       </Text>
                     </Section>
                   </Column>
-                )}
-              </Row>
+                </Row>
+              )}
             </Section>
           )}
 
@@ -241,8 +245,8 @@ EventJoinedEmailAlt.PreviewProps = {
   eventURL: "https://barong.cc/event/1",
   inviteURL: "https://barong.cc/event/1?ref=invite",
   bibNumber: "002",
-  jerseySize: "L",
-  category: "Long",
+  jerseySize: "XXS",
+  category: "The Grand Melali",
 } satisfies EmailProps;
 
 export default EventJoinedEmailAlt;
