@@ -7,6 +7,7 @@ import {BtnResendConfirm} from "@/components/button/btn-resend-confirm";
 import {EventCategoryType, EventGroupType} from "@/db/schema";
 import {ButtonChangeParticipantGroup} from "@/components/participant/button-change-participant-group";
 import {ButtonChangeParticipantCategory} from "@/components/participant/button-change-participant-category";
+import {ButtonFixBibNumber} from "@/components/participant/button-fix-bib-number";
 
 export function ListParticipant({participants, groups, categories} : {participants : ParticipantType[], groups: EventGroupType[], categories: EventCategoryType[]}) {
   return (
@@ -64,6 +65,7 @@ export function ListParticipant({participants, groups, categories} : {participan
                 <BtnResendConfirm participantId={participant.id} />
                 <ButtonChangeParticipantGroup participantId={participant.id} groups={groups} />
                 <ButtonChangeParticipantCategory participantId={participant.id} currentCategoryId={participant.categoryId} categories={categories} />
+                <ButtonFixBibNumber participantId={participant.id} currentBib={participant.bibNumber} />
               </TableCell>
             </TableRow>
           ))

@@ -15,6 +15,7 @@ import {getPromoById} from "@/db/query/event-promo.query";
 import {createPayment} from "@/app/actions/payment/payment.action";
 import {auth} from "@/lib/auth";
 import {PARTICIPANT_STATUS} from "@/utils/event.helper";
+import {generateBibNumber} from "@/utils/bib.helper";
 
 export async function resendEmailConfirmation(participantId: number): Promise<ActionResponse> {
 
@@ -216,4 +217,31 @@ export async function adminRegisterParticipant(
     paymentUrl: paymentRes.data as string,
     participantId: newParticipant.id,
   }
+}
+
+export async function fixParticipantBibNumber(participantId: number): Promise<ActionResponse> {
+  const existing = await getParticipantById(participantId)
+  if (!existing) {
+    return { success: false, message: 'Participant not found.' }
+  }
+
+  const detail = await db.query.userDetail.findFirst({
+    where: eq(userDetail.userId, existing.userId),
+    columns: { gender: true },
+  })
+
+  const gender = detail?.gender
+  if (gender !== 'male' && gender !== 'female') {
+    return { success: false, message: 'Cannot fix bib: gender on profile is not set or is unsupported.' }
+  }
+
+  const newBib = await generateBibNumber(gender, existing.eventId)
+
+  await db.update(participant)
+    .set({ bibNumber: newBib })
+    .where(eq(participant.id, participantId))
+
+  revalidatePath('/', 'layout')
+
+  return { success: true, message: `Bib number updated to ${newBib}.` }
 }
