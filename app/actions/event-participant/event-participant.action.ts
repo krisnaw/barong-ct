@@ -235,6 +235,12 @@ export async function fixParticipantBibNumber(participantId: number): Promise<Ac
     return { success: false, message: 'Cannot fix bib: gender on profile is not set or is unsupported.' }
   }
 
+  const GENDER_PREFIX: Record<'male' | 'female', number> = { male: 1, female: 2 }
+  const currentBib = existing.bibNumber
+  if (currentBib && Math.floor(Number(currentBib) / 1000) === GENDER_PREFIX[gender]) {
+    return { success: false, message: 'Bib number already matches the current gender profile.' }
+  }
+
   const newBib = await generateBibNumber(gender, existing.eventId)
 
   await db.update(participant)
