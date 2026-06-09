@@ -46,10 +46,19 @@ export async function updatePromo(formData: UpdatePromoType) {
   }
 }
 
-export async function incrementPromoUsage(promoId: number) {
-  await db.update(eventPromoSchema)
+export async function handlePromoUsageOnComplete(promoId: number | null) {
+  if (!promoId) return;
+
+  const [updated] = await db.update(eventPromoSchema)
     .set({ usedCount: sql`${eventPromoSchema.usedCount} + 1` })
-    .where(eq(eventPromoSchema.id, promoId));
+    .where(eq(eventPromoSchema.id, promoId))
+    .returning();
+
+  if (updated.usageLimit !== null && updated.usedCount >= updated.usageLimit) {
+    await db.update(eventPromoSchema)
+      .set({ isActive: false })
+      .where(eq(eventPromoSchema.id, promoId));
+  }
 }
 
 export async function deletePromoAction(id: number) {

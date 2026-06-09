@@ -6,6 +6,7 @@ import {generateDigest, generateSignature} from "@/utils/doku-helper";
 import {getPendingPaymentByInvoice} from "@/db/query/event-payment.query";
 import {markParticipantComplete} from "@/service/participant.service";
 import {getParticipantById} from "@/db/query/participant-query";
+import {handlePromoUsageOnComplete} from "@/app/actions/event-promo/promo.action";
 
 export async function POST(request: NextRequest) {
   const header = request.headers;
@@ -36,6 +37,7 @@ export async function POST(request: NextRequest) {
       const participant = await getParticipantById(payment.participantId)
       if (participant) {
         await markParticipantComplete(participant.eventId, participant.userId)
+        await handlePromoUsageOnComplete(participant.promoId)
       }
     }
   }
