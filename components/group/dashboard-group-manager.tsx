@@ -184,6 +184,7 @@ export function DashboardGroupManager({eventId, categories, groups}: Props) {
               <TableHead className="w-16">ID</TableHead>
               <TableHead>Group</TableHead>
               <TableHead>Category</TableHead>
+              <TableHead className="w-24 tabular-nums">Participants</TableHead>
               <TableHead className="w-20 text-right">Action</TableHead>
             </TableRow>
           </TableHeader>
@@ -202,6 +203,7 @@ export function DashboardGroupManager({eventId, categories, groups}: Props) {
                       <span className="text-sm text-muted-foreground">Unassigned</span>
                     )}
                   </TableCell>
+                  <TableCell className="tabular-nums">{group.participants.length}</TableCell>
                   <TableCell className="text-right">
                     <Button
                       type="button"
@@ -226,7 +228,7 @@ export function DashboardGroupManager({eventId, categories, groups}: Props) {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={4}>
+                <TableCell colSpan={5}>
                   <Empty className="border-0 py-10">
                     <EmptyHeader>
                       <EmptyMedia variant="icon">
