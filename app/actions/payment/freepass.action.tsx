@@ -9,6 +9,8 @@ import {updateParticipant} from "@/app/actions/event-participant/event-participa
 import {getPromoById} from "@/db/query/event-promo.query";
 import {generateBibNumber} from "@/utils/bib.helper";
 import {getUserWithDetail} from "@/db/query/user-query";
+import {sendEmailConfirmation} from "@/service/participant.service";
+import {getEventById} from "@/db/query/event-query";
 
 export async function processFreePass(payload: { participantId: number, promoId: number, discountAmount: number }) : Promise<ActionResponse> {
   const participant = await getParticipantById(payload.participantId)
@@ -51,6 +53,11 @@ export async function processFreePass(payload: { participantId: number, promoId:
     }
 
     await updateParticipant(updateParticipantPayload)
+
+    const event = await getEventById(participant.eventId)
+    if (user && event) {
+      await sendEmailConfirmation(event, user)
+    }
 
     return {
       success: true,
