@@ -42,7 +42,7 @@ export function ButtonChangeJerseySize({ participantId, currentSize }: { partici
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger render={
-        <Button variant="outline" size="icon-xs">
+        <Button variant="outline" size="icon">
           <ShirtIcon />
         </Button>
       } />

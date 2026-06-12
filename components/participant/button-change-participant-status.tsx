@@ -19,7 +19,7 @@ import {PARTICIPANT_STATUS} from "@/utils/event.helper";
 import {toast} from "sonner";
 import {updateParticipantStatus} from "@/app/actions/event-participant/event-participant.action";
 import {UpdateParticipantType} from "@/db/schema";
-import {ParticipantStatus, PARTICIPANT_STATUS_LABELS} from "@/utils/participant-status";
+import {PARTICIPANT_STATUS_LABELS, ParticipantStatus} from "@/utils/participant-status";
 
 export function ButtonChangeParticipantStatus({ participantId, currentStatus }: { participantId: number, currentStatus?: string }) {
   const [selected, setSelected] = useState<ParticipantStatus>(
@@ -47,7 +47,7 @@ export function ButtonChangeParticipantStatus({ participantId, currentStatus }: 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger render={
-        <Button variant="outline" size="icon-xs">
+        <Button variant="outline" size="icon">
           <PencilIcon />
         </Button>
       } />

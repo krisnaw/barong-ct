@@ -15,6 +15,8 @@ import {ButtonFixBibNumber} from "@/components/participant/button-fix-bib-number
 import {ButtonChangeParticipantStatus} from "@/components/participant/button-change-participant-status";
 import {ButtonChangeJerseySize} from "@/components/participant/button-change-jersey-size";
 import {PARTICIPANT_STATUS_BADGE, PARTICIPANT_STATUS_LABELS} from "@/utils/participant-status";
+import {ButtonChangeParticipantGroup} from "@/components/participant/button-change-participant-group";
+import {getGroupsByEvent} from "@/db/query/event-group.query";
 
 function Row({label, value}: { label: string; value: React.ReactNode }) {
   return (
@@ -37,6 +39,7 @@ export default async function Page({
 
   const detail = await getUserWithDetail(participant.userId).then(u => u?.detail)
   const latestPayment = participant.payments[0]
+  const groups = await getGroupsByEvent(Number(eventId))
 
   return (
     <div className="space-y-4">
@@ -71,6 +74,7 @@ export default async function Page({
       <Card>
         <CardContent className="flex flex-wrap gap-2 py-3">
           <BtnResendConfirm participantId={participant.id} />
+          <ButtonChangeParticipantGroup participantId={participant.id} groups={groups} />
           <ButtonFixBibNumber participantId={participant.id} currentBib={participant.bibNumber} />
           <ButtonChangeJerseySize participantId={participant.id} currentSize={participant.jerseySize} />
           <ButtonChangeParticipantStatus participantId={participant.id} currentStatus={participant.status ?? ""} />
