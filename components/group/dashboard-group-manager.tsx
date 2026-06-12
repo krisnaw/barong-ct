@@ -30,24 +30,10 @@ import {
 } from "@/components/ui/sheet"
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table"
 import {EventCategoryType, EventGroupType, InsertGroupType} from "@/db/schema"
-import {PARTICIPANT_STATUS} from "@/utils/event.helper"
+import {PARTICIPANT_STATUS_BADGE, PARTICIPANT_STATUS_LABELS} from "@/utils/participant-status"
 import {Pencil, Plus, Search, Users, UsersRound} from "lucide-react";
 
 type GroupParticipant = { id: number; bibNumber: string | null; status: string | null; user: { name: string } }
-
-const STATUS_BADGE: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
-  [PARTICIPANT_STATUS.COMPLETED]: "default",
-  [PARTICIPANT_STATUS.PENDING_PAYMENT]: "secondary",
-  [PARTICIPANT_STATUS.DRAFT]: "outline",
-  [PARTICIPANT_STATUS.PROFILE]: "outline",
-}
-
-const STATUS_LABELS: Record<string, string> = {
-  [PARTICIPANT_STATUS.COMPLETED]: "Completed",
-  [PARTICIPANT_STATUS.PENDING_PAYMENT]: "Pending Payment",
-  [PARTICIPANT_STATUS.DRAFT]: "Draft",
-  [PARTICIPANT_STATUS.PROFILE]: "Profile",
-}
 
 type DraftGroup = Pick<EventGroupType, "id" | "name" | "eventId" | "eventCategoryId"> & {
   participants: GroupParticipant[]
@@ -97,7 +83,7 @@ export function DashboardGroupManager({eventId, categories, groups}: Props) {
         ? categoryById.get(group.eventCategoryId)?.name ?? ""
         : "unassigned"
       const participants = group.participants
-        .map((participant) => `${participant.user.name} ${participant.bibNumber ?? ""} ${STATUS_LABELS[participant.status ?? ""] ?? participant.status ?? ""}`)
+        .map((participant) => `${participant.user.name} ${participant.bibNumber ?? ""} ${PARTICIPANT_STATUS_LABELS[participant.status ?? ""] ?? participant.status ?? ""}`)
         .join(" ")
 
       return `${group.name} ${categoryName} ${participants}`.toLowerCase().includes(normalizedQuery)
@@ -306,8 +292,8 @@ export function DashboardGroupManager({eventId, categories, groups}: Props) {
                 <li key={p.id} className="flex items-center justify-between gap-3 rounded px-2 py-1.5 hover:bg-muted">
                   <span className="min-w-0 truncate">{p.user.name}</span>
                   <span className="flex shrink-0 items-center gap-2">
-                    <Badge variant={STATUS_BADGE[p.status ?? ""] ?? "outline"} className="text-xs">
-                      {STATUS_LABELS[p.status ?? ""] ?? p.status ?? "Unknown"}
+                    <Badge variant={PARTICIPANT_STATUS_BADGE[p.status ?? ""] ?? "outline"} className="text-xs">
+                      {PARTICIPANT_STATUS_LABELS[p.status ?? ""] ?? p.status ?? "Unknown"}
                     </Badge>
                     <span className="text-xs tabular-nums text-muted-foreground">
                       {p.bibNumber ? `#${p.bibNumber}` : "No bib"}

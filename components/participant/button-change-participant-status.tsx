@@ -19,15 +19,7 @@ import {PARTICIPANT_STATUS} from "@/utils/event.helper";
 import {toast} from "sonner";
 import {updateParticipantStatus} from "@/app/actions/event-participant/event-participant.action";
 import {UpdateParticipantType} from "@/db/schema";
-
-type ParticipantStatus = typeof PARTICIPANT_STATUS[keyof typeof PARTICIPANT_STATUS]
-
-const STATUS_LABELS: Record<ParticipantStatus, string> = {
-  draft: "Draft",
-  profile: "Profile",
-  payment: "Pending Payment",
-  completed: "Completed",
-}
+import {ParticipantStatus, PARTICIPANT_STATUS_LABELS} from "@/utils/participant-status";
 
 export function ButtonChangeParticipantStatus({ participantId, currentStatus }: { participantId: number, currentStatus?: string }) {
   const [selected, setSelected] = useState<ParticipantStatus>(
@@ -78,7 +70,7 @@ export function ButtonChangeParticipantStatus({ participantId, currentStatus }: 
           <SelectContent>
             {(Object.entries(PARTICIPANT_STATUS) as [string, ParticipantStatus][]).map(([, value]) => (
               <SelectItem key={value} value={value}>
-                {STATUS_LABELS[value]}
+                {PARTICIPANT_STATUS_LABELS[value]}
               </SelectItem>
             ))}
           </SelectContent>
