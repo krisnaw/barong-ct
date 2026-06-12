@@ -29,7 +29,7 @@ export function EditPromo({promo}: { promo: PromoType }) {
   const [discountType, setDiscountType] = useState(promo.discountType)
   const [discountValue, setDiscountValue] = useState<number>(promo.discountValue);
 
-  const [_, formAction, isPending] = useActionState<ActionResponse, FormData>(
+  const [, formAction, isPending] = useActionState<ActionResponse, FormData>(
     async (_: ActionResponse, formData: FormData) => {
 
       const status = formData.get("status") as string == "true";
@@ -55,16 +55,16 @@ export function EditPromo({promo}: { promo: PromoType }) {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger render={<Button variant="ghost"><Pencil/></Button>}/>
-      <SheetContent>
-        <SheetHeader>
+      <SheetContent className="overflow-hidden sm:max-w-md">
+        <SheetHeader className="shrink-0 pb-2">
           <SheetTitle>Edit Promo</SheetTitle>
           <SheetDescription>Update the promo code details.</SheetDescription>
         </SheetHeader>
-        <form id="edit-promo-form" action={formAction}>
-          <div className="grid flex-1 auto-rows-min gap-6 px-4">
-            <FieldGroup>
+        <form id="edit-promo-form" action={formAction} className="min-h-0 flex-1 overflow-y-auto">
+          <div className="grid auto-rows-min gap-4 px-4 pb-2">
+            <FieldGroup className="gap-3">
 
-              <Field>
+              <Field className="gap-1.5">
                 <FieldLabel htmlFor="promo">Promo Code</FieldLabel>
                 <Input
                   id="promo"
@@ -73,110 +73,108 @@ export function EditPromo({promo}: { promo: PromoType }) {
                   defaultValue={promo.promo}
                   placeholder="SAVE10"
                 />
-                <FieldDescription>
+                <FieldDescription className="text-xs leading-snug">
                   Enter the promo code that users will use
                 </FieldDescription>
               </Field>
 
-              <Field>
-                <FieldLabel htmlFor="currency">Currency</FieldLabel>
-                <Select name="currency" defaultValue={promo.currency ?? "IDR"}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue/>
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="IDR">IDR</SelectItem>
-                    <SelectItem value="USD">USD</SelectItem>
-                    <SelectItem value="SGD">SGD</SelectItem>
-                    <SelectItem value="MYR">MYR</SelectItem>
-                  </SelectContent>
-                </Select>
-              </Field>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <Field className="gap-1.5">
+                  <FieldLabel htmlFor="currency">Currency</FieldLabel>
+                  <Select name="currency" defaultValue={promo.currency ?? "IDR"}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue/>
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="IDR">IDR</SelectItem>
+                      <SelectItem value="USD">USD</SelectItem>
+                      <SelectItem value="SGD">SGD</SelectItem>
+                      <SelectItem value="MYR">MYR</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </Field>
 
-              <Field>
-                <FieldLabel htmlFor="discountType">Discount Type</FieldLabel>
-                <Select
-                  name="discountType"
-                  defaultValue={promo.discountType}
-                  onValueChange={(value) => value && setDiscountType(value)}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue/>
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="fixed">Fixed</SelectItem>
-                    <SelectItem value="percentage">Percentage</SelectItem>
-                  </SelectContent>
-                </Select>
-              </Field>
+                <Field className="gap-1.5">
+                  <FieldLabel htmlFor="discountType">Discount Type</FieldLabel>
+                  <Select
+                    name="discountType"
+                    defaultValue={promo.discountType}
+                    onValueChange={(value) => value && setDiscountType(value)}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue/>
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="fixed">Fixed</SelectItem>
+                      <SelectItem value="percentage">Percentage</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </Field>
+              </div>
 
-              {discountType === "fixed" ? (
-                <Field>
-                  <FieldLabel htmlFor="discountValue">Discount Value</FieldLabel>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                {discountType === "fixed" ? (
+                  <Field className="gap-1.5">
+                    <FieldLabel htmlFor="discountValue">Discount Value</FieldLabel>
+                    <Input
+                      id="discountValue"
+                      type="number"
+                      name="discountValue"
+                      defaultValue={promo.discountValue}
+                      placeholder="10000"
+                      min="0"
+                      step="10000"
+                    />
+                  </Field>
+                ) : (
+                  <Field className="gap-1.5">
+                    <FieldLabel htmlFor="discountValue">Discount Percentage { discountValue }%</FieldLabel>
+                    <Slider
+                      name="discountValue"
+                      max={100}
+                      step={1}
+                      value={[discountValue]}
+                      onValueChange={(value: number | readonly number[]) => setDiscountValue(Array.isArray(value) ? value[0] : value)}
+                      className="w-full"
+                    />
+                    <FieldDescription className="text-xs leading-snug">
+                      Percentage off the ticket price
+                    </FieldDescription>
+                  </Field>
+                )}
+
+                <Field className="gap-1.5">
+                  <FieldLabel htmlFor="usageLimit">Usage Limit</FieldLabel>
                   <Input
-                    id="discountValue"
+                    id="usageLimit"
                     type="number"
-                    name="discountValue"
-                    defaultValue={promo.discountValue}
-                    placeholder="10000"
-                    min="0"
-                    step="10000"
+                    name="usageLimit"
+                    defaultValue={promo.usageLimit ?? ""}
+                    placeholder="Unlimited"
+                    min="1"
                   />
-                </Field>
-              ) : (
-                <Field>
-                  <FieldLabel htmlFor="discountValue">Discount Percentage { discountValue }% </FieldLabel>
-                  <Slider
-                    name="discountValue"
-                    max={100}
-                    step={1}
-                    value={[discountValue]}
-                    onValueChange={(value: number | readonly number[]) => setDiscountValue(Array.isArray(value) ? value[0] : value)}
-                    className="w-full"
-                  />
-                  <FieldDescription>
-                    Percentage off the ticket price
-                  </FieldDescription>
-                </Field>
-              )}
-
-              <Field>
-                <FieldLabel htmlFor="usageLimit">Usage Limit</FieldLabel>
-                <Input
-                  id="usageLimit"
-                  type="number"
-                  name="usageLimit"
-                  defaultValue={promo.usageLimit ?? ""}
-                  placeholder="Unlimited"
-                  min="1"
-                />
-                <FieldDescription>
-                  {promo.usageLimit
-                    ? `Used ${promo.usedCount} of ${promo.usageLimit}`
-                    : `Used ${promo.usedCount} time(s) · no limit set`
-                  }
-                </FieldDescription>
-              </Field>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <Field>
-                  <FieldLabel htmlFor="startDate">Start Date & Time</FieldLabel>
-                  <CustomDatePicker name="startDate" value={promo.startsAt ? new Date(promo.startsAt) : new Date()}/>
-                  <FieldDescription>
-                    When the promo becomes active
-                  </FieldDescription>
-                </Field>
-
-                <Field>
-                  <FieldLabel htmlFor="endDate">End Date & Time</FieldLabel>
-                  <CustomDatePicker name="endDate" value={promo.endsAt ? new Date(promo.endsAt) : new Date()}/>
-                  <FieldDescription>
-                    When the promo expires (optional)
+                  <FieldDescription className="text-xs leading-snug">
+                    {promo.usageLimit
+                      ? `Used ${promo.usedCount} of ${promo.usageLimit}`
+                      : `Used ${promo.usedCount} time(s), no limit set`
+                    }
                   </FieldDescription>
                 </Field>
               </div>
 
-              <Field>
+              <div className="grid grid-cols-1 gap-3">
+                <Field className="gap-1.5">
+                  <FieldLabel htmlFor="startDate">Start Date & Time</FieldLabel>
+                  <CustomDatePicker name="startDate" value={promo.startsAt ? new Date(promo.startsAt) : new Date()}/>
+                </Field>
+
+                <Field className="gap-1.5">
+                  <FieldLabel htmlFor="endDate">End Date & Time</FieldLabel>
+                  <CustomDatePicker name="endDate" value={promo.endsAt ? new Date(promo.endsAt) : new Date()}/>
+                </Field>
+              </div>
+
+              <Field className="gap-1.5">
                 <FieldLabel htmlFor="isActive">Status</FieldLabel>
                 <Select name="status" items={items} defaultValue={`${String(promo.isActive)}`}>
                   <SelectTrigger className="w-full">
@@ -190,7 +188,7 @@ export function EditPromo({promo}: { promo: PromoType }) {
                     ))}
                   </SelectContent>
                 </Select>
-                <FieldDescription>
+                <FieldDescription className="text-xs leading-snug">
                   Set whether the promo is currently active
                 </FieldDescription>
               </Field>
@@ -199,7 +197,7 @@ export function EditPromo({promo}: { promo: PromoType }) {
           </div>
         </form>
 
-        <SheetFooter>
+        <SheetFooter className="shrink-0 border-t bg-popover">
           <Button type="submit" form="edit-promo-form" disabled={isPending}>
             Save changes
           </Button>
