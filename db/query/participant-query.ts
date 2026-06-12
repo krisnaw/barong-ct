@@ -115,7 +115,8 @@ export async function getPendingParticipantByEvent(eventId: number) {
         limit: 1,
         orderBy: (payment, { desc }) => [desc(payment.createdAt)],
       },
-    }
+    },
+    orderBy: (participant, { asc }) => [asc(participant.status)],
   });
 }
 

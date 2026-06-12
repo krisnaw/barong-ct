@@ -14,21 +14,7 @@ import {BtnResendConfirm} from "@/components/button/btn-resend-confirm";
 import {ButtonFixBibNumber} from "@/components/participant/button-fix-bib-number";
 import {ButtonChangeParticipantStatus} from "@/components/participant/button-change-participant-status";
 import {ButtonChangeJerseySize} from "@/components/participant/button-change-jersey-size";
-import {PARTICIPANT_STATUS} from "@/utils/event.helper";
-
-const STATUS_BADGE: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
-  [PARTICIPANT_STATUS.COMPLETED]: "default",
-  [PARTICIPANT_STATUS.PENDING_PAYMENT]: "secondary",
-  [PARTICIPANT_STATUS.DRAFT]: "outline",
-  [PARTICIPANT_STATUS.PROFILE]: "outline",
-}
-
-const STATUS_LABELS: Record<string, string> = {
-  [PARTICIPANT_STATUS.COMPLETED]: "Completed",
-  [PARTICIPANT_STATUS.PENDING_PAYMENT]: "Pending Payment",
-  [PARTICIPANT_STATUS.DRAFT]: "Draft",
-  [PARTICIPANT_STATUS.PROFILE]: "Profile",
-}
+import {PARTICIPANT_STATUS_BADGE, PARTICIPANT_STATUS_LABELS} from "@/utils/participant-status";
 
 function Row({label, value}: { label: string; value: React.ReactNode }) {
   return (
@@ -70,8 +56,8 @@ export default async function Page({
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Badge variant={STATUS_BADGE[participant.status ?? ""] ?? "outline"}>
-            {STATUS_LABELS[participant.status ?? ""] ?? participant.status}
+          <Badge variant={PARTICIPANT_STATUS_BADGE[participant.status ?? ""] ?? "outline"}>
+            {PARTICIPANT_STATUS_LABELS[participant.status ?? ""] ?? participant.status}
           </Badge>
           {participant.bibNumber && (
             <Badge variant="outline" className="font-mono tabular-nums">
