@@ -11,6 +11,7 @@ export async function getCategoryByEvent(eventId: number) {
     with: {
       participants: {
         columns: {
+          status: true,
           bibNumber: true,
         },
         with: {
