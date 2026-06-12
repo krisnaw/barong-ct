@@ -36,7 +36,7 @@ export function ButtonFixBibNumber({participantId, currentBib}: { participantId:
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger render={
-        <Button variant="outline" size="icon-xs" aria-label="Fix bib number">
+        <Button variant="outline" size="icon" aria-label="Fix bib number">
           <HashIcon />
         </Button>
       } />
