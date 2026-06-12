@@ -32,7 +32,7 @@ import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/c
 import {EventCategoryType, EventGroupType, InsertGroupType} from "@/db/schema"
 import {Pencil, Plus, Search, Users, UsersRound} from "lucide-react";
 
-type GroupParticipant = { id: number; user: { name: string } }
+type GroupParticipant = { id: number; bibNumber: string | null; user: { name: string } }
 
 type DraftGroup = Pick<EventGroupType, "id" | "name" | "eventId" | "eventCategoryId"> & {
   participants: GroupParticipant[]
@@ -71,16 +71,31 @@ export function DashboardGroupManager({eventId, categories, groups}: Props) {
   const filteredGroups = React.useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase()
 
-    if (!normalizedQuery) {
-      return items
+    const getCategoryName = (group: DraftGroup) => {
+      return group.eventCategoryId
+        ? categoryById.get(group.eventCategoryId)?.name ?? ""
+        : "unassigned"
     }
 
-    return items.filter((group) => {
+    const matchingGroups = normalizedQuery ? items.filter((group) => {
       const categoryName = group.eventCategoryId
         ? categoryById.get(group.eventCategoryId)?.name ?? ""
         : "unassigned"
+      const participants = group.participants
+        .map((participant) => `${participant.user.name} ${participant.bibNumber ?? ""}`)
+        .join(" ")
 
-      return `${group.name} ${categoryName}`.toLowerCase().includes(normalizedQuery)
+      return `${group.name} ${categoryName} ${participants}`.toLowerCase().includes(normalizedQuery)
+    }) : items
+
+    return [...matchingGroups].sort((a, b) => {
+      const categoryCompare = getCategoryName(a).localeCompare(getCategoryName(b), undefined, {sensitivity: "base"})
+
+      if (categoryCompare !== 0) {
+        return categoryCompare
+      }
+
+      return a.name.localeCompare(b.name, undefined, {sensitivity: "base"})
     })
   }, [categoryById, items, query])
 
@@ -204,11 +219,11 @@ export function DashboardGroupManager({eventId, categories, groups}: Props) {
                     )}
                   </TableCell>
                   <TableCell className="tabular-nums">{group.participants.length}</TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-right inline-flex gap-2">
                     <Button
                       type="button"
-                      variant="ghost"
-                      size="icon-sm"
+                      variant="outline"
+                      size="icon"
                       aria-label={`View participants in ${group.name}`}
                       onClick={() => setParticipantsGroup(group)}
                     >
@@ -216,8 +231,8 @@ export function DashboardGroupManager({eventId, categories, groups}: Props) {
                     </Button>
                     <Button
                       type="button"
-                      variant="ghost"
-                      size="icon-sm"
+                      variant="outline"
+                      size="icon"
                       aria-label={`Edit ${group.name}`}
                       onClick={() => openEditSheet(group)}
                     >
@@ -273,8 +288,11 @@ export function DashboardGroupManager({eventId, categories, groups}: Props) {
           {participantsGroup && participantsGroup.participants.length > 0 ? (
             <ul className="max-h-72 space-y-1 overflow-y-auto py-1 text-sm">
               {participantsGroup.participants.map((p) => (
-                <li key={p.id} className="rounded px-2 py-1.5 hover:bg-muted">
-                  {p.user.name}
+                <li key={p.id} className="flex items-center justify-between gap-3 rounded px-2 py-1.5 hover:bg-muted">
+                  <span className="min-w-0 truncate">{p.user.name}</span>
+                  <span className="shrink-0 text-xs tabular-nums text-muted-foreground">
+                    {p.bibNumber ? `#${p.bibNumber}` : "No bib"}
+                  </span>
                 </li>
               ))}
             </ul>
