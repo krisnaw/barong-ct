@@ -3,10 +3,10 @@ import {EventDate} from "@/components/events/event-date";
 import {formatMoney} from "@/utils/money-helper";
 import {Badge} from "@/components/ui/badge";
 import {ParticipantType} from "@/db/query/participant-query";
-import {EventCategoryType, EventGroupType} from "@/db/schema";
 import Link from "next/link";
+import {buttonVariants} from "@/components/ui/button";
 
-export function ListParticipant({participants, groups, categories} : {participants : ParticipantType[], groups: EventGroupType[], categories: EventCategoryType[]}) {
+export function ListParticipant({participants} : {participants : ParticipantType[]}) {
   return (
     <Table>
       <TableHeader>
@@ -59,7 +59,9 @@ export function ListParticipant({participants, groups, categories} : {participan
                 <EventDate eventDate={participant.updatedAt} type="date" />
               </TableCell>
               <TableCell className="inline-flex gap-2">
-                <Link href={`/dashboard/events/${participant.eventId}/participant/${participant.id}`}>
+                <Link
+                  className={buttonVariants({ variant: "secondary", size: "sm" })}
+                  href={`/dashboard/events/${participant.eventId}/participant/${participant.id}`}>
                   View
                 </Link>
               </TableCell>

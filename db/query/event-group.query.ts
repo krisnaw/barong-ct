@@ -1,7 +1,7 @@
 'use server'
 
 import {db} from "@/db/db";
-import {eq} from "drizzle-orm";
+import {asc, eq} from "drizzle-orm";
 import {eventGroup} from "@/db/schema";
 
 export async function getGroupById(groupId: number) {
@@ -20,6 +20,7 @@ export async function getGroupById(groupId: number) {
 export async function getGroupsByEvent(eventId: number) {
   return db.query.eventGroup.findMany({
     where: eq(eventGroup.eventId, eventId),
+    orderBy: asc(eventGroup.name),
     with: {
       participants: {
         with: {
