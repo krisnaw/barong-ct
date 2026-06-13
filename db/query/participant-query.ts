@@ -1,7 +1,7 @@
 "use server"
 
 import {db} from "@/db/db";
-import {and, count, eq, getTableColumns, isNull, ne, sum} from "drizzle-orm";
+import {and, eq, getTableColumns, isNull, ne} from "drizzle-orm";
 import {eventCategory, eventGroup, participant, user, userDetail} from "@/db/schema";
 import {PARTICIPANT_STATUS} from "@/utils/event.helper";
 
@@ -120,12 +120,9 @@ export async function getPendingParticipantByEvent(eventId: number) {
   });
 }
 
-export async function getParticipantByEvent(
-  eventId: number,
-  { page = 1, pageSize = 20, sortByName = false, status = PARTICIPANT_STATUS.COMPLETED }: { page?: number; pageSize?: number; sortByName?: boolean, status? : string } = {}
-) {
+export async function getParticipantByEvent(eventId: number) {
   return db.query.participant.findMany({
-    where: and(eq(participant.eventId, eventId), eq(participant.status, status)),
+    where: and(eq(participant.eventId, eventId), eq(participant.status, PARTICIPANT_STATUS.COMPLETED)),
     with: {
       user: {
         columns: {
@@ -153,26 +150,11 @@ export async function getParticipantByEvent(
         orderBy: (payment, { desc }) => [desc(payment.createdAt)],
       },
     },
-    orderBy: (participant, { desc, asc }) => [
-      sortByName ? asc(participant.id) : desc(participant.createdAt)
-    ],
-    limit: pageSize,
-    offset: (page - 1) * pageSize,
   })
 }
 
 export type ParticipantType = Awaited<ReturnType<typeof getParticipantByEvent>>[number]
 
-export async function getParticipantByEventCount(
-  eventId: number,
-  status: string = PARTICIPANT_STATUS.COMPLETED
-) {
-  const result = await db
-    .select({ total: count() })
-    .from(participant)
-    .where(and(eq(participant.eventId, eventId), eq(participant.status, status)))
-  return result[0]?.total ?? 0
-}
 
 export async function getPendingParticipants(eventId: number) {
   return await db
@@ -221,17 +203,4 @@ export async function getParticipantsForDownload(eventId: number) {
     .leftJoin(eventGroup, eq(participant.groupId, eventGroup.id))
     .where(and(eq(participant.eventId, eventId), eq(participant.status, PARTICIPANT_STATUS.COMPLETED)))
     .orderBy(participant.bibNumber)
-}
-
-export async function getTotalRevenue(eventId: number) {
-  const result = await db
-    .select({ totalRevenue: sum(participant.finalPrice) })
-    .from(participant)
-    .where(
-      and(
-        eq(participant.eventId, eventId),
-        eq(participant.status, PARTICIPANT_STATUS.COMPLETED),
-      )
-    );
-  return result[0]?.totalRevenue ?? 0;
 }
