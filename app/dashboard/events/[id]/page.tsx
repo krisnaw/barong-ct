@@ -7,6 +7,7 @@ import Link from "next/link";
 import {ButtonDownloadParticipant} from "@/components/button/button-download-participant";
 import {getParticipantByEvent} from "@/db/query/participant-query";
 import {ListParticipant} from "@/components/participant/list-participant";
+import type {CompletedParticipantTableRow} from "@/components/participant/list-participant";
 import {buttonVariants} from "@/components/ui/button";
 
 export default async function Page({
@@ -23,6 +24,19 @@ export default async function Page({
   }
 
   const participants = await getParticipantByEvent(id)
+  const participantRows: CompletedParticipantTableRow[] = participants.map((participant) => ({
+    id: participant.id,
+    eventId: participant.eventId,
+    bibNumber: participant.bibNumber,
+    name: participant.user.name,
+    email: participant.user.email,
+    groupName: participant.group?.name ?? null,
+    finalPrice: participant.finalPrice,
+    invoiceNumber: participant.payments[0]?.invoiceNumber ?? null,
+    promoCode: participant.promoCode,
+    categoryName: participant.category?.name ?? null,
+    registeredAt: participant.updatedAt.toISOString(),
+  }))
 
   return (
     <div className="space-y-4">
@@ -81,7 +95,7 @@ export default async function Page({
           </CardAction>
         </CardHeader>
         <CardContent className="space-y-4">
-          <ListParticipant participants={participants}/>
+          <ListParticipant participants={participantRows}/>
         </CardContent>
       </Card>
     </div>
