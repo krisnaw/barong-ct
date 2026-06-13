@@ -1,7 +1,7 @@
 "use server"
 
 import {db} from "@/db/db";
-import {and, eq, getTableColumns, isNull, ne} from "drizzle-orm";
+import {and, desc, eq, getTableColumns, isNull, ne} from "drizzle-orm";
 import {eventCategory, eventGroup, participant, user, userDetail} from "@/db/schema";
 import {PARTICIPANT_STATUS} from "@/utils/event.helper";
 
@@ -123,6 +123,7 @@ export async function getPendingParticipantByEvent(eventId: number) {
 export async function getParticipantByEvent(eventId: number) {
   return db.query.participant.findMany({
     where: and(eq(participant.eventId, eventId), eq(participant.status, PARTICIPANT_STATUS.COMPLETED)),
+    orderBy: desc(participant.updatedAt),
     with: {
       user: {
         columns: {
@@ -154,7 +155,6 @@ export async function getParticipantByEvent(eventId: number) {
 }
 
 export type ParticipantType = Awaited<ReturnType<typeof getParticipantByEvent>>[number]
-
 
 export async function getPendingParticipants(eventId: number) {
   return await db
