@@ -16,6 +16,7 @@ import Link from "next/link";
 import {Badge} from "@/components/ui/badge";
 import {Button, buttonVariants} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {eventDateFormat} from "@/types/date-helper";
 import {formatMoney} from "@/utils/money-helper";
@@ -149,8 +150,12 @@ const columns: ColumnDef<CompletedParticipantTableRow>[] = [
   },
 ];
 
+const pageSizeOptions = [10, 25, 50, 100, 300];
+
 export function ListParticipant({participants} : {participants : CompletedParticipantTableRow[]}) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [sorting, setSorting] = React.useState<SortingState>([
+    { id: "registeredAt", desc: true },
+  ]);
   const [globalFilter, setGlobalFilter] = React.useState("");
 
   // eslint-disable-next-line react-hooks/incompatible-library -- TanStack Table exposes non-memoizable table helpers.
@@ -172,12 +177,29 @@ export function ListParticipant({participants} : {participants : CompletedPartic
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between gap-2">
-        <Input
-          value={globalFilter}
-          onChange={(event) => setGlobalFilter(event.target.value)}
-          placeholder="Search participants"
-          className="max-w-xs"
-        />
+        <div className="flex items-center gap-2">
+          <Input
+            value={globalFilter}
+            onChange={(event) => setGlobalFilter(event.target.value)}
+            placeholder="Search participants"
+            className="w-56 sm:w-72"
+          />
+          <Select
+            value={String(table.getState().pagination.pageSize)}
+            onValueChange={(value) => table.setPageSize(Number(value ?? pageSizeOptions[0]))}
+          >
+            <SelectTrigger className="w-24">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {pageSizeOptions.map((pageSize) => (
+                <SelectItem key={pageSize} value={String(pageSize)}>
+                  {pageSize} / page
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
         <div className="text-sm text-muted-foreground">
           {table.getFilteredRowModel().rows.length} completed
         </div>
