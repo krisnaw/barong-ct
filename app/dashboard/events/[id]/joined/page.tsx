@@ -39,7 +39,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
                   {participant.bibNumber && participant.status !== PARTICIPANT_STATUS.COMPLETED ? (
                     <ButtonChangeParticipantStatus participantId={participant.id} currentStatus={participant.status ?? ""} />
                   ) : null}
-                  {participant.status === PARTICIPANT_STATUS.DRAFT ? (
+                  {participant.status === PARTICIPANT_STATUS.DRAFT || participant.status === PARTICIPANT_STATUS.PROFILE  ? (
                     <DeleteParticipant participant={participant} />
                   ) : null}
                 </TableCell>
