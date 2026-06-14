@@ -1,5 +1,5 @@
 import {getUserWithDetail} from "@/db/query/user-query";
-import {Button} from "@/components/ui/button";
+import {buttonVariants} from "@/components/ui/button";
 import {ArrowLeft, Mail} from "lucide-react";
 import Link from "next/link";
 import {notFound} from "next/navigation";
@@ -29,12 +29,10 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Button variant="outline" size="sm">
-            <Link href="/dashboard/users">
-              <ArrowLeft className="size-4 mr-2" />
-              Back to Users
-            </Link>
-          </Button>
+          <Link href="/dashboard/users" className={buttonVariants({variant: "outline", size: "sm"})}>
+            <ArrowLeft className="size-4" />
+            Back to Users
+          </Link>
         </div>
       </div>
 
