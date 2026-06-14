@@ -4,6 +4,7 @@ import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/
 import {EventDate} from "@/components/events/event-date";
 import {ButtonChangeParticipantStatus} from "@/components/participant/button-change-participant-status";
 import {PARTICIPANT_STATUS} from "@/utils/event.helper";
+import {DeleteParticipant} from "@/components/participant/delete-participant";
 
 export default async function Page({params}: { params: Promise<{ id: number }> }) {
   const {id} = await params;
@@ -37,6 +38,9 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
                 <TableCell className="text-right">
                   {participant.bibNumber && participant.status !== PARTICIPANT_STATUS.COMPLETED ? (
                     <ButtonChangeParticipantStatus participantId={participant.id} currentStatus={participant.status ?? ""} />
+                  ) : null}
+                  {participant.status === PARTICIPANT_STATUS.DRAFT ? (
+                    <DeleteParticipant participant={participant} />
                   ) : null}
                 </TableCell>
               </TableRow>
