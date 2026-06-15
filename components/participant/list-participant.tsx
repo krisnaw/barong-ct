@@ -155,8 +155,7 @@ const pageSizeOptions = [10, 25, 50, 100, 300];
 
 export function ListParticipant({participants} : {participants : CompletedParticipantTableRow[]}) {
   const [sorting, setSorting] = React.useState<SortingState>([
-    { id: "groupName", desc: false },
-    { id: "name", desc: false },
+    { id: "registeredAt", desc: true },
   ]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = React.useState("");
@@ -198,13 +197,13 @@ export function ListParticipant({participants} : {participants : CompletedPartic
             value={String(table.getState().pagination.pageSize)}
             onValueChange={(value) => table.setPageSize(Number(value ?? pageSizeOptions[0]))}
           >
-            <SelectTrigger className="w-24">
+            <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
               {pageSizeOptions.map((pageSize) => (
                 <SelectItem key={pageSize} value={String(pageSize)}>
-                  {pageSize} / page
+                  {pageSize}
                 </SelectItem>
               ))}
             </SelectContent>
