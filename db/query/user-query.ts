@@ -3,13 +3,12 @@
 import {user, userDetail} from "@/db/schema";
 import {UserWithDetail} from "@/types/auth-types";
 import {db} from "@/db/db";
-import {desc, eq, getTableColumns, ilike} from "drizzle-orm";
+import {desc, eq, getTableColumns} from "drizzle-orm";
 
-export async function getUsers( name?  : string) {
+export async function getUsers() {
   return db.select({
     ...getTableColumns(user), phone: userDetail.phoneNumber
   }).from(user)
-    .where(name ? ilike(user.name, `%${name}%`) : undefined)
     .leftJoin(userDetail, eq(userDetail.userId, user.id))
     .orderBy(desc(user.createdAt))
     .limit(150);

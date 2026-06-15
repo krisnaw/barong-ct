@@ -45,6 +45,12 @@ export async function DeleteEventParticipantAction(formData: FormData): Promise<
   revalidatePath('/', 'layout');
 }
 
+export async function deleteParticipantAction(id: number): Promise<ActionResponse> {
+  await db.delete(participant).where(eq(participant.id, id))
+  revalidatePath('/', 'layout')
+  return { success: true, message: 'Participant deleted successfully.' }
+}
+
 export async function createParticipant(formData: InsertParticipantType) : Promise<ActionResponse> {
   const validate = participantInsertSchema.safeParse(formData)
   if (!validate.success) {

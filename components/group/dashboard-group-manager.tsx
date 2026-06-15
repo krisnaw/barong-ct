@@ -1,6 +1,15 @@
 'use client'
 
 import * as React from "react"
+import {
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getSortedRowModel,
+  SortingState,
+  useReactTable,
+} from "@tanstack/react-table"
 import {useRouter} from "next/navigation"
 import {toast} from "sonner"
 
@@ -31,7 +40,7 @@ import {
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table"
 import {EventCategoryType, EventGroupType, InsertGroupType} from "@/db/schema"
 import {PARTICIPANT_STATUS_BADGE, PARTICIPANT_STATUS_LABELS} from "@/utils/participant-status"
-import {Pencil, Plus, Search, Users, UsersRound} from "lucide-react";
+import {ArrowUpDown, Pencil, Plus, Search, Users, UsersRound} from "lucide-react";
 
 type GroupParticipant = { id: number; bibNumber: string | null; status: string | null; user: { name: string } }
 
@@ -58,7 +67,11 @@ export function DashboardGroupManager({eventId, categories, groups}: Props) {
       participants: group.participants,
     }))
   )
-  const [query, setQuery] = React.useState("")
+  const [globalFilter, setGlobalFilter] = React.useState("")
+  const [sorting, setSorting] = React.useState<SortingState>([
+    {id: "category", desc: false},
+    {id: "name", desc: false},
+  ])
   const [open, setOpen] = React.useState(false)
   const [isSaving, setIsSaving] = React.useState(false)
   const [mode, setMode] = React.useState<SheetMode>("create")
@@ -69,16 +82,151 @@ export function DashboardGroupManager({eventId, categories, groups}: Props) {
     return new Map(categories.map((category) => [category.id, category]))
   }, [categories])
 
-  const filteredGroups = React.useMemo(() => {
-    const normalizedQuery = query.trim().toLowerCase()
+  function openCreateSheet() {
+    setMode("create")
+    setSelectedGroup(null)
+    setOpen(true)
+  }
 
-    const getCategoryName = (group: DraftGroup) => {
-      return group.eventCategoryId
-        ? categoryById.get(group.eventCategoryId)?.name ?? ""
-        : "unassigned"
-    }
+  const openEditSheet = React.useCallback((group: DraftGroup) => {
+    setMode("edit")
+    setSelectedGroup(group)
+    setOpen(true)
+  }, [])
 
-    const matchingGroups = normalizedQuery ? items.filter((group) => {
+  const columns = React.useMemo<ColumnDef<DraftGroup>[]>(() => [
+    {
+      accessorKey: "id",
+      header: ({column}) => (
+        <Button
+          variant="ghost"
+          size="sm"
+          className="-ml-2"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          ID
+          <ArrowUpDown />
+        </Button>
+      ),
+      cell: ({row}) => (
+        <span className="tabular-nums text-muted-foreground">
+          {row.original.id}
+        </span>
+      ),
+    },
+    {
+      accessorKey: "name",
+      header: ({column}) => (
+        <Button
+          variant="ghost"
+          size="sm"
+          className="-ml-2"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Group
+          <ArrowUpDown />
+        </Button>
+      ),
+      cell: ({row}) => (
+        <span className="font-medium">
+          {row.original.name}
+        </span>
+      ),
+    },
+    {
+      id: "category",
+      accessorFn: (group) => group.eventCategoryId
+        ? categoryById.get(group.eventCategoryId)?.name ?? "Unknown category"
+        : "Unassigned",
+      header: ({column}) => (
+        <Button
+          variant="ghost"
+          size="sm"
+          className="-ml-2"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Category
+          <ArrowUpDown />
+        </Button>
+      ),
+      cell: ({row}) => (
+        row.original.eventCategoryId ? (
+          <Badge variant="secondary">
+            {categoryById.get(row.original.eventCategoryId)?.name ?? "Unknown category"}
+          </Badge>
+        ) : (
+          <span className="text-sm text-muted-foreground">Unassigned</span>
+        )
+      ),
+    },
+    {
+      id: "participants",
+      accessorFn: (group) => group.participants.length,
+      header: ({column}) => (
+        <Button
+          variant="ghost"
+          size="sm"
+          className="-ml-2"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Participants
+          <ArrowUpDown />
+        </Button>
+      ),
+      cell: ({row}) => (
+        <span className="tabular-nums">
+          {row.original.participants.length}
+        </span>
+      ),
+    },
+    {
+      id: "actions",
+      header: "Action",
+      enableSorting: false,
+      cell: ({row}) => (
+        <div className="flex justify-end gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            aria-label={`View participants in ${row.original.name}`}
+            onClick={() => setParticipantsGroup(row.original)}
+          >
+            <Users />
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            aria-label={`Edit ${row.original.name}`}
+            onClick={() => openEditSheet(row.original)}
+          >
+            <Pencil />
+          </Button>
+        </div>
+      ),
+    },
+  ], [categoryById, openEditSheet])
+
+  // eslint-disable-next-line react-hooks/incompatible-library -- TanStack Table exposes non-memoizable table helpers.
+  const table = useReactTable({
+    data: items,
+    columns,
+    state: {
+      sorting,
+      globalFilter,
+    },
+    onSortingChange: setSorting,
+    onGlobalFilterChange: setGlobalFilter,
+    getRowId: (group) => String(group.id),
+    globalFilterFn: (row, _columnId, filterValue) => {
+      const normalizedFilter = String(filterValue).trim().toLowerCase()
+
+      if (!normalizedFilter) {
+        return true
+      }
+
+      const group = row.original
       const categoryName = group.eventCategoryId
         ? categoryById.get(group.eventCategoryId)?.name ?? ""
         : "unassigned"
@@ -86,31 +234,12 @@ export function DashboardGroupManager({eventId, categories, groups}: Props) {
         .map((participant) => `${participant.user.name} ${participant.bibNumber ?? ""} ${PARTICIPANT_STATUS_LABELS[participant.status ?? ""] ?? participant.status ?? ""}`)
         .join(" ")
 
-      return `${group.name} ${categoryName} ${participants}`.toLowerCase().includes(normalizedQuery)
-    }) : items
-
-    return [...matchingGroups].sort((a, b) => {
-      const categoryCompare = getCategoryName(a).localeCompare(getCategoryName(b), undefined, {sensitivity: "base"})
-
-      if (categoryCompare !== 0) {
-        return categoryCompare
-      }
-
-      return a.name.localeCompare(b.name, undefined, {sensitivity: "base"})
-    })
-  }, [categoryById, items, query])
-
-  function openCreateSheet() {
-    setMode("create")
-    setSelectedGroup(null)
-    setOpen(true)
-  }
-
-  function openEditSheet(group: DraftGroup) {
-    setMode("edit")
-    setSelectedGroup(group)
-    setOpen(true)
-  }
+      return `${group.name} ${categoryName} ${participants}`.toLowerCase().includes(normalizedFilter)
+    },
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+  })
 
   async function handleSave(values: { name: string; eventCategoryId: number | null }) {
     setIsSaving(true)
@@ -181,8 +310,8 @@ export function DashboardGroupManager({eventId, categories, groups}: Props) {
         <div className="relative max-w-sm">
           <Search className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
+            value={globalFilter}
+            onChange={(event) => setGlobalFilter(event.target.value)}
             placeholder="Search groups"
             className="pl-8"
           />
@@ -196,55 +325,38 @@ export function DashboardGroupManager({eventId, categories, groups}: Props) {
       <div className="overflow-hidden rounded-lg border bg-card">
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead className="w-16">ID</TableHead>
-              <TableHead>Group</TableHead>
-              <TableHead>Category</TableHead>
-              <TableHead className="w-24 tabular-nums">Participants</TableHead>
-              <TableHead className="w-20 text-right">Action</TableHead>
-            </TableRow>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <TableHead
+                    key={header.id}
+                    className={header.column.id === "actions" ? "w-24 text-right" : undefined}
+                  >
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(header.column.columnDef.header, header.getContext())}
+                  </TableHead>
+                ))}
+              </TableRow>
+            ))}
           </TableHeader>
           <TableBody>
-            {filteredGroups.length > 0 ? (
-              filteredGroups.map((group) => (
-                <TableRow key={group.id}>
-                  <TableCell className="tabular-nums text-muted-foreground">{group.id}</TableCell>
-                  <TableCell className="font-medium">{group.name}</TableCell>
-                  <TableCell>
-                    {group.eventCategoryId ? (
-                      <Badge variant="secondary">
-                        {categoryById.get(group.eventCategoryId)?.name ?? "Unknown category"}
-                      </Badge>
-                    ) : (
-                      <span className="text-sm text-muted-foreground">Unassigned</span>
-                    )}
-                  </TableCell>
-                  <TableCell className="tabular-nums">{group.participants.length}</TableCell>
-                  <TableCell className="text-right inline-flex gap-2">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="icon"
-                      aria-label={`View participants in ${group.name}`}
-                      onClick={() => setParticipantsGroup(group)}
+            {table.getRowModel().rows.length > 0 ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow key={row.id}>
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell
+                      key={cell.id}
+                      className={cell.column.id === "actions" ? "text-right" : undefined}
                     >
-                      <Users />
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="icon"
-                      aria-label={`Edit ${group.name}`}
-                      onClick={() => openEditSheet(group)}
-                    >
-                      <Pencil />
-                    </Button>
-                  </TableCell>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
+                  ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={5}>
+                <TableCell colSpan={columns.length}>
                   <Empty className="border-0 py-10">
                     <EmptyHeader>
                       <EmptyMedia variant="icon">

@@ -3,6 +3,7 @@
 import * as React from "react";
 import {
   ColumnDef,
+  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -156,7 +157,13 @@ export function ListParticipant({participants} : {participants : CompletedPartic
   const [sorting, setSorting] = React.useState<SortingState>([
     { id: "registeredAt", desc: true },
   ]);
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = React.useState("");
+  const categoryOptions = React.useMemo(() => {
+    return Array.from(
+      new Set(participants.map((participant) => participant.categoryName ?? "-"))
+    ).sort((a, b) => a.localeCompare(b, undefined, {sensitivity: "base"}));
+  }, [participants]);
 
   // eslint-disable-next-line react-hooks/incompatible-library -- TanStack Table exposes non-memoizable table helpers.
   const table = useReactTable({
@@ -164,9 +171,11 @@ export function ListParticipant({participants} : {participants : CompletedPartic
     columns,
     state: {
       sorting,
+      columnFilters,
       globalFilter,
     },
     onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -188,13 +197,31 @@ export function ListParticipant({participants} : {participants : CompletedPartic
             value={String(table.getState().pagination.pageSize)}
             onValueChange={(value) => table.setPageSize(Number(value ?? pageSizeOptions[0]))}
           >
-            <SelectTrigger className="w-24">
+            <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
               {pageSizeOptions.map((pageSize) => (
                 <SelectItem key={pageSize} value={String(pageSize)}>
-                  {pageSize} / page
+                  {pageSize}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select
+            value={(table.getColumn("categoryName")?.getFilterValue() as string | undefined) ?? "all"}
+            onValueChange={(value) => {
+              table.getColumn("categoryName")?.setFilterValue(value === "all" ? undefined : value)
+            }}
+          >
+            <SelectTrigger className="w-36">
+              <SelectValue placeholder="Category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All categories</SelectItem>
+              {categoryOptions.map((categoryName) => (
+                <SelectItem key={categoryName} value={categoryName}>
+                  {categoryName}
                 </SelectItem>
               ))}
             </SelectContent>
