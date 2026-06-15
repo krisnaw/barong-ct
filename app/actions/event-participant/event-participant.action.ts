@@ -2,7 +2,14 @@
 
 import {ActionResponse} from "@/types/types";
 import {db} from "@/db/db";
-import {InsertParticipantType, participant, participantInsertSchema, UpdateParticipantType, user, userDetail} from "@/db/schema";
+import {
+  InsertParticipantType,
+  participant,
+  participantInsertSchema,
+  UpdateParticipantType,
+  user,
+  userDetail
+} from "@/db/schema";
 import {getEventById} from "@/db/query/event-query";
 import {revalidatePath} from "next/cache";
 import {eq} from "drizzle-orm";
@@ -124,6 +131,8 @@ export async function adminRegisterParticipant(
   const promoId = formData.get('promoId') ? Number(formData.get('promoId')) : null
   const gender = (formData.get('gender') as string | null) || null
   const bloodType = (formData.get('bloodType') as string | null) || null
+  const dateOfBirth = (formData.get('dateOfBirth') as string | null) || null
+  const identityNumber = (formData.get('identityNumber') as string | null) || null
   const city = (formData.get('city') as string | null) || null
   const emergencyContactName = (formData.get('emergencyContactName') as string | null) || null
   const emergencyPhone = (formData.get('emergencyPhone') as string | null) || null
@@ -156,13 +165,15 @@ export async function adminRegisterParticipant(
       phoneNumber: phone,
       gender,
       bloodType,
+      dateOfBirth,
+      identityNumber,
       city,
       emergencyContactName,
       emergencyContactNumber: emergencyPhone,
     })
     .onConflictDoUpdate({
       target: userDetail.userId,
-      set: { phoneNumber: phone, gender, bloodType, city, emergencyContactName, emergencyContactNumber: emergencyPhone },
+      set: { phoneNumber: phone, gender, bloodType, dateOfBirth, identityNumber, city, emergencyContactName, emergencyContactNumber: emergencyPhone },
     })
 
   // 4. Resolve pricing

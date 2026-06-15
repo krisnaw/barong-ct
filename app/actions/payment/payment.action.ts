@@ -23,8 +23,7 @@ export async function createPayment(payload: { participantId: number, pm : strin
   const requestTimestamp = new Date().toISOString().slice(0, 19) + "Z"
 
   const participant = await getParticipantById(payload.participantId)
-
-
+  
 
   if (!participant) {
     redirect('/')

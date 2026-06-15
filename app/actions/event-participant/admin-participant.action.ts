@@ -22,6 +22,8 @@ export type AdminRegisterFreePassParams = {
   jerseySize?: string | null
   gender?: string | null
   bloodType?: string | null
+  dateOfBirth?: string | null
+  identityNumber?: string | null
   city?: string | null
   emergencyContactName?: string | null
   emergencyPhone?: string | null
@@ -32,7 +34,7 @@ export async function adminRegisterFreePass(
   params: AdminRegisterFreePassParams
 ): Promise<AdminRegisterState> {
   const { name, email, categoryId, eventId, promoId, groupId, jerseySize,
-    gender, bloodType, city, emergencyContactName, emergencyPhone, phone } = params
+    gender, bloodType, dateOfBirth, identityNumber, city, emergencyContactName, emergencyPhone, phone } = params
 
   // 1. Resolve user — find by email or create
   let existingUser = await db.query.user.findFirst({ where: eq(user.email, email) })
@@ -61,13 +63,15 @@ export async function adminRegisterFreePass(
       phoneNumber: phone,
       gender,
       bloodType,
+      dateOfBirth,
+      identityNumber,
       city,
       emergencyContactName,
       emergencyContactNumber: emergencyPhone,
     })
     .onConflictDoUpdate({
       target: userDetail.userId,
-      set: { phoneNumber: phone, gender, bloodType, city, emergencyContactName, emergencyContactNumber: emergencyPhone },
+      set: { phoneNumber: phone, gender, bloodType, dateOfBirth, identityNumber, city, emergencyContactName, emergencyContactNumber: emergencyPhone },
     })
 
   // 4. Resolve pricing and verify free-pass

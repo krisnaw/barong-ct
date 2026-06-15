@@ -3,7 +3,7 @@ import {redirect} from "next/navigation";
 import {getCategoryByEvent} from "@/db/query/event-category.query";
 import {getGroupsByEvent} from "@/db/query/event-group.query";
 import {getPromoByEvent} from "@/db/query/event-promo.query";
-import {AdminRegisterForm} from "./admin-register-form";
+import {AdminRegisterForm} from "@/components/form/admin-register-form";
 import Link from "next/link";
 import {buttonVariants} from "@/components/ui/button";
 import {ChevronLeft} from "lucide-react";
