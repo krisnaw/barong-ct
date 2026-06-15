@@ -52,6 +52,8 @@ export function AdminRegisterForm({eventId, categories, groups, promos}: Props) 
   const [promoId, setPromoId] = useState<string>('')
   const [gender, setGender] = useState<string>('')
   const [bloodType, setBloodType] = useState<string>('')
+  const [dateOfBirth, setDateOfBirth] = useState('')
+  const [identityNumber, setIdentityNumber] = useState('')
   const [emergencyContactName, setEmergencyContactName] = useState('')
   const [emergencyPhone, setEmergencyPhone] = useState('')
   const [city, setCity] = useState('')
@@ -86,6 +88,8 @@ export function AdminRegisterForm({eventId, categories, groups, promos}: Props) 
           jerseySize: jerseySize || null,
           gender: gender || null,
           bloodType: bloodType || null,
+          dateOfBirth: dateOfBirth || null,
+          identityNumber: identityNumber || null,
           city: city || null,
           emergencyContactName: emergencyContactName || null,
           emergencyPhone: emergencyPhone || null,
@@ -152,6 +156,36 @@ export function AdminRegisterForm({eventId, categories, groups, promos}: Props) 
                 value={phone}
                 onChange={e => setPhone(e.target.value)}
               />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <Label htmlFor="dateOfBirth">
+                  Birth Date{" "}
+                  <span className="text-muted-foreground text-xs">(optional)</span>
+                </Label>
+                <Input
+                  id="dateOfBirth"
+                  name="dateOfBirth"
+                  type="date"
+                  value={dateOfBirth}
+                  onChange={e => setDateOfBirth(e.target.value)}
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <Label htmlFor="identityNumber">
+                  KTP / ID{" "}
+                  <span className="text-muted-foreground text-xs">(optional)</span>
+                </Label>
+                <Input
+                  id="identityNumber"
+                  name="identityNumber"
+                  placeholder="e.g. 3201234567890001"
+                  value={identityNumber}
+                  onChange={e => setIdentityNumber(e.target.value)}
+                />
+              </div>
             </div>
 
             <div className="space-y-1.5">
@@ -431,7 +465,7 @@ export function AdminRegisterForm({eventId, categories, groups, promos}: Props) 
             </ItemContent>
           </Item>
 
-          {(selectedGroup || jerseySize || gender || bloodType || city || emergencyContactName || emergencyPhone) && (
+          {(selectedGroup || jerseySize || gender || bloodType || dateOfBirth || identityNumber || city || emergencyContactName || emergencyPhone) && (
             <div className="flex flex-wrap gap-2">
               {selectedGroup && (
                 <span className="rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground">
@@ -451,6 +485,16 @@ export function AdminRegisterForm({eventId, categories, groups, promos}: Props) 
               {bloodType && (
                 <span className="rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground">
                   {bloodType}
+                </span>
+              )}
+              {dateOfBirth && (
+                <span className="rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground">
+                  Birth: {dateOfBirth}
+                </span>
+              )}
+              {identityNumber && (
+                <span className="rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground">
+                  ID: {identityNumber}
                 </span>
               )}
               {city && (
