@@ -35,7 +35,7 @@ export default async function Page({
     invoiceNumber: participant.payments[0]?.invoiceNumber ?? null,
     promoCode: participant.promoCode,
     categoryName: participant.category?.name ?? null,
-    registeredAt: participant.updatedAt.toISOString(),
+    registeredAt: participant.createdAt.toISOString(),
   }))
 
   return (

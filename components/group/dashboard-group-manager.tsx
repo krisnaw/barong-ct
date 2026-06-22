@@ -29,6 +29,7 @@ import {Button} from "@/components/ui/button"
 import {Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle,} from "@/components/ui/empty"
 import {Field, FieldDescription, FieldGroup, FieldLabel} from "@/components/ui/field"
 import {Input} from "@/components/ui/input"
+import {InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput} from "@/components/ui/input-group"
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select"
 import {
   Sheet,
@@ -42,7 +43,7 @@ import {
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table"
 import {EventCategoryType, EventGroupType, InsertGroupType} from "@/db/schema"
 import {PARTICIPANT_STATUS_BADGE, PARTICIPANT_STATUS_LABELS} from "@/utils/participant-status"
-import {ArrowUpDown, Pencil, Plus, Search, Trash, Users, UsersRound} from "lucide-react";
+import {ArrowUpDown, Check, Copy, Link2, Pencil, Plus, Search, Trash, Users, UsersRound} from "lucide-react";
 
 type GroupParticipant = { id: number; bibNumber: string | null; status: string | null; user: { name: string } }
 
@@ -79,6 +80,8 @@ export function DashboardGroupManager({eventId, categories, groups}: Props) {
   const [mode, setMode] = React.useState<SheetMode>("create")
   const [selectedGroup, setSelectedGroup] = React.useState<DraftGroup | null>(null)
   const [participantsGroup, setParticipantsGroup] = React.useState<DraftGroup | null>(null)
+  const [inviteGroup, setInviteGroup] = React.useState<DraftGroup | null>(null)
+  const [copiedInviteGroupId, setCopiedInviteGroupId] = React.useState<number | null>(null)
   const [deleteGroup, setDeleteGroup] = React.useState<DraftGroup | null>(null)
   const [isDeleting, setIsDeleting] = React.useState(false)
 
@@ -97,6 +100,30 @@ export function DashboardGroupManager({eventId, categories, groups}: Props) {
     setSelectedGroup(group)
     setOpen(true)
   }, [])
+
+  const getInviteLink = React.useCallback((group: DraftGroup) => {
+    const origin = process.env.NEXT_PUBLIC_BASE_URL || window.location.origin
+    const url = new URL(`/event/${eventId}/register/group`, origin)
+
+    url.searchParams.set("groupId", String(group.id))
+    if (group.eventCategoryId) {
+      url.searchParams.set("category", String(group.eventCategoryId))
+    }
+    url.searchParams.set("group", group.name)
+
+    return url.toString()
+  }, [eventId])
+
+  const handleCopyInviteLink = React.useCallback(async (group: DraftGroup) => {
+    try {
+      await navigator.clipboard.writeText(getInviteLink(group))
+      setCopiedInviteGroupId(group.id)
+      toast.success("Invite link copied.")
+      setTimeout(() => setCopiedInviteGroupId(null), 2000)
+    } catch {
+      toast.error("Unable to copy invite link.")
+    }
+  }, [getInviteLink])
 
   const columns = React.useMemo<ColumnDef<DraftGroup>[]>(() => [
     {
@@ -189,6 +216,15 @@ export function DashboardGroupManager({eventId, categories, groups}: Props) {
       enableSorting: false,
       cell: ({row}) => (
         <div className="flex justify-end gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            aria-label={`Show invite link for ${row.original.name}`}
+            onClick={() => setInviteGroup(row.original)}
+          >
+            <Link2 />
+          </Button>
           <Button
             type="button"
             variant="outline"
@@ -371,7 +407,7 @@ export function DashboardGroupManager({eventId, categories, groups}: Props) {
                 {headerGroup.headers.map((header) => (
                   <TableHead
                     key={header.id}
-                    className={header.column.id === "actions" ? "w-36 text-right" : undefined}
+                    className={header.column.id === "actions" ? "w-48 text-right" : undefined}
                   >
                     {header.isPlaceholder
                       ? null
@@ -462,6 +498,58 @@ export function DashboardGroupManager({eventId, categories, groups}: Props) {
           )}
           <AlertDialogFooter>
             <AlertDialogCancel>Close</AlertDialogCancel>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog
+        open={inviteGroup !== null}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) {
+            setInviteGroup(null)
+            setCopiedInviteGroupId(null)
+          }
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Copy invite link?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Share this link with riders so they can join <strong>{inviteGroup?.name}</strong>.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          {inviteGroup ? (
+            <div className="space-y-2">
+              <InputGroup>
+                <InputGroupInput
+                  value={getInviteLink(inviteGroup)}
+                  readOnly
+                  aria-label="Invite link"
+                />
+                <InputGroupAddon align="inline-end">
+                  <InputGroupButton
+                    size="icon-xs"
+                    aria-label="Copy invite link"
+                    onClick={() => handleCopyInviteLink(inviteGroup)}
+                  >
+                    {copiedInviteGroupId === inviteGroup.id ? <Check /> : <Copy />}
+                  </InputGroupButton>
+                </InputGroupAddon>
+              </InputGroup>
+              {!inviteGroup.eventCategoryId ? (
+                <p className="text-xs text-muted-foreground">
+                  This group has no category assigned, so riders may need an admin to update it before registration can continue.
+                </p>
+              ) : null}
+            </div>
+          ) : null}
+          <AlertDialogFooter>
+            <AlertDialogCancel>Close</AlertDialogCancel>
+            {inviteGroup ? (
+              <AlertDialogAction onClick={() => handleCopyInviteLink(inviteGroup)}>
+                {copiedInviteGroupId === inviteGroup.id ? "Copied" : "Copy Link"}
+              </AlertDialogAction>
+            ) : null}
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
