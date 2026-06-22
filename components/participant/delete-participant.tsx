@@ -16,9 +16,13 @@ import {Button} from "@/components/ui/button"
 import {Trash} from "lucide-react"
 import {toast} from "sonner"
 import {deleteParticipantAction} from "@/app/actions/event-participant/event-participant.action"
-import {getPendingParticipantByEvent} from "@/db/query/participant-query"
 
-type PendingParticipant = Awaited<ReturnType<typeof getPendingParticipantByEvent>>[number]
+type PendingParticipant = {
+  id: number
+  user: {
+    name: string
+  }
+}
 
 export function DeleteParticipant({participant}: {participant: PendingParticipant}) {
   const [open, setOpen] = useState(false)

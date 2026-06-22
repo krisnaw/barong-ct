@@ -13,11 +13,13 @@ import {
 import {useRouter} from "next/navigation"
 import {toast} from "sonner"
 
-import {createGroupAction, updateGroupAction} from "@/app/actions/event-group/event-group.action"
+import {createGroupAction, deleteGroupAction, updateGroupAction} from "@/app/actions/event-group/event-group.action"
 import {
   AlertDialog,
+  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
+  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
@@ -40,7 +42,7 @@ import {
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table"
 import {EventCategoryType, EventGroupType, InsertGroupType} from "@/db/schema"
 import {PARTICIPANT_STATUS_BADGE, PARTICIPANT_STATUS_LABELS} from "@/utils/participant-status"
-import {ArrowUpDown, Pencil, Plus, Search, Users, UsersRound} from "lucide-react";
+import {ArrowUpDown, Pencil, Plus, Search, Trash, Users, UsersRound} from "lucide-react";
 
 type GroupParticipant = { id: number; bibNumber: string | null; status: string | null; user: { name: string } }
 
@@ -77,6 +79,8 @@ export function DashboardGroupManager({eventId, categories, groups}: Props) {
   const [mode, setMode] = React.useState<SheetMode>("create")
   const [selectedGroup, setSelectedGroup] = React.useState<DraftGroup | null>(null)
   const [participantsGroup, setParticipantsGroup] = React.useState<DraftGroup | null>(null)
+  const [deleteGroup, setDeleteGroup] = React.useState<DraftGroup | null>(null)
+  const [isDeleting, setIsDeleting] = React.useState(false)
 
   const categoryById = React.useMemo(() => {
     return new Map(categories.map((category) => [category.id, category]))
@@ -203,6 +207,17 @@ export function DashboardGroupManager({eventId, categories, groups}: Props) {
           >
             <Pencil />
           </Button>
+          {row.original.participants.length === 0 ? (
+            <Button
+              type="button"
+              variant="destructive"
+              size="icon"
+              aria-label={`Delete ${row.original.name}`}
+              onClick={() => setDeleteGroup(row.original)}
+            >
+              <Trash />
+            </Button>
+          ) : null}
         </div>
       ),
     },
@@ -304,6 +319,32 @@ export function DashboardGroupManager({eventId, categories, groups}: Props) {
     }
   }
 
+  async function handleDeleteGroup() {
+    if (!deleteGroup) {
+      return
+    }
+
+    setIsDeleting(true)
+
+    try {
+      const res = await deleteGroupAction(deleteGroup.id, eventId)
+
+      if (!res.success) {
+        toast.error(res.message)
+        return
+      }
+
+      setItems((current) => current.filter((group) => group.id !== deleteGroup.id))
+      toast.success(res.message)
+      router.refresh()
+      setDeleteGroup(null)
+    } catch {
+      toast.error("Unable to delete group.")
+    } finally {
+      setIsDeleting(false)
+    }
+  }
+
   return (
     <div className="space-y-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -330,7 +371,7 @@ export function DashboardGroupManager({eventId, categories, groups}: Props) {
                 {headerGroup.headers.map((header) => (
                   <TableHead
                     key={header.id}
-                    className={header.column.id === "actions" ? "w-24 text-right" : undefined}
+                    className={header.column.id === "actions" ? "w-36 text-right" : undefined}
                   >
                     {header.isPlaceholder
                       ? null
@@ -421,6 +462,35 @@ export function DashboardGroupManager({eventId, categories, groups}: Props) {
           )}
           <AlertDialogFooter>
             <AlertDialogCancel>Close</AlertDialogCancel>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog
+        open={deleteGroup !== null}
+        onOpenChange={(isOpen) => {
+          if (!isOpen && !isDeleting) {
+            setDeleteGroup(null)
+          }
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete group?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete <strong>{deleteGroup?.name}</strong>. Existing participants
+              will no longer be assigned to this group. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              variant="destructive"
+              disabled={isDeleting}
+              onClick={handleDeleteGroup}
+            >
+              {isDeleting ? "Deleting..." : "Yes, Delete"}
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

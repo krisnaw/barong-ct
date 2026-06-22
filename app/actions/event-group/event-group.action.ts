@@ -3,7 +3,7 @@ import {ActionResponse} from "@/types/types";
 import {db} from "@/db/db";
 import {eventGroup, InsertGroupType} from "@/db/schema";
 import {revalidatePath} from "next/cache";
-import {eq} from "drizzle-orm";
+import {and, eq} from "drizzle-orm";
 
 export async function createGroupAction(formData: InsertGroupType) : Promise<ActionResponse> {
   const [group] = await db.insert(eventGroup).values(formData).returning();
@@ -49,5 +49,27 @@ export async function updateGroupAction(formData: Pick<InsertGroupType, "name" |
   return {
     success: true,
     message: "Success, group was updated.",
+  }
+}
+
+export async function deleteGroupAction(groupId: number, eventId: number): Promise<ActionResponse> {
+  const [deletedGroup] = await db
+    .delete(eventGroup)
+    .where(and(eq(eventGroup.id, groupId), eq(eventGroup.eventId, eventId)))
+    .returning()
+
+  if (!deletedGroup) {
+    return {
+      success: false,
+      message: "Group was not found.",
+    }
+  }
+
+  revalidatePath(`/dashboard/events/${eventId}/groups`, "page")
+  revalidatePath(`/event/${eventId}/register/group`, "page")
+
+  return {
+    success: true,
+    message: "Success, group was deleted.",
   }
 }
