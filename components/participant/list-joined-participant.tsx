@@ -114,7 +114,7 @@ const columns: ColumnDef<JoinedParticipantTableRow>[] = [
           {participant.bibNumber && participant.status !== PARTICIPANT_STATUS.COMPLETED ? (
             <ButtonChangeParticipantStatus participantId={participant.id} currentStatus={participant.status ?? ""} />
           ) : null}
-          {participant.status === PARTICIPANT_STATUS.DRAFT || participant.status === PARTICIPANT_STATUS.PROFILE ? (
+          {participant.status === PARTICIPANT_STATUS.DRAFT || participant.status === PARTICIPANT_STATUS.PROFILE || participant.status === PARTICIPANT_STATUS.PENDING_PAYMENT ? (
             <DeleteParticipant participant={{id: participant.id, user: {name: participant.name}}} />
           ) : null}
         </div>
