@@ -18,6 +18,10 @@ export async function getUserById(userId: string) {
   return db.query.user.findFirst({where: eq(user.id, userId)})
 }
 
+export async function getUserDetail(userId: string) {
+  return db.query.userDetail.findFirst({where: eq(userDetail.userId, userId)})
+}
+
 export async function getUserWithDetail(id: string): Promise<UserWithDetail> {
   const userDetail = await db.query.user.findFirst({
     where: eq(user.id, id),

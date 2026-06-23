@@ -95,14 +95,33 @@ const columns: ColumnDef<UserRow>[] = [
 ]
 
 const pageSizeOptions = [10, 25, 50, 100]
+const profileFilterOptions = [
+  { value: "all", label: "All profiles" },
+  { value: "completed", label: "Completed" },
+  { value: "incomplete", label: "Incomplete" },
+] as const
+
+type ProfileFilter = (typeof profileFilterOptions)[number]["value"]
 
 export function UsersTable({users}: {users: UserRow[]}) {
   const [sorting, setSorting] = React.useState<SortingState>([{id: "createdAt", desc: true}])
   const [globalFilter, setGlobalFilter] = React.useState("")
+  const [profileFilter, setProfileFilter] = React.useState<ProfileFilter>("all")
+  const filteredUsers = React.useMemo(() => {
+    if (profileFilter === "completed") {
+      return users.filter((user) => Boolean(user.phone))
+    }
+
+    if (profileFilter === "incomplete") {
+      return users.filter((user) => !user.phone)
+    }
+
+    return users
+  }, [profileFilter, users])
 
   // eslint-disable-next-line react-hooks/incompatible-library -- TanStack Table exposes non-memoizable table helpers.
   const table = useReactTable({
-    data: users,
+    data: filteredUsers,
     columns,
     state: {sorting, globalFilter},
     onSortingChange: setSorting,
@@ -181,11 +200,29 @@ export function UsersTable({users}: {users: UserRow[]}) {
         </Table>
       </div>
 
-      <div className="flex items-center justify-between gap-2 text-sm text-muted-foreground">
+      <div className="flex flex-col gap-2 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
         <span>
           Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount() || 1}
         </span>
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-2">
+          <Select
+            value={profileFilter}
+            onValueChange={(value) => {
+              setProfileFilter(value as ProfileFilter)
+              table.setPageIndex(0)
+            }}
+          >
+            <SelectTrigger className="w-36">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {profileFilterOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <Button
             variant="outline"
             size="icon-xs"
