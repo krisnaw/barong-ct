@@ -1,17 +1,20 @@
-import {getUserWithDetail} from "@/db/query/user-query";
-import {DashboardProfileForm} from "@/components/profile/dashboard-profile-form";
+import {getUserById, getUserDetail} from "@/db/query/user-query";
 import Link from "next/link";
 import {cn} from "@/lib/utils";
 import {buttonVariants} from "@/components/ui/button";
 import {ArrowLeft} from "lucide-react";
+import {EditUserForm} from "@/components/users/edit-user-form";
+import {EditUserDetailForm} from "@/components/users/edit-user-detail-form";
+import {CreateUserDetailForm} from "@/components/users/create-user-detail-form";
 
 export default async function EditUser({ params }: { params: Promise<{ id: string }> }) {
   const {id} = await params;
 
-  const user = await getUserWithDetail(id)
+  const user = await getUserById(id);
+  const detail = await getUserDetail(id)
 
   return (
-    <div className="max-w-5xl">
+    <div className="space-y-6 max-w-2xl mx-auto">
       <Link
         href="/dashboard/users"
         className={cn(
@@ -23,7 +26,18 @@ export default async function EditUser({ params }: { params: Promise<{ id: strin
         Back to Users
       </Link>
 
-      <DashboardProfileForm user={user} />
+      {user && (
+        <EditUserForm user={user} />
+      )}
+
+      {user && detail && (
+        <EditUserDetailForm userId={id} detail={detail} />
+      )}
+
+      {user && !detail && (
+        <CreateUserDetailForm user={user} />
+      )}
+
     </div>
   )
 }
