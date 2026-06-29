@@ -16,7 +16,6 @@ import {Button} from "@/components/ui/button";
 import {Field, FieldDescription, FieldGroup, FieldLabel} from "@/components/ui/field";
 import {Input} from "@/components/ui/input";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
-import {CustomDatePicker} from "@/components/ui/custom-date-picker";
 import {ActionResponse, initialState} from "@/types/types";
 import {InsertPromoType} from "@/db/schema";
 import {Slider} from "@/components/ui/slider";
@@ -35,8 +34,6 @@ export function AddPromo({eventId}: { eventId: number }) {
       const status = formData.get("status") as string == "true";
       const payload: InsertPromoType = {
         eventId: eventId,
-        startsAt: new Date(`${formData.get("startsAt") as string}`),
-        endsAt: new Date(`${formData.get("endDate") as string}`),
         currency: formData.get("currency") as string,
         promo: formData.get("promo") as string,
         discountValue: Number(formData.get("discountValue") as string),
@@ -76,7 +73,7 @@ export function AddPromo({eventId}: { eventId: number }) {
                 </FieldDescription>
               </Field>
 
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <div className="grid grid-cols-1 gap-3">
                 <Field className="gap-1.5">
                   <FieldLabel htmlFor="currency">Currency</FieldLabel>
                   <Select name="currency" defaultValue="IDR">
@@ -107,7 +104,7 @@ export function AddPromo({eventId}: { eventId: number }) {
                 </Field>
               </div>
 
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <div className="grid grid-cols-1 gap-3">
                 {discountType === "fixed" ? (
                   <Field className="gap-1.5">
                     <FieldLabel htmlFor="discountValue">Discount Value</FieldLabel>
@@ -148,18 +145,6 @@ export function AddPromo({eventId}: { eventId: number }) {
                   <FieldDescription className="text-xs leading-snug">
                     Leave blank for unlimited
                   </FieldDescription>
-                </Field>
-              </div>
-
-              <div className="grid grid-cols-1 gap-3">
-                <Field className="gap-1.5">
-                  <FieldLabel htmlFor="startDate">Start Date & Time</FieldLabel>
-                  <CustomDatePicker name="startDate"/>
-                </Field>
-
-                <Field className="gap-1.5">
-                  <FieldLabel htmlFor="endDate">End Date & Time</FieldLabel>
-                  <CustomDatePicker name="endDate"/>
                 </Field>
               </div>
 

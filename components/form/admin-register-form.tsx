@@ -195,7 +195,11 @@ export function AdminRegisterForm({eventId, categories, groups, promos}: Props) 
                 setPromoId('')
               }}>
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select category"/>
+                  <SelectValue placeholder="Select category">
+                    {selectedCategory
+                      ? `${selectedCategory.name} — ${formatMoney(Number(selectedCategory.price))}`
+                      : undefined}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   {categories.map(cat => (
@@ -214,7 +218,9 @@ export function AdminRegisterForm({eventId, categories, groups, promos}: Props) 
               </Label>
               <Select name="groupId" value={groupId} onValueChange={v => setGroupId(v ?? '')}>
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select group"/>
+                  <SelectValue placeholder="Select group">
+                    {selectedGroup?.name}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   {groups.map(g => (
@@ -233,7 +239,9 @@ export function AdminRegisterForm({eventId, categories, groups, promos}: Props) 
               </Label>
               <Select name="jerseySize" value={jerseySize} onValueChange={v => setJerseySize(v ?? '')}>
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select size"/>
+                  <SelectValue placeholder="Select size">
+                    {JERSEY_SIZES.find(size => size.toLowerCase() === jerseySize)}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   {JERSEY_SIZES.map(size => (
@@ -253,7 +261,9 @@ export function AdminRegisterForm({eventId, categories, groups, promos}: Props) 
                 </Label>
                 <Select name="gender" value={gender} onValueChange={v => setGender(v ?? '')}>
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select gender"/>
+                    <SelectValue placeholder="Select gender">
+                      {GENDERS.find(option => option.toLowerCase() === gender)}
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {GENDERS.map(g => (
@@ -355,7 +365,15 @@ export function AdminRegisterForm({eventId, categories, groups, promos}: Props) 
                 </Label>
                 <Select name="promoId" value={promoId} onValueChange={v => setPromoId(v ?? '')}>
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select promo"/>
+                    <SelectValue placeholder="Select promo">
+                      {selectedPromo
+                        ? `${selectedPromo.promo} — ${
+                          selectedPromo.discountType === 'percentage'
+                            ? `${selectedPromo.discountValue}% off`
+                            : formatMoney(selectedPromo.discountValue)
+                        }`
+                        : undefined}
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {promos.map(p => (
@@ -419,6 +437,9 @@ export function AdminRegisterForm({eventId, categories, groups, promos}: Props) 
             <p className="text-sm text-muted-foreground">
               {email || 'email@example.com'}
             </p>
+            <p className="text-sm text-muted-foreground">
+              {phone || 'Phone number'}
+            </p>
           </div>
 
           <Separator/>
@@ -469,42 +490,42 @@ export function AdminRegisterForm({eventId, categories, groups, promos}: Props) 
             <div className="flex flex-wrap gap-2">
               {selectedGroup && (
                 <span className="rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground">
-                  {selectedGroup.name}
+                  Group: {selectedGroup.name}
                 </span>
               )}
               {jerseySize && (
-                <span className="rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground uppercase">
-                  {jerseySize}
+                <span className="rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground">
+                  Jersey Size: {jerseySize.toUpperCase()}
                 </span>
               )}
               {gender && (
-                <span className="rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground capitalize">
-                  {gender}
+                <span className="rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground">
+                  Gender: {GENDERS.find(option => option.toLowerCase() === gender) ?? gender}
                 </span>
               )}
               {bloodType && (
                 <span className="rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground">
-                  {bloodType}
+                  Blood Type: {bloodType}
                 </span>
               )}
               {dateOfBirth && (
                 <span className="rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground">
-                  Birth: {dateOfBirth}
+                  Birth Date: {dateOfBirth}
                 </span>
               )}
               {identityNumber && (
                 <span className="rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground">
-                  ID: {identityNumber}
+                  KTP / ID: {identityNumber}
                 </span>
               )}
               {city && (
                 <span className="rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground">
-                  {city}
+                  City: {city}
                 </span>
               )}
-              {emergencyContactName && (
+              {(emergencyContactName || emergencyPhone) && (
                 <span className="rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground">
-                  Emergency: {emergencyContactName}{emergencyPhone ? ` · ${emergencyPhone}` : ''}
+                  Emergency Contact: {[emergencyContactName, emergencyPhone].filter(Boolean).join(' · ')}
                 </span>
               )}
             </div>
