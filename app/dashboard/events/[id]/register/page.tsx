@@ -4,9 +4,7 @@ import {getCategoryByEvent} from "@/db/query/event-category.query";
 import {getGroupsByEvent} from "@/db/query/event-group.query";
 import {getPromoByEvent} from "@/db/query/event-promo.query";
 import {AdminRegisterForm} from "@/components/form/admin-register-form";
-import Link from "next/link";
-import {buttonVariants} from "@/components/ui/button";
-import {ChevronLeft} from "lucide-react";
+import {BackButton} from "@/components/button/back-button";
 
 export default async function Page({params}: { params: Promise<{ id: number }> }) {
   const {id} = await params
@@ -21,15 +19,7 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
 
   return (
     <div className="space-y-4">
-      <div>
-        <Link
-          className={buttonVariants({variant: "ghost", size: "sm"})}
-          href={`/dashboard/events/${id}`}
-        >
-          <ChevronLeft className="size-4"/>
-          Back to event
-        </Link>
-      </div>
+      <BackButton href={`/dashboard/events/${id}`}>Back to event</BackButton>
 
       <div>
         <h1 className="text-2xl font-bold">Register Participant</h1>

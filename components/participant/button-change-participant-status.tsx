@@ -47,8 +47,9 @@ export function ButtonChangeParticipantStatus({ participantId, currentStatus }: 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger render={
-        <Button variant="outline" size="icon">
+        <Button variant="outline" size="sm">
           <PencilIcon />
+          Change status
         </Button>
       } />
       <AlertDialogContent size="sm">

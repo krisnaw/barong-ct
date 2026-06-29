@@ -1,16 +1,12 @@
-import Link from "next/link"
-import {ArrowLeft} from "lucide-react"
-
 import {AddUserForm} from "@/components/users/add-user-form"
-import {buttonVariants} from "@/components/ui/button"
+import {BackButton} from "@/components/button/back-button";
 
 export default function CreateUserPage() {
   return (
     <div className="space-y-4">
-      <Link href="/dashboard/users" className={buttonVariants({variant: "ghost", className: "-ml-2"})}>
-        <ArrowLeft />
+      <BackButton href="/dashboard/users">
         Back to Users
-      </Link>
+      </BackButton>
 
       <AddUserForm />
     </div>

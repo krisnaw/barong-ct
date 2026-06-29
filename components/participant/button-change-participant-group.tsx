@@ -54,8 +54,9 @@ export function ButtonChangeParticipantGroup({participantId, currentGroupId, gro
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger render={
-        <Button variant="outline" size="icon">
+        <Button variant="outline" size="sm">
           <Users/>
+          Change group
         </Button>
       }/>
       <AlertDialogContent size="sm">

@@ -1,10 +1,8 @@
-import Link from "next/link"
-import {ArrowLeft} from "lucide-react"
-
 import {DashboardGroupManager} from "@/components/group/dashboard-group-manager"
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card"
 import {getGroupsByEvent} from "@/db/query/event-group.query"
 import {getCategoryByEvent} from "@/db/query/event-category.query";
+import {BackButton} from "@/components/button/back-button";
 
 export default async function Page({
   params,
@@ -22,12 +20,7 @@ export default async function Page({
 
   return (
     <div className="space-y-4">
-      <div>
-        <Link href={`/dashboard/events/${eventId}`} className="inline-flex gap-2">
-          <ArrowLeft />
-          Event Detail
-        </Link>
-      </div>
+      <BackButton href={`/dashboard/events/${eventId}`}>Back to event</BackButton>
 
       <Card>
         <CardHeader className="gap-1">

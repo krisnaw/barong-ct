@@ -1,7 +1,7 @@
 import {getEventById} from "@/db/query/event-query";
 import {redirect} from "next/navigation";
 import {Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
-import {CalendarIcon, MapPin} from "lucide-react";
+import {CalendarClock, CalendarIcon, MapPin} from "lucide-react";
 import {EventDate} from "@/components/events/event-date";
 import Link from "next/link";
 import {ButtonDownloadParticipant} from "@/components/button/button-download-participant";
@@ -55,6 +55,13 @@ export default async function Page({
                 <CalendarIcon aria-hidden="true" className="mr-1.5 size-5 shrink-0 text-muted-foreground"/>
                 <EventDate eventDate={event.startDate} type="date"/> - <EventDate eventDate={event.startDate} type="time"/>
               </div>
+              {event.registrationClosesAt && (
+                <div className="mt-2 flex items-center text-sm text-muted-foreground">
+                  <CalendarClock aria-hidden="true" className="mr-1.5 size-5 shrink-0 text-muted-foreground"/>
+                  Registration closes&nbsp;
+                  <EventDate eventDate={event.registrationClosesAt} type="date"/>
+                </div>
+              )}
             </div>
           </CardDescription>
           <CardAction className="inline-flex gap-2">

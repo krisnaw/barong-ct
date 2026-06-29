@@ -1,12 +1,11 @@
 import {getUserWithDetail} from "@/db/query/user-query";
-import {buttonVariants} from "@/components/ui/button";
-import {ArrowLeft, Mail} from "lucide-react";
-import Link from "next/link";
+import {Mail} from "lucide-react";
 import {notFound} from "next/navigation";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card"
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {Badge} from "@/components/ui/badge";
 import Image from "next/image";
+import {BackButton} from "@/components/button/back-button";
 import {cn} from "@/lib/utils";
 
 export default async function UserDetailPage({params}: {params: Promise<{id: string}>}) {
@@ -24,16 +23,9 @@ export default async function UserDetailPage({params}: {params: Promise<{id: str
 
   return (
     <div className="space-y-4">
-      <Link
-        href="/dashboard/users"
-        className={cn(
-          buttonVariants({variant: "outline", size: "sm"}),
-          "active:scale-[0.96] transition-transform duration-150 ease-out"
-        )}
-      >
-        <ArrowLeft className="size-4" />
+      <BackButton href="/dashboard/users">
         Back to Users
-      </Link>
+      </BackButton>
 
       {/* Profile hero */}
       <Card>

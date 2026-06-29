@@ -1,6 +1,7 @@
 import {EditEventForm} from "@/components/events/edit-event-form";
 import {getEventById} from "@/db/query/event-query";
 import {redirect} from "next/navigation";
+import {BackButton} from "@/components/button/back-button";
 
 export default async function Page({
                                      params,
@@ -17,7 +18,8 @@ export default async function Page({
   }
 
   return (
-    <div className="max-w-xl">
+    <div className="max-w-xl space-y-4">
+      <BackButton href={`/dashboard/events/${id}`}>Back to event</BackButton>
       <EditEventForm event={event} />
     </div>
   )

@@ -1,13 +1,10 @@
 import React from "react";
 import {notFound} from "next/navigation";
-import Link from "next/link";
-import {ChevronLeft} from "lucide-react";
 import {getParticipantDetail} from "@/db/query/participant-query";
 import {getUserWithDetail} from "@/db/query/user-query";
 import {Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
 import {Badge} from "@/components/ui/badge";
 import {Separator} from "@/components/ui/separator";
-import {buttonVariants} from "@/components/ui/button";
 import {EventDate} from "@/components/events/event-date";
 import {formatMoney} from "@/utils/money-helper";
 import {BtnResendConfirm} from "@/components/button/btn-resend-confirm";
@@ -17,6 +14,7 @@ import {ButtonChangeJerseySize} from "@/components/participant/button-change-jer
 import {PARTICIPANT_STATUS_BADGE, PARTICIPANT_STATUS_LABELS} from "@/utils/participant-status";
 import {ButtonChangeParticipantGroup} from "@/components/participant/button-change-participant-group";
 import {getGroupsByEvent} from "@/db/query/event-group.query";
+import {BackButton} from "@/components/button/back-button";
 
 function Row({label, value}: { label: string; value: React.ReactNode }) {
   return (
@@ -44,18 +42,7 @@ export default async function Page({
   return (
     <div className="space-y-4">
 
-      {/* Back + header */}
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <Link
-            href={`/dashboard/events/${eventId}`}
-            className={buttonVariants({variant: "ghost", size: "sm"})}
-          >
-            <ChevronLeft /> Back
-          </Link>
-        </div>
-
-      </div>
+      <BackButton href={`/dashboard/events/${eventId}`}>Back to event</BackButton>
 
       {/* Action bar */}
       <Card>

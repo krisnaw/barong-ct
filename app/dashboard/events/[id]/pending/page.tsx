@@ -9,6 +9,7 @@ import Link from "next/link";
 import {id as idLocale} from "date-fns/locale";
 import {ButtonEventReminder} from "@/app/dashboard/events/[id]/pending/button-event-reminder";
 import {ButtonAddParticipant} from "@/app/dashboard/events/[id]/pending/button-add-participant";
+import {BackButton} from "@/components/button/back-button";
 
 export default async function Page({params}: { params: Promise<{ id: number }> }) {
   const {id} = await params;
@@ -21,6 +22,9 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
 
   return (
     <div className="flex flex-col gap-6">
+      <BackButton href={`/dashboard/events/${id}`} className="self-start">
+        Back to event
+      </BackButton>
 
       <h1 className="text-2xl font-bold">
         Total {users.length} have not joined

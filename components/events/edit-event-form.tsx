@@ -47,18 +47,14 @@ export function EditEventForm({event} : {event: EventType}) {
       locationLink: formData.get("map") as string,
       maxParticipants: Number(formData.get("maxParticipants")),
       isGroupRide : Number(formData.get("isGroupRide")),
-      registrationClosesAt: new Date(formData.get("registrationClosesAt") as string),
+      registrationClosesAt: new Date(formData.get("closedAt") as string),
     }
 
     const res = await UpdateEventAction(payload)
 
     toast.info(res.message)
 
-    return {
-      success: false,
-      message: "",
-
-    }
+    return res
   }, initialState);
 
   return (
@@ -128,9 +124,6 @@ export function EditEventForm({event} : {event: EventType}) {
               placeholder="Enter description..."
             />
           </Field>
-
-
-
 
           <Field>
             <FieldLabel htmlFor="name">Registration Closed At</FieldLabel>

@@ -2,6 +2,7 @@ import {Card, CardAction, CardContent, CardHeader, CardTitle} from "@/components
 import {AddCategory} from "@/components/category/add-category";
 import {ListCategory} from "@/components/category/list-category";
 import {getCategoryByEvent} from "@/db/query/event-category.query";
+import {BackButton} from "@/components/button/back-button";
 
 export default async function Page({
                                      params,
@@ -13,16 +14,19 @@ export default async function Page({
   const categories = await getCategoryByEvent(id)
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Categories</CardTitle>
-        <CardAction>
-          <AddCategory eventId={id}/>
-        </CardAction>
-      </CardHeader>
-      <CardContent>
-        <ListCategory categories={categories}/>
-      </CardContent>
-    </Card>
+    <div className="space-y-4">
+      <BackButton href={`/dashboard/events/${id}`}>Back to event</BackButton>
+      <Card>
+        <CardHeader>
+          <CardTitle>Categories</CardTitle>
+          <CardAction>
+            <AddCategory eventId={id}/>
+          </CardAction>
+        </CardHeader>
+        <CardContent>
+          <ListCategory categories={categories}/>
+        </CardContent>
+      </Card>
+    </div>
   )
 }

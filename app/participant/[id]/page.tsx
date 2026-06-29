@@ -1,10 +1,11 @@
 import {getParticipantById} from "@/db/query/participant-query";
 import {EventDate} from "@/components/events/event-date";
 import Image from "next/image";
+import {cn} from "@/lib/utils";
 
-function StatBlock({ label, value }: { label: string; value: string | null | undefined }) {
+function StatBlock({ label, value, className }: { label: string; value: string | null | undefined, className?: string }) {
   return (
-    <div className="flex flex-col gap-1">
+    <div className={cn("flex flex-col gap-1", className)}>
       <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
         {label}
       </span>
@@ -85,9 +86,8 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
           <div className="grid grid-cols-3 gap-4 border-t px-6 py-5 rounded-b-3xl">
             <StatBlock label="Bib" value={participant.bibNumber} />
             <StatBlock label="Jersey" value={participant.jerseySize} />
-            <StatBlock label="Category" value={participant.category?.name} />
+            <StatBlock className="col-span-3" label="Category" value={participant.category?.name} />
           </div>
-
 
         </div>
       </div>
