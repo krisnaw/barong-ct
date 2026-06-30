@@ -24,6 +24,10 @@ export default async function Page({params, searchParams}: {
     redirect(`/event`);
   }
 
+  // if (isRegistrationClosed(event.registrationClosesAt)) {
+  //   redirect(`/event/${id}`)
+  // }
+
   const session = await auth.api.getSession({
     headers: await headers() // you need to pass the headers object.
   })

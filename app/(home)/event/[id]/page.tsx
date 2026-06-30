@@ -4,7 +4,7 @@ import {auth} from "@/lib/auth";
 import {headers} from "next/headers";
 import * as React from "react";
 import Link from "next/link";
-import {buttonVariants} from "@/components/ui/button";
+import {Button, buttonVariants} from "@/components/ui/button";
 import {PARTICIPANT_STATUS} from "@/utils/event.helper";
 import {getOnGoingParticipant} from "@/db/query/participant-query";
 import {getGroupById} from "@/db/query/event-group.query";
@@ -55,6 +55,9 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
 
   if (!event) redirect('/');
 
+  // const registrationClosed = isRegistrationClosed(event.registrationClosesAt)
+  const registrationClosed = false
+
   const session = await auth.api.getSession({ headers: await headers() })
 
   // No session — show event + signup prompt
@@ -64,7 +67,13 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
         <div className="mx-auto max-w-3xl px-4 md:px-6 lg:px-8 pt-10 pb-24">
 
           <EventDetailAlt event={event}>
-            <EventDetailWithSignup returnURL={`/event/${event.id}`} />
+            {registrationClosed ? (
+              <Button size="lg" className="w-full uppercase" disabled>
+                Registration closed
+              </Button>
+            ) : (
+              <EventDetailWithSignup returnURL={`/event/${event.id}`} />
+            )}
           </EventDetailAlt>
         </div>
       </div>
@@ -106,7 +115,11 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
           {/* Event detail — CTA slot used for non-completed & no-participant states */}
           {!isCompleted ? (
             <EventDetailAlt event={event}>
-              {participant ? (
+              {registrationClosed ? (
+                <Button size="lg" className="w-full uppercase" disabled>
+                  Registration closed
+                </Button>
+              ) : participant ? (
                 // In-progress registration — per-status CTA
                 <Link
                   href={`/event/${id}/register`}
