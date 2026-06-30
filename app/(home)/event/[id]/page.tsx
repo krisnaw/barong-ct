@@ -13,7 +13,6 @@ import {EventDetailAlt} from "@/components/events/event-detail-alt";
 import {RegistrationCompleteAlt} from "@/components/events/registration-complete-alt";
 import {BanknoteIcon, CircleDashedIcon, UserIcon} from "lucide-react";
 import {EventDetailWithSignup} from "@/components/events/event-detail-with-signup";
-import {isRegistrationClosed} from "@/utils/registration";
 
 const STATUS_CTA: Record<string, string> = {
   [PARTICIPANT_STATUS.DRAFT]:           "Continue Registration",
@@ -56,7 +55,8 @@ export default async function Page({params}: { params: Promise<{ id: number }> }
 
   if (!event) redirect('/');
 
-  const registrationClosed = isRegistrationClosed(event.registrationClosesAt)
+  // const registrationClosed = isRegistrationClosed(event.registrationClosesAt)
+  const registrationClosed = false
 
   const session = await auth.api.getSession({ headers: await headers() })
 
