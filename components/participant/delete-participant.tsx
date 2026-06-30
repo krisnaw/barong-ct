@@ -16,6 +16,7 @@ import {Button} from "@/components/ui/button"
 import {Trash} from "lucide-react"
 import {toast} from "sonner"
 import {deleteParticipantAction} from "@/app/actions/event-participant/event-participant.action"
+import {useRouter} from "next/navigation"
 
 type PendingParticipant = {
   id: number
@@ -24,9 +25,16 @@ type PendingParticipant = {
   }
 }
 
-export function DeleteParticipant({participant}: {participant: PendingParticipant}) {
+export function DeleteParticipant({
+  participant,
+  redirectTo,
+}: {
+  participant: PendingParticipant
+  redirectTo?: string
+}) {
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
+  const router = useRouter()
 
   const onConfirm = async () => {
     setLoading(true)
@@ -35,6 +43,9 @@ export function DeleteParticipant({participant}: {participant: PendingParticipan
     if (res.success) {
       toast.success(res.message)
       setOpen(false)
+      if (redirectTo) {
+        router.push(redirectTo)
+      }
     } else {
       toast.error(res.message)
     }

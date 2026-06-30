@@ -6,6 +6,8 @@ import {z} from "zod";
 import {db} from "@/db/db";
 import {getParticipantByPromo} from "@/db/query/participant-query";
 
+type Transaction = Parameters<Parameters<typeof db.transaction>[0]>[0]
+
 export async function createPromoAction(formData: InsertPromoType) {
   try {
     await db.insert(eventPromoSchema).values(formData).returning()
@@ -59,6 +61,14 @@ export async function handlePromoUsageOnComplete(promoId: number | null) {
       .set({ isActive: false })
       .where(eq(eventPromoSchema.id, promoId));
   }
+}
+
+export async function handlePromoUsageOnDelete(promoId: number | null, tx: typeof db | Transaction = db) {
+  if (!promoId) return;
+
+  await tx.update(eventPromoSchema)
+    .set({ usedCount: sql`greatest(${eventPromoSchema.usedCount} - 1, 0)` })
+    .where(eq(eventPromoSchema.id, promoId));
 }
 
 export async function deletePromoAction(id: number) {

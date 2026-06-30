@@ -23,6 +23,7 @@ import {createPayment} from "@/app/actions/payment/payment.action";
 import {auth} from "@/lib/auth";
 import {PARTICIPANT_STATUS} from "@/utils/event.helper";
 import {generateBibNumber} from "@/utils/bib.helper";
+import {handlePromoUsageOnDelete} from "@/app/actions/event-promo/promo.action";
 
 export async function resendEmailConfirmation(participantId: number): Promise<ActionResponse> {
 
@@ -53,7 +54,19 @@ export async function DeleteEventParticipantAction(formData: FormData): Promise<
 }
 
 export async function deleteParticipantAction(id: number): Promise<ActionResponse> {
-  await db.delete(participant).where(eq(participant.id, id))
+  const existing = await getParticipantById(id)
+  if (!existing) {
+    return { success: false, message: 'Participant not found.' }
+  }
+
+  await db.transaction(async (tx) => {
+    if (existing.status === PARTICIPANT_STATUS.COMPLETED && existing.promoId) {
+      await handlePromoUsageOnDelete(existing.promoId, tx)
+    }
+
+    await tx.delete(participant).where(eq(participant.id, id))
+  })
+
   revalidatePath('/', 'layout')
   return { success: true, message: 'Participant deleted successfully.' }
 }

@@ -15,6 +15,7 @@ import {PARTICIPANT_STATUS_BADGE, PARTICIPANT_STATUS_LABELS} from "@/utils/parti
 import {ButtonChangeParticipantGroup} from "@/components/participant/button-change-participant-group";
 import {getGroupsByEvent} from "@/db/query/event-group.query";
 import {BackButton} from "@/components/button/back-button";
+import {DeleteParticipant} from "@/components/participant/delete-participant";
 
 function Row({label, value}: { label: string; value: React.ReactNode }) {
   return (
@@ -191,6 +192,21 @@ export default async function Page({
           </Card>
         )}
       </div>
+
+      <Card className="border-destructive/30 bg-destructive/5">
+        <CardHeader>
+          <CardTitle className="text-destructive">Danger zone</CardTitle>
+          <CardDescription>
+            Delete this participant registration and remove related payment records. This action cannot be undone.
+          </CardDescription>
+          <CardAction>
+            <DeleteParticipant
+              participant={{id: participant.id, user: {name: participant.user.name}}}
+              redirectTo={`/dashboard/events/${eventId}`}
+            />
+          </CardAction>
+        </CardHeader>
+      </Card>
     </div>
   )
 }
