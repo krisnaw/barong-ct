@@ -25,8 +25,11 @@ export default async function Page({
   }
 
   const participants = await getParticipantByEvent(id)
-  const totalFinalPrice = participants.reduce(
-    (total, participant) => total + (participant.finalPrice ?? 0),
+  const totalWithoutServiceFee = participants.reduce(
+    (total, participant) => total + Math.max(
+      0,
+      (participant.price ?? 0) - (participant.discountAmount ?? 0),
+    ),
     0,
   )
   const participantRows: CompletedParticipantTableRow[] = participants.map((participant) => ({
@@ -106,9 +109,9 @@ export default async function Page({
               <Banknote aria-hidden="true" className="size-5"/>
             </div>
             <div>
-              <p className="text-xs font-medium text-muted-foreground">Total final price</p>
+              <p className="text-xs font-medium text-muted-foreground">Total without service fee</p>
               <p className="font-heading text-xl font-semibold tabular-nums">
-                {formatMoney(totalFinalPrice)}
+                {formatMoney(totalWithoutServiceFee)}
               </p>
             </div>
           </div>
