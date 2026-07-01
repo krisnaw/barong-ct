@@ -1,7 +1,7 @@
 import {getEventById} from "@/db/query/event-query";
 import {redirect} from "next/navigation";
 import {Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
-import {CalendarClock, CalendarIcon, MapPin} from "lucide-react";
+import {Banknote, CalendarClock, CalendarIcon, MapPin} from "lucide-react";
 import {EventDate} from "@/components/events/event-date";
 import Link from "next/link";
 import {ButtonDownloadParticipant} from "@/components/button/button-download-participant";
@@ -9,6 +9,7 @@ import {getParticipantByEvent} from "@/db/query/participant-query";
 import {ListParticipant} from "@/components/participant/list-participant";
 import type {CompletedParticipantTableRow} from "@/components/participant/list-participant";
 import {buttonVariants} from "@/components/ui/button";
+import {formatMoney} from "@/utils/money-helper";
 
 export default async function Page({
   params,
@@ -24,6 +25,10 @@ export default async function Page({
   }
 
   const participants = await getParticipantByEvent(id)
+  const totalFinalPrice = participants.reduce(
+    (total, participant) => total + (participant.finalPrice ?? 0),
+    0,
+  )
   const participantRows: CompletedParticipantTableRow[] = participants.map((participant) => ({
     id: participant.id,
     eventId: participant.eventId,
@@ -93,6 +98,21 @@ export default async function Page({
             </Link>
           </CardAction>
         </CardHeader>
+      </Card>
+      <Card size="sm" className="max-w-sm">
+        <CardContent>
+          <div className="flex items-center gap-3">
+            <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
+              <Banknote aria-hidden="true" className="size-5"/>
+            </div>
+            <div>
+              <p className="text-xs font-medium text-muted-foreground">Total final price</p>
+              <p className="font-heading text-xl font-semibold tabular-nums">
+                {formatMoney(totalFinalPrice)}
+              </p>
+            </div>
+          </div>
+        </CardContent>
       </Card>
       <Card>
         <CardHeader>
