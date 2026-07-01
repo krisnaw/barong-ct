@@ -54,8 +54,9 @@ export function ButtonChangeParticipantCategory({participantId, currentCategoryI
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger render={
-        <Button variant="outline" size="icon-xs">
+        <Button variant="outline" size="sm">
           <Tag />
+          Change category
         </Button>
       } />
       <AlertDialogContent size="sm">
